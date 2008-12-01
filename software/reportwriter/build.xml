@@ -1,0 +1,152 @@
+<?xml version="1.0"?>
+
+<!-- ************************************************************************** -->
+<!--                             ANT BUILD SCRIPT                               -->
+<!--                            NCI REPORT WRITER                               -->
+<!-- ************************************************************************** -->
+
+<project name="NCI Report Writer"  default="dist"  basedir=".">
+
+    <!-- =========================================================== -->
+    <!--                      Global Settings                        -->
+    <!-- =========================================================== -->
+
+    <property name="lib.dir" value="lib" />
+    <property name="src.dir" value="src" />
+    <property name="target.dir" value="target" />
+    <property name="java.dir" value="${src.dir}/main/java" />
+    <property name="resources.dir" value="${src.dir}/main/resources" />
+    <property name="webapp.dir" value="${src.dir}/main/webapp" />
+    <property name="test.dir" value="${src.dir}/test" />
+    <property name="classes.dir" value="${target.dir}/classes" />
+    <property name="testclasses.dir" value="${target.dir}/test-classes" />
+    <property name="build.dir" value="build" />
+    <property name="dist.dir" value="dist" />
+    <property name="war.file" value="reportwriter.war" />
+    <property name="deploy.dir" value="C:\devtools\jboss-4.0.5\server\default\deploy" />
+
+    <!-- Set the class path of required libraries for the Report Writer. -->
+    <path id="cp">
+        <fileset dir="${lib.dir}">
+            <include name="**/*.jar"/>
+        </fileset>
+    </path>
+
+    <!-- Set print macro. -->
+    <macrodef name="ReportWriterEcho">
+	<attribute name="message" default="..." />
+	<sequential>
+	    <echo>*****************************************************************</echo>
+	    <echo>***  @{message}</echo>
+	    <echo>*****************************************************************</echo>
+	</sequential>
+    </macrodef>
+	
+
+    <!-- =========================================================== -->
+    <!--                           COMPILE                           -->
+    <!-- =========================================================== -->
+    <target name="compile" depends="clean">
+
+	<mkdir dir="${target.dir}"/>
+	<mkdir dir="${classes.dir}"/>
+	
+	<javac srcdir="${java.dir}" destdir="${classes.dir}" >
+	    <include name="**/*.java"/>
+	    <classpath refid="cp"/>
+	</javac>
+
+    </target>
+    
+	
+
+    <!-- =========================================================== -->
+    <!--                       COMPILE-TEST                          -->
+    <!-- =========================================================== -->
+    <target name="compile-test">
+
+	<mkdir dir="${target.dir}"/>
+	<mkdir dir="${testclasses.dir}"/>
+	
+	<javac srcdir="${test.dir}" destdir="${testclasses.dir}" >
+	    <include name="**/*.java"/>
+	    <classpath refid="cp"/>
+	</javac>
+
+    </target>
+    
+
+    <!-- =========================================================== -->
+    <!--                           BUILD WAR                         -->
+    <!-- =========================================================== -->
+    <target name="buildwar" depends="compile" 
+		description="Creates the war file">
+
+	<mkdir dir="${build.dir}"/>
+	<mkdir dir="${build.dir}/WEB-INF"/>
+	<mkdir dir="${build.dir}/WEB-INF/lib"/>
+	<mkdir dir="${build.dir}/WEB-INF/classes"/>
+
+	<copy todir="${build.dir}/WEB-INF">
+		<fileset dir="${webapp.dir}/conf" includes="web.xml" /> 
+	</copy>
+
+	<copy todir="${build.dir}/WEB-INF/classes">
+		<fileset dir="${webapp.dir}/conf" includes="struts.xml" /> 
+	</copy>
+
+	<copy todir="${build.dir}/WEB-INF/classes">
+		<fileset dir="${classes.dir}/" includes="**/*.class" /> 
+	</copy>
+
+	<copy todir="${build.dir}/WEB-INF/lib">
+		<fileset dir="${lib.dir}" includes="**/*.jar" /> 
+	</copy>
+
+	<copy todir="${build.dir}">
+		<fileset dir="${webapp.dir}" includes="**/*.*" excludes="conf/*.*"/> 
+	</copy>
+
+	<jar jarfile="${build.dir}/${war.file}" basedir="${build.dir}"  
+		 excludes="${war.file}"/> 
+
+    </target>
+    
+
+    <!-- =========================================================== -->
+    <!--                              DIST                           -->
+    <!-- =========================================================== -->
+    <target name="dist" depends="buildwar" 
+		description="Copies war file to dist directory">
+
+	<mkdir dir="${dist.dir}"/>
+
+	<move todir="${dist.dir}">
+		<fileset dir="${build.dir}" includes="*.war"/> 
+	</move>
+
+    </target>
+    
+
+    <!-- =========================================================== -->
+    <!--                            DEPLOY                           -->
+    <!-- =========================================================== -->
+    <target name="deploy" depends="dist" 
+		description="Deploys war file to JBoss">
+
+	<copy todir="${deploy.dir}">
+		<fileset dir="${dist.dir}" includes="*.war"/> 
+	</copy>
+
+    </target>
+    
+
+    <!-- =========================================================== -->
+    <!--                             CLEAN                           -->
+    <!-- =========================================================== -->
+    <target name="clean"> 
+	 <delete dir="${build.dir}" />
+	 <delete dir="${dist.dir}" />
+    </target>
+
+</project>
