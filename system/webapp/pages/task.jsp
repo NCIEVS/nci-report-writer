@@ -62,7 +62,8 @@
 								<td>
 									<table summary="Enter summary of data here" cellpadding="3" cellspacing="0" border="0" class="dataTable" width="100%">
 										<tr class="dataRowLight">
-											<td class="dataCellText"><h:selectOneMenu id="id" value="#{userSessionBean.selectedTask}"><f:selectItems value="#{userSessionBean.taskList}"/></h:selectOneMenu></td>
+											<td class="dataCellText"><h:selectOneMenu id="id" value="#{userSessionBean.selectedTask}">
+											<f:selectItems value="#{userSessionBean.taskList}"/></h:selectOneMenu></td>
 										</tr>
 									</table>
 								</td>

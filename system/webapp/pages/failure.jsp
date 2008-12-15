@@ -111,7 +111,8 @@
                                             <tr>
                                             
     <td class="sidebarLogin" align="right"><label for="password">PASSWORD</label></td>                                        
-    <td><h:inputSecret id="password" size="15" required="true" value="#{loginBean.password}" ><f:validateLength minimum="4" maximum="50" /></h:inputSecret> </td>
+    <td><h:inputSecret id="password" size="15" required="true" value="#{loginBean.password}" >
+    <f:validateLength minimum="4" maximum="50" /></h:inputSecret> </td>
                                             
                                             </tr>
                                             <tr>
