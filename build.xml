@@ -5,7 +5,7 @@
 
 	<!-- Local system paths -->
 	<property file="${basedir}/build.properties"/>
-	<property name="webroot.dir" value="${basedir}/webapp"/>
+	<property name="webroot.dir" value="${basedir}/webroot"/>
 	<property name="webinf.dir" value="${webroot.dir}/WEB-INF"/>
 	<property name="build.dir" value="build"/>
 
