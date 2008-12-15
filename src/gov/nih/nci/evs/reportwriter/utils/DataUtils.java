@@ -1,17 +1,11 @@
 package gov.nih.nci.evs.reportwriter.utils;
 
-import java.sql.*;
-import java.util.*;
+import java.sql.Connection;
+import java.sql.ResultSet;
+import java.sql.Statement;
+import java.util.ArrayList;
+import java.util.List;
 
-import java.io.PrintWriter;
-import java.io.BufferedInputStream;
-import java.io.DataInputStream;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-
-import gov.nih.nci.evs.reportwriter.bean.*;
 import javax.faces.model.SelectItem;
 
 /**
@@ -56,13 +50,13 @@ public class DataUtils {
     {
 		adminTaskList = new ArrayList();
 		adminTaskList.add(new SelectItem("Administer Standard Reports", "Administer Standard Reports"));
-
+		
 		userTaskList = new ArrayList();
 		userTaskList.add(new SelectItem("Retrieve Standard Reports", "Retrieve Standard Reports"));
 	}
 
-	public static List getTaskList(int groupId) {
-		if (groupId == 1)
+	public static List getTaskList(boolean isAdmin) {
+		if (isAdmin)
 		{
 			if (adminTaskList == null)
 			{

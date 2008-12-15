@@ -1,21 +1,20 @@
 
 package gov.nih.nci.evs.reportwriter.bean;
 
-import java.util.*;
-
-import org.apache.log4j.Level;
-import org.apache.log4j.Logger;
-
-import gov.nih.nci.security.SecurityServiceProvider;
+import gov.nih.nci.evs.reportwriter.utils.DataUtils;
 import gov.nih.nci.security.AuthenticationManager;
+import gov.nih.nci.security.AuthorizationManager;
+import gov.nih.nci.security.SecurityServiceProvider;
+import gov.nih.nci.security.authorization.domainobjects.Group;
+import gov.nih.nci.security.authorization.domainobjects.User;
 
-import gov.nih.nci.evs.reportwriter.utils.*;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Set;
 
-
-import javax.faces.model.SelectItem;
-import javax.faces.context.FacesContext;
-import javax.faces.event.ActionEvent;
 import javax.faces.event.ValueChangeEvent;
+
+import org.apache.log4j.Logger;
 
 /**
   * <!-- LICENSE_TEXT_START -->
@@ -53,8 +52,9 @@ public class LoginBean extends Object
   String userid;
   String password;
 
-  int roleGroupId;
+  long roleGroupId;
   String selectedTask = null;
+  boolean isAdmin = false;
 
   public void setSelectedTask(String selectedTask)
   {
@@ -68,68 +68,118 @@ public class LoginBean extends Object
 
   public void setUserid(String newUserid)
   {
-    userid = newUserid;
+    this.userid = newUserid;
   }
 
   public String getPassword()
   {
-    return password;
+    return this.password;
   }
 
   public void setPassword(String newPassword)
   {
-    password = newPassword;
+    this.password = newPassword;
   }
 
-  public int getRoleGroupId()
+  public long getRoleGroupId()
   {
-    return roleGroupId;
+	  return this.roleGroupId;
   }
 
-  public void setRoleGroupId(int roleGroupId)
+  public void setRoleGroupId(long roleGroupId)
   {
-    roleGroupId = roleGroupId;
+    this.roleGroupId = roleGroupId;
   }
 
+  public long findRoleGroupId() {
+	  
+	  long rid = -1;
+	  AuthorizationManager ami = null;
+	  
+	  try {
+		  System.out.println("LoginBean findRoleGroupId " + this.roleGroupId);
+		  ami = SecurityServiceProvider.getAuthorizationManager("ncireportwriter");
+		  if (ami == null) {
+				throw new Exception();
+		  }
+		  ami = (AuthorizationManager) ami;
+			
+		  User user = ami.getUser(userid);
+		  System.out.println("LoginBean: User ID: " + user.getUserId() + " User paswd: " + user.getPassword());
+		  
+		  //Set<Group> groups = user.getGroups();
+		  Set<Group> groups = ami.getGroups(user.getUserId().toString());
+		  
+		  if(null != groups) {
+			  System.out.println("LoginBean findRoleGroupId: Groups set is not null. User is part of : " + groups.size() + " groups");
+			  Iterator iter = groups.iterator(); 
+			  while(iter.hasNext()) {
+				    Group grp = (Group) iter.next();
+				    if(null != grp) {
+				    	System.out.println("GROUP is NOT null");
+				    	rid = grp.getGroupId();
+				    	if(grp.getGroupName().startsWith("admin")) {
+				    		KLO_log.warn("LoginBean: User is associated with an admin group");
+				    		isAdmin = true;
+				    		break;
+				    	}
+				    }
+			  }
+		  }
+	  }
+	  catch(Exception e) {
+		  e.printStackTrace();
+	  }
+	  
+	  KLO_log.warn("LoginBean: isAdmin: " + isAdmin);
+	  return rid;
+  }
+  
+  
   public List getTaskList()
   {
-    return DataUtils.getTaskList(roleGroupId);
+	  KLO_log.warn("LoginBean: isAdmin: " + isAdmin);
+	  return DataUtils.getTaskList(isAdmin);
   }
 
+  
+  public String loginAction()
+  {
+		String applicationName = "ncireportwriter";
 
-	  public String loginAction()
-	  {
-			String applicationName = "reportwriter";
-
-			KLO_log.warn("applicationName: " + applicationName);
-			KLO_log.warn("userid: " + userid);
-			KLO_log.warn("password: " + password);
-
-			//Get the user credentials from the database and login
-			try {
-				AuthenticationManager authenticationManager = SecurityServiceProvider.getAuthenticationManager(applicationName);
-				boolean loginOK = authenticationManager.login(userid, password);
-				if (loginOK)
-				{
-					// To be implemented -- find roleGroupId
-					int roleGroupId = 1;
-					setRoleGroupId(roleGroupId);
-					return "success";
-				}
-				else
-				{
-					return "failure";
-				}
+		KLO_log.warn("applicationName: " + applicationName);
+		KLO_log.warn("userid: " + userid);
+		KLO_log.warn("password: " + password);
+		isAdmin = false;
+		
+		//Get the user credentials from the database and login
+		try {
+			AuthenticationManager authenticationManager = SecurityServiceProvider.getAuthenticationManager(applicationName);
+			boolean loginOK = authenticationManager.login(userid, password);
+			if (loginOK)
+			{
+				// To be implemented -- find roleGroupId
+				System.out.println("LoginBean: rolegroupid = " + roleGroupId);
+				long rid = findRoleGroupId();
+				System.out.println("LoginBean: findRoleGroupId returned " + rid);
+				setRoleGroupId(rid);
+				return "success";
 			}
-			catch (Exception cse) {
-				System.out.println(">>>>>>>>>>>>> ERROR IN LOGIN by <<<<<<<<< " + userid);
+			else
+			{
+				return "failure";
 			}
-			return "failure";
+		}
+		catch (Exception cse) {
+			System.out.println(">>>>>>>>>>>>> ERROR IN LOGIN by <<<<<<<<< " + userid);
+		}
+		
+		return "failure";
 	  }
 
 	  public void changeTaskSelection(ValueChangeEvent vce) {
 		 String newValue = (String)vce.getNewValue();
-		 selectedTask = newValue;
+		 this.selectedTask = newValue;
 	  }
 
   }
