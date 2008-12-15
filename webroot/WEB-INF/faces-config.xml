@@ -1,0 +1,64 @@
+<?xml version="1.0"?>
+
+
+<!DOCTYPE faces-config PUBLIC
+  "-//Sun Microsystems, Inc.//DTD JavaServer Faces Config 1.0//EN"
+  "http://java.sun.com/dtd/web-facesconfig_1_0.dtd">
+
+<faces-config>
+  <application>
+    <message-bundle>gov.nih.nci.evs.reportwriter.bean.Resources</message-bundle>
+    <locale-config>
+      <default-locale>en</default-locale>
+      <supported-locale>en-us</supported-locale>
+      <supported-locale>fr</supported-locale>
+      <supported-locale>es</supported-locale>
+    </locale-config>
+  </application>
+
+  <navigation-rule>
+   <from-view-id>/pages/login.jsp</from-view-id>
+   <navigation-case> 
+    <description>Handle case for unsuccessful login</description>
+    <from-action>#{loginBean.loginAction}</from-action>
+    <from-outcome>failure</from-outcome>
+    <to-view-id>/pages/failure.jsp</to-view-id>
+   </navigation-case>
+   
+   <navigation-case> 
+    <description>Handle case for successful login</description>
+    <from-action>#{loginBean.loginAction}</from-action>
+    <from-outcome>success</from-outcome>
+    <to-view-id>/pages/task.jsp</to-view-id>
+   </navigation-case>
+   
+  </navigation-rule>
+      
+  <navigation-rule>
+   <from-view-id>/pages/failure.jsp</from-view-id>
+   <navigation-case>
+    <from-outcome>back</from-outcome>
+    <to-view-id>/pages/login.jsp</to-view-id>
+   </navigation-case>
+  </navigation-rule>
+  
+     
+<managed-bean>
+  <managed-bean-name>loginBean</managed-bean-name>
+  <managed-bean-class>gov.nih.nci.evs.reportwriter.bean.LoginBean</managed-bean-class>
+  <managed-bean-scope>session</managed-bean-scope>
+</managed-bean> 
+
+<managed-bean>
+  <managed-bean-name>DataUtils</managed-bean-name>
+  <managed-bean-class>gov.nih.nci.evs.reportwriter.bean.DataUtils</managed-bean-class>
+  <managed-bean-scope>session</managed-bean-scope>
+</managed-bean>
+
+<managed-bean>
+  <managed-bean-name>userSessionBean</managed-bean-name>
+  <managed-bean-class>gov.nih.nci.evs.reportwriter.bean.UserSessionBean</managed-bean-class>
+  <managed-bean-scope>session</managed-bean-scope>
+</managed-bean>
+
+</faces-config>
