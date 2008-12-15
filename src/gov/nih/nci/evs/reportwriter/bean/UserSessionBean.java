@@ -1,21 +1,19 @@
 
 package gov.nih.nci.evs.reportwriter.bean;
 
-import java.util.*;
-
-import org.apache.log4j.Level;
-import org.apache.log4j.Logger;
-
+import gov.nih.nci.evs.reportwriter.utils.DataUtils;
+import gov.nih.nci.security.AuthorizationManager;
 import gov.nih.nci.security.SecurityServiceProvider;
-import gov.nih.nci.security.AuthenticationManager;
+import gov.nih.nci.security.authorization.domainobjects.Group;
+import gov.nih.nci.security.authorization.domainobjects.User;
 
-import gov.nih.nci.evs.reportwriter.utils.*;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Set;
 
-
-import javax.faces.model.SelectItem;
-import javax.faces.context.FacesContext;
-import javax.faces.event.ActionEvent;
 import javax.faces.event.ValueChangeEvent;
+
+import org.apache.log4j.Logger;
 
 /**
   * <!-- LICENSE_TEXT_START -->
@@ -47,10 +45,12 @@ import javax.faces.event.ValueChangeEvent;
 
 public class UserSessionBean extends Object
 {
+	private static Logger KLO_log = Logger.getLogger("LoginBean KLO");
+	
 	  String userid;
 	  String password;
 
-	  int roleGroupId;
+	  long roleGroupId;
 	  String selectedTask = null;
 
 	  public String getSelectedTask()
@@ -58,13 +58,17 @@ public class UserSessionBean extends Object
 		  return this.selectedTask;
 	  }
 
+	  public void setUserId(String userid)
+	  {
+		  this.userid = userid;
+	  }
+
 	  public void setSelectedTask(String selectedTask)
 	  {
 		  this.selectedTask = selectedTask;;
 	  }
 
-
-	  public void setRoleGroupId(int roleId) {
+	  public void setRoleGroupId(long roleId) {
 		  this.roleGroupId = roleId;
 	  }
 
@@ -76,8 +80,51 @@ public class UserSessionBean extends Object
 		  // (2) call setRoleGroupId to set roleGroupId
 		  // (3) replace the following statement by:
 		  //     return DataUtils.getTaskList(roleGroupId);
-
-		  return DataUtils.getTaskList(1); // tempararily set role to 1 (admin)
+		  
+		  long rid = -1;
+		  boolean isAdmin = false;
+		  AuthorizationManager ami = null;
+		  
+		  try {
+			  System.out.println("In userSessionBean getTaskList " + this.roleGroupId);
+			  ami = SecurityServiceProvider.getAuthorizationManager("ncireportwriter");
+			  if (ami == null) {
+					throw new Exception();
+			  }
+			  ami = (AuthorizationManager) ami;
+				
+			  User user = ami.getUser(userid);
+			  System.out.println("UserSessionBean: User ID: " + user.getUserId() + " User paswd: " + user.getPassword());
+			  
+			  //Set<Group> groups = user.getGroups();
+			  Set<Group> groups = ami.getGroups(user.getUserId().toString());
+			  
+			  if(null != groups) {
+				  System.out.println("Groups set is not null. User is part of : " + groups.size() + " groups");
+				  
+				  Iterator iter = groups.iterator(); 
+				  while(iter.hasNext()) {
+					    Group grp = (Group) iter.next();
+					    if(null != grp) {
+					    	System.out.println("GROUP is NOT null");
+					    	rid = grp.getGroupId();
+					    	if(grp.getGroupName().startsWith("admin")) {
+					    		System.out.println("User associated with an admin group");
+					    		isAdmin = true;
+					    		break;
+					    	}
+					    }
+				  }
+			  }
+		  }
+		  catch(Exception e) {
+			  e.printStackTrace();
+		  }
+		  
+		  setRoleGroupId(rid);
+		  System.out.println("In UserSessionBean.getTaskList() roleGroupId here is: " + this.roleGroupId);	
+		  KLO_log.warn("UserSessionBean: isAdmin: " + isAdmin);
+		  return DataUtils.getTaskList(isAdmin); // temporarily set role to 1 (admin)
 	  }
 
 	  public void changeTaskSelection(ValueChangeEvent vce) {
