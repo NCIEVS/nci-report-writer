@@ -67,7 +67,23 @@ public class UserSessionBean extends Object
 	  public void setRoleGroupId(int roleId) {
 		  this.roleGroupId = roleId;
 	  }
-
+/**
+	  public int getRoleGroupIdFromCSM(String userId) {
+		  user = ami.getUser(userId);
+		  System.out.println("User ID: " + user.getUserId() + " User paswd: " + user.getPassword());
+		  Set pgroles = user.getProtectionGroupRoleContexts();
+		  System.out.println("The user: " + userId + " has been assigned " + pgroles.size() + "protection groups");
+		   
+		  while(pgroles.iterator().hasNext()) {
+		        pgrc = (ProtectionGroupRoleContext) pgroles.iterator().next();
+		        Set roles = pgrc.getRoles();
+		        while(roles.iterator().hasNext()) {
+		              ur = (UserRole) roles.iterator().next();
+		              int roleid = ur.getRoleID();
+		        }
+		  }
+	  }
+	*/  
 	  public List getTaskList()
 	  {
 		  // To be modified:
@@ -77,7 +93,9 @@ public class UserSessionBean extends Object
 		  // (3) replace the following statement by:
 		  //     return DataUtils.getTaskList(roleGroupId);
 
-		  return DataUtils.getTaskList(1); // tempararily set role to 1 (admin)
+		  //setRoleGroupId(getRoleGroupIdFromCSM(userId));
+		  //return DataUtils.getTaskList(roleGroupId);
+		  return DataUtils.getTaskList(1); // temporarily set role to 1 (admin)
 	  }
 
 	  public void changeTaskSelection(ValueChangeEvent vce) {
