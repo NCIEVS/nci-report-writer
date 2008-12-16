@@ -50,13 +50,14 @@ public class DataUtils {
     {
 		adminTaskList = new ArrayList();
 		adminTaskList.add(new SelectItem("Administer Standard Reports", "Administer Standard Reports"));
-		
+
 		userTaskList = new ArrayList();
 		userTaskList.add(new SelectItem("Retrieve Standard Reports", "Retrieve Standard Reports"));
 	}
 
-	public static List getTaskList(boolean isAdmin) {
-		if (isAdmin)
+	public static List getTaskList(Boolean isAdmin) {
+		if (isAdmin == null) return null;
+		else if (isAdmin.equals(Boolean.TRUE))
 		{
 			if (adminTaskList == null)
 			{

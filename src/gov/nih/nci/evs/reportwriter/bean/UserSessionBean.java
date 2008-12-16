@@ -15,6 +15,11 @@ import javax.faces.event.ValueChangeEvent;
 
 import org.apache.log4j.Logger;
 
+import javax.faces.application.FacesMessage;
+import javax.faces.context.FacesContext;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 /**
   * <!-- LICENSE_TEXT_START -->
 * Copyright 2007 NGIT. This software was developed in conjunction with the National Cancer Institute,
@@ -45,13 +50,26 @@ import org.apache.log4j.Logger;
 
 public class UserSessionBean extends Object
 {
-	private static Logger KLO_log = Logger.getLogger("LoginBean KLO");
-	
+	  private static Logger KLO_log = Logger.getLogger("LoginBean KLO");
+
 	  String userid;
 	  String password;
 
+	  Boolean isAdmin = null;
+
+
 	  long roleGroupId;
 	  String selectedTask = null;
+
+      public void setIsAdmin(Boolean bool_obj)
+      {
+		  this.isAdmin = bool_obj;
+	  }
+
+      public Boolean getIsAdmin()
+      {
+		  return this.isAdmin;
+	  }
 
 	  public String getSelectedTask()
 	  {
@@ -80,11 +98,19 @@ public class UserSessionBean extends Object
 		  // (2) call setRoleGroupId to set roleGroupId
 		  // (3) replace the following statement by:
 		  //     return DataUtils.getTaskList(roleGroupId);
-		  
+			FacesContext context = FacesContext.getCurrentInstance();
+			HttpServletRequest request = (HttpServletRequest)context.getExternalContext().getRequest();
+			HttpSession session = request.getSession(false);
+			Boolean isAdmin = null;
+			if (session != null) {
+				 isAdmin = (Boolean) request.getSession(true).getAttribute("isAdmin");
+			}
+
+			/*
 		  long rid = -1;
 		  boolean isAdmin = false;
 		  AuthorizationManager ami = null;
-		  
+
 		  try {
 			  System.out.println("In userSessionBean getTaskList " + this.roleGroupId);
 			  ami = SecurityServiceProvider.getAuthorizationManager("ncireportwriter");
@@ -92,17 +118,17 @@ public class UserSessionBean extends Object
 					throw new Exception();
 			  }
 			  ami = (AuthorizationManager) ami;
-				
+
 			  User user = ami.getUser(userid);
 			  System.out.println("UserSessionBean: User ID: " + user.getUserId() + " User paswd: " + user.getPassword());
-			  
+
 			  //Set<Group> groups = user.getGroups();
 			  Set<Group> groups = ami.getGroups(user.getUserId().toString());
-			  
+
 			  if(null != groups) {
 				  System.out.println("Groups set is not null. User is part of : " + groups.size() + " groups");
-				  
-				  Iterator iter = groups.iterator(); 
+
+				  Iterator iter = groups.iterator();
 				  while(iter.hasNext()) {
 					    Group grp = (Group) iter.next();
 					    if(null != grp) {
@@ -120,10 +146,12 @@ public class UserSessionBean extends Object
 		  catch(Exception e) {
 			  e.printStackTrace();
 		  }
-		  
+
 		  setRoleGroupId(rid);
-		  System.out.println("In UserSessionBean.getTaskList() roleGroupId here is: " + this.roleGroupId);	
+		  System.out.println("In UserSessionBean.getTaskList() roleGroupId here is: " + this.roleGroupId);
 		  KLO_log.warn("UserSessionBean: isAdmin: " + isAdmin);
+		  */
+
 		  return DataUtils.getTaskList(isAdmin); // temporarily set role to 1 (admin)
 	  }
 
