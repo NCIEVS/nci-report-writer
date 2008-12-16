@@ -12,18 +12,13 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
+import javax.faces.context.FacesContext;
 import javax.faces.event.ValueChangeEvent;
+import javax.naming.InitialContext;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 
 import org.apache.log4j.Logger;
-
-import javax.naming.InitialContext;
-
-import javax.faces.application.FacesMessage;
-import javax.faces.context.FacesContext;
-//import javax.faces.el.ValueBinding;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
 
 /**
   * <!-- LICENSE_TEXT_START -->
@@ -119,7 +114,6 @@ public class LoginBean extends Object
 		  User user = ami.getUser(userid);
 		  System.out.println("LoginBean: User ID: " + user.getUserId() + " User paswd: " + user.getPassword());
 
-		  //Set<Group> groups = user.getGroups();
 		  Set<Group> groups = ami.getGroups(user.getUserId().toString());
 
 		  if(null != groups) {
@@ -142,7 +136,6 @@ public class LoginBean extends Object
 		  e.printStackTrace();
 	  }
 
-	  //KLO_log.warn("LoginBean: isAdmin: " + isAdmin);
 	  return Boolean.FALSE;
   }
 
@@ -169,22 +162,12 @@ public class LoginBean extends Object
 			boolean loginOK = authenticationManager.login(userid, password);
 			if (loginOK)
 			{
-				// To be implemented -- find roleGroupId
-				/*
-				System.out.println("LoginBean: rolegroupid = " + roleGroupId);
-				long rid = findRoleGroupId();
-				System.out.println("LoginBean: findRoleGroupId returned " + rid);
-				setRoleGroupId(rid);
-				*/
-
 				FacesContext context = FacesContext.getCurrentInstance();
 			    HttpServletRequest request = (HttpServletRequest)context.getExternalContext().getRequest();
 			    HttpSession session = request.getSession(false);
 			    if (session != null) {
 					 request.getSession(true).setAttribute("uid", userid);
 					 request.getSession(true).setAttribute("password", password);
-					 //String username = (String)session.getAttribute(SecurityUtils.J_USERNAME_KEY);
-					 //String password = (String)session.getAttribute(SecurityUtils.J_PASSWORD_KEY);
 				}
 				isAdmin = hasAdminPrivilege();
 				request.getSession(true).setAttribute("isAdmin", isAdmin);
