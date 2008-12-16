@@ -16,6 +16,15 @@ import javax.faces.event.ValueChangeEvent;
 
 import org.apache.log4j.Logger;
 
+import javax.naming.InitialContext;
+
+import javax.faces.application.FacesMessage;
+import javax.faces.context.FacesContext;
+//import javax.faces.el.ValueBinding;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
+
 /**
   * <!-- LICENSE_TEXT_START -->
 * Copyright 2007 NGIT. This software was developed in conjunction with the National Cancer Institute,
@@ -54,7 +63,10 @@ public class LoginBean extends Object
 
   long roleGroupId;
   String selectedTask = null;
-  boolean isAdmin = false;
+  Boolean isAdmin = null;
+
+  private InitialContext ctx = null;
+
 
   public void setSelectedTask(String selectedTask)
   {
@@ -91,11 +103,11 @@ public class LoginBean extends Object
     this.roleGroupId = roleGroupId;
   }
 
-  public long findRoleGroupId() {
-	  
+  public Boolean hasAdminPrivilege() {
+
 	  long rid = -1;
 	  AuthorizationManager ami = null;
-	  
+
 	  try {
 		  System.out.println("LoginBean findRoleGroupId " + this.roleGroupId);
 		  ami = SecurityServiceProvider.getAuthorizationManager("ncireportwriter");
@@ -103,16 +115,16 @@ public class LoginBean extends Object
 				throw new Exception();
 		  }
 		  ami = (AuthorizationManager) ami;
-			
+
 		  User user = ami.getUser(userid);
 		  System.out.println("LoginBean: User ID: " + user.getUserId() + " User paswd: " + user.getPassword());
-		  
+
 		  //Set<Group> groups = user.getGroups();
 		  Set<Group> groups = ami.getGroups(user.getUserId().toString());
-		  
+
 		  if(null != groups) {
 			  System.out.println("LoginBean findRoleGroupId: Groups set is not null. User is part of : " + groups.size() + " groups");
-			  Iterator iter = groups.iterator(); 
+			  Iterator iter = groups.iterator();
 			  while(iter.hasNext()) {
 				    Group grp = (Group) iter.next();
 				    if(null != grp) {
@@ -120,8 +132,7 @@ public class LoginBean extends Object
 				    	rid = grp.getGroupId();
 				    	if(grp.getGroupName().startsWith("admin")) {
 				    		KLO_log.warn("LoginBean: User is associated with an admin group");
-				    		isAdmin = true;
-				    		break;
+				    		return Boolean.TRUE;
 				    	}
 				    }
 			  }
@@ -130,19 +141,19 @@ public class LoginBean extends Object
 	  catch(Exception e) {
 		  e.printStackTrace();
 	  }
-	  
-	  KLO_log.warn("LoginBean: isAdmin: " + isAdmin);
-	  return rid;
+
+	  //KLO_log.warn("LoginBean: isAdmin: " + isAdmin);
+	  return Boolean.FALSE;
   }
-  
-  
+
+
   public List getTaskList()
   {
 	  KLO_log.warn("LoginBean: isAdmin: " + isAdmin);
 	  return DataUtils.getTaskList(isAdmin);
   }
 
-  
+
   public String loginAction()
   {
 		String applicationName = "ncireportwriter";
@@ -151,7 +162,7 @@ public class LoginBean extends Object
 		KLO_log.warn("userid: " + userid);
 		KLO_log.warn("password: " + password);
 		isAdmin = false;
-		
+
 		//Get the user credentials from the database and login
 		try {
 			AuthenticationManager authenticationManager = SecurityServiceProvider.getAuthenticationManager(applicationName);
@@ -159,10 +170,24 @@ public class LoginBean extends Object
 			if (loginOK)
 			{
 				// To be implemented -- find roleGroupId
+				/*
 				System.out.println("LoginBean: rolegroupid = " + roleGroupId);
 				long rid = findRoleGroupId();
 				System.out.println("LoginBean: findRoleGroupId returned " + rid);
 				setRoleGroupId(rid);
+				*/
+
+				FacesContext context = FacesContext.getCurrentInstance();
+			    HttpServletRequest request = (HttpServletRequest)context.getExternalContext().getRequest();
+			    HttpSession session = request.getSession(false);
+			    if (session != null) {
+					 request.getSession(true).setAttribute("uid", userid);
+					 request.getSession(true).setAttribute("password", password);
+					 //String username = (String)session.getAttribute(SecurityUtils.J_USERNAME_KEY);
+					 //String password = (String)session.getAttribute(SecurityUtils.J_PASSWORD_KEY);
+				}
+				isAdmin = hasAdminPrivilege();
+				request.getSession(true).setAttribute("isAdmin", isAdmin);
 				return "success";
 			}
 			else
@@ -173,13 +198,17 @@ public class LoginBean extends Object
 		catch (Exception cse) {
 			System.out.println(">>>>>>>>>>>>> ERROR IN LOGIN by <<<<<<<<< " + userid);
 		}
-		
+
 		return "failure";
 	  }
 
 	  public void changeTaskSelection(ValueChangeEvent vce) {
 		 String newValue = (String)vce.getNewValue();
 		 this.selectedTask = newValue;
+	  }
+
+	  public Object getService(String serviceBeanName) throws javax.naming.NamingException {
+		return ctx.lookup(serviceBeanName);
 	  }
 
   }
