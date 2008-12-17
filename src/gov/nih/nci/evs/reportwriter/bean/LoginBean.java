@@ -104,7 +104,6 @@ public class LoginBean extends Object
 	  AuthorizationManager ami = null;
 
 	  try {
-		  System.out.println("LoginBean findRoleGroupId " + this.roleGroupId);
 		  ami = SecurityServiceProvider.getAuthorizationManager("ncireportwriter");
 		  if (ami == null) {
 				throw new Exception();
@@ -112,17 +111,16 @@ public class LoginBean extends Object
 		  ami = (AuthorizationManager) ami;
 
 		  User user = ami.getUser(userid);
-		  System.out.println("LoginBean: User ID: " + user.getUserId() + " User paswd: " + user.getPassword());
+		  KLO_log.warn("LoginBean: User ID: " + user.getUserId() + " User paswd: " + user.getPassword());
 
 		  Set<Group> groups = ami.getGroups(user.getUserId().toString());
 
 		  if(null != groups) {
-			  System.out.println("LoginBean findRoleGroupId: Groups set is not null. User is part of : " + groups.size() + " groups");
+			  KLO_log.warn("LoginBean findRoleGroupId: Groups set is not null. User is part of : " + groups.size() + " groups");
 			  Iterator iter = groups.iterator();
 			  while(iter.hasNext()) {
 				    Group grp = (Group) iter.next();
 				    if(null != grp) {
-				    	System.out.println("GROUP is NOT null");
 				    	rid = grp.getGroupId();
 				    	if(grp.getGroupName().startsWith("admin")) {
 				    		KLO_log.warn("LoginBean: User is associated with an admin group");
