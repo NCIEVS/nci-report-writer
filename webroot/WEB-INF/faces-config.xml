@@ -60,7 +60,7 @@
    
     <navigation-case>
      <from-outcome>retrieve_standard_reports</from-outcome>
-     <to-view-id>/pages/retrieve_report_template.jsp</to-view-id>
+     <to-view-id>/pages/retrieve_standard_report_template.jsp</to-view-id>
     </navigation-case>
    
    </navigation-rule>
