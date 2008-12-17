@@ -62,7 +62,7 @@ public class UserSessionBean extends Object
 	  //long roleGroupId;
 	  String selectedTask = null;
 
-	  private List standardReportTemplateItems = new ArrayList();
+	  private List standardReportTemplateList = new ArrayList();
 	  private String selectedStandardReportTemplate = null;
 
       public void setIsAdmin(Boolean bool_obj)
@@ -90,19 +90,26 @@ public class UserSessionBean extends Object
 		  this.roleGroupId = roleId;
 	  }
 */
+	  
+	  public HttpServletRequest getHttpRequest() {
+		  FacesContext context = FacesContext.getCurrentInstance();
+		  HttpServletRequest request = (HttpServletRequest)context.getExternalContext().getRequest();
+		  
+		  return request;
+	  }
+	  
 	  public List getTaskList()
 	  {
-			FacesContext context = FacesContext.getCurrentInstance();
-			HttpServletRequest request = (HttpServletRequest)context.getExternalContext().getRequest();
+			HttpServletRequest request = getHttpRequest();
 			HttpSession session = request.getSession(false);
+			
 			Boolean isAdmin = null;
 			if (session != null) {
 				 isAdmin = (Boolean) request.getSession(true).getAttribute("isAdmin");
 			}
 
 			List list = DataUtils.getTaskList(isAdmin);
-			if (selectedTask == null)
-			{
+			if (selectedTask == null) {
 				SelectItem item = (SelectItem) list.get(0);
 				selectedTask = item.getLabel();
 			}
@@ -116,8 +123,22 @@ public class UserSessionBean extends Object
 	  }
 
 
-	  public List getStandardReportTemplateItems() {
-		  return standardReportTemplateItems;
+	  public List getStandardReportTemplateList() {
+		    HttpServletRequest request = getHttpRequest();
+			HttpSession session = request.getSession(false);
+			
+			Boolean isAdmin = null;
+			if (session != null) {
+				 isAdmin = (Boolean) request.getSession(true).getAttribute("isAdmin");
+			}
+
+			List list = DataUtils.getStandardReportTemplateList(isAdmin);
+			if (selectedStandardReportTemplate == null) {
+				SelectItem item = (SelectItem) list.get(0);
+				selectedStandardReportTemplate = item.getLabel();
+			}
+
+		  return DataUtils.getStandardReportTemplateList(isAdmin);
 	  }
 
 
