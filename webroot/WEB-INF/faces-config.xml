@@ -52,19 +52,63 @@
   </navigation-rule>
   
   <navigation-rule>
-   <from-view-id>/pages/task.jsp</from-view-id>
-   <navigation-case>
-    <from-outcome>administer_standard_reports</from-outcome>
-    <to-view-id>/pages/standard_report_template.jsp</to-view-id>
-   </navigation-case>
+    <from-view-id>/pages/task.jsp</from-view-id>
+    <navigation-case>
+     <from-outcome>administer_standard_reports</from-outcome>
+     <to-view-id>/pages/standard_report_template.jsp</to-view-id>
+    </navigation-case>
    
     <navigation-case>
-    <from-outcome>retrieve_standard_reports</from-outcome>
-    <to-view-id>/pages/retrieve_report_template.jsp</to-view-id>
-   </navigation-case>
+     <from-outcome>retrieve_standard_reports</from-outcome>
+     <to-view-id>/pages/retrieve_report_template.jsp</to-view-id>
+    </navigation-case>
+   
+   </navigation-rule>
+
+  <navigation-rule>
+    <from-view-id>/pages/standard_report_template.jsp</from-view-id>
+    <navigation-case>
+     <from-outcome>back</from-outcome>
+     <to-view-id>/pages/task.jsp</to-view-id>
+    </navigation-case>
+   
+    <navigation-case>
+     <from-outcome>add</from-outcome>
+     <to-view-id>/pages/add_standard_report_template.jsp</to-view-id>
+    </navigation-case>
+   
+    <navigation-case>
+     <from-outcome>generate</from-outcome>
+     <to-view-id>/pages/standard_report_template.jsp</to-view-id>
+    </navigation-case>
+   
+    <navigation-case>
+     <from-outcome>modify</from-outcome>
+     <to-view-id>/pages/standard_report_template.jsp</to-view-id>
+    </navigation-case>
+   
+    <navigation-case>
+     <from-outcome>review</from-outcome>
+     <to-view-id>/pages/standard_report_template.jsp</to-view-id>
+    </navigation-case>
+   
+   </navigation-rule>
+
+  <navigation-rule>
+    <from-view-id>/pages/add_standard_report_template.jsp</from-view-id>
+    <navigation-case>
+     <from-outcome>back</from-outcome>
+     <to-view-id>/pages/standard_report_template.jsp</to-view-id>
+    </navigation-case>
+   
+    <navigation-case>
+     <from-outcome>add</from-outcome>
+     <to-view-id>/pages/standard_report_template.jsp</to-view-id>
+    </navigation-case>
    
   </navigation-rule>
-     
+
+       
 <managed-bean>
   <managed-bean-name>loginBean</managed-bean-name>
   <managed-bean-class>gov.nih.nci.evs.reportwriter.bean.LoginBean</managed-bean-class>
