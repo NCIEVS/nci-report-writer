@@ -41,9 +41,12 @@ public class DataUtils {
 	Connection con;
 	Statement stmt;
 	ResultSet rs;
+	
+	private List supportedStandardReportTemplateList = new ArrayList();
 	private List supportedStandardReportList = new ArrayList();
 
-    private static List adminTaskList = null;
+	private static List standardReportTemplateList = null;
+	private static List adminTaskList = null;
     private static List userTaskList = null;
 
     public DataUtils()
@@ -53,16 +56,18 @@ public class DataUtils {
 
 		userTaskList = new ArrayList();
 		userTaskList.add(new SelectItem("Retrieve Standard Reports", "Retrieve Standard Reports"));
+		
+		standardReportTemplateList = new ArrayList();
 	}
 
 	public static List getTaskList(Boolean isAdmin) {
+		
 		if (isAdmin == null) return null;
 		else if (isAdmin.equals(Boolean.TRUE))
 		{
 			if (adminTaskList == null)
 			{
 				adminTaskList = new ArrayList();
-				//adminTaskList.add(new SelectItem("Administer Standard Reports", "Administer Standard Reports"));
 				adminTaskList.add(new SelectItem("Administer Standard Reports"));
 			}
 		    return adminTaskList;
@@ -72,11 +77,21 @@ public class DataUtils {
 			if (userTaskList == null)
 			{
 				userTaskList = new ArrayList();
-				//userTaskList.add(new SelectItem("Retrieve Standard Reports", "Retrieve Standard Reports"));
 				userTaskList.add(new SelectItem("Retrieve Standard Reports"));
 			}
 		    return userTaskList;
 		}
+	}
+
+	public static List getStandardReportTemplateList(Boolean isAdmin) {
+		
+		if (isAdmin == null || isAdmin == Boolean.FALSE) 
+			return null;
+		if (standardReportTemplateList == null) {
+				standardReportTemplateList = new ArrayList();
+				standardReportTemplateList.add(new SelectItem("Select a Standard Report Template or Click Add to Create new template"));
+		}
+	    return standardReportTemplateList;
 	}
 
 
