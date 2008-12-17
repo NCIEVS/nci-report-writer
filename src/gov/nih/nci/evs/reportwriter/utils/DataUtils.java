@@ -62,7 +62,8 @@ public class DataUtils {
 			if (adminTaskList == null)
 			{
 				adminTaskList = new ArrayList();
-				adminTaskList.add(new SelectItem("Administer Standard Reports", "Administer Standard Reports"));
+				//adminTaskList.add(new SelectItem("Administer Standard Reports", "Administer Standard Reports"));
+				adminTaskList.add(new SelectItem("Administer Standard Reports"));
 			}
 		    return adminTaskList;
 		}
@@ -71,7 +72,8 @@ public class DataUtils {
 			if (userTaskList == null)
 			{
 				userTaskList = new ArrayList();
-				userTaskList.add(new SelectItem("Retrieve Standard Reports", "Retrieve Standard Reports"));
+				//userTaskList.add(new SelectItem("Retrieve Standard Reports", "Retrieve Standard Reports"));
+				userTaskList.add(new SelectItem("Retrieve Standard Reports"));
 			}
 		    return userTaskList;
 		}

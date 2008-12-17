@@ -1,4 +1,3 @@
-
 <%@ taglib uri="http://java.sun.com/jsf/html" prefix="h" %>
 <%@ taglib uri="http://java.sun.com/jsf/core" prefix="f" %> 
 
@@ -47,7 +46,7 @@
                                     <td>
                          
 <!--_____ main content begins _____-->
-<h:form id="SELECT_TASKForm">
+<h:form id="STANDARD_REPORTSForm">
 	<tr>
 		<td width="100%" valign="top"><br>
 		<!-- target of anchor to skip menus --><a name="content" />
@@ -56,18 +55,23 @@
 					<td>
 						<table summary="" cellpadding="0" cellspacing="0" border="0">
 							<tr>
-								<td class="dataTablePrimaryLabel" height="20">SELECT TASK</td>
+								<td class="dataTablePrimaryLabel" height="20">STANDARD REPORTS</td>
 							</tr>
 							<tr>
 								<td>
 									<table summary="Enter summary of data here" cellpadding="3" cellspacing="0" border="0" class="dataTable" width="100%">
 										<tr class="dataRowLight">
-											<td class="dataCellText">
-											    <h:selectOneMenu id="id" value="#{userSessionBean.selectedTask}" valueChangeListener="#{userSessionBean.taskSelectionChanged}" >
-											        <f:selectItems value="#{userSessionBean.taskList}"/>
-											    </h:selectOneMenu>
-									      	        </td>
-										</tr>
+										
+
+<td class="dataCellText">
+	<h:selectOneMenu id="standardReportTemplateId" value="#{userSessionBean.selectedStandardReportTemplate}">
+	     <f:selectItems value="#{userSessionBean.standardReportTemplateItems}"/>
+	</h:selectOneMenu>
+</td>
+<!--
+											<td class="dataCellText"><SELECT NAME=reports SINGLE><OPTION>Structured Product Labeling (SPL) Report</OPTION><OPTION>FDA-UNII Subset Report (FDA UNII Code)</OPTION><OPTION>Individual Case Safety (ICS) Subset Report</OPTION><OPTION>Center for Devices and Radiological Health (CDRH) Subset Report</OPTION><OPTION>FDA-SPL Country Code Report</OPTION><OPTION>CDISC Subset Report</OPTION></SELECT></td>
+										
+-->										</tr>
 									</table>
 								</td>
 							</tr>
@@ -76,7 +80,12 @@
 									<!-- bottom action buttons begins -->
 									<table cellpadding="4" cellspacing="0" border="0">
 										<tr>
-											<td><h:commandButton id="next" action="#{userSessionBean.performTask}" value="Next" /></td>
+											<td><h:commandButton id="add" action="add" value="Add" /></td>
+											<td><h:commandButton id="modify" action="modify" value="Modify" /></td>
+											<td><h:commandButton id="generate" action="generate" value="Generate" /></td>
+											<td><h:commandButton id="review" action="review" value="Review" /></td>
+											<td><h:commandButton id="delete" action="delete" value="Delete" /></td>
+											<td><h:commandButton id="back" action="back" value="Back" /></td>
 										</tr>
 									</table>
 									<!-- bottom action buttons end -->
@@ -90,7 +99,6 @@
 	</tr>
 </h:form>
 <!--_____ main content ends _____-->
-
 
                                     </td>
                               </tr>
