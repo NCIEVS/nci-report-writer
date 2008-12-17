@@ -55,7 +55,7 @@
 					<td>
 						<table summary="" cellpadding="0" cellspacing="0" border="0">
 							<tr>
-								<td class="dataTablePrimaryLabel" height="20">STANDARD REPORT TEMPLATES</td>
+								<td class="dataTablePrimaryLabel" height="20">ADD A STANDARD REPORT TEMPLATE</td>
 							</tr>
 							<tr>
 								<td>
@@ -64,9 +64,9 @@
 										
 
 <td class="dataCellText">
-	<h:selectOneMenu id="standardReportTemplateId" value="#{userSessionBean.selectedStandardReportTemplate}">
-	     <f:selectItems value="#{userSessionBean.standardReportTemplateList}"/>
-	</h:selectOneMenu>
+	
+	
+	
 </td>
 <!--
 											<td class="dataCellText"><SELECT NAME=reports SINGLE><OPTION>Structured Product Labeling (SPL) Report</OPTION><OPTION>FDA-UNII Subset Report (FDA UNII Code)</OPTION><OPTION>Individual Case Safety (ICS) Subset Report</OPTION><OPTION>Center for Devices and Radiological Health (CDRH) Subset Report</OPTION><OPTION>FDA-SPL Country Code Report</OPTION><OPTION>CDISC Subset Report</OPTION></SELECT></td>
@@ -81,10 +81,6 @@
 									<table cellpadding="4" cellspacing="0" border="0">
 										<tr>
 											<td><h:commandButton id="add" action="add" value="Add" /></td>
-											<td><h:commandButton id="modify" action="modify" value="Modify" /></td>
-											<td><h:commandButton id="generate" action="generate" value="Generate" /></td>
-											<td><h:commandButton id="review" action="review" value="Review" /></td>
-											<td><h:commandButton id="delete" action="delete" value="Delete" /></td>
 											<td><h:commandButton id="back" action="back" value="Back" /></td>
 										</tr>
 									</table>
