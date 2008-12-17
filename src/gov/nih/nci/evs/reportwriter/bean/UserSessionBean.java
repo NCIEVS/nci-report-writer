@@ -80,7 +80,6 @@ public class UserSessionBean extends Object
 		  return this.selectedTask;
 	  }
 
-
 	  public void setSelectedTask(String selectedTask)
 	  {
 		  this.selectedTask = selectedTask;;
