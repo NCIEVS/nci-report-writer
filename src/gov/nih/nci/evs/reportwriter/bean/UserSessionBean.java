@@ -65,6 +65,8 @@ public class UserSessionBean extends Object
 	  private List standardReportTemplateList = new ArrayList();
 	  private String selectedStandardReportTemplate = null;
 
+	  private String rootConceptCode = "";
+
       public void setIsAdmin(Boolean bool_obj)
       {
 		  this.isAdmin = bool_obj;
@@ -162,5 +164,13 @@ public class UserSessionBean extends Object
 		  else if (this.selectedTask.compareTo("Retrieve Standard Reports") == 0) return "retrieve_standard_reports";
 
 		  return null;
+	  }
+
+	  public String getRootConceptCode() {
+		  return this.rootConceptCode;
+	  }
+
+	  public void setRootConceptCode(String rootConceptCode) {
+		  this.rootConceptCode = rootConceptCode;
 	  }
   }
