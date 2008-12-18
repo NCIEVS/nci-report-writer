@@ -65,8 +65,21 @@
 											<td class="dataCellText"><input type="text" name="fieldlabel"></td>
 										</tr>
 										<tr class="dataRowDark">
+										
+											<td class="dataCellText">											
+												<h:outputText value="Property Type" />
+											</td>
+
+											<td class="dataCellText">
+												<h:selectOneMenu id="id" value="#{userSessionBean.selectedPropertyType}">
+												     <f:selectItems value="#{userSessionBean.propertyTypeList}" />
+												</h:selectOneMenu>											
+											</td>											
+										
+										        <!--
 											<td class="dataCellText">Property Type</td>
 											<td class="dataCellText"><input type="text" name="propertytype"></td>
+											-->
 										</tr>
 										<tr class="dataRowLight">
 											<td class="dataCellText">Property Name</td>

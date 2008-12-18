@@ -49,6 +49,8 @@ public class DataUtils {
 	private static List adminTaskList = null;
     private static List userTaskList = null;
 
+    private static List propertyTypeList = null;
+
     public DataUtils()
     {
 		adminTaskList = new ArrayList();
@@ -59,6 +61,21 @@ public class DataUtils {
 
 		standardReportTemplateList = new ArrayList();
 	}
+
+	public static List getPropertyTypeList() {
+
+		if (propertyTypeList == null)
+		{
+			propertyTypeList = new ArrayList();
+			propertyTypeList.add(new SelectItem("Comment"));
+			propertyTypeList.add(new SelectItem("Definition"));
+			propertyTypeList.add(new SelectItem("Generic Property"));
+			propertyTypeList.add(new SelectItem("Instruction"));
+			propertyTypeList.add(new SelectItem("Textual Presentation"));
+		}
+	    return propertyTypeList;
+	}
+
 
 	public static List getTaskList(Boolean isAdmin) {
 

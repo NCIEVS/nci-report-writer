@@ -201,29 +201,26 @@
     <from-view-id>/pages/add_standard_report_template.jsp</from-view-id>
 
     <navigation-case>
-
      <from-outcome>back</from-outcome>
-
      <to-view-id>/pages/standard_report_template.jsp</to-view-id>
-
     </navigation-case>
-
  
      <navigation-case>
- 
-      <from-outcome>next</from-outcome>
- 
-      <to-view-id>/pages/add_standard_report_column.jsp</to-view-id>
- 
+      <from-action>#{userSessionBean.addColumnAction}</from-action> 
+      <from-outcome>add_standard_report_column</from-outcome>
+       <to-view-id>/pages/add_standard_report_column.jsp</to-view-id>
     </navigation-case>
-    
-    
 
   </navigation-rule>
 
  
-
-       
+  <navigation-rule>
+    <from-view-id>/pages/add_standard_report_column.jsp</from-view-id>
+    <navigation-case>
+     <from-outcome>back</from-outcome>
+     <to-view-id>/pages/add_standard_report_template.jsp</to-view-id>
+    </navigation-case>
+  </navigation-rule>     
 
 <managed-bean>
 
