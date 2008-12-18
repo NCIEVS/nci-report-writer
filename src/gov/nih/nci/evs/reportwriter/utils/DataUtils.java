@@ -41,7 +41,7 @@ public class DataUtils {
 	Connection con;
 	Statement stmt;
 	ResultSet rs;
-	
+
 	private List supportedStandardReportTemplateList = new ArrayList();
 	private List supportedStandardReportList = new ArrayList();
 
@@ -56,12 +56,12 @@ public class DataUtils {
 
 		userTaskList = new ArrayList();
 		userTaskList.add(new SelectItem("Retrieve Standard Reports", "Retrieve Standard Reports"));
-		
+
 		standardReportTemplateList = new ArrayList();
 	}
 
 	public static List getTaskList(Boolean isAdmin) {
-		
+
 		if (isAdmin == null) return null;
 		else if (isAdmin.equals(Boolean.TRUE))
 		{
@@ -84,13 +84,24 @@ public class DataUtils {
 	}
 
 	public static List getStandardReportTemplateList(Boolean isAdmin) {
-		
-		if (isAdmin == null || isAdmin == Boolean.FALSE) 
-			return null;
+
+		if (isAdmin == null || isAdmin == Boolean.FALSE) return null;
+
+		/*
 		if (standardReportTemplateList == null) {
 				standardReportTemplateList = new ArrayList();
-				standardReportTemplateList.add(new SelectItem("Select a Standard Report Template or Click Add to Create new template"));
+				// to be implemented
+				// Retrieve report labels from database through DAO
+				//standardReportTemplateList.add(new SelectItem("Select a Standard Report Template or Click Add to Create new template"));
 		}
+		*/
+        /*
+		if (standardReportTemplateList.size() == 0)
+		{
+			standardReportTemplateList.add(new SelectItem("No report template is available.");
+		}
+		*/
+        standardReportTemplateList = new ArrayList();
 	    return standardReportTemplateList;
 	}
 
@@ -99,8 +110,5 @@ public class DataUtils {
 		return supportedStandardReportList;
 	}
 
-	public static String getSupportedOntologies() {
-		return "NCI Thesaurus";
-	}
 
 }
