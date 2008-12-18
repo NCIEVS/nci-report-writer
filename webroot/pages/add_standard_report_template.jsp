@@ -77,13 +77,20 @@
 										<tr class="dataRowDark">
                                                                                 
 										<td class="dataCellText">Root Concept Code</td>
-
+                                                                                <!--
 										<td>
+										
 											<h:inputText
-												id="root_concept_code"
+												id="rootConceptCode"
 												value="#{userDataSession.rootConceptCode}">
 											</h:inputText>
-										</td>											
+										
+										
+										</td>
+										-->
+										
+										<td class="dataCellText"><input type="text" name="rootConceptCode"></td>
+										
 											
 										</tr>
 										<tr class="dataRowLight">
@@ -110,7 +117,7 @@
 											<td><h:commandButton id="save" action="save" value="Save" /></td>
 											<td><h:commandButton id="reset" action="reset" value="Reset" /></td>
 											<td><h:commandButton id="back" action="back" value="Back" /></td>
-											<td><h:commandButton id="next" action="next" value="Next" /></td>
+											<td><h:commandButton id="next" action="#{userSessionBean.addColumnAction}" value="Next" /></td>
 										</tr>
 									</table>
 									<!-- bottom action buttons end -->

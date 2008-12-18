@@ -65,6 +65,9 @@ public class UserSessionBean extends Object
 	  private List standardReportTemplateList = new ArrayList();
 	  private String selectedStandardReportTemplate = null;
 
+	  private String selectedPropertyType = null;
+	  private List propertyTypeList = new ArrayList();
+
 	  private String rootConceptCode = null;
 
       public void setIsAdmin(Boolean bool_obj)
@@ -84,7 +87,17 @@ public class UserSessionBean extends Object
 
 	  public void setSelectedTask(String selectedTask)
 	  {
-		  this.selectedTask = selectedTask;;
+		  this.selectedTask = selectedTask;
+	  }
+
+	  public String getSelectedPropertyType()
+	  {
+		  return this.selectedPropertyType;
+	  }
+
+	  public void setSelectedPropertyType(String selectedPropertyType)
+	  {
+		  this.selectedPropertyType = selectedPropertyType;
 	  }
 
 
@@ -113,6 +126,18 @@ public class UserSessionBean extends Object
 
 		  return DataUtils.getTaskList(isAdmin);
 	  }
+
+
+	  public List getPropertyTypeList()
+	  {
+			List list = DataUtils.getPropertyTypeList();
+			if (selectedPropertyType == null) {
+				SelectItem item = (SelectItem) list.get(0);
+				selectedPropertyType = item.getLabel();
+			}
+			return list;
+	  }
+
 
 	  public void changeTaskSelection(ValueChangeEvent vce) {
 		  String newValue = (String)vce.getNewValue();
@@ -185,6 +210,12 @@ public class UserSessionBean extends Object
 
 		  return null;
 	  }
+
+	  public String addColumnAction() {
+
+		  return "add_standard_report_column";
+	  }
+
 
 	  public String getRootConceptCode() {
 		  return this.rootConceptCode;
