@@ -60,7 +60,7 @@
    
     <navigation-case>
      <from-outcome>retrieve_standard_reports</from-outcome>
-     <to-view-id>/pages/retrieve_standard_report_templates.jsp</to-view-id>
+     <to-view-id>/pages/retrieve_report_template.jsp</to-view-id>
     </navigation-case>
    
    </navigation-rule>
@@ -68,16 +68,16 @@
   <navigation-rule>
     <from-view-id>/pages/standard_report_template.jsp</from-view-id>
     <navigation-case>
-     <from-outcome>back</from-outcome>
-     <to-view-id>/pages/task.jsp</to-view-id>
-    </navigation-case>
-   
-    <navigation-case>
      <from-outcome>add</from-outcome>
      <to-view-id>/pages/add_standard_report_template.jsp</to-view-id>
     </navigation-case>
    
-    <navigation-case>
+   <navigation-case>
+     <from-outcome>back</from-outcome>
+     <to-view-id>/pages/task.jsp</to-view-id>
+    </navigation-case>
+   
+     <navigation-case>
      <from-outcome>generate</from-outcome>
      <to-view-id>/pages/standard_report_template.jsp</to-view-id>
     </navigation-case>
@@ -124,6 +124,12 @@
 <managed-bean>
   <managed-bean-name>userSessionBean</managed-bean-name>
   <managed-bean-class>gov.nih.nci.evs.reportwriter.bean.UserSessionBean</managed-bean-class>
+  <managed-bean-scope>session</managed-bean-scope>
+</managed-bean>
+
+<managed-bean>
+  <managed-bean-name>ontologyBean</managed-bean-name>
+  <managed-bean-class>gov.nih.nci.evs.reportwriter.bean.OntologyBean</managed-bean-class>
   <managed-bean-scope>session</managed-bean-scope>
 </managed-bean>
 
