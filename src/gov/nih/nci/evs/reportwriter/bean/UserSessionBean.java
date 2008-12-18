@@ -65,7 +65,7 @@ public class UserSessionBean extends Object
 	  private List standardReportTemplateList = new ArrayList();
 	  private String selectedStandardReportTemplate = null;
 
-	  private String rootConceptCode = "";
+	  private String rootConceptCode = null;
 
       public void setIsAdmin(Boolean bool_obj)
       {
@@ -86,24 +86,20 @@ public class UserSessionBean extends Object
 	  {
 		  this.selectedTask = selectedTask;;
 	  }
-/*
-	  public void setRoleGroupId(long roleId) {
-		  this.roleGroupId = roleId;
-	  }
-*/
-	  
+
+
 	  public HttpServletRequest getHttpRequest() {
 		  FacesContext context = FacesContext.getCurrentInstance();
 		  HttpServletRequest request = (HttpServletRequest)context.getExternalContext().getRequest();
-		  
+
 		  return request;
 	  }
-	  
+
 	  public List getTaskList()
 	  {
 			HttpServletRequest request = getHttpRequest();
 			HttpSession session = request.getSession(false);
-			
+
 			Boolean isAdmin = null;
 			if (session != null) {
 				 isAdmin = (Boolean) request.getSession(true).getAttribute("isAdmin");
@@ -127,19 +123,34 @@ public class UserSessionBean extends Object
 	  public List getStandardReportTemplateList() {
 		    HttpServletRequest request = getHttpRequest();
 			HttpSession session = request.getSession(false);
-			
+
 			Boolean isAdmin = null;
 			if (session != null) {
 				 isAdmin = (Boolean) request.getSession(true).getAttribute("isAdmin");
 			}
 
 			List list = DataUtils.getStandardReportTemplateList(isAdmin);
-			if (selectedStandardReportTemplate == null) {
+
+			/*
+			if (selectedStandardReportTemplate == null && list != null && list.size() > 0) {
 				SelectItem item = (SelectItem) list.get(0);
 				selectedStandardReportTemplate = item.getLabel();
 			}
+			else
+			{
+				selectedStandardReportTemplate = "";
+			}
+			*/
 
-		  return DataUtils.getStandardReportTemplateList(isAdmin);
+			if (selectedStandardReportTemplate == null)
+			{
+			    if (list != null && list.size() > 0)
+			    {
+					SelectItem item = (SelectItem) list.get(0);
+					selectedStandardReportTemplate = item.getLabel();
+			    }
+			}
+		    return list;
 	  }
 
 
@@ -160,7 +171,16 @@ public class UserSessionBean extends Object
 	  }
 
 	  public String performTask() {
-		  if (this.selectedTask.compareTo("Administer Standard Reports") == 0) return "administer_standard_reports";
+		  if (this.selectedTask.compareTo("Administer Standard Reports") == 0)
+		  {
+			  List list = getStandardReportTemplateList();
+			  if (list == null || list.size() == 0)
+			  {
+				  return "add_standard_report_template";
+			  }
+
+			  return "administer_standard_reports";
+		  }
 		  else if (this.selectedTask.compareTo("Retrieve Standard Reports") == 0) return "retrieve_standard_reports";
 
 		  return null;
@@ -171,6 +191,7 @@ public class UserSessionBean extends Object
 	  }
 
 	  public void setRootConceptCode(String rootConceptCode) {
+		  if (rootConceptCode == null) return;
 		  this.rootConceptCode = rootConceptCode;
 	  }
   }
