@@ -139,7 +139,7 @@ import gov.nih.nci.evs.reportwriter.utils.*;
 
 public class OntologyBean //extends BaseBean
 {
-	List _ontologies = null;
+	private static List _ontologies = null;
 
 	private org.LexGrid.LexBIG.LexBIGService.LexBIGService lbSvc = null;
 	public org.LexGrid.LexBIG.Utility.ConvenienceMethods lbConvMethods = null;
@@ -148,14 +148,16 @@ public class OntologyBean //extends BaseBean
     private HashMap codingSchemeMap = null;
     private Vector codingSchemes = null;
 
-    public String selectedOntology;
+    private String selectedOntology = null;
+
+    //public String selectedOntology;
 
 // Initialization
-
+/*
   protected void init() {
       initializeOntologies();
   }
-
+*/
   public void setSelectedOntology(String selectedOntology)
   {
 	   this.selectedOntology = selectedOntology;
@@ -165,11 +167,24 @@ public class OntologyBean //extends BaseBean
 	  return this.selectedOntology;
   }
 
-
+/*
   protected void initializeOntologies() {
       initializeOntologyList(true);
   }
+*/
 
+      public List getOntologyList()
+      {
+		  _ontologies = DataUtils.getOntologyList();
+		  if (_ontologies != null && _ontologies.size() > 0)
+		  {
+			  SelectItem item = (SelectItem) _ontologies.get(0);
+			  selectedOntology = item.getLabel();
+		  }
+		  return _ontologies;
+	  }
+
+/*
   public List getOntologyList() {
 	  if(_ontologies == null)
 	  {
@@ -240,7 +255,7 @@ public class OntologyBean //extends BaseBean
 		}
 	}
 
-
+*/
 	public HashMap getMetadataProperties(String codingSchemeURN)
 	{
 		HashMap map = new HashMap();
@@ -310,22 +325,27 @@ public class OntologyBean //extends BaseBean
 	}
 
 
+/*
+    protected void initializeOntologyList(boolean initStatistics) {
+		try {
+			 _ontologies = new ArrayList();
+			 if (codingSchemeMap == null)
+			 {
+				 setCodingSchemeMap();
+			 }
 
-  protected void initializeOntologyList(boolean initStatistics) {
-    try {
-		 _ontologies = new ArrayList();
-		 if (codingSchemeMap == null)
-		 {
-			 setCodingSchemeMap();
-		 }
+			 String[] keys = getSortedKeys(codingSchemeMap);
+		}
+		catch (Exception e) {
+			//MessageUtils.addExceptionMessage(e);
+			//LogUtils.log(logger, Level.ERROR, e);
+		}
+   }
+*/
 
-		 String[] keys = getSortedKeys(codingSchemeMap);
-    }
-    catch (Exception e) {
-        //MessageUtils.addExceptionMessage(e);
-        //LogUtils.log(logger, Level.ERROR, e);
-    }
-  }
-
+	  public void ontologySelectionChanged(ValueChangeEvent vce) {
+		  String newValue = (String) vce.getNewValue();
+          setSelectedOntology(newValue);
+	  }
 
 }

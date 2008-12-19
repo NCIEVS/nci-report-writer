@@ -65,7 +65,7 @@ public class RemoteServerUtil {
 	 * Establish a remote LexBIG connection.
 	 *
 	 */
-	static public LexBIGService createLexBIGService()
+	public static LexBIGService createLexBIGService()
     {
 		LexBIGService lbSvc = null;
 		try {

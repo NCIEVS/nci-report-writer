@@ -67,7 +67,7 @@
 											</td>
 
 											<td class="dataCellText">
-												<h:selectOneMenu id="id" value="#{ontologyBean.selectedOntology}">
+												<h:selectOneMenu id="id" value="#{ontologyBean.selectedOntology}" valueChangeListener="#{ontologyBean.ontologySelectionChanged}" >
 												     <f:selectItems value="#{ontologyBean.ontologyList}" />
 												</h:selectOneMenu>											
 											</td>											
