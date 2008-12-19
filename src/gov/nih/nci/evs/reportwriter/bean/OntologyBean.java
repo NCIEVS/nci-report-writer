@@ -312,4 +312,93 @@ public class OntologyBean //extends BaseBean
 		//int id = Integer.parseInt((String) event.getNewValue());
 	}
 
+
+	private String selectedPropertyName = null;
+	private List propertyNameList = null;
+	private Vector<String> propertyNameListData = null;
+
+
+	public List getPropertyNameList() {
+		propertyNameListData = DataUtils.getPropertyNameListData(selectedOntology);
+		propertyNameList = new Vector<String>();
+		for (int i=0; i<propertyNameListData.size(); i++) {
+			String t = (String) propertyNameListData.elementAt(i);
+			propertyNameList.add(new SelectItem(t));
+		}
+		if (propertyNameList != null && propertyNameList.size() > 0) {
+			selectedPropertyName = ((SelectItem) propertyNameList.get(0)).getLabel();
+		}
+		return propertyNameList;
+	}
+
+	public void setSelectedPropertyName(String selectedPropertyName) {
+		this.selectedPropertyName = selectedPropertyName;
+	}
+
+
+	public String getSelectedPropertyName() {
+		return this.selectedPropertyName;
+	}
+
+	public void propertyNameSelectionChanged(ValueChangeEvent event) {
+		if (event.getNewValue() == null) return;
+	}
+
+
+
+	private String selectedRepresentationalForm = null;
+	private List representationalFormList = null;
+	private Vector<String> representationalFormListData = null;
+
+
+	public List getRepresentationalFormList() {
+		representationalFormListData = DataUtils.getRepresentationalFormListData(selectedOntology);
+		representationalFormList = new ArrayList();
+		for (int i=0; i<representationalFormListData.size(); i++) {
+			String t = (String) representationalFormListData.elementAt(i);
+			representationalFormList.add(new SelectItem(t));
+		}
+		if (representationalFormList != null && representationalFormList.size() > 0) {
+			selectedRepresentationalForm = ((SelectItem) representationalFormList.get(0)).getLabel();
+		}
+		return representationalFormList;
+	}
+
+	public void setSelectedRepresentationalForm(String selectedRepresentationalForm) {
+		this.selectedRepresentationalForm = selectedRepresentationalForm;
+	}
+
+
+	public String getSelectedRepresentationalForm() {
+		return this.selectedRepresentationalForm;
+	}
+
+	public void representationalFormSelectionChanged(ValueChangeEvent event) {
+		if (event.getNewValue() == null) return;
+	}
+
+
+	private String selectedDelimiter = null;
+	private List delimiterList = null;
+
+	public List getDelimiterList() {
+		delimiterList = new ArrayList();
+		delimiterList.add(new SelectItem("|"));
+		delimiterList.add(new SelectItem("tab"));
+		return delimiterList;
+	}
+
+	public void setSelectedDelimiter(String selectedDelimiter) {
+		this.selectedDelimiter = selectedDelimiter;
+	}
+
+
+	public String getSelectedDelimiter() {
+		return this.selectedDelimiter;
+	}
+
+	public void delimiterSelectionChanged(ValueChangeEvent event) {
+		if (event.getNewValue() == null) return;
+	}
+
 }
