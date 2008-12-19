@@ -264,11 +264,52 @@ public class OntologyBean //extends BaseBean
 				  }
 				  if (associationList != null && associationList.size() > 0)
 				  {
-					  SelectItem item = (SelectItem) associationList.get(0);
-					  setSelectedAssociation(item.getLabel());
+					  for (int j=0; j<associationList.size(); j++)
+					  {
+						  SelectItem item = (SelectItem) associationList.get(j);
+						  if (item.getLabel().compareTo("Concept_In_Subset") == 0)
+						  {
+						  	  setSelectedAssociation(item.getLabel());
+						  	  break;
+						  }
+
+				      }
 				  }
 		      }
 		  }
 		  return associationList;
 	  }
+
+
+	private String selectedLevel = null;
+	private List levelList = null;
+
+	public List getLevelList() {
+		int max_level = 20;
+		levelList = new ArrayList();
+		for (int i=0; i<=max_level; i++) {
+			String t = Integer.toString(i);
+			levelList.add(new SelectItem(t));
+		}
+		levelList.add(new SelectItem("All"));
+		if (levelList != null && levelList.size() > 0) {
+			selectedLevel = "All";
+		}
+		return levelList;
+	}
+
+	public void setSelectedLevel(String selectedLevel) {
+		this.selectedLevel = selectedLevel;
+	}
+
+
+	public String getSelectedLevel() {
+		return this.selectedLevel;
+	}
+
+	public void levelSelectionChanged(ValueChangeEvent event) {
+		if (event.getNewValue() == null) return;
+		//int id = Integer.parseInt((String) event.getNewValue());
+	}
+
 }
