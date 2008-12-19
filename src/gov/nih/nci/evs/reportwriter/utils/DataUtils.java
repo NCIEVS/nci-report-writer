@@ -432,8 +432,7 @@ public class DataUtils {
 				for (int i=0; i<forms.length; i++)
 				{
 					SupportedRepresentationalForm form = forms[i];
-					//propertyNameListData.add(form.getLocalId());
-					propertyNameListData.add(form.getContent());
+					propertyNameListData.add(form.getLocalId());
 				}
 		    }
 			return propertyNameListData;
@@ -442,6 +441,5 @@ public class DataUtils {
 		}
 		return null;
 	}
-
 
 }
