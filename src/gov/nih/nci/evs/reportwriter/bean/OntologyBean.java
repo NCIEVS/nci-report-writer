@@ -401,4 +401,38 @@ public class OntologyBean //extends BaseBean
 		if (event.getNewValue() == null) return;
 	}
 
+
+	private String selectedPropertyQualifier = null;
+	private List propertyQualifierList = null;
+	private Vector<String> propertyQualifierListData = null;
+
+
+	public List getPropertyQualifierList() {
+		propertyQualifierListData = DataUtils.getPropertyQualifierListData(selectedOntology);
+		propertyQualifierList = new ArrayList();
+		for (int i=0; i<propertyQualifierListData.size(); i++) {
+			String t = (String) propertyQualifierListData.elementAt(i);
+			propertyQualifierList.add(new SelectItem(t));
+		}
+		if (propertyQualifierList != null && propertyQualifierList.size() > 0) {
+			selectedPropertyQualifier = ((SelectItem) propertyQualifierList.get(0)).getLabel();
+		}
+		return propertyQualifierList;
+	}
+
+	public void setSelectedPropertyQualifier(String selectedPropertyQualifier) {
+		this.selectedPropertyQualifier = selectedPropertyQualifier;
+	}
+
+
+	public String getSelectedPropertyQualifier() {
+		return this.selectedPropertyQualifier;
+	}
+
+	public void propertyQualifierSelectionChanged(ValueChangeEvent event) {
+		if (event.getNewValue() == null) return;
+		//int id = Integer.parseInt((String) event.getNewValue());
+	}
+
+
 }

@@ -442,4 +442,39 @@ public class DataUtils {
 		return null;
 	}
 
+
+    public static Vector<String> getPropertyQualifierListData(String key)
+    {
+		String codingSchemeName = (String) csnv2codingSchemeNameMap.get(key);
+		if(codingSchemeName == null) return null;
+		String version = (String) csnv2VersionMap.get(key);
+		if(version == null) return null;
+        return getPropertyQualifierListData(codingSchemeName, version);
+	}
+
+	public static Vector<String> getPropertyQualifierListData(String codingSchemeName, String version) {
+		CodingSchemeVersionOrTag vt = new CodingSchemeVersionOrTag();
+		if (version != null) {
+			vt.setVersion(version);
+		}
+		CodingScheme scheme = null;
+		try {
+			LexBIGService lbSvc = RemoteServerUtil.createLexBIGService();
+			scheme = lbSvc.resolveCodingScheme(codingSchemeName, vt);
+			if (scheme == null) return null;
+			Vector<String> propertyQualifierListData = new Vector<String>();
+            SupportedPropertyQualifier[] qualifiers = scheme.getMappings().getSupportedPropertyQualifier();
+            for (int i=0; i<qualifiers.length; i++)
+            {
+				SupportedPropertyQualifier qualifier = qualifiers[i];
+				propertyQualifierListData.add(qualifier.getLocalId());
+			}
+
+			return propertyQualifierListData;
+		} catch (Exception ex) {
+			ex.printStackTrace();
+		}
+		return null;
+	}
+
 }
