@@ -119,8 +119,23 @@
 											<td class="dataCellText"><input type="radio" name="direction" value="source" checked>Source&nbsp;<input type="radio" name="direction" value="target">Target<br></td>
 										</tr>
 										<tr class="dataRowLight">
+										<!--
 											<td class="dataCellText">Level</td>
 											<td class="dataCellText"><input type="text" name="level"></td>
+										-->
+										
+										
+										<td class="dataCellText">
+											<h:outputText value="Level" />
+										</td>
+
+										<td class="dataCellText">
+											<h:selectOneMenu id="LevelId" value="#{ontologyBean.selectedLevel}" valueChangeListener="#{ontologyBean.levelSelectionChanged}" >
+												<f:selectItems value="#{ontologyBean.levelList}" />
+											</h:selectOneMenu>
+										</td>										
+										
+										
 										</tr>
 										
 									</table>
