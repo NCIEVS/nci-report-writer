@@ -70,6 +70,9 @@ public class UserSessionBean extends Object
 
 	  private String rootConceptCode = null;
 
+	  private String selectedOntology = null;
+
+
       public void setIsAdmin(Boolean bool_obj)
       {
 		  this.isAdmin = bool_obj;
@@ -98,6 +101,16 @@ public class UserSessionBean extends Object
 	  public void setSelectedPropertyType(String selectedPropertyType)
 	  {
 		  this.selectedPropertyType = selectedPropertyType;
+	  }
+
+	  public String getSelectedOntology()
+	  {
+		  return this.selectedOntology;
+	  }
+
+	  public void setSelectedOntology(String selectedOntology)
+	  {
+		  this.selectedOntology = selectedOntology;
 	  }
 
 
@@ -144,6 +157,17 @@ public class UserSessionBean extends Object
 		  selectedTask = newValue;
 	  }
 
+/*
+      public List getOntologyList()
+      {
+		  List list = DataUtils.getOntologyList();
+		  if (list != null && list.size() > 0)
+		  {
+			  SelectItem item = (SelectItem) list.get(0);
+			  selectedOntology = item.getLabel();
+		  }
+	  }
+*/
 
 	  public List getStandardReportTemplateList() {
 		    HttpServletRequest request = getHttpRequest();
@@ -155,18 +179,6 @@ public class UserSessionBean extends Object
 			}
 
 			List list = DataUtils.getStandardReportTemplateList(isAdmin);
-
-			/*
-			if (selectedStandardReportTemplate == null && list != null && list.size() > 0) {
-				SelectItem item = (SelectItem) list.get(0);
-				selectedStandardReportTemplate = item.getLabel();
-			}
-			else
-			{
-				selectedStandardReportTemplate = "";
-			}
-			*/
-
 			if (selectedStandardReportTemplate == null)
 			{
 			    if (list != null && list.size() > 0)
@@ -225,4 +237,6 @@ public class UserSessionBean extends Object
 		  if (rootConceptCode == null) return;
 		  this.rootConceptCode = rootConceptCode;
 	  }
+
+
   }

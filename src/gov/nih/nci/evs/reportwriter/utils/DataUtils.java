@@ -8,6 +8,116 @@ import java.util.List;
 
 import javax.faces.model.SelectItem;
 
+
+import org.LexGrid.LexBIG.LexBIGService.LexBIGServiceMetadata;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Iterator;
+import java.util.Map;
+import java.util.TreeMap;
+
+import javax.faces.application.FacesMessage;
+import javax.faces.context.FacesContext;
+import javax.faces.event.ActionEvent;
+import javax.faces.event.ValueChangeEvent;
+import javax.faces.model.ListDataModel;
+
+import org.apache.log4j.Level;
+import org.apache.log4j.Logger;
+
+import org.LexGrid.LexBIG.DataModel.Collections.CodingSchemeRenderingList;
+import org.LexGrid.LexBIG.DataModel.Collections.LocalNameList;
+import org.LexGrid.LexBIG.DataModel.Collections.ResolvedConceptReferenceList;
+import org.LexGrid.LexBIG.LexBIGService.CodedNodeSet;
+import org.LexGrid.LexBIG.LexBIGService.LexBIGService;
+import org.LexGrid.LexBIG.Impl.LexBIGServiceImpl;
+
+import org.LexGrid.LexBIG.Utility.ObjectToString;
+import org.LexGrid.LexBIG.DataModel.Core.*;
+
+import org.LexGrid.concepts.*;
+import org.LexGrid.codingSchemes.*;
+import org.LexGrid.versions.*;
+
+import org.LexGrid.naming.*;
+import org.LexGrid.LexBIG.Impl.Extensions.GenericExtensions.*;
+import org.LexGrid.LexBIG.LexBIGService.CodedNodeGraph;
+import org.LexGrid.concepts.Instruction;
+
+import org.LexGrid.LexBIG.DataModel.Collections.*;
+
+import org.LexGrid.LexBIG.DataModel.InterfaceElements.CodingSchemeRendering;
+import org.LexGrid.relations.Relations;
+
+import org.LexGrid.LexBIG.DataModel.InterfaceElements.ExtensionDescription;
+import org.LexGrid.LexBIG.DataModel.Collections.ExtensionDescriptionList;
+
+import org.LexGrid.LexBIG.Impl.CodedNodeSetImpl;
+
+import org.LexGrid.LexBIG.Utility.ConvenienceMethods;
+
+import org.LexGrid.LexBIG.Exceptions.LBException;
+
+import org.LexGrid.LexBIG.Utility.Iterators.ResolvedConceptReferencesIterator;
+import org.LexGrid.LexBIG.Utility.Constructors;
+
+
+import org.LexGrid.LexBIG.History.HistoryService;
+import org.LexGrid.LexBIG.Impl.History.NCIThesaurusHistoryServiceImpl;
+
+import org.LexGrid.LexBIG.DataModel.NCIHistory.*;
+import org.LexGrid.LexBIG.DataModel.Collections.NCIChangeEventList;
+
+import org.LexGrid.LexBIG.DataModel.NCIHistory.types.ChangeType;
+
+import org.LexGrid.LexBIG.DataModel.Collections.SystemReleaseList;
+
+
+import org.LexGrid.LexBIG.DataModel.Core.ConceptReference;
+
+import org.LexGrid.versions.SystemRelease;
+
+import org.LexGrid.codingSchemes.CodingSchemeVersion;
+
+import org.LexGrid.LexBIG.DataModel.Collections.CodingSchemeVersionList;
+
+import org.LexGrid.LexBIG.DataModel.Collections.NCIChangeEventList;
+import org.LexGrid.LexBIG.DataModel.NCIHistory.NCIChangeEvent;
+
+import org.LexGrid.naming.SupportedPropertyQualifier;
+
+import org.LexGrid.LexBIG.DataModel.InterfaceElements.ModuleDescription;
+
+import org.LexGrid.codingSchemes.Mappings;
+import org.LexGrid.LexBIG.LexBIGService.CodedNodeSet.PropertyType;
+
+import org.apache.log4j.*;
+import org.apache.log4j.xml.*;
+
+import org.LexGrid.commonTypes.PropertyQualifier;
+
+import org.LexGrid.LexBIG.LexBIGService.CodedNodeSet.SearchDesignationOption;
+import org.LexGrid.LexBIG.Utility.LBConstants.MatchAlgorithms;
+
+import java.util.Vector;
+import java.util.HashMap;
+
+import org.LexGrid.LexBIG.DataModel.Core.types.CodingSchemeVersionStatus;
+
+import java.util.Set;
+
+import java.text.NumberFormat;
+
+
+import javax.faces.model.SelectItem;
+
+import gov.nih.nci.evs.reportwriter.utils.*;
+
+
 /**
   * <!-- LICENSE_TEXT_START -->
 * Copyright 2007 NGIT. This software was developed in conjunction with the National Cancer Institute,
@@ -50,6 +160,15 @@ public class DataUtils {
     private static List userTaskList = null;
 
     private static List propertyTypeList = null;
+
+	private static List _ontologies = null;
+
+	private static org.LexGrid.LexBIG.LexBIGService.LexBIGService lbSvc = null;
+	public org.LexGrid.LexBIG.Utility.ConvenienceMethods lbConvMethods = null;
+    public CodingSchemeRenderingList csrl = null;
+    private Vector supportedCodingSchemes = null;
+    private static HashMap codingSchemeMap = null;
+    private Vector codingSchemes = null;
 
     public DataUtils()
     {
@@ -126,6 +245,73 @@ public class DataUtils {
 	public List getSupportedStandardReports() {
 		return supportedStandardReportList;
 	}
+
+    public static List getOntologyList() {
+	    if(_ontologies == null) setCodingSchemeMap();
+	    return _ontologies;
+    }
+
+
+    private static void setCodingSchemeMap()
+	{
+		_ontologies = new ArrayList();
+		codingSchemeMap = new HashMap();
+        try {
+			LexBIGService lbSvc = RemoteServerUtil.createLexBIGService();
+			CodingSchemeRenderingList csrl = lbSvc.getSupportedCodingSchemes();
+			CodingSchemeRendering[] csrs = csrl.getCodingSchemeRendering();
+			for (int i=0; i<csrs.length; i++)
+			{
+				CodingSchemeRendering csr = csrs[i];
+            	Boolean isActive = csr.getRenderingDetail().getVersionStatus().equals(CodingSchemeVersionStatus.ACTIVE);
+				if (isActive != null && isActive.equals(Boolean.TRUE))
+				{
+					CodingSchemeSummary css = csr.getCodingSchemeSummary();
+					String formalname = css.getFormalName();
+					String representsVersion = css.getRepresentsVersion();
+					CodingSchemeVersionOrTag vt = new CodingSchemeVersionOrTag();
+					vt.setVersion(representsVersion);
+
+					String value = formalname + " (version: " + representsVersion + ")";
+					_ontologies.add(new SelectItem(value, value));
+
+
+					CodingScheme scheme = null;
+					try {
+						scheme = lbSvc.resolveCodingScheme(formalname, vt);
+						if (scheme != null)
+						{
+							codingSchemeMap.put((Object) formalname, (Object) scheme);
+						}
+				    } catch (Exception e) {
+						String urn = css.getCodingSchemeURN();
+						try {
+							scheme = lbSvc.resolveCodingScheme(urn, vt);
+							if (scheme != null)
+							{
+								codingSchemeMap.put((Object) formalname, (Object) scheme);
+							}
+						} catch (Exception ex) {
+
+							String localname = css.getLocalName();
+							try {
+								scheme = lbSvc.resolveCodingScheme(localname, vt);
+								if (scheme != null)
+								{
+									codingSchemeMap.put((Object) formalname, (Object) scheme);
+								}
+							} catch (Exception e2) {
+								//e2.printStackTrace();
+                            }
+					    }
+					}
+			    }
+			}
+	    } catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
 
 
 }
