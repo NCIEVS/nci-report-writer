@@ -157,17 +157,6 @@ public class UserSessionBean extends Object
 		  selectedTask = newValue;
 	  }
 
-/*
-      public List getOntologyList()
-      {
-		  List list = DataUtils.getOntologyList();
-		  if (list != null && list.size() > 0)
-		  {
-			  SelectItem item = (SelectItem) list.get(0);
-			  selectedOntology = item.getLabel();
-		  }
-	  }
-*/
 
 	  public List getStandardReportTemplateList() {
 		    HttpServletRequest request = getHttpRequest();

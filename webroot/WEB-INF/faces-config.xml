@@ -176,7 +176,7 @@
 
      <from-outcome>modify</from-outcome>
 
-     <to-view-id>/pages/standard_report_template.jsp</to-view-id>
+     <to-view-id>/pages/standard_report_column.jsp</to-view-id>
 
     </navigation-case>
 
@@ -220,7 +220,34 @@
      <from-outcome>back</from-outcome>
      <to-view-id>/pages/add_standard_report_template.jsp</to-view-id>
     </navigation-case>
-  </navigation-rule>     
+  </navigation-rule>
+  
+  
+  <navigation-rule>
+    <from-view-id>/pages/standard_report_column.jsp</from-view-id>
+    
+    <navigation-case>
+     <from-outcome>insertbefore</from-outcome>
+     <to-view-id>/pages/add_standard_report_column.jsp</to-view-id>
+    </navigation-case>
+
+    <navigation-case>
+     <from-outcome>insertafter</from-outcome>
+     <to-view-id>/pages/add_standard_report_column.jsp</to-view-id>
+    </navigation-case>
+
+    <navigation-case>
+     <from-outcome>modify</from-outcome>
+     <to-view-id>/pages/add_standard_report_column.jsp</to-view-id>
+    </navigation-case>
+    
+    <navigation-case>
+     <from-outcome>back</from-outcome>
+     <to-view-id>/pages/standard_report_template.jsp</to-view-id>
+    </navigation-case>
+    
+  </navigation-rule>
+  
 
 <managed-bean>
 

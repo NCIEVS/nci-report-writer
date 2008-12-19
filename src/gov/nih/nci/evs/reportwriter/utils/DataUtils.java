@@ -230,21 +230,15 @@ public class DataUtils {
 
 		if (isAdmin == null || isAdmin == Boolean.FALSE) return null;
 
-		/*
-		if (standardReportTemplateList == null) {
-				standardReportTemplateList = new ArrayList();
-				// to be implemented
-				// Retrieve report labels from database through DAO
-				//standardReportTemplateList.add(new SelectItem("Select a Standard Report Template or Click Add to Create new template"));
-		}
-		*/
-        /*
-		if (standardReportTemplateList.size() == 0)
-		{
-			standardReportTemplateList.add(new SelectItem("No report template is available.");
-		}
-		*/
         standardReportTemplateList = new ArrayList();
+
+        // To be modified:
+        standardReportTemplateList.add(new SelectItem("Structured Product Labeling (SPL) Report"));
+        standardReportTemplateList.add(new SelectItem("FDA-UNII Subset Report"));
+        standardReportTemplateList.add(new SelectItem("Individual Case Safety (ICS) Subset Report"));
+        standardReportTemplateList.add(new SelectItem("Center for Devices and Radiological Health (CDRH) Subset Report"));
+        standardReportTemplateList.add(new SelectItem("FDA-SPL Country Code Report"));
+
 	    return standardReportTemplateList;
 	}
 
