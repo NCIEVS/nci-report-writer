@@ -186,9 +186,16 @@ public class OntologyBean //extends BaseBean
 		  _ontologies = DataUtils.getOntologyList();
 		  if (_ontologies != null && _ontologies.size() > 0)
 		  {
-			  SelectItem item = (SelectItem) _ontologies.get(0);
-			  selectedOntology = item.getLabel();
-//??????????????????????????????????????????????????????????????????????????
+			  for (int i=0; i<_ontologies.size(); i++)
+			  {
+				  SelectItem item = (SelectItem) _ontologies.get(i);
+				  String key = item.getLabel();
+				  if (key.indexOf("NCI Thesaurus") != -1 || key.indexOf("NCI_Thesaurus") != -1)
+				  {
+				  	   selectedOntology = key;
+				  	   break;
+				  }
+			  }
 			  associationList = getAssociationList();
 		  }
 		  return _ontologies;

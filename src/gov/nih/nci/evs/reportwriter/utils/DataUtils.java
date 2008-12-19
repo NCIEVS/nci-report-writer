@@ -351,6 +351,7 @@ public class DataUtils {
 
 		CodingScheme scheme = null;
 		try {
+			LexBIGService lbSvc = RemoteServerUtil.createLexBIGService();
 			scheme = lbSvc.resolveCodingScheme(codingSchemeName, vt);
 			if (scheme == null) return null;
 
