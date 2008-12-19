@@ -67,7 +67,7 @@
 											</td>
 
 											<td class="dataCellText">
-												<h:selectOneMenu id="id" value="#{ontologyBean.selectedOntology}" valueChangeListener="#{ontologyBean.ontologySelectionChanged}" >
+												<h:selectOneMenu id="ontologyId" value="#{ontologyBean.selectedOntology}" valueChangeListener="#{ontologyBean.ontologySelectionChanged}" >
 												     <f:selectItems value="#{ontologyBean.ontologyList}" />
 												</h:selectOneMenu>											
 											</td>											
@@ -94,9 +94,26 @@
 											
 										</tr>
 										<tr class="dataRowLight">
+										
+										<!--        
 											<td class="dataCellText">Association Name</td>
 											<td class="dataCellText"><input type="text" name="associationname"></td>
+										-->
+										
+											<td class="dataCellText">											
+												<h:outputText value="Association Name" />
+											</td>
+
+											<td class="dataCellText">
+												<h:selectOneMenu id="associationId" value="#{ontologyBean.selectedAssociation}" >
+												     <f:selectItems value="#{ontologyBean.associationList}" />
+												</h:selectOneMenu>											
+											</td>											
+									
+										
 										</tr>
+										
+										
 										<tr class="dataRowDark">
 											<td class="dataCellText">Direction</td>
 											<td class="dataCellText"><input type="radio" name="direction" value="source" checked>Source&nbsp;<input type="radio" name="direction" value="target">Target<br></td>

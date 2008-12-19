@@ -170,15 +170,22 @@ public class DataUtils {
     private static HashMap codingSchemeMap = null;
     private Vector codingSchemes = null;
 
+    private static HashMap csnv2codingSchemeNameMap = null;
+    private static HashMap csnv2VersionMap = null;
+
+
     public DataUtils()
     {
 		adminTaskList = new ArrayList();
-		adminTaskList.add(new SelectItem("Administer Standard Reports", "Administer Standard Reports"));
+		adminTaskList.add(new SelectItem("Administer Standard Reports"));
 
 		userTaskList = new ArrayList();
-		userTaskList.add(new SelectItem("Retrieve Standard Reports", "Retrieve Standard Reports"));
+		userTaskList.add(new SelectItem("Retrieve Standard Reports"));
 
 		standardReportTemplateList = new ArrayList();
+
+        csnv2codingSchemeNameMap = new HashMap();
+        csnv2VersionMap = new HashMap();
 	}
 
 	public static List getPropertyTypeList() {
@@ -254,8 +261,14 @@ public class DataUtils {
 
     private static void setCodingSchemeMap()
 	{
+		if (_ontologies != null) return;
+
 		_ontologies = new ArrayList();
 		codingSchemeMap = new HashMap();
+		csnv2codingSchemeNameMap = new HashMap();
+		csnv2VersionMap = new HashMap();
+
+
         try {
 			LexBIGService lbSvc = RemoteServerUtil.createLexBIGService();
 			CodingSchemeRenderingList csrl = lbSvc.getSupportedCodingSchemes();
@@ -275,6 +288,8 @@ public class DataUtils {
 					String value = formalname + " (version: " + representsVersion + ")";
 					_ontologies.add(new SelectItem(value, value));
 
+					csnv2codingSchemeNameMap.put(value, formalname);
+					csnv2VersionMap.put(value, representsVersion);
 
 					CodingScheme scheme = null;
 					try {
@@ -282,7 +297,9 @@ public class DataUtils {
 						if (scheme != null)
 						{
 							codingSchemeMap.put((Object) formalname, (Object) scheme);
+
 						}
+
 				    } catch (Exception e) {
 						String urn = css.getCodingSchemeURN();
 						try {
@@ -312,6 +329,43 @@ public class DataUtils {
 		}
 	}
 
+    public static Vector<String> getSupportedAssociationNames(String key)
+    {
+		System.out.println("************************************** getSupportedAssociationNames " + key);
 
+		String codingSchemeName = (String) csnv2codingSchemeNameMap.get(key);
+		if(codingSchemeName == null) return null;
+		String version = (String) csnv2VersionMap.get(key);
+		if(version == null) return null;
+        return getSupportedAssociationNames(codingSchemeName, version);
+	}
+
+
+    public static Vector<String> getSupportedAssociationNames(String codingSchemeName, String version)
+	{
+		CodingSchemeVersionOrTag vt = new CodingSchemeVersionOrTag();
+		if (version != null)
+		{
+			vt.setVersion(version);
+		}
+
+		CodingScheme scheme = null;
+		try {
+			scheme = lbSvc.resolveCodingScheme(codingSchemeName, vt);
+			if (scheme == null) return null;
+
+			Vector<String> v = new Vector<String>();
+			SupportedAssociation[] assos = scheme.getMappings().getSupportedAssociation();
+			for (int i=0; i<assos.length; i++)
+			{
+				 SupportedAssociation sa = (SupportedAssociation) assos[i];
+				 v.add(sa.getLocalId());
+			}
+			return v;
+		} catch (Exception ex) {
+			ex.printStackTrace();
+		}
+		return null;
+	}
 
 }

@@ -150,6 +150,10 @@ public class OntologyBean //extends BaseBean
 
     private String selectedOntology = null;
 
+    private List associationList = null;
+    private String selectedAssociation = null;
+
+
     //public String selectedOntology;
 
 // Initialization
@@ -167,11 +171,15 @@ public class OntologyBean //extends BaseBean
 	  return this.selectedOntology;
   }
 
-/*
-  protected void initializeOntologies() {
-      initializeOntologyList(true);
+  public void setSelectedAssociation(String selectedAssociation)
+  {
+	   this.selectedAssociation = selectedAssociation;
   }
-*/
+
+  public String getSelectedAssociation() {
+	  return this.selectedAssociation;
+  }
+
 
       public List getOntologyList()
       {
@@ -180,118 +188,12 @@ public class OntologyBean //extends BaseBean
 		  {
 			  SelectItem item = (SelectItem) _ontologies.get(0);
 			  selectedOntology = item.getLabel();
+//??????????????????????????????????????????????????????????????????????????
+			  associationList = getAssociationList();
 		  }
 		  return _ontologies;
 	  }
 
-/*
-  public List getOntologyList() {
-	  if(_ontologies == null)
-	  {
-		  setCodingSchemeMap();
-	  }
-
-	  return _ontologies;
-  }
-
-
-    private void setCodingSchemeMap()
-	{
-		_ontologies = new ArrayList();
-		codingSchemeMap = new HashMap();
-        try {
-			lbSvc = RemoteServerUtil.createLexBIGService();
-			CodingSchemeRenderingList csrl = lbSvc.getSupportedCodingSchemes();
-			CodingSchemeRendering[] csrs = csrl.getCodingSchemeRendering();
-			for (int i=0; i<csrs.length; i++)
-			{
-				CodingSchemeRendering csr = csrs[i];
-            	Boolean isActive = csr.getRenderingDetail().getVersionStatus().equals(CodingSchemeVersionStatus.ACTIVE);
-				if (isActive != null && isActive.equals(Boolean.TRUE))
-				{
-					CodingSchemeSummary css = csr.getCodingSchemeSummary();
-					String formalname = css.getFormalName();
-					String representsVersion = css.getRepresentsVersion();
-					CodingSchemeVersionOrTag vt = new CodingSchemeVersionOrTag();
-					vt.setVersion(representsVersion);
-
-					String value = formalname + " (version: " + representsVersion + ")";
-					_ontologies.add(new SelectItem(value, value));
-
-
-					CodingScheme scheme = null;
-					try {
-						scheme = lbSvc.resolveCodingScheme(formalname, vt);
-						if (scheme != null)
-						{
-							codingSchemeMap.put((Object) formalname, (Object) scheme);
-						}
-				    } catch (Exception e) {
-						String urn = css.getCodingSchemeURN();
-						try {
-							scheme = lbSvc.resolveCodingScheme(urn, vt);
-							if (scheme != null)
-							{
-								codingSchemeMap.put((Object) formalname, (Object) scheme);
-							}
-						} catch (Exception ex) {
-
-							String localname = css.getLocalName();
-							try {
-								scheme = lbSvc.resolveCodingScheme(localname, vt);
-								if (scheme != null)
-								{
-									codingSchemeMap.put((Object) formalname, (Object) scheme);
-								}
-							} catch (Exception e2) {
-								//e2.printStackTrace();
-                            }
-					    }
-					}
-			    }
-			}
-	    } catch (Exception e) {
-			e.printStackTrace();
-		}
-	}
-
-*/
-	public HashMap getMetadataProperties(String codingSchemeURN)
-	{
-		HashMap map = new HashMap();
-		try {
-			LexBIGService lbSvc = RemoteServerUtil.createLexBIGService();
-			LexBIGServiceMetadata metadataSvc = lbSvc.getServiceMetadata();
-
-			AbsoluteCodingSchemeVersionReferenceList acsvrl = metadataSvc.listCodingSchemes();
-			AbsoluteCodingSchemeVersionReference[] acdvra =	acsvrl.getAbsoluteCodingSchemeVersionReference();
-			for (int i=0; i<acdvra.length; i++)
-			{
-				AbsoluteCodingSchemeVersionReference acsvr = acdvra[i];
-				String urn = acsvr.getCodingSchemeURN();
-				if (urn.equals(codingSchemeURN))
-				{
-					metadataSvc = metadataSvc.restrictToCodingScheme(acsvr);
-					try {
-						MetadataPropertyList mdpl = metadataSvc.resolve();
-						MetadataProperty[] properties = mdpl.getMetadataProperty();
-						for (int j=0; j<properties.length; j++)
-						{
-							MetadataProperty property = properties[j];
-							map.put(property.getName(), property.getValue());
-						}
-				    } catch (Exception ex) {
-
-					}
-				}
-			}
-
-	    } catch (Exception e) {
-			e.printStackTrace();
-
-		}
-		return map;
-	}
 
 	public static void sortArray(String[] strArray) {
 	    String tmp;
@@ -325,27 +227,41 @@ public class OntologyBean //extends BaseBean
 	}
 
 
-/*
-    protected void initializeOntologyList(boolean initStatistics) {
-		try {
-			 _ontologies = new ArrayList();
-			 if (codingSchemeMap == null)
-			 {
-				 setCodingSchemeMap();
-			 }
-
-			 String[] keys = getSortedKeys(codingSchemeMap);
-		}
-		catch (Exception e) {
-			//MessageUtils.addExceptionMessage(e);
-			//LogUtils.log(logger, Level.ERROR, e);
-		}
-   }
-*/
-
 	  public void ontologySelectionChanged(ValueChangeEvent vce) {
 		  String newValue = (String) vce.getNewValue();
           setSelectedOntology(newValue);
+          associationList = getAssociationList();
 	  }
 
+
+      public List getAssociationList() {
+
+		  if (selectedOntology == null)
+		  {
+			  _ontologies = getOntologyList();
+		  }
+
+		  System.out.println("************************************** selectedOntology " + selectedOntology);
+
+
+		  if (associationList == null)
+		  {
+			  associationList = new ArrayList();
+			  Vector associationNames = DataUtils.getSupportedAssociationNames(selectedOntology);
+			  if (associationNames != null)
+			  {
+				  for (int i=0; i<associationNames.size(); i++)
+				  {
+					  String name = (String) associationNames.elementAt(i);
+					  associationList.add(new SelectItem(name));
+				  }
+				  if (associationList != null && associationList.size() > 0)
+				  {
+					  SelectItem item = (SelectItem) associationList.get(0);
+					  setSelectedAssociation(item.getLabel());
+				  }
+		      }
+		  }
+		  return associationList;
+	  }
 }
