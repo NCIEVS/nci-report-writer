@@ -369,4 +369,79 @@ public class DataUtils {
 		return null;
 	}
 
+
+    public static Vector<String> getPropertyNameListData(String key)
+    {
+		String codingSchemeName = (String) csnv2codingSchemeNameMap.get(key);
+		if(codingSchemeName == null) return null;
+		String version = (String) csnv2VersionMap.get(key);
+		if(version == null) return null;
+        return getPropertyNameListData(codingSchemeName, version);
+	}
+
+
+	public static Vector<String> getPropertyNameListData(String codingSchemeName, String version) {
+		CodingSchemeVersionOrTag vt = new CodingSchemeVersionOrTag();
+		if (version != null) {
+			vt.setVersion(version);
+		}
+		CodingScheme scheme = null;
+		try {
+			LexBIGService lbSvc = RemoteServerUtil.createLexBIGService();
+			scheme = lbSvc.resolveCodingScheme(codingSchemeName, vt);
+			if (scheme == null) return null;
+			Vector<String> propertyNameListData = new Vector<String>();
+            SupportedProperty[] properties = scheme.getMappings().getSupportedProperty();
+            for (int i=0; i<properties.length; i++)
+            {
+				SupportedProperty property = properties[i];
+				propertyNameListData.add(property.getLocalId());
+			}
+			return propertyNameListData;
+		} catch (Exception ex) {
+			ex.printStackTrace();
+		}
+		return null;
+	}
+
+
+    public static Vector<String> getRepresentationalFormListData(String key)
+    {
+		String codingSchemeName = (String) csnv2codingSchemeNameMap.get(key);
+		if(codingSchemeName == null) return null;
+		String version = (String) csnv2VersionMap.get(key);
+		if(version == null) return null;
+        return getRepresentationalFormListData(codingSchemeName, version);
+	}
+
+
+	public static Vector<String> getRepresentationalFormListData(String codingSchemeName, String version) {
+		CodingSchemeVersionOrTag vt = new CodingSchemeVersionOrTag();
+		if (version != null) {
+			vt.setVersion(version);
+		}
+		CodingScheme scheme = null;
+		try {
+			LexBIGService lbSvc = RemoteServerUtil.createLexBIGService();
+			scheme = lbSvc.resolveCodingScheme(codingSchemeName, vt);
+			if (scheme == null) return null;
+			Vector<String> propertyNameListData = new Vector<String>();
+            SupportedRepresentationalForm[] forms = scheme.getMappings().getSupportedRepresentationalForm();
+            if (forms != null)
+            {
+				for (int i=0; i<forms.length; i++)
+				{
+					SupportedRepresentationalForm form = forms[i];
+					//propertyNameListData.add(form.getLocalId());
+					propertyNameListData.add(form.getContent());
+				}
+		    }
+			return propertyNameListData;
+		} catch (Exception ex) {
+			ex.printStackTrace();
+		}
+		return null;
+	}
+
+
 }
