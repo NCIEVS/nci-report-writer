@@ -124,8 +124,22 @@
 											<td class="dataCellText"><input type="text" name="source"></td>
 										</tr>
 										<tr class="dataRowLight">
+										        <!--
 											<td class="dataCellText">Qualifier Name</td>
 											<td class="dataCellText"><input type="text" name="qualifiernname"></td>
+											-->
+											
+											
+											<td class="dataCellText">
+												<h:outputText value="Property Qualifier" />
+											</td>
+
+											<td class="dataCellText">
+												<h:selectOneMenu id="PropertyQualifierId" value="#{ontologyBean.selectedPropertyQualifier}" valueChangeListener="#{ontologyBean.propertyQualifierSelectionChanged}" >
+													<f:selectItems value="#{ontologyBean.propertyQualifierList}" />
+												</h:selectOneMenu>
+											</td>							
+											
 										</tr>
 										<tr class="dataRowDark">
 											<td class="dataCellText">Qualifier Value</td>
