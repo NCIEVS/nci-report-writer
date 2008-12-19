@@ -354,6 +354,7 @@ public class OntologyBean //extends BaseBean
 	public List getRepresentationalFormList() {
 		representationalFormListData = DataUtils.getRepresentationalFormListData(selectedOntology);
 		representationalFormList = new ArrayList();
+		representationalFormList.add(new SelectItem(""));
 		for (int i=0; i<representationalFormListData.size(); i++) {
 			String t = (String) representationalFormListData.elementAt(i);
 			representationalFormList.add(new SelectItem(t));
@@ -410,6 +411,7 @@ public class OntologyBean //extends BaseBean
 	public List getPropertyQualifierList() {
 		propertyQualifierListData = DataUtils.getPropertyQualifierListData(selectedOntology);
 		propertyQualifierList = new ArrayList();
+		propertyQualifierList.add(new SelectItem(""));
 		for (int i=0; i<propertyQualifierListData.size(); i++) {
 			String t = (String) propertyQualifierListData.elementAt(i);
 			propertyQualifierList.add(new SelectItem(t));
@@ -431,7 +433,6 @@ public class OntologyBean //extends BaseBean
 
 	public void propertyQualifierSelectionChanged(ValueChangeEvent event) {
 		if (event.getNewValue() == null) return;
-		//int id = Integer.parseInt((String) event.getNewValue());
 	}
 
 
