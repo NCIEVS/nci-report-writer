@@ -193,6 +193,7 @@ public class DataUtils {
 		if (propertyTypeList == null)
 		{
 			propertyTypeList = new ArrayList();
+			propertyTypeList.add(new SelectItem(""));
 			propertyTypeList.add(new SelectItem("Comment"));
 			propertyTypeList.add(new SelectItem("Definition"));
 			propertyTypeList.add(new SelectItem("Generic Property"));
@@ -325,8 +326,6 @@ public class DataUtils {
 
     public static Vector<String> getSupportedAssociationNames(String key)
     {
-		System.out.println("************************************** getSupportedAssociationNames " + key);
-
 		String codingSchemeName = (String) csnv2codingSchemeNameMap.get(key);
 		if(codingSchemeName == null) return null;
 		String version = (String) csnv2VersionMap.get(key);

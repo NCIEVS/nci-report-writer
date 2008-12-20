@@ -60,6 +60,17 @@
 							<tr>
 								<td>
 									<table summary="Enter summary of data here" cellpadding="3" cellspacing="0" border="0" class="dataTable" width="100%">
+										
+										<td class="dataCellText">
+											<h:outputText value="Data Category" />
+										</td>
+
+										<td class="dataCellText">
+											<h:selectOneMenu id="DataCategoryId" value="#{ontologyBean.selectedDataCategory}" valueChangeListener="#{ontologyBean.dataCategorySelectionChanged}" >
+												<f:selectItems value="#{ontologyBean.dataCategoryList}" />
+											</h:selectOneMenu>
+										</td>									
+										
 										<tr class="dataRowLight">
 											<td class="dataCellText">Field Label</td>
 											<td class="dataCellText"><input type="text" name="fieldlabel"></td>
@@ -100,7 +111,7 @@
 										</tr>
 										<tr class="dataRowDark">
 											<td class="dataCellText">Is Preferred?</td>
-											<td class="dataCellText"><input type="radio" name="preferred" value="yes" checked>Yes&nbsp;<input type="radio" name="preferred" value="no">No<input type="radio" name="preferred" value="na">NA</td>
+											<td class="dataCellText"><input type="radio" name="preferred" value="yes" >Yes&nbsp;<input type="radio" name="preferred" value="no">No<input type="radio" name="preferred" value="na" checked>NA</td>
 										</tr>
 										<tr class="dataRowLight">
 										        <!--
@@ -153,17 +164,22 @@
 										</tr>
 										-->
 										
-										
-										<td class="dataCellText">
-											<h:outputText value="Delimiter" />
-										</td>
+										<tr class="dataRowLight">
+											<td class="dataCellText">
+												<h:outputText value="Delimiter" />
+											</td>
 
-										<td class="dataCellText">
-											<h:selectOneMenu id="DelimiterId" value="#{ontologyBean.selectedDelimiter}" valueChangeListener="#{ontologyBean.delimiterSelectionChanged}" >
-												<f:selectItems value="#{ontologyBean.delimiterList}" />
-											</h:selectOneMenu>
-										</td>										
-										
+											<td class="dataCellText">
+												<h:selectOneMenu id="DelimiterId" value="#{ontologyBean.selectedDelimiter}" valueChangeListener="#{ontologyBean.delimiterSelectionChanged}" >
+													<f:selectItems value="#{ontologyBean.delimiterList}" />
+												</h:selectOneMenu>
+											</td>
+										</tr>
+
+										<tr class="dataRowDark">
+											<td class="dataCellText">Dependent Field (if applicable)</td>
+											<td class="dataCellText"><input type="text" name="dependentfield"></td>
+										</tr>										
 									</table>
 								</td>
 							</tr>
