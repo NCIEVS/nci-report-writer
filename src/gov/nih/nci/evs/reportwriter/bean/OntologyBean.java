@@ -154,14 +154,12 @@ public class OntologyBean //extends BaseBean
     private String selectedAssociation = null;
 
 
-    //public String selectedOntology;
-
 // Initialization
-/*
+
   protected void init() {
-      initializeOntologies();
+      _ontologies = getOntologyList();
   }
-*/
+
   public void setSelectedOntology(String selectedOntology)
   {
 	   this.selectedOntology = selectedOntology;
@@ -321,13 +319,16 @@ public class OntologyBean //extends BaseBean
 	public List getPropertyNameList() {
 		propertyNameListData = DataUtils.getPropertyNameListData(selectedOntology);
 		propertyNameList = new Vector<String>();
-		for (int i=0; i<propertyNameListData.size(); i++) {
-			String t = (String) propertyNameListData.elementAt(i);
-			propertyNameList.add(new SelectItem(t));
-		}
-		if (propertyNameList != null && propertyNameList.size() > 0) {
-			selectedPropertyName = ((SelectItem) propertyNameList.get(0)).getLabel();
-		}
+		propertyNameList.add(new SelectItem(""));
+		if (propertyNameListData != null) {
+			for (int i=0; i<propertyNameListData.size(); i++) {
+				String t = (String) propertyNameListData.elementAt(i);
+				propertyNameList.add(new SelectItem(t));
+			}
+			if (propertyNameList != null && propertyNameList.size() > 0) {
+				selectedPropertyName = ((SelectItem) propertyNameList.get(0)).getLabel();
+			}
+	    }
 		return propertyNameList;
 	}
 
@@ -354,14 +355,16 @@ public class OntologyBean //extends BaseBean
 	public List getRepresentationalFormList() {
 		representationalFormListData = DataUtils.getRepresentationalFormListData(selectedOntology);
 		representationalFormList = new ArrayList();
-		representationalFormList.add(new SelectItem(""));
-		for (int i=0; i<representationalFormListData.size(); i++) {
-			String t = (String) representationalFormListData.elementAt(i);
-			representationalFormList.add(new SelectItem(t));
-		}
-		if (representationalFormList != null && representationalFormList.size() > 0) {
-			selectedRepresentationalForm = ((SelectItem) representationalFormList.get(0)).getLabel();
-		}
+		if (representationalFormListData != null) {
+			representationalFormList.add(new SelectItem(""));
+			for (int i=0; i<representationalFormListData.size(); i++) {
+				String t = (String) representationalFormListData.elementAt(i);
+				representationalFormList.add(new SelectItem(t));
+			}
+			if (representationalFormList != null && representationalFormList.size() > 0) {
+				selectedRepresentationalForm = ((SelectItem) representationalFormList.get(0)).getLabel();
+			}
+	    }
 		return representationalFormList;
 	}
 
@@ -384,6 +387,7 @@ public class OntologyBean //extends BaseBean
 
 	public List getDelimiterList() {
 		delimiterList = new ArrayList();
+		delimiterList.add(new SelectItem(""));
 		delimiterList.add(new SelectItem("|"));
 		delimiterList.add(new SelectItem("tab"));
 		return delimiterList;
@@ -432,6 +436,38 @@ public class OntologyBean //extends BaseBean
 	}
 
 	public void propertyQualifierSelectionChanged(ValueChangeEvent event) {
+		if (event.getNewValue() == null) return;
+	}
+
+
+	private String selectedDataCategory = null;
+	private List dataCategoryList = null;
+	private Vector<String> dataCategoryListData = null;
+
+
+	public List getDataCategoryList() {
+		dataCategoryList = new ArrayList();
+		dataCategoryList.add(new SelectItem("Concept code"));
+		dataCategoryList.add(new SelectItem("Concept property"));
+		dataCategoryList.add(new SelectItem("Parent code"));
+		dataCategoryList.add(new SelectItem("Parent property"));
+
+		if (dataCategoryList != null && dataCategoryList.size() > 0) {
+			selectedDataCategory = ((SelectItem) dataCategoryList.get(0)).getLabel();
+		}
+		return dataCategoryList;
+	}
+
+	public void setSelectedDataCategory(String selectedDataCategory) {
+		this.selectedDataCategory = selectedDataCategory;
+	}
+
+
+	public String getSelectedDataCategory() {
+		return this.selectedDataCategory;
+	}
+
+	public void dataCategorySelectionChanged(ValueChangeEvent event) {
 		if (event.getNewValue() == null) return;
 	}
 
