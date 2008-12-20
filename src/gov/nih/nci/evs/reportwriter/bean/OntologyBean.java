@@ -447,10 +447,12 @@ public class OntologyBean //extends BaseBean
 
 	public List getDataCategoryList() {
 		dataCategoryList = new ArrayList();
-		dataCategoryList.add(new SelectItem("Concept code"));
-		dataCategoryList.add(new SelectItem("Concept property"));
-		dataCategoryList.add(new SelectItem("Parent code"));
-		dataCategoryList.add(new SelectItem("Parent property"));
+		dataCategoryList.add(new SelectItem("Code"));
+		dataCategoryList.add(new SelectItem("Property"));
+		dataCategoryList.add(new SelectItem("Property Qualifier"));
+		dataCategoryList.add(new SelectItem("Parent Code"));
+		dataCategoryList.add(new SelectItem("Parent Property"));
+		dataCategoryList.add(new SelectItem("Parent Property Qualifier"));
 
 		if (dataCategoryList != null && dataCategoryList.size() > 0) {
 			selectedDataCategory = ((SelectItem) dataCategoryList.get(0)).getLabel();

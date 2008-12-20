@@ -196,9 +196,9 @@ public class DataUtils {
 			propertyTypeList.add(new SelectItem(""));
 			propertyTypeList.add(new SelectItem("Comment"));
 			propertyTypeList.add(new SelectItem("Definition"));
-			propertyTypeList.add(new SelectItem("Generic Property"));
+			propertyTypeList.add(new SelectItem("Generic"));
 			propertyTypeList.add(new SelectItem("Instruction"));
-			propertyTypeList.add(new SelectItem("Textual Presentation"));
+			propertyTypeList.add(new SelectItem("Presentation"));
 		}
 	    return propertyTypeList;
 	}
