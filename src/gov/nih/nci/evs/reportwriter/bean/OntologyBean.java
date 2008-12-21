@@ -387,7 +387,7 @@ public class OntologyBean //extends BaseBean
 
 	public List getDelimiterList() {
 		delimiterList = new ArrayList();
-		delimiterList.add(new SelectItem(""));
+		delimiterList.add(new SelectItem(" "));
 		delimiterList.add(new SelectItem("|"));
 		delimiterList.add(new SelectItem("tab"));
 		return delimiterList;
@@ -450,6 +450,11 @@ public class OntologyBean //extends BaseBean
 		dataCategoryList.add(new SelectItem("Code"));
 		dataCategoryList.add(new SelectItem("Property"));
 		dataCategoryList.add(new SelectItem("Property Qualifier"));
+
+		dataCategoryList.add(new SelectItem("Associated Concept Code"));
+		dataCategoryList.add(new SelectItem("Associated Concept Property"));
+		dataCategoryList.add(new SelectItem("Associated Concept Property Qualifier"));
+
 		dataCategoryList.add(new SelectItem("Parent Code"));
 		dataCategoryList.add(new SelectItem("Parent Property"));
 		dataCategoryList.add(new SelectItem("Parent Property Qualifier"));
