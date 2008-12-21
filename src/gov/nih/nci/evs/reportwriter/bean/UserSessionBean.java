@@ -217,6 +217,27 @@ public class UserSessionBean extends Object
 		  return "add_standard_report_column";
 	  }
 
+	  public String modifyColumnAction() {
+          // not functional, to be modifid
+          // need to track coding scheme
+          // need to populate selected report_column data
+		  return "add_standard_report_column";
+	  }
+
+	  public String insertbeforeColumnAction() {
+          // not functional, to be modifid
+          // need to track coding scheme
+          // track selected column number
+		  return "add_standard_report_column";
+	  }
+
+	  public String insertafterColumnAction() {
+          // not functional, to be modifid
+          // need to track coding scheme
+          // track selected column number
+		  return "add_standard_report_column";
+	  }
+
 
 	  public String getRootConceptCode() {
 		  return this.rootConceptCode;
