@@ -60,21 +60,24 @@
 							<tr>
 								<td>
 									<table summary="Enter summary of data here" cellpadding="3" cellspacing="0" border="0" class="dataTable" width="100%">
-										
-										<td class="dataCellText">
-											<h:outputText value="Data Category" />
-										</td>
-
-										<td class="dataCellText">
-											<h:selectOneMenu id="DataCategoryId" value="#{ontologyBean.selectedDataCategory}" valueChangeListener="#{ontologyBean.dataCategorySelectionChanged}" >
-												<f:selectItems value="#{ontologyBean.dataCategoryList}" />
-											</h:selectOneMenu>
-										</td>									
-										
-										<tr class="dataRowLight">
+									
+										<tr class="dataRowDark">
 											<td class="dataCellText">Field Label</td>
 											<td class="dataCellText"><input type="text" name="fieldlabel"></td>
 										</tr>
+
+										<tr class="dataRowLight">
+											<td class="dataCellText">
+												<h:outputText value="Field Type" />
+											</td>
+
+											<td class="dataCellText">
+												<h:selectOneMenu id="DataCategoryId" value="#{ontologyBean.selectedDataCategory}" valueChangeListener="#{ontologyBean.dataCategorySelectionChanged}" >
+													<f:selectItems value="#{ontologyBean.dataCategoryList}" />
+												</h:selectOneMenu>
+											</td>									
+										</tr> 
+										
 										<tr class="dataRowDark">
 										
 											<td class="dataCellText">											
