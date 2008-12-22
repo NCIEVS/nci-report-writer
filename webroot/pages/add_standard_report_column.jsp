@@ -134,8 +134,22 @@
 											
 										</tr>
 										<tr class="dataRowDark">
+										        <!--
 											<td class="dataCellText">Source</td>
 											<td class="dataCellText"><input type="text" name="source"></td>
+											-->
+											
+											<td class="dataCellText">
+												<h:outputText value="Source" />
+											</td>
+
+											<td class="dataCellText">
+												<h:selectOneMenu id="SourceId" value="#{ontologyBean.selectedSource}" valueChangeListener="#{ontologyBean.sourceSelectionChanged}" >
+													<f:selectItems value="#{ontologyBean.sourceList}" />
+												</h:selectOneMenu>
+											</td>					
+											
+											
 										</tr>
 										<tr class="dataRowLight">
 										        <!--

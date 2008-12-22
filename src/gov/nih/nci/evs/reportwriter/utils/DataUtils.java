@@ -470,4 +470,41 @@ public class DataUtils {
 		return null;
 	}
 
+
+    public static Vector<String> getSourceListData(String key)
+    {
+		String codingSchemeName = (String) csnv2codingSchemeNameMap.get(key);
+		if(codingSchemeName == null) return null;
+		String version = (String) csnv2VersionMap.get(key);
+		if(version == null) return null;
+        return getSourceListData(codingSchemeName, version);
+	}
+
+	public static Vector<String> getSourceListData(String codingSchemeName, String version) {
+		CodingSchemeVersionOrTag vt = new CodingSchemeVersionOrTag();
+		if (version != null) {
+			vt.setVersion(version);
+		}
+		CodingScheme scheme = null;
+		try {
+			LexBIGService lbSvc = RemoteServerUtil.createLexBIGService();
+			scheme = lbSvc.resolveCodingScheme(codingSchemeName, vt);
+			if (scheme == null) return null;
+			Vector<String> sourceListData = new Vector<String>();
+
+			//Insert your code here
+            SupportedSource[] sources = scheme.getMappings().getSupportedSource();
+            for (int i=0; i<sources.length; i++)
+            {
+				SupportedSource source = sources[i];
+				sourceListData.add(source.getLocalId());
+			}
+
+			return sourceListData;
+		} catch (Exception ex) {
+			ex.printStackTrace();
+		}
+		return null;
+	}
+
 }
