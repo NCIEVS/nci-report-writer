@@ -248,5 +248,12 @@ public class UserSessionBean extends Object
 		  this.rootConceptCode = rootConceptCode;
 	  }
 
+	  public String selectFileAction() {
+          // pop-up file selection dialog box (JNLP.jar)
+          // update selectedFile
+          // show selectedFile to thre user
+
+		  return "generate_standard_report";
+	  }
 
   }
