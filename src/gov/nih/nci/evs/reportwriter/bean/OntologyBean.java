@@ -478,5 +478,37 @@ public class OntologyBean //extends BaseBean
 		if (event.getNewValue() == null) return;
 	}
 
+	private String selectedSource = null;
+	private List sourceList = null;
+	private Vector<String> sourceListData = null;
+
+
+	public List getSourceList() {
+		sourceListData = DataUtils.getSourceListData(selectedOntology);
+		sourceList = new ArrayList();
+		sourceList.add(new SelectItem(" "));
+		for (int i=0; i<sourceListData.size(); i++) {
+			String t = (String) sourceListData.elementAt(i);
+			sourceList.add(new SelectItem(t));
+		}
+
+		if (sourceList != null && sourceList.size() > 0) {
+			selectedSource = ((SelectItem) sourceList.get(0)).getLabel();
+		}
+		return sourceList;
+	}
+
+	public void setSelectedSource(String selectedSource) {
+		this.selectedSource = selectedSource;
+	}
+
+
+	public String getSelectedSource() {
+		return this.selectedSource;
+	}
+
+	public void sourceSelectionChanged(ValueChangeEvent event) {
+		if (event.getNewValue() == null) return;
+	}
 
 }
