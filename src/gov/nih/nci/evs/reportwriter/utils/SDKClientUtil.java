@@ -18,15 +18,43 @@ import gov.nih.nci.system.query.example.InsertExampleQuery;
 import gov.nih.nci.system.query.example.UpdateExampleQuery;
 import gov.nih.nci.system.applicationservice.ApplicationService;
 import gov.nih.nci.system.applicationservice.WritableApplicationService;
+
+/**
+  * <!-- LICENSE_TEXT_START -->
+* Copyright 2007 NGIT. This software was developed in conjunction with the National Cancer Institute,
+* and so to the extent government employees are co-authors, any rights in such works shall be subject to Title 17 of the United States Code, section 105.
+* Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:
+* 1. Redistributions of source code must retain the above copyright notice, this list of conditions and the disclaimer of Article 3, below. Redistributions
+* in binary form must reproduce the above copyright notice, this list of conditions and the following disclaimer in the documentation and/or other
+* materials provided with the distribution.
+* 2. The end-user documentation included with the redistribution, if any, must include the following acknowledgment:
+* "This product includes software developed by NGIT and the National Cancer Institute."
+* If no such end-user documentation is to be included, this acknowledgment shall appear in the software itself,
+* wherever such third-party acknowledgments normally appear.
+* 3. The names "The National Cancer Institute", "NCI" and "NGIT" must not be used to endorse or promote products derived from this software.
+* 4. This license does not authorize the incorporation of this software into any third party proprietary programs. This license does not authorize
+* the recipient to use any trademarks owned by either NCI or NGIT
+* 5. THIS SOFTWARE IS PROVIDED "AS IS," AND ANY EXPRESSED OR IMPLIED WARRANTIES, (INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
+* MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE) ARE DISCLAIMED. IN NO EVENT SHALL THE NATIONAL CANCER INSTITUTE,
+* NGIT, OR THEIR AFFILIATES BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
+* PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY,
+* WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+  * <!-- LICENSE_TEXT_END -->
+  */
+
+/**
+  * @author EVS Team
+  * @version 1.0
+ */
 
 public class SDKClientUtil {
 
-	public SDKClientUtil() { 
+	public SDKClientUtil() {
 
 
 	}
 
-	private ReportUser createReportUser( 
+	private ReportUser createReportUser(
 		String userID,
 		String suffix,
 		String firstName,
@@ -193,7 +221,7 @@ public class SDKClientUtil {
 	}
 
 
-	private UserRole createUserRole( 
+	private UserRole createUserRole(
 		int roleID,
 		String roleDescription) {
 
@@ -256,7 +284,7 @@ public class SDKClientUtil {
 	}
 
 
-	private UserAccountStatus createUserAccountStatus( 
+	private UserAccountStatus createUserAccountStatus(
 		int statusID,
 		String statusDescription) {
 
@@ -319,7 +347,7 @@ public class SDKClientUtil {
 	}
 
 
-	private SupportedStandardReport createSupportedStandardReport( 
+	private SupportedStandardReport createSupportedStandardReport(
 		int reportID,
 		String reportLabel) {
 
@@ -382,7 +410,7 @@ public class SDKClientUtil {
 	}
 
 
-	private ReportStatus createReportStatus( 
+	private ReportStatus createReportStatus(
 		int ID,
 		String label) {
 
@@ -445,7 +473,7 @@ public class SDKClientUtil {
 	}
 
 
-	private Report createReport( 
+	private Report createReport(
 		int ID,
 		String label,
 		int statusID,
@@ -548,7 +576,7 @@ public class SDKClientUtil {
 	}
 
 
-	private ReportColumn createReportColumn( 
+	private ReportColumn createReportColumn(
 		int id,
 		String label,
 		String fieldId,
@@ -683,7 +711,7 @@ public class SDKClientUtil {
 	}
 
 
-	private StandardReportTemplate createStandardReportTemplate( 
+	private StandardReportTemplate createStandardReportTemplate(
 		int id,
 		String label,
 		String rootConceptCode,
@@ -786,7 +814,7 @@ public class SDKClientUtil {
 	}
 
 
-	private SupportedFormat createSupportedFormat( 
+	private SupportedFormat createSupportedFormat(
 		String name,
 		String description) {
 
@@ -849,7 +877,7 @@ public class SDKClientUtil {
 	}
 
 
-	private SupportedCodingScheme createSupportedCodingScheme( 
+	private SupportedCodingScheme createSupportedCodingScheme(
 		int ID,
 		String name,
 		String version) {
@@ -919,103 +947,8 @@ public class SDKClientUtil {
 		SDKQueryResult queryResult = appService.executeQuery(query);
 	}
 
-
-	private ConceptAssociation createConceptAssociation( 
-		int codingSchemeId,
-		String associationName,
-		String sourceConceptCode,
-		String targetConceptCode,
-		String sourceConceptName,
-		String targetConceptName) {
-
-		ConceptAssociation conceptAssociation = new ConceptAssociation();
-		conceptAssociation.setCodingSchemeId(codingSchemeId);
-		conceptAssociation.setAssociationName(associationName);
-		conceptAssociation.setSourceConceptCode(sourceConceptCode);
-		conceptAssociation.setTargetConceptCode(targetConceptCode);
-		conceptAssociation.setSourceConceptName(sourceConceptName);
-		conceptAssociation.setTargetConceptName(targetConceptName);
-		return conceptAssociation;
-	}
-
-	public void insertConceptAssociation(
-		int codingSchemeId,
-		String associationName,
-		String sourceConceptCode,
-		String targetConceptCode,
-		String sourceConceptName,
-		String targetConceptName) throws Exception {
-
-		ConceptAssociation conceptAssociation = createConceptAssociation(
-			codingSchemeId,
-			associationName,
-			sourceConceptCode,
-			targetConceptCode,
-			sourceConceptName,
-			targetConceptName);
-		insertConceptAssociation(conceptAssociation);
-	}
-
-	public void updateConceptAssociation(
-		int codingSchemeId,
-		String associationName,
-		String sourceConceptCode,
-		String targetConceptCode,
-		String sourceConceptName,
-		String targetConceptName) throws Exception {
-
-		ConceptAssociation conceptAssociation = createConceptAssociation(
-			codingSchemeId,
-			associationName,
-			sourceConceptCode,
-			targetConceptCode,
-			sourceConceptName,
-			targetConceptName);
-		updateConceptAssociation(conceptAssociation);
-	}
-
-	public void deleteConceptAssociation(
-		int codingSchemeId,
-		String associationName,
-		String sourceConceptCode,
-		String targetConceptCode,
-		String sourceConceptName,
-		String targetConceptName) throws Exception {
-
-		ConceptAssociation conceptAssociation = createConceptAssociation(
-			codingSchemeId,
-			associationName,
-			sourceConceptCode,
-			targetConceptCode,
-			sourceConceptName,
-			targetConceptName);
-		deleteConceptAssociation(conceptAssociation);
-	}
-
-	public void insertConceptAssociation(ConceptAssociation conceptAssociation) throws Exception {
-		WritableApplicationService appService = (WritableApplicationService)ApplicationServiceProvider.getApplicationService();
-		InsertExampleQuery query = new InsertExampleQuery(conceptAssociation);
-		SDKQueryResult queryResult = appService.executeQuery(query);
-		//conceptAssociation = (ConceptAssociation)queryResult.getObjectResult();
-	}
-
-
-	public void updateConceptAssociation(ConceptAssociation conceptAssociation) throws Exception {
-		WritableApplicationService appService = (WritableApplicationService)ApplicationServiceProvider.getApplicationService();
-		UpdateExampleQuery query = new UpdateExampleQuery(conceptAssociation);
-		SDKQueryResult queryResult = appService.executeQuery(query);
-		//conceptAssociation = (ConceptAssociation)queryResult.getObjectResult();
-	}
-
-
-	public void deleteConceptAssociation(ConceptAssociation conceptAssociation) throws Exception {
-		WritableApplicationService appService = (WritableApplicationService)ApplicationServiceProvider.getApplicationService();
-		DeleteExampleQuery query = new DeleteExampleQuery(conceptAssociation);
-		SDKQueryResult queryResult = appService.executeQuery(query);
-	}
-
-
-	private RootConcept createRootConcept( 
+    // To be deleted. No need to have a RootConcept table.
+	private RootConcept createRootConcept(
 		int reportID,
 		int codingSchemeId,
 		String conceptCode,
