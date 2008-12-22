@@ -228,16 +228,19 @@
     
     <navigation-case>
      <from-outcome>insertbefore</from-outcome>
+     <from-action>#{userSessionBean.insertbeforeColumnAction}</from-action>
      <to-view-id>/pages/add_standard_report_column.jsp</to-view-id>
     </navigation-case>
 
     <navigation-case>
      <from-outcome>insertafter</from-outcome>
+     <from-action>#{userSessionBean.insertafterColumnAction}</from-action>
      <to-view-id>/pages/add_standard_report_column.jsp</to-view-id>
     </navigation-case>
 
     <navigation-case>
      <from-outcome>modify</from-outcome>
+     <from-action>#{userSessionBean.modifyColumnAction}</from-action>
      <to-view-id>/pages/add_standard_report_column.jsp</to-view-id>
     </navigation-case>
     

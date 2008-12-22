@@ -64,31 +64,226 @@
 											<th class="dataTableHeader" scope="col" align="center">Data Field</th>
 											<th class="dataTableHeader" scope="col" align="center">Field No</th>
 											<th class="dataTableHeader" scope="col" align="center">Field Label</th>
+											<th class="dataTableHeader" scope="col" align="center">Field Type</th>
 											<th class="dataTableHeader" scope="col" align="center">Property Type</th>
 											<th class="dataTableHeader" scope="col" align="center">Property Name</th>
 											<th class="dataTableHeader" scope="col" align="center">Is Preferred?</th>
 											<th class="dataTableHeader" scope="col" align="center">Representational Form</th>
 											<th class="dataTableHeader" scope="col" align="center">Source</th>
-											<th class="dataTableHeader" scope="col" align="center">Property Qualifier</th>
+											<th class="dataTableHeader" scope="col" align="center">Qualifier Name</th>
 											<th class="dataTableHeader" scope="col" align="center">Qualifier Value</th>
 											<th class="dataTableHeader" scope="col" align="center">Delimiter</th>
 										</tr>
-										
-										<!-- need to use do loop to create this section -->
 										<tr class="dataRowLight">
 											<td class="dataCellText"><input type="radio" name="selectedcolumn" value="1"></td>
 											<td class="dataCellNumerical">1</td>
-											<td class="dataCellText">Source</td>
+											<td class="dataCellText">Contributing Source</td>
+											<td class="dataCellText">Property</td>
+											<td class="dataCellText">Generic</td>
+											<td class="dataCellText">Contributing Source</td>
+											<td class="dataCellText">null</td>
+											<td class="dataCellText">null</td>
+											<td class="dataCellText">null</td>
+											<td class="dataCellText">null</td>
+											<td class="dataCellText">null</td>
+											<td class="dataCellText">null</td>
 										</tr>
 										<tr class="dataRowDark">
 											<td class="dataCellText"><input type="radio" name="selectedcolumn" value="2"></td>
 											<td class="dataCellNumerical">2</td>
 											<td class="dataCellText">Subset Code</td>
+											<td class="dataCellText">Associated Concept Code</td>
+											<td class="dataCellText">null</td>
+											<td class="dataCellText">null</td>
+											<td class="dataCellText">null</td>
+											<td class="dataCellText">null</td>
+											<td class="dataCellText">null</td>
+											<td class="dataCellText">null</td>
+											<td class="dataCellText">null</td>
+											<td class="dataCellText">null</td>
 										</tr>
 										<tr class="dataRowLight">
 											<td class="dataCellText"><input type="radio" name="selectedcolumn" value="3"></td>
 											<td class="dataCellNumerical">3</td>
 											<td class="dataCellText">Subset Name</td>
+											<td class="dataCellText">Associated Concept Property</td>
+											<td class="dataCellText">Presentation</td>
+											<td class="dataCellText">Preferred_Name</td>
+											<td class="dataCellText">null</td>
+											<td class="dataCellText">null</td>
+											<td class="dataCellText">null</td>
+											<td class="dataCellText">null</td>
+											<td class="dataCellText">null</td>
+											<td class="dataCellText">null</td>
+										</tr>
+										<tr class="dataRowDark">
+											<td class="dataCellText"><input type="radio" name="selectedcolumn" value="4"></td>
+											<td class="dataCellNumerical">4</td>
+											<td class="dataCellText">Concept Code</td>
+											<td class="dataCellText">Code</td>
+											<td class="dataCellText">null</td>
+											<td class="dataCellText">null</td>
+											<td class="dataCellText">null</td>
+											<td class="dataCellText">null</td>
+											<td class="dataCellText">null</td>
+											<td class="dataCellText">null</td>
+											<td class="dataCellText">null</td>
+											<td class="dataCellText">null</td>
+										</tr>
+										<tr class="dataRowLight">
+											<td class="dataCellText"><input type="radio" name="selectedcolumn" value="5"></td>
+											<td class="dataCellNumerical">5</td>
+											<td class="dataCellText">Source Code</td>
+											<td class="dataCellText">Property Qualifier</td>
+											<td class="dataCellText">Presentation</td>
+											<td class="dataCellText">FULL_SYN</td>
+											<td class="dataCellText">null</td>
+											<td class="dataCellText">PT</td>
+											<td class="dataCellText">FDA</td>
+											<td class="dataCellText">source-code</td>
+											<td class="dataCellText">null</td>
+											<td class="dataCellText">null</td>
+										</tr>
+										<tr class="dataRowDark">
+											<td class="dataCellText"><input type="radio" name="selectedcolumn" value="6"></td>
+											<td class="dataCellNumerical">6</td>
+											<td class="dataCellText">Source PT</td>
+											<td class="dataCellText">Property</td>
+											<td class="dataCellText">Presentation</td>
+											<td class="dataCellText">FULL_SYN</td>
+											<td class="dataCellText">null</td>
+											<td class="dataCellText">PT</td>
+											<td class="dataCellText">FDA</td>
+											<td class="dataCellText">null</td>
+											<td class="dataCellText">null</td>
+											<td class="dataCellText">null</td>
+											
+										</tr>
+										<tr class="dataRowLight">
+											<td class="dataCellText"><input type="radio" name="selectedcolumn" value="7"></td>
+											<td class="dataCellNumerical">7</td>
+											<td class="dataCellText">Source Synonym(s)</td>
+											<td class="dataCellText">Property</td>
+											<td class="dataCellText">Presentation</td>
+											<td class="dataCellText">FULL_SYN</td>
+											<td class="dataCellText">null</td>
+											<td class="dataCellText">SY</td>
+											<td class="dataCellText">FDA</td>
+											<td class="dataCellText">null</td>
+											<td class="dataCellText">null</td>
+											<td class="dataCellText">tab</td>
+										</tr>
+										<tr class="dataRowDark">
+											<td class="dataCellText"><input type="radio" name="selectedcolumn" value="8"></td>
+											<td class="dataCellNumerical">8</td>
+											<td class="dataCellText">Source Definition</td>
+											<td class="dataCellText">Property</td>
+											<td class="dataCellText">Definition</td>
+											<td class="dataCellText">ALT_DEFINITION</td>
+											<td class="dataCellText">null</td>
+											<td class="dataCellText">null</td>
+											<td class="dataCellText">FDA</td>
+											<td class="dataCellText">null</td>
+											<td class="dataCellText">null</td>
+											<td class="dataCellText">null</td>
+										</tr>
+										<tr class="dataRowLight">
+											<td class="dataCellText"><input type="radio" name="selectedcolumn" value="9"></td>
+											<td class="dataCellNumerical">9</td>
+											<td class="dataCellText">NCI Definition</td>
+											<td class="dataCellText">Property</td>
+											<td class="dataCellText">Definition</td>
+											<td class="dataCellText">DEFINITION</td>
+											<td class="dataCellText">null</td>
+											<td class="dataCellText">null</td>
+											<td class="dataCellText">NCI</td>
+											<td class="dataCellText">null</td>
+											<td class="dataCellText">null</td>
+											<td class="dataCellText">null</td>
+										</tr>
+										<tr class="dataRowDark">
+											<td class="dataCellText"><input type="radio" name="selectedcolumn" value="10"></td>
+											<td class="dataCellNumerical">10</td>
+											<td class="dataCellText">Parent Code</td>
+											<td class="dataCellText">Parent Code</td>
+											<td class="dataCellText">null</td>
+											<td class="dataCellText">null</td>
+											<td class="dataCellText">null</td>
+											<td class="dataCellText">null</td>
+											<td class="dataCellText">null</td>
+											<td class="dataCellText">null</td>
+											<td class="dataCellText">null</td>
+											<td class="dataCellText">null</td>
+										</tr>
+										<tr class="dataRowLight">
+											<td class="dataCellText"><input type="radio" name="selectedcolumn" value="11"></td>
+											<td class="dataCellNumerical">11</td>
+											<td class="dataCellText">Parent Source Code</td>
+											<td class="dataCellText">Parent Property Qualifier</td>
+											<td class="dataCellText">Presentation</td>
+											<td class="dataCellText">FULL_SYN</td>
+											<td class="dataCellText">null</td>
+											<td class="dataCellText">PT</td>
+											<td class="dataCellText">FDA</td>
+											<td class="dataCellText">source-code</td>
+											<td class="dataCellText">null</td>
+											<td class="dataCellText">null</td>
+										</tr>
+										<tr class="dataRowDark">
+											<td class="dataCellText"><input type="radio" name="selectedcolumn" value="12"></td>
+											<td class="dataCellNumerical">12</td>
+											<td class="dataCellText">Parent Source PT</td>
+											<td class="dataCellText">Parent Property</td>
+											<td class="dataCellText">Presentation</td>
+											<td class="dataCellText">FULL_SYN</td>
+											<td class="dataCellText">null</td>
+											<td class="dataCellText">PT</td>
+											<td class="dataCellText">FDA</td>
+											<td class="dataCellText">null</td>
+											<td class="dataCellText">null</td>
+											<td class="dataCellText">null</td>
+										</tr>
+										<tr class="dataRowLight">
+											<td class="dataCellText"><input type="radio" name="selectedcolumn" value="13"></td>
+											<td class="dataCellNumerical">13</td>
+											<td class="dataCellText">Parent NCI PT</td>
+											<td class="dataCellText">Parent Property</td>
+											<td class="dataCellText">Presentation</td>
+											<td class="dataCellText">FULL_SYN</td>
+											<td class="dataCellText">null</td>
+											<td class="dataCellText">PT</td>
+											<td class="dataCellText">NCI</td>
+											<td class="dataCellText">null</td>
+											<td class="dataCellText">null</td>
+											<td class="dataCellText">null</td>
+										</tr>
+										<tr class="dataRowDark">
+											<td class="dataCellText"><input type="radio" name="selectedcolumn" value="14"></td>
+											<td class="dataCellNumerical">14</td>
+											<td class="dataCellText">2nd Parent Code</td>
+											<td class="dataCellText">Parent Code</td>
+											<td class="dataCellText">null</td>
+											<td class="dataCellText">null</td>
+											<td class="dataCellText">null</td>
+											<td class="dataCellText">null</td>
+											<td class="dataCellText">null</td>
+											<td class="dataCellText">null</td>
+											<td class="dataCellText">null</td>
+											<td class="dataCellText">null</td>
+										</tr>
+										<tr class="dataRowLight">
+											<td class="dataCellText"><input type="radio" name="selectedcolumn" value="15"></td>
+											<td class="dataCellNumerical">15</td>
+											<td class="dataCellText">2nd Parent NCI PT</td>
+											<td class="dataCellText">Parent Property</td>
+											<td class="dataCellText">Presentation</td>
+											<td class="dataCellText">FULL_SYN</td>
+											<td class="dataCellText">null</td>
+											<td class="dataCellText">PT</td>
+											<td class="dataCellText">NCI</td>
+											<td class="dataCellText">null</td>
+											<td class="dataCellText">null</td>
+											<td class="dataCellText">null</td>
 										</tr>
 									</table>
 								</td>
@@ -148,3 +343,4 @@
 </f:view>
 </body>
 </html>
+

@@ -46,6 +46,13 @@
 		<pathelement path ="${webinf.dir}/lib/asm-1.5.3.jar"/>
 		<pathelement path ="${webinf.dir}/lib/antlr-2.7.6.jar"/>
 		<pathelement path ="${webinf.dir}/lib/acegi-security-1.0.3.jar"/>
+
+		<pathelement path ="${webinf.dir}/lib/sdk-client-framework.jar"/>
+		<pathelement path ="${webinf.dir}/lib/sdk-core.jar"/>
+		
+		<pathelement path ="${webinf.dir}/lib/sdk-writable-client-framework.jar"/>
+		<pathelement path ="${webinf.dir}/lib/sdk-writable-core.jar"/>
+		
 		<pathelement path ="${webinf.dir}/classes"/>
 		<pathelement path ="${classpath.external}"/>
 		<pathelement path ="${classpath}"/>
