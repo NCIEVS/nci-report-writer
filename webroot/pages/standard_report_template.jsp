@@ -10,6 +10,20 @@
 <title>Home</title>
 <link rel="stylesheet" type="text/css" href="<%= request.getContextPath() %>/css/styleSheet.css" />
 <script src="script.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+<!--
+function confirmation() {
+	var answer = confirm("Delete selected report permanently?")
+	if (answer){
+		window.location = "<%= request.getContextPath() %>/pages/delete_standard_report.jsf";
+	}
+
+}
+//-->
+</script>
+
+
 </head>
 <body>
 
@@ -84,7 +98,7 @@
 											<td><h:commandButton id="modify" action="modify" value="Modify" /></td>
 											<td><h:commandButton id="generate" action="generate" value="Generate" /></td>
 											<td><h:commandButton id="review" action="review" value="Review" /></td>
-											<td><h:commandButton id="delete" action="delete" value="Delete" /></td>
+											<td><h:commandButton id="delete" action="delete" onclick="confirmation()" value="Delete" /></td>
 											<td><h:commandButton id="back" action="back" value="Back" /></td>
 										</tr>
 									</table>
