@@ -111,19 +111,19 @@ public class LoginBean extends Object
 		  ami = (AuthorizationManager) ami;
 
 		  User user = ami.getUser(userid);
-		  KLO_log.warn("LoginBean: User ID: " + user.getUserId() + " User paswd: " + user.getPassword());
+		  //KLO_log.warn("LoginBean: User ID: " + user.getUserId() + " User paswd: " + user.getPassword());
 
 		  Set<Group> groups = ami.getGroups(user.getUserId().toString());
 
 		  if(null != groups) {
-			  KLO_log.warn("LoginBean findRoleGroupId: Groups set is not null. User is part of : " + groups.size() + " groups");
+			  //KLO_log.warn("LoginBean findRoleGroupId: Groups set is not null. User is part of : " + groups.size() + " groups");
 			  Iterator iter = groups.iterator();
 			  while(iter.hasNext()) {
 				    Group grp = (Group) iter.next();
 				    if(null != grp) {
 				    	rid = grp.getGroupId();
 				    	if(grp.getGroupName().startsWith("admin")) {
-				    		KLO_log.warn("LoginBean: User is associated with an admin group");
+				    		//KLO_log.warn("LoginBean: User is associated with an admin group");
 				    		return Boolean.TRUE;
 				    	}
 				    }
@@ -140,7 +140,7 @@ public class LoginBean extends Object
 
   public List getTaskList()
   {
-	  KLO_log.warn("LoginBean: isAdmin: " + isAdmin);
+	  //KLO_log.warn("LoginBean: isAdmin: " + isAdmin);
 	  return DataUtils.getTaskList(isAdmin);
   }
 
@@ -149,9 +149,9 @@ public class LoginBean extends Object
   {
 		String applicationName = "ncireportwriter";
 
-		KLO_log.warn("applicationName: " + applicationName);
-		KLO_log.warn("userid: " + userid);
-		KLO_log.warn("password: " + password);
+		//KLO_log.warn("applicationName: " + applicationName);
+		//KLO_log.warn("userid: " + userid);
+		//KLO_log.warn("password: " + password);
 		isAdmin = false;
 
 		//Get the user credentials from the database and login

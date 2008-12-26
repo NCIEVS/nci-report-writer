@@ -65,7 +65,7 @@
 										
 
 <td class="dataCellText">
-	<h:selectOneMenu id="standardReportTemplateId" value="#{userSessionBean.selectedStandardReportTemplate}">
+	<h:selectOneMenu id="standardReportTemplateId" value="#{userSessionBean.selectedStandardReportTemplate}" valueChangeListener="#{userSessionBean.reportSelectionChanged}">
 	     <f:selectItems value="#{userSessionBean.standardReportTemplateList}"/>
 	</h:selectOneMenu>
 </td>
