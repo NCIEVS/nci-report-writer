@@ -49,9 +49,11 @@
 		<pathelement path ="${webinf.dir}/lib/antlr-2.7.6.jar"/>
 		<pathelement path ="${webinf.dir}/lib/acegi-security-1.0.3.jar"/>
 
+		<pathelement path ="${webinf.dir}/lib/rwdbserver-beans.jar"/>
+		<pathelement path ="${webinf.dir}/lib/rwdbserver-orm.jar"/>
+
 		<pathelement path ="${webinf.dir}/lib/sdk-client-framework.jar"/>
 		<pathelement path ="${webinf.dir}/lib/sdk-core.jar"/>
-		
 		<pathelement path ="${webinf.dir}/lib/sdk-writable-client-framework.jar"/>
 		<pathelement path ="${webinf.dir}/lib/sdk-writable-core.jar"/>
 		
@@ -93,7 +95,7 @@
 	<target name="clean"
 		description="Prepare for clean build">
 		<delete dir="${webinf.dir}/classes"/>
-		<mkdir dir="${webinf.dir}/classes"/>
+		<delete dir="${basedir}/build"/>
 	</target>
 
 	<!-- Build entire project -->

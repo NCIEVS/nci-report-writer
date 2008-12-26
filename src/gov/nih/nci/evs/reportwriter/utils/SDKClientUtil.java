@@ -1,6 +1,8 @@
 package gov.nih.nci.evs.reportwriter.utils;
 
 import gov.nih.nci.evs.reportwriter.bean.*;
+import gov.nih.nci.evs.reportwriter.service.*;
+
 import java.io.File;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
@@ -57,12 +59,14 @@ public class SDKClientUtil {
 	private CustomizedQuery createCustomizedQuery(
 		int ID,
 		String queryExpression,
-		int createdBy,
+		String codingSchemeName,
+		String codingSchemeVersion,
 		Date lastModified) {
 		CustomizedQuery customizedQuery = new CustomizedQuery();
-		customizedQuery.setID(ID);
+		customizedQuery.setId(ID);
 		customizedQuery.setQueryExpression(queryExpression);
-		customizedQuery.setCreatedBy(createdBy);
+		customizedQuery.setCodingSchemeName(codingSchemeName);
+		customizedQuery.setCodingSchemeVersion(codingSchemeVersion);
 		customizedQuery.setLastModified(lastModified);
 		return customizedQuery;
 	}
@@ -70,13 +74,15 @@ public class SDKClientUtil {
 	public void insertCustomizedQuery(
 		int ID,
 		String queryExpression,
-		int createdBy,
+		String codingSchemeName,
+		String codingSchemeVersion,
 		Date lastModified) throws Exception {
 
 		CustomizedQuery customizedQuery = createCustomizedQuery(
 			ID,
 			queryExpression,
-			createdBy,
+			codingSchemeName,
+			codingSchemeVersion,
 			lastModified);
 		insertCustomizedQuery(customizedQuery);
 	}
@@ -84,13 +90,15 @@ public class SDKClientUtil {
 	public void updateCustomizedQuery(
 		int ID,
 		String queryExpression,
-		int createdBy,
+		String codingSchemeName,
+		String codingSchemeVersion,
 		Date lastModified) throws Exception {
 
 		CustomizedQuery customizedQuery = createCustomizedQuery(
 			ID,
 			queryExpression,
-			createdBy,
+			codingSchemeName,
+			codingSchemeVersion,
 			lastModified);
 		updateCustomizedQuery(customizedQuery);
 	}
@@ -98,13 +106,15 @@ public class SDKClientUtil {
 	public void deleteCustomizedQuery(
 		int ID,
 		String queryExpression,
-		int createdBy,
+		String codingSchemeName,
+		String codingSchemeVersion,
 		Date lastModified) throws Exception {
 
 		CustomizedQuery customizedQuery = createCustomizedQuery(
 			ID,
 			queryExpression,
-			createdBy,
+			codingSchemeName,
+			codingSchemeVersion,
 			lastModified);
 		deleteCustomizedQuery(customizedQuery);
 	}
@@ -134,7 +144,8 @@ public class SDKClientUtil {
 
 	private CustomizedReport createCustomizedReport(int reportID) {
 		CustomizedReport customizedReport = new CustomizedReport();
-		customizedReport.setReportID(reportID);
+		customizedReport.setId(reportID);
+		
 		return customizedReport;
 	}
 
@@ -180,20 +191,12 @@ public class SDKClientUtil {
 		int ID,
 		String label,
 		Date lastModified,
-		String pathName,
-		int hasFormat,
-		int hasStatus,
-		int modifiedBy,
-		int createdBy) {
+		String pathName) {
 		Report report = new Report();
-		report.setID(ID);
+		report.setId(ID);
 		report.setLabel(label);
 		report.setLastModified(lastModified);
 		report.setPathName(pathName);
-		report.setHasFormat(hasFormat);
-		report.setHasStatus(hasStatus);
-		report.setModifiedBy(modifiedBy);
-		report.setCreatedBy(createdBy);
 		return report;
 	}
 
@@ -201,21 +204,13 @@ public class SDKClientUtil {
 		int ID,
 		String label,
 		Date lastModified,
-		String pathName,
-		int hasFormat,
-		int hasStatus,
-		int modifiedBy,
-		int createdBy) throws Exception {
+		String pathName) throws Exception {
 
 		Report report = createReport(
 			ID,
 			label,
 			lastModified,
-			pathName,
-			hasFormat,
-			hasStatus,
-			modifiedBy,
-			createdBy);
+			pathName);
 		insertReport(report);
 	}
 
@@ -223,21 +218,13 @@ public class SDKClientUtil {
 		int ID,
 		String label,
 		Date lastModified,
-		String pathName,
-		int hasFormat,
-		int hasStatus,
-		int modifiedBy,
-		int createdBy) throws Exception {
+		String pathName) throws Exception {
 
 		Report report = createReport(
 			ID,
 			label,
 			lastModified,
-			pathName,
-			hasFormat,
-			hasStatus,
-			modifiedBy,
-			createdBy);
+			pathName);
 		updateReport(report);
 	}
 
@@ -245,21 +232,13 @@ public class SDKClientUtil {
 		int ID,
 		String label,
 		Date lastModified,
-		String pathName,
-		int hasFormat,
-		int hasStatus,
-		int modifiedBy,
-		int createdBy) throws Exception {
+		String pathName) throws Exception {
 
 		Report report = createReport(
 			ID,
 			label,
 			lastModified,
-			pathName,
-			hasFormat,
-			hasStatus,
-			modifiedBy,
-			createdBy);
+			pathName);
 		deleteReport(report);
 	}
 
@@ -298,9 +277,9 @@ public class SDKClientUtil {
 		String qualifierName,
 		String qualifierValue,
 		char delimiter,
-		int conditionalColumn) {
+		int conditionalColumnId) {
 		ReportColumn reportColumn = new ReportColumn();
-		reportColumn.setID(ID);
+		reportColumn.setId(ID);
 		reportColumn.setLabel(label);
 		reportColumn.setFieldId(fieldId);
 		reportColumn.setPropertyType(propertyType);
@@ -311,7 +290,7 @@ public class SDKClientUtil {
 		reportColumn.setQualifierName(qualifierName);
 		reportColumn.setQualifierValue(qualifierValue);
 		reportColumn.setDelimiter(delimiter);
-		reportColumn.setConditionalColumn(conditionalColumn);
+		reportColumn.setConditionalColumnId(conditionalColumnId);
 		return reportColumn;
 	}
 
@@ -327,7 +306,7 @@ public class SDKClientUtil {
 		String qualifierName,
 		String qualifierValue,
 		char delimiter,
-		int conditionalColumn) throws Exception {
+		int conditionalColumnId) throws Exception {
 
 		ReportColumn reportColumn = createReportColumn(
 			ID,
@@ -341,7 +320,7 @@ public class SDKClientUtil {
 			qualifierName,
 			qualifierValue,
 			delimiter,
-			conditionalColumn);
+			conditionalColumnId);
 		insertReportColumn(reportColumn);
 	}
 
@@ -430,47 +409,39 @@ public class SDKClientUtil {
 
 	private ReportFormat createReportFormat(
 		int ID,
-		String label,
 		String description) {
 		ReportFormat reportFormat = new ReportFormat();
-		reportFormat.setID(ID);
-		reportFormat.setLabel(label);
+		reportFormat.setId(ID);
 		reportFormat.setDescription(description);
 		return reportFormat;
 	}
 
 	public void insertReportFormat(
 		int ID,
-		String label,
 		String description) throws Exception {
 
 		ReportFormat reportFormat = createReportFormat(
 			ID,
-			label,
 			description);
 		insertReportFormat(reportFormat);
 	}
 
 	public void updateReportFormat(
 		int ID,
-		String label,
 		String description) throws Exception {
 
 		ReportFormat reportFormat = createReportFormat(
 			ID,
-			label,
 			description);
 		updateReportFormat(reportFormat);
 	}
 
 	public void deleteReportFormat(
 		int ID,
-		String label,
 		String description) throws Exception {
 
 		ReportFormat reportFormat = createReportFormat(
 			ID,
-			label,
 			description);
 		deleteReportFormat(reportFormat);
 	}
@@ -504,7 +475,7 @@ public class SDKClientUtil {
 		String description,
 		boolean active) {
 		ReportStatus reportStatus = new ReportStatus();
-		reportStatus.setID(ID);
+		reportStatus.setId(ID);
 		reportStatus.setLabel(label);
 		reportStatus.setDescription(description);
 		reportStatus.setActive(active);
@@ -578,7 +549,8 @@ public class SDKClientUtil {
 
 	private StandardReport createStandardReport(int reportID) {
 		StandardReport standardReport = new StandardReport();
-		standardReport.setReportID(reportID);
+		standardReport.setId(reportID);
+		
 		return standardReport;
 	}
 
@@ -624,7 +596,7 @@ public class SDKClientUtil {
 		int ID,
 		String serviceURL) {
 		StandardReportService standardReportService = new StandardReportService();
-		standardReportService.setID(ID);
+		standardReportService.setId(ID);
 		standardReportService.setServiceURL(serviceURL);
 		return standardReportService;
 	}
@@ -693,7 +665,6 @@ public class SDKClientUtil {
 		int level,
 		char delimiter) {
 		StandardReportTemplate standardReportTemplate = new StandardReportTemplate();
-		standardReportTemplate.setID(ID);
 		standardReportTemplate.setCodingSchemeName(codingSchemeName);
 		standardReportTemplate.setCodingSchemeVersion(codingSchemeVersion);
 		standardReportTemplate.setLabel(label);
