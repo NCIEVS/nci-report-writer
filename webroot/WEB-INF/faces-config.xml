@@ -128,16 +128,40 @@
 
      <from-outcome>retrieve_standard_reports</from-outcome>
 
-     <to-view-id>/pages/retrieve_standard_report_templates.jsp</to-view-id>
+     <to-view-id>/pages/retrieve_standard_reports.jsp</to-view-id>
 
     </navigation-case>
 
-   
-
    </navigation-rule>
 
- 
+  <navigation-rule>
 
+    <from-view-id>/pages/retrieve_standard_reports.jsp</from-view-id>
+
+    <navigation-case>
+
+     <from-outcome>download</from-outcome>
+
+     <to-view-id>/pages/download.jsp</to-view-id>
+
+    </navigation-case>
+  </navigation-rule>  
+    
+
+  <navigation-rule>
+
+    <from-view-id>/pages/download.jsp</from-view-id>
+
+    <navigation-case>
+
+     <from-outcome>back</from-outcome>
+
+     <to-view-id>/pages/retrieve_standard_reports.jsp</to-view-id>
+
+    </navigation-case>
+  </navigation-rule>  
+  
+  
   <navigation-rule>
 
     <from-view-id>/pages/standard_report_template.jsp</from-view-id>
@@ -169,50 +193,44 @@
      <to-view-id>/pages/generate_standard_report.jsp</to-view-id>
 
     </navigation-case>
-
-   
-
+  
     <navigation-case>
-
      <from-outcome>modify</from-outcome>
-
      <to-view-id>/pages/standard_report_column.jsp</to-view-id>
-
     </navigation-case>
-
-   
+  
 
     <navigation-case>
-
      <from-outcome>review</from-outcome>
-
      <to-view-id>/pages/standard_report_template.jsp</to-view-id>
-
     </navigation-case>
-
    
-
    </navigation-rule>
-
  
-
-  <navigation-rule>
-
-    <from-view-id>/pages/add_standard_report_template.jsp</from-view-id>
-
-    <navigation-case>
-     <from-outcome>back</from-outcome>
-     <to-view-id>/pages/standard_report_template.jsp</to-view-id>
-    </navigation-case>
+ 
+   <navigation-rule>
+ 
+     <from-view-id>/pages/add_standard_report_template.jsp</from-view-id>
  
      <navigation-case>
-      <from-action>#{userSessionBean.addColumnAction}</from-action> 
-      <from-outcome>add_standard_report_column</from-outcome>
-       <to-view-id>/pages/add_standard_report_column.jsp</to-view-id>
-    </navigation-case>
-
+      <from-outcome>back</from-outcome>
+      <to-view-id>/pages/standard_report_template.jsp</to-view-id>
+     </navigation-case>
+  
+      <navigation-case>
+       <from-action>#{userSessionBean.addColumnAction}</from-action> 
+       <from-outcome>add_standard_report_column</from-outcome>
+        <to-view-id>/pages/add_standard_report_column.jsp</to-view-id>
+     </navigation-case>
+ 
+      <navigation-case>
+       <from-action>#{userSessionBean.saveReportAction}</from-action> 
+       <from-outcome>add_standard_report_template</from-outcome>
+        <to-view-id>/pages/add_standard_report_column.jsp</to-view-id>
+     </navigation-case>
+     
   </navigation-rule>
-
+  
  
   <navigation-rule>
     <from-view-id>/pages/add_standard_report_column.jsp</from-view-id>

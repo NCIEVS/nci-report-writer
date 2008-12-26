@@ -54,421 +54,124 @@ public class SDKClientUtil {
 
 	}
 
-	private ReportUser createReportUser(
-		String userID,
-		String suffix,
-		String firstName,
-		String middleInitial,
-		String lastName,
-		String title,
-		String organization,
-		String phone,
-		String email,
-		int roleID,
-		String pwd,
-		Date passwordLastModified,
-		int statusID,
-		Date statusLastModified,
-		String statusModifiedBy) {
-
-		ReportUser reportUser = new ReportUser();
-		reportUser.setUserID(userID);
-		reportUser.setSuffix(suffix);
-		reportUser.setFirstName(firstName);
-		reportUser.setMiddleInitial(middleInitial);
-		reportUser.setLastName(lastName);
-		reportUser.setTitle(title);
-		reportUser.setOrganization(organization);
-		reportUser.setPhone(phone);
-		reportUser.setEmail(email);
-		reportUser.setRoleID(roleID);
-		reportUser.setPwd(pwd);
-		reportUser.setPasswordLastModified(passwordLastModified);
-		reportUser.setStatusID(statusID);
-		reportUser.setStatusLastModified(statusLastModified);
-		reportUser.setStatusModifiedBy(statusModifiedBy);
-		return reportUser;
-	}
-
-	public void insertReportUser(
-		String userID,
-		String suffix,
-		String firstName,
-		String middleInitial,
-		String lastName,
-		String title,
-		String organization,
-		String phone,
-		String email,
-		int roleID,
-		String pwd,
-		Date passwordLastModified,
-		int statusID,
-		Date statusLastModified,
-		String statusModifiedBy) throws Exception {
-
-		ReportUser reportUser = createReportUser(
-			userID,
-			suffix,
-			firstName,
-			middleInitial,
-			lastName,
-			title,
-			organization,
-			phone,
-			email,
-			roleID,
-			pwd,
-			passwordLastModified,
-			statusID,
-			statusLastModified,
-			statusModifiedBy);
-		insertReportUser(reportUser);
-	}
-
-	public void updateReportUser(
-		String userID,
-		String suffix,
-		String firstName,
-		String middleInitial,
-		String lastName,
-		String title,
-		String organization,
-		String phone,
-		String email,
-		int roleID,
-		String pwd,
-		Date passwordLastModified,
-		int statusID,
-		Date statusLastModified,
-		String statusModifiedBy) throws Exception {
-
-		ReportUser reportUser = createReportUser(
-			userID,
-			suffix,
-			firstName,
-			middleInitial,
-			lastName,
-			title,
-			organization,
-			phone,
-			email,
-			roleID,
-			pwd,
-			passwordLastModified,
-			statusID,
-			statusLastModified,
-			statusModifiedBy);
-		updateReportUser(reportUser);
-	}
-
-	public void deleteReportUser(
-		String userID,
-		String suffix,
-		String firstName,
-		String middleInitial,
-		String lastName,
-		String title,
-		String organization,
-		String phone,
-		String email,
-		int roleID,
-		String pwd,
-		Date passwordLastModified,
-		int statusID,
-		Date statusLastModified,
-		String statusModifiedBy) throws Exception {
-
-		ReportUser reportUser = createReportUser(
-			userID,
-			suffix,
-			firstName,
-			middleInitial,
-			lastName,
-			title,
-			organization,
-			phone,
-			email,
-			roleID,
-			pwd,
-			passwordLastModified,
-			statusID,
-			statusLastModified,
-			statusModifiedBy);
-		deleteReportUser(reportUser);
-	}
-
-	public void insertReportUser(ReportUser reportUser) throws Exception {
-		WritableApplicationService appService = (WritableApplicationService)ApplicationServiceProvider.getApplicationService();
-		InsertExampleQuery query = new InsertExampleQuery(reportUser);
-		SDKQueryResult queryResult = appService.executeQuery(query);
-		//reportUser = (ReportUser)queryResult.getObjectResult();
-	}
-
-
-	public void updateReportUser(ReportUser reportUser) throws Exception {
-		WritableApplicationService appService = (WritableApplicationService)ApplicationServiceProvider.getApplicationService();
-		UpdateExampleQuery query = new UpdateExampleQuery(reportUser);
-		SDKQueryResult queryResult = appService.executeQuery(query);
-		//reportUser = (ReportUser)queryResult.getObjectResult();
-	}
-
-
-	public void deleteReportUser(ReportUser reportUser) throws Exception {
-		WritableApplicationService appService = (WritableApplicationService)ApplicationServiceProvider.getApplicationService();
-		DeleteExampleQuery query = new DeleteExampleQuery(reportUser);
-		SDKQueryResult queryResult = appService.executeQuery(query);
-	}
-
-
-	private UserRole createUserRole(
-		int roleID,
-		String roleDescription) {
-
-		UserRole userRole = new UserRole();
-		userRole.setRoleID(roleID);
-		userRole.setRoleDescription(roleDescription);
-		return userRole;
-	}
-
-	public void insertUserRole(
-		int roleID,
-		String roleDescription) throws Exception {
-
-		UserRole userRole = createUserRole(
-			roleID,
-			roleDescription);
-		insertUserRole(userRole);
-	}
-
-	public void updateUserRole(
-		int roleID,
-		String roleDescription) throws Exception {
-
-		UserRole userRole = createUserRole(
-			roleID,
-			roleDescription);
-		updateUserRole(userRole);
-	}
-
-	public void deleteUserRole(
-		int roleID,
-		String roleDescription) throws Exception {
-
-		UserRole userRole = createUserRole(
-			roleID,
-			roleDescription);
-		deleteUserRole(userRole);
-	}
-
-	public void insertUserRole(UserRole userRole) throws Exception {
-		WritableApplicationService appService = (WritableApplicationService)ApplicationServiceProvider.getApplicationService();
-		InsertExampleQuery query = new InsertExampleQuery(userRole);
-		SDKQueryResult queryResult = appService.executeQuery(query);
-		//userRole = (UserRole)queryResult.getObjectResult();
-	}
-
-
-	public void updateUserRole(UserRole userRole) throws Exception {
-		WritableApplicationService appService = (WritableApplicationService)ApplicationServiceProvider.getApplicationService();
-		UpdateExampleQuery query = new UpdateExampleQuery(userRole);
-		SDKQueryResult queryResult = appService.executeQuery(query);
-		//userRole = (UserRole)queryResult.getObjectResult();
-	}
-
-
-	public void deleteUserRole(UserRole userRole) throws Exception {
-		WritableApplicationService appService = (WritableApplicationService)ApplicationServiceProvider.getApplicationService();
-		DeleteExampleQuery query = new DeleteExampleQuery(userRole);
-		SDKQueryResult queryResult = appService.executeQuery(query);
-	}
-
-
-	private UserAccountStatus createUserAccountStatus(
-		int statusID,
-		String statusDescription) {
-
-		UserAccountStatus userAccountStatus = new UserAccountStatus();
-		userAccountStatus.setStatusID(statusID);
-		userAccountStatus.setStatusDescription(statusDescription);
-		return userAccountStatus;
-	}
-
-	public void insertUserAccountStatus(
-		int statusID,
-		String statusDescription) throws Exception {
-
-		UserAccountStatus userAccountStatus = createUserAccountStatus(
-			statusID,
-			statusDescription);
-		insertUserAccountStatus(userAccountStatus);
-	}
-
-	public void updateUserAccountStatus(
-		int statusID,
-		String statusDescription) throws Exception {
-
-		UserAccountStatus userAccountStatus = createUserAccountStatus(
-			statusID,
-			statusDescription);
-		updateUserAccountStatus(userAccountStatus);
-	}
-
-	public void deleteUserAccountStatus(
-		int statusID,
-		String statusDescription) throws Exception {
-
-		UserAccountStatus userAccountStatus = createUserAccountStatus(
-			statusID,
-			statusDescription);
-		deleteUserAccountStatus(userAccountStatus);
-	}
-
-	public void insertUserAccountStatus(UserAccountStatus userAccountStatus) throws Exception {
-		WritableApplicationService appService = (WritableApplicationService)ApplicationServiceProvider.getApplicationService();
-		InsertExampleQuery query = new InsertExampleQuery(userAccountStatus);
-		SDKQueryResult queryResult = appService.executeQuery(query);
-		//userAccountStatus = (UserAccountStatus)queryResult.getObjectResult();
-	}
-
-
-	public void updateUserAccountStatus(UserAccountStatus userAccountStatus) throws Exception {
-		WritableApplicationService appService = (WritableApplicationService)ApplicationServiceProvider.getApplicationService();
-		UpdateExampleQuery query = new UpdateExampleQuery(userAccountStatus);
-		SDKQueryResult queryResult = appService.executeQuery(query);
-		//userAccountStatus = (UserAccountStatus)queryResult.getObjectResult();
-	}
-
-
-	public void deleteUserAccountStatus(UserAccountStatus userAccountStatus) throws Exception {
-		WritableApplicationService appService = (WritableApplicationService)ApplicationServiceProvider.getApplicationService();
-		DeleteExampleQuery query = new DeleteExampleQuery(userAccountStatus);
-		SDKQueryResult queryResult = appService.executeQuery(query);
-	}
-
-
-	private SupportedStandardReport createSupportedStandardReport(
-		int reportID,
-		String reportLabel) {
-
-		SupportedStandardReport supportedStandardReport = new SupportedStandardReport();
-		supportedStandardReport.setReportID(reportID);
-		supportedStandardReport.setReportLabel(reportLabel);
-		return supportedStandardReport;
-	}
-
-	public void insertSupportedStandardReport(
-		int reportID,
-		String reportLabel) throws Exception {
-
-		SupportedStandardReport supportedStandardReport = createSupportedStandardReport(
-			reportID,
-			reportLabel);
-		insertSupportedStandardReport(supportedStandardReport);
-	}
-
-	public void updateSupportedStandardReport(
-		int reportID,
-		String reportLabel) throws Exception {
-
-		SupportedStandardReport supportedStandardReport = createSupportedStandardReport(
-			reportID,
-			reportLabel);
-		updateSupportedStandardReport(supportedStandardReport);
-	}
-
-	public void deleteSupportedStandardReport(
-		int reportID,
-		String reportLabel) throws Exception {
-
-		SupportedStandardReport supportedStandardReport = createSupportedStandardReport(
-			reportID,
-			reportLabel);
-		deleteSupportedStandardReport(supportedStandardReport);
-	}
-
-	public void insertSupportedStandardReport(SupportedStandardReport supportedStandardReport) throws Exception {
-		WritableApplicationService appService = (WritableApplicationService)ApplicationServiceProvider.getApplicationService();
-		InsertExampleQuery query = new InsertExampleQuery(supportedStandardReport);
-		SDKQueryResult queryResult = appService.executeQuery(query);
-		//supportedStandardReport = (SupportedStandardReport)queryResult.getObjectResult();
-	}
-
-
-	public void updateSupportedStandardReport(SupportedStandardReport supportedStandardReport) throws Exception {
-		WritableApplicationService appService = (WritableApplicationService)ApplicationServiceProvider.getApplicationService();
-		UpdateExampleQuery query = new UpdateExampleQuery(supportedStandardReport);
-		SDKQueryResult queryResult = appService.executeQuery(query);
-		//supportedStandardReport = (SupportedStandardReport)queryResult.getObjectResult();
-	}
-
-
-	public void deleteSupportedStandardReport(SupportedStandardReport supportedStandardReport) throws Exception {
-		WritableApplicationService appService = (WritableApplicationService)ApplicationServiceProvider.getApplicationService();
-		DeleteExampleQuery query = new DeleteExampleQuery(supportedStandardReport);
-		SDKQueryResult queryResult = appService.executeQuery(query);
-	}
-
-
-	private ReportStatus createReportStatus(
+	private CustomizedQuery createCustomizedQuery(
 		int ID,
-		String label) {
-
-		ReportStatus reportStatus = new ReportStatus();
-		reportStatus.setID(ID);
-		reportStatus.setLabel(label);
-		return reportStatus;
+		String queryExpression,
+		int createdBy,
+		Date lastModified) {
+		CustomizedQuery customizedQuery = new CustomizedQuery();
+		customizedQuery.setID(ID);
+		customizedQuery.setQueryExpression(queryExpression);
+		customizedQuery.setCreatedBy(createdBy);
+		customizedQuery.setLastModified(lastModified);
+		return customizedQuery;
 	}
 
-	public void insertReportStatus(
+	public void insertCustomizedQuery(
 		int ID,
-		String label) throws Exception {
+		String queryExpression,
+		int createdBy,
+		Date lastModified) throws Exception {
 
-		ReportStatus reportStatus = createReportStatus(
+		CustomizedQuery customizedQuery = createCustomizedQuery(
 			ID,
-			label);
-		insertReportStatus(reportStatus);
+			queryExpression,
+			createdBy,
+			lastModified);
+		insertCustomizedQuery(customizedQuery);
 	}
 
-	public void updateReportStatus(
+	public void updateCustomizedQuery(
 		int ID,
-		String label) throws Exception {
+		String queryExpression,
+		int createdBy,
+		Date lastModified) throws Exception {
 
-		ReportStatus reportStatus = createReportStatus(
+		CustomizedQuery customizedQuery = createCustomizedQuery(
 			ID,
-			label);
-		updateReportStatus(reportStatus);
+			queryExpression,
+			createdBy,
+			lastModified);
+		updateCustomizedQuery(customizedQuery);
 	}
 
-	public void deleteReportStatus(
+	public void deleteCustomizedQuery(
 		int ID,
-		String label) throws Exception {
+		String queryExpression,
+		int createdBy,
+		Date lastModified) throws Exception {
 
-		ReportStatus reportStatus = createReportStatus(
+		CustomizedQuery customizedQuery = createCustomizedQuery(
 			ID,
-			label);
-		deleteReportStatus(reportStatus);
+			queryExpression,
+			createdBy,
+			lastModified);
+		deleteCustomizedQuery(customizedQuery);
 	}
 
-	public void insertReportStatus(ReportStatus reportStatus) throws Exception {
+	public void insertCustomizedQuery(CustomizedQuery customizedQuery) throws Exception {
 		WritableApplicationService appService = (WritableApplicationService)ApplicationServiceProvider.getApplicationService();
-		InsertExampleQuery query = new InsertExampleQuery(reportStatus);
+		InsertExampleQuery query = new InsertExampleQuery(customizedQuery);
 		SDKQueryResult queryResult = appService.executeQuery(query);
-		//reportStatus = (ReportStatus)queryResult.getObjectResult();
+		//customizedQuery = (CustomizedQuery)queryResult.getObjectResult();
 	}
 
 
-	public void updateReportStatus(ReportStatus reportStatus) throws Exception {
+	public void updateCustomizedQuery(CustomizedQuery customizedQuery) throws Exception {
 		WritableApplicationService appService = (WritableApplicationService)ApplicationServiceProvider.getApplicationService();
-		UpdateExampleQuery query = new UpdateExampleQuery(reportStatus);
+		UpdateExampleQuery query = new UpdateExampleQuery(customizedQuery);
 		SDKQueryResult queryResult = appService.executeQuery(query);
-		//reportStatus = (ReportStatus)queryResult.getObjectResult();
+		//customizedQuery = (CustomizedQuery)queryResult.getObjectResult();
 	}
 
 
-	public void deleteReportStatus(ReportStatus reportStatus) throws Exception {
+	public void deleteCustomizedQuery(CustomizedQuery customizedQuery) throws Exception {
 		WritableApplicationService appService = (WritableApplicationService)ApplicationServiceProvider.getApplicationService();
-		DeleteExampleQuery query = new DeleteExampleQuery(reportStatus);
+		DeleteExampleQuery query = new DeleteExampleQuery(customizedQuery);
+		SDKQueryResult queryResult = appService.executeQuery(query);
+	}
+
+
+	private CustomizedReport createCustomizedReport(int reportID) {
+		CustomizedReport customizedReport = new CustomizedReport();
+		customizedReport.setReportID(reportID);
+		return customizedReport;
+	}
+
+	public void insertCustomizedReport(int reportID) throws Exception {
+		CustomizedReport customizedReport = createCustomizedReport(reportID);
+		insertCustomizedReport(customizedReport);
+	}
+
+	public void updateCustomizedReport(int reportID) throws Exception {
+		CustomizedReport customizedReport = createCustomizedReport(reportID);
+		updateCustomizedReport(customizedReport);
+	}
+
+	public void deleteCustomizedReport(int reportID) throws Exception {
+		CustomizedReport customizedReport = createCustomizedReport(reportID);
+		deleteCustomizedReport(customizedReport);
+	}
+
+	public void insertCustomizedReport(CustomizedReport customizedReport) throws Exception {
+		WritableApplicationService appService = (WritableApplicationService)ApplicationServiceProvider.getApplicationService();
+		InsertExampleQuery query = new InsertExampleQuery(customizedReport);
+		SDKQueryResult queryResult = appService.executeQuery(query);
+		//customizedReport = (CustomizedReport)queryResult.getObjectResult();
+	}
+
+
+	public void updateCustomizedReport(CustomizedReport customizedReport) throws Exception {
+		WritableApplicationService appService = (WritableApplicationService)ApplicationServiceProvider.getApplicationService();
+		UpdateExampleQuery query = new UpdateExampleQuery(customizedReport);
+		SDKQueryResult queryResult = appService.executeQuery(query);
+		//customizedReport = (CustomizedReport)queryResult.getObjectResult();
+	}
+
+
+	public void deleteCustomizedReport(CustomizedReport customizedReport) throws Exception {
+		WritableApplicationService appService = (WritableApplicationService)ApplicationServiceProvider.getApplicationService();
+		DeleteExampleQuery query = new DeleteExampleQuery(customizedReport);
 		SDKQueryResult queryResult = appService.executeQuery(query);
 	}
 
@@ -476,80 +179,87 @@ public class SDKClientUtil {
 	private Report createReport(
 		int ID,
 		String label,
-		int statusID,
-		String formatName,
-		String URL,
 		Date lastModified,
-		String modifiedBy) {
-
+		String pathName,
+		int hasFormat,
+		int hasStatus,
+		int modifiedBy,
+		int createdBy) {
 		Report report = new Report();
 		report.setID(ID);
 		report.setLabel(label);
-		report.setStatusID(statusID);
-		report.setFormatName(formatName);
-		report.setURL(URL);
 		report.setLastModified(lastModified);
+		report.setPathName(pathName);
+		report.setHasFormat(hasFormat);
+		report.setHasStatus(hasStatus);
 		report.setModifiedBy(modifiedBy);
+		report.setCreatedBy(createdBy);
 		return report;
 	}
 
 	public void insertReport(
 		int ID,
 		String label,
-		int statusID,
-		String formatName,
-		String URL,
 		Date lastModified,
-		String modifiedBy) throws Exception {
+		String pathName,
+		int hasFormat,
+		int hasStatus,
+		int modifiedBy,
+		int createdBy) throws Exception {
 
 		Report report = createReport(
 			ID,
 			label,
-			statusID,
-			formatName,
-			URL,
 			lastModified,
-			modifiedBy);
+			pathName,
+			hasFormat,
+			hasStatus,
+			modifiedBy,
+			createdBy);
 		insertReport(report);
 	}
 
 	public void updateReport(
 		int ID,
 		String label,
-		int statusID,
-		String formatName,
-		String URL,
 		Date lastModified,
-		String modifiedBy) throws Exception {
+		String pathName,
+		int hasFormat,
+		int hasStatus,
+		int modifiedBy,
+		int createdBy) throws Exception {
 
 		Report report = createReport(
 			ID,
 			label,
-			statusID,
-			formatName,
-			URL,
 			lastModified,
-			modifiedBy);
+			pathName,
+			hasFormat,
+			hasStatus,
+			modifiedBy,
+			createdBy);
 		updateReport(report);
 	}
 
 	public void deleteReport(
 		int ID,
 		String label,
-		int statusID,
-		String formatName,
-		String URL,
 		Date lastModified,
-		String modifiedBy) throws Exception {
+		String pathName,
+		int hasFormat,
+		int hasStatus,
+		int modifiedBy,
+		int createdBy) throws Exception {
 
 		Report report = createReport(
 			ID,
 			label,
-			statusID,
-			formatName,
-			URL,
 			lastModified,
-			modifiedBy);
+			pathName,
+			hasFormat,
+			hasStatus,
+			modifiedBy,
+			createdBy);
 		deleteReport(report);
 	}
 
@@ -577,7 +287,7 @@ public class SDKClientUtil {
 
 
 	private ReportColumn createReportColumn(
-		int id,
+		int ID,
 		String label,
 		String fieldId,
 		String propertyType,
@@ -587,10 +297,10 @@ public class SDKClientUtil {
 		String source,
 		String qualifierName,
 		String qualifierValue,
-		char delimiter) {
-
+		char delimiter,
+		int conditionalColumn) {
 		ReportColumn reportColumn = new ReportColumn();
-		reportColumn.setId(id);
+		reportColumn.setID(ID);
 		reportColumn.setLabel(label);
 		reportColumn.setFieldId(fieldId);
 		reportColumn.setPropertyType(propertyType);
@@ -601,11 +311,12 @@ public class SDKClientUtil {
 		reportColumn.setQualifierName(qualifierName);
 		reportColumn.setQualifierValue(qualifierValue);
 		reportColumn.setDelimiter(delimiter);
+		reportColumn.setConditionalColumn(conditionalColumn);
 		return reportColumn;
 	}
 
 	public void insertReportColumn(
-		int id,
+		int ID,
 		String label,
 		String fieldId,
 		String propertyType,
@@ -615,10 +326,11 @@ public class SDKClientUtil {
 		String source,
 		String qualifierName,
 		String qualifierValue,
-		char delimiter) throws Exception {
+		char delimiter,
+		int conditionalColumn) throws Exception {
 
 		ReportColumn reportColumn = createReportColumn(
-			id,
+			ID,
 			label,
 			fieldId,
 			propertyType,
@@ -628,12 +340,13 @@ public class SDKClientUtil {
 			source,
 			qualifierName,
 			qualifierValue,
-			delimiter);
+			delimiter,
+			conditionalColumn);
 		insertReportColumn(reportColumn);
 	}
 
 	public void updateReportColumn(
-		int id,
+		int ID,
 		String label,
 		String fieldId,
 		String propertyType,
@@ -643,10 +356,11 @@ public class SDKClientUtil {
 		String source,
 		String qualifierName,
 		String qualifierValue,
-		char delimiter) throws Exception {
+		char delimiter,
+		int conditionalColumn) throws Exception {
 
 		ReportColumn reportColumn = createReportColumn(
-			id,
+			ID,
 			label,
 			fieldId,
 			propertyType,
@@ -656,12 +370,13 @@ public class SDKClientUtil {
 			source,
 			qualifierName,
 			qualifierValue,
-			delimiter);
+			delimiter,
+			conditionalColumn);
 		updateReportColumn(reportColumn);
 	}
 
 	public void deleteReportColumn(
-		int id,
+		int ID,
 		String label,
 		String fieldId,
 		String propertyType,
@@ -671,10 +386,11 @@ public class SDKClientUtil {
 		String source,
 		String qualifierName,
 		String qualifierValue,
-		char delimiter) throws Exception {
+		char delimiter,
+		int conditionalColumn) throws Exception {
 
 		ReportColumn reportColumn = createReportColumn(
-			id,
+			ID,
 			label,
 			fieldId,
 			propertyType,
@@ -684,7 +400,8 @@ public class SDKClientUtil {
 			source,
 			qualifierName,
 			qualifierValue,
-			delimiter);
+			delimiter,
+			conditionalColumn);
 		deleteReportColumn(reportColumn);
 	}
 
@@ -711,83 +428,352 @@ public class SDKClientUtil {
 	}
 
 
+	private ReportFormat createReportFormat(
+		int ID,
+		String label,
+		String description) {
+		ReportFormat reportFormat = new ReportFormat();
+		reportFormat.setID(ID);
+		reportFormat.setLabel(label);
+		reportFormat.setDescription(description);
+		return reportFormat;
+	}
+
+	public void insertReportFormat(
+		int ID,
+		String label,
+		String description) throws Exception {
+
+		ReportFormat reportFormat = createReportFormat(
+			ID,
+			label,
+			description);
+		insertReportFormat(reportFormat);
+	}
+
+	public void updateReportFormat(
+		int ID,
+		String label,
+		String description) throws Exception {
+
+		ReportFormat reportFormat = createReportFormat(
+			ID,
+			label,
+			description);
+		updateReportFormat(reportFormat);
+	}
+
+	public void deleteReportFormat(
+		int ID,
+		String label,
+		String description) throws Exception {
+
+		ReportFormat reportFormat = createReportFormat(
+			ID,
+			label,
+			description);
+		deleteReportFormat(reportFormat);
+	}
+
+	public void insertReportFormat(ReportFormat reportFormat) throws Exception {
+		WritableApplicationService appService = (WritableApplicationService)ApplicationServiceProvider.getApplicationService();
+		InsertExampleQuery query = new InsertExampleQuery(reportFormat);
+		SDKQueryResult queryResult = appService.executeQuery(query);
+		//reportFormat = (ReportFormat)queryResult.getObjectResult();
+	}
+
+
+	public void updateReportFormat(ReportFormat reportFormat) throws Exception {
+		WritableApplicationService appService = (WritableApplicationService)ApplicationServiceProvider.getApplicationService();
+		UpdateExampleQuery query = new UpdateExampleQuery(reportFormat);
+		SDKQueryResult queryResult = appService.executeQuery(query);
+		//reportFormat = (ReportFormat)queryResult.getObjectResult();
+	}
+
+
+	public void deleteReportFormat(ReportFormat reportFormat) throws Exception {
+		WritableApplicationService appService = (WritableApplicationService)ApplicationServiceProvider.getApplicationService();
+		DeleteExampleQuery query = new DeleteExampleQuery(reportFormat);
+		SDKQueryResult queryResult = appService.executeQuery(query);
+	}
+
+
+	private ReportStatus createReportStatus(
+		int ID,
+		String label,
+		String description,
+		boolean active) {
+		ReportStatus reportStatus = new ReportStatus();
+		reportStatus.setID(ID);
+		reportStatus.setLabel(label);
+		reportStatus.setDescription(description);
+		reportStatus.setActive(active);
+		return reportStatus;
+	}
+
+	public void insertReportStatus(
+		int ID,
+		String label,
+		String description,
+		boolean active) throws Exception {
+
+		ReportStatus reportStatus = createReportStatus(
+			ID,
+			label,
+			description,
+			active);
+		insertReportStatus(reportStatus);
+	}
+
+	public void updateReportStatus(
+		int ID,
+		String label,
+		String description,
+		boolean active) throws Exception {
+
+		ReportStatus reportStatus = createReportStatus(
+			ID,
+			label,
+			description,
+			active);
+		updateReportStatus(reportStatus);
+	}
+
+	public void deleteReportStatus(
+		int ID,
+		String label,
+		String description,
+		boolean active) throws Exception {
+
+		ReportStatus reportStatus = createReportStatus(
+			ID,
+			label,
+			description,
+			active);
+		deleteReportStatus(reportStatus);
+	}
+
+	public void insertReportStatus(ReportStatus reportStatus) throws Exception {
+		WritableApplicationService appService = (WritableApplicationService)ApplicationServiceProvider.getApplicationService();
+		InsertExampleQuery query = new InsertExampleQuery(reportStatus);
+		SDKQueryResult queryResult = appService.executeQuery(query);
+		//reportStatus = (ReportStatus)queryResult.getObjectResult();
+	}
+
+
+	public void updateReportStatus(ReportStatus reportStatus) throws Exception {
+		WritableApplicationService appService = (WritableApplicationService)ApplicationServiceProvider.getApplicationService();
+		UpdateExampleQuery query = new UpdateExampleQuery(reportStatus);
+		SDKQueryResult queryResult = appService.executeQuery(query);
+		//reportStatus = (ReportStatus)queryResult.getObjectResult();
+	}
+
+
+	public void deleteReportStatus(ReportStatus reportStatus) throws Exception {
+		WritableApplicationService appService = (WritableApplicationService)ApplicationServiceProvider.getApplicationService();
+		DeleteExampleQuery query = new DeleteExampleQuery(reportStatus);
+		SDKQueryResult queryResult = appService.executeQuery(query);
+	}
+
+
+	private StandardReport createStandardReport(int reportID) {
+		StandardReport standardReport = new StandardReport();
+		standardReport.setReportID(reportID);
+		return standardReport;
+	}
+
+	public void insertStandardReport(int reportID) throws Exception {
+		StandardReport standardReport = createStandardReport(reportID);
+		insertStandardReport(standardReport);
+	}
+
+	public void updateStandardReport(int reportID) throws Exception {
+		StandardReport standardReport = createStandardReport(reportID);
+		updateStandardReport(standardReport);
+	}
+
+	public void deleteStandardReport(int reportID) throws Exception {
+		StandardReport standardReport = createStandardReport(reportID);
+		deleteStandardReport(standardReport);
+	}
+
+	public void insertStandardReport(StandardReport standardReport) throws Exception {
+		WritableApplicationService appService = (WritableApplicationService)ApplicationServiceProvider.getApplicationService();
+		InsertExampleQuery query = new InsertExampleQuery(standardReport);
+		SDKQueryResult queryResult = appService.executeQuery(query);
+		//standardReport = (StandardReport)queryResult.getObjectResult();
+	}
+
+
+	public void updateStandardReport(StandardReport standardReport) throws Exception {
+		WritableApplicationService appService = (WritableApplicationService)ApplicationServiceProvider.getApplicationService();
+		UpdateExampleQuery query = new UpdateExampleQuery(standardReport);
+		SDKQueryResult queryResult = appService.executeQuery(query);
+		//standardReport = (StandardReport)queryResult.getObjectResult();
+	}
+
+
+	public void deleteStandardReport(StandardReport standardReport) throws Exception {
+		WritableApplicationService appService = (WritableApplicationService)ApplicationServiceProvider.getApplicationService();
+		DeleteExampleQuery query = new DeleteExampleQuery(standardReport);
+		SDKQueryResult queryResult = appService.executeQuery(query);
+	}
+
+
+	private StandardReportService createStandardReportService(
+		int ID,
+		String serviceURL) {
+		StandardReportService standardReportService = new StandardReportService();
+		standardReportService.setID(ID);
+		standardReportService.setServiceURL(serviceURL);
+		return standardReportService;
+	}
+
+	public void insertStandardReportService(
+		int ID,
+		String serviceURL) throws Exception {
+
+		StandardReportService standardReportService = createStandardReportService(
+			ID,
+			serviceURL);
+		insertStandardReportService(standardReportService);
+	}
+
+	public void updateStandardReportService(
+		int ID,
+		String serviceURL) throws Exception {
+
+		StandardReportService standardReportService = createStandardReportService(
+			ID,
+			serviceURL);
+		updateStandardReportService(standardReportService);
+	}
+
+	public void deleteStandardReportService(
+		int ID,
+		String serviceURL) throws Exception {
+
+		StandardReportService standardReportService = createStandardReportService(
+			ID,
+			serviceURL);
+		deleteStandardReportService(standardReportService);
+	}
+
+	public void insertStandardReportService(StandardReportService standardReportService) throws Exception {
+		WritableApplicationService appService = (WritableApplicationService)ApplicationServiceProvider.getApplicationService();
+		InsertExampleQuery query = new InsertExampleQuery(standardReportService);
+		SDKQueryResult queryResult = appService.executeQuery(query);
+		//standardReportService = (StandardReportService)queryResult.getObjectResult();
+	}
+
+
+	public void updateStandardReportService(StandardReportService standardReportService) throws Exception {
+		WritableApplicationService appService = (WritableApplicationService)ApplicationServiceProvider.getApplicationService();
+		UpdateExampleQuery query = new UpdateExampleQuery(standardReportService);
+		SDKQueryResult queryResult = appService.executeQuery(query);
+		//standardReportService = (StandardReportService)queryResult.getObjectResult();
+	}
+
+
+	public void deleteStandardReportService(StandardReportService standardReportService) throws Exception {
+		WritableApplicationService appService = (WritableApplicationService)ApplicationServiceProvider.getApplicationService();
+		DeleteExampleQuery query = new DeleteExampleQuery(standardReportService);
+		SDKQueryResult queryResult = appService.executeQuery(query);
+	}
+
+
 	private StandardReportTemplate createStandardReportTemplate(
-		int id,
+		int ID,
+		String codingSchemeName,
+		String codingSchemeVersion,
 		String label,
 		String rootConceptCode,
 		String associationName,
 		boolean direction,
 		int level,
-		java.util.ArrayList<ReportColumn> reportColumnCollection) {
-
+		char delimiter) {
 		StandardReportTemplate standardReportTemplate = new StandardReportTemplate();
-		standardReportTemplate.setId(id);
+		standardReportTemplate.setID(ID);
+		standardReportTemplate.setCodingSchemeName(codingSchemeName);
+		standardReportTemplate.setCodingSchemeVersion(codingSchemeVersion);
 		standardReportTemplate.setLabel(label);
 		standardReportTemplate.setRootConceptCode(rootConceptCode);
 		standardReportTemplate.setAssociationName(associationName);
 		standardReportTemplate.setDirection(direction);
 		standardReportTemplate.setLevel(level);
-		standardReportTemplate.setReportColumnCollection(reportColumnCollection);
+		standardReportTemplate.setDelimiter(delimiter);
 		return standardReportTemplate;
 	}
 
 	public void insertStandardReportTemplate(
-		int id,
+		int ID,
+		String codingSchemeName,
+		String codingSchemeVersion,
 		String label,
 		String rootConceptCode,
 		String associationName,
 		boolean direction,
 		int level,
-		java.util.ArrayList<ReportColumn> reportColumnCollection) throws Exception {
+		char delimiter) throws Exception {
 
 		StandardReportTemplate standardReportTemplate = createStandardReportTemplate(
-			id,
+			ID,
+			codingSchemeName,
+			codingSchemeVersion,
 			label,
 			rootConceptCode,
 			associationName,
 			direction,
 			level,
-			reportColumnCollection);
+			delimiter);
 		insertStandardReportTemplate(standardReportTemplate);
 	}
 
 	public void updateStandardReportTemplate(
-		int id,
+		int ID,
+		String codingSchemeName,
+		String codingSchemeVersion,
 		String label,
 		String rootConceptCode,
 		String associationName,
 		boolean direction,
 		int level,
-		java.util.ArrayList<ReportColumn> reportColumnCollection) throws Exception {
+		char delimiter) throws Exception {
 
 		StandardReportTemplate standardReportTemplate = createStandardReportTemplate(
-			id,
+			ID,
+			codingSchemeName,
+			codingSchemeVersion,
 			label,
 			rootConceptCode,
 			associationName,
 			direction,
 			level,
-			reportColumnCollection);
+			delimiter);
 		updateStandardReportTemplate(standardReportTemplate);
 	}
 
 	public void deleteStandardReportTemplate(
-		int id,
+		int ID,
+		String codingSchemeName,
+		String codingSchemeVersion,
 		String label,
 		String rootConceptCode,
 		String associationName,
 		boolean direction,
 		int level,
-		java.util.ArrayList<ReportColumn> reportColumnCollection) throws Exception {
+		char delimiter) throws Exception {
 
 		StandardReportTemplate standardReportTemplate = createStandardReportTemplate(
-			id,
+			ID,
+			codingSchemeName,
+			codingSchemeVersion,
 			label,
 			rootConceptCode,
 			associationName,
 			direction,
 			level,
-			reportColumnCollection);
+			delimiter);
 		deleteStandardReportTemplate(standardReportTemplate);
 	}
 
@@ -810,227 +796,6 @@ public class SDKClientUtil {
 	public void deleteStandardReportTemplate(StandardReportTemplate standardReportTemplate) throws Exception {
 		WritableApplicationService appService = (WritableApplicationService)ApplicationServiceProvider.getApplicationService();
 		DeleteExampleQuery query = new DeleteExampleQuery(standardReportTemplate);
-		SDKQueryResult queryResult = appService.executeQuery(query);
-	}
-
-
-	private SupportedFormat createSupportedFormat(
-		String name,
-		String description) {
-
-		SupportedFormat supportedFormat = new SupportedFormat();
-		supportedFormat.setName(name);
-		supportedFormat.setDescription(description);
-		return supportedFormat;
-	}
-
-	public void insertSupportedFormat(
-		String name,
-		String description) throws Exception {
-
-		SupportedFormat supportedFormat = createSupportedFormat(
-			name,
-			description);
-		insertSupportedFormat(supportedFormat);
-	}
-
-	public void updateSupportedFormat(
-		String name,
-		String description) throws Exception {
-
-		SupportedFormat supportedFormat = createSupportedFormat(
-			name,
-			description);
-		updateSupportedFormat(supportedFormat);
-	}
-
-	public void deleteSupportedFormat(
-		String name,
-		String description) throws Exception {
-
-		SupportedFormat supportedFormat = createSupportedFormat(
-			name,
-			description);
-		deleteSupportedFormat(supportedFormat);
-	}
-
-	public void insertSupportedFormat(SupportedFormat supportedFormat) throws Exception {
-		WritableApplicationService appService = (WritableApplicationService)ApplicationServiceProvider.getApplicationService();
-		InsertExampleQuery query = new InsertExampleQuery(supportedFormat);
-		SDKQueryResult queryResult = appService.executeQuery(query);
-		//supportedFormat = (SupportedFormat)queryResult.getObjectResult();
-	}
-
-
-	public void updateSupportedFormat(SupportedFormat supportedFormat) throws Exception {
-		WritableApplicationService appService = (WritableApplicationService)ApplicationServiceProvider.getApplicationService();
-		UpdateExampleQuery query = new UpdateExampleQuery(supportedFormat);
-		SDKQueryResult queryResult = appService.executeQuery(query);
-		//supportedFormat = (SupportedFormat)queryResult.getObjectResult();
-	}
-
-
-	public void deleteSupportedFormat(SupportedFormat supportedFormat) throws Exception {
-		WritableApplicationService appService = (WritableApplicationService)ApplicationServiceProvider.getApplicationService();
-		DeleteExampleQuery query = new DeleteExampleQuery(supportedFormat);
-		SDKQueryResult queryResult = appService.executeQuery(query);
-	}
-
-
-	private SupportedCodingScheme createSupportedCodingScheme(
-		int ID,
-		String name,
-		String version) {
-
-		SupportedCodingScheme supportedCodingScheme = new SupportedCodingScheme();
-		supportedCodingScheme.setID(ID);
-		supportedCodingScheme.setName(name);
-		supportedCodingScheme.setVersion(version);
-		return supportedCodingScheme;
-	}
-
-	public void insertSupportedCodingScheme(
-		int ID,
-		String name,
-		String version) throws Exception {
-
-		SupportedCodingScheme supportedCodingScheme = createSupportedCodingScheme(
-			ID,
-			name,
-			version);
-		insertSupportedCodingScheme(supportedCodingScheme);
-	}
-
-	public void updateSupportedCodingScheme(
-		int ID,
-		String name,
-		String version) throws Exception {
-
-		SupportedCodingScheme supportedCodingScheme = createSupportedCodingScheme(
-			ID,
-			name,
-			version);
-		updateSupportedCodingScheme(supportedCodingScheme);
-	}
-
-	public void deleteSupportedCodingScheme(
-		int ID,
-		String name,
-		String version) throws Exception {
-
-		SupportedCodingScheme supportedCodingScheme = createSupportedCodingScheme(
-			ID,
-			name,
-			version);
-		deleteSupportedCodingScheme(supportedCodingScheme);
-	}
-
-	public void insertSupportedCodingScheme(SupportedCodingScheme supportedCodingScheme) throws Exception {
-		WritableApplicationService appService = (WritableApplicationService)ApplicationServiceProvider.getApplicationService();
-		InsertExampleQuery query = new InsertExampleQuery(supportedCodingScheme);
-		SDKQueryResult queryResult = appService.executeQuery(query);
-		//supportedCodingScheme = (SupportedCodingScheme)queryResult.getObjectResult();
-	}
-
-
-	public void updateSupportedCodingScheme(SupportedCodingScheme supportedCodingScheme) throws Exception {
-		WritableApplicationService appService = (WritableApplicationService)ApplicationServiceProvider.getApplicationService();
-		UpdateExampleQuery query = new UpdateExampleQuery(supportedCodingScheme);
-		SDKQueryResult queryResult = appService.executeQuery(query);
-		//supportedCodingScheme = (SupportedCodingScheme)queryResult.getObjectResult();
-	}
-
-
-	public void deleteSupportedCodingScheme(SupportedCodingScheme supportedCodingScheme) throws Exception {
-		WritableApplicationService appService = (WritableApplicationService)ApplicationServiceProvider.getApplicationService();
-		DeleteExampleQuery query = new DeleteExampleQuery(supportedCodingScheme);
-		SDKQueryResult queryResult = appService.executeQuery(query);
-	}
-
-    // To be deleted. No need to have a RootConcept table.
-	private RootConcept createRootConcept(
-		int reportID,
-		int codingSchemeId,
-		String conceptCode,
-		String conceptName,
-		String constributingSource) {
-
-		RootConcept rootConcept = new RootConcept();
-		rootConcept.setReportID(reportID);
-		rootConcept.setCodingSchemeId(codingSchemeId);
-		rootConcept.setConceptCode(conceptCode);
-		rootConcept.setConceptName(conceptName);
-		rootConcept.setConstributingSource(constributingSource);
-		return rootConcept;
-	}
-
-	public void insertRootConcept(
-		int reportID,
-		int codingSchemeId,
-		String conceptCode,
-		String conceptName,
-		String constributingSource) throws Exception {
-
-		RootConcept rootConcept = createRootConcept(
-			reportID,
-			codingSchemeId,
-			conceptCode,
-			conceptName,
-			constributingSource);
-		insertRootConcept(rootConcept);
-	}
-
-	public void updateRootConcept(
-		int reportID,
-		int codingSchemeId,
-		String conceptCode,
-		String conceptName,
-		String constributingSource) throws Exception {
-
-		RootConcept rootConcept = createRootConcept(
-			reportID,
-			codingSchemeId,
-			conceptCode,
-			conceptName,
-			constributingSource);
-		updateRootConcept(rootConcept);
-	}
-
-	public void deleteRootConcept(
-		int reportID,
-		int codingSchemeId,
-		String conceptCode,
-		String conceptName,
-		String constributingSource) throws Exception {
-
-		RootConcept rootConcept = createRootConcept(
-			reportID,
-			codingSchemeId,
-			conceptCode,
-			conceptName,
-			constributingSource);
-		deleteRootConcept(rootConcept);
-	}
-
-	public void insertRootConcept(RootConcept rootConcept) throws Exception {
-		WritableApplicationService appService = (WritableApplicationService)ApplicationServiceProvider.getApplicationService();
-		InsertExampleQuery query = new InsertExampleQuery(rootConcept);
-		SDKQueryResult queryResult = appService.executeQuery(query);
-		//rootConcept = (RootConcept)queryResult.getObjectResult();
-	}
-
-
-	public void updateRootConcept(RootConcept rootConcept) throws Exception {
-		WritableApplicationService appService = (WritableApplicationService)ApplicationServiceProvider.getApplicationService();
-		UpdateExampleQuery query = new UpdateExampleQuery(rootConcept);
-		SDKQueryResult queryResult = appService.executeQuery(query);
-		//rootConcept = (RootConcept)queryResult.getObjectResult();
-	}
-
-
-	public void deleteRootConcept(RootConcept rootConcept) throws Exception {
-		WritableApplicationService appService = (WritableApplicationService)ApplicationServiceProvider.getApplicationService();
-		DeleteExampleQuery query = new DeleteExampleQuery(rootConcept);
 		SDKQueryResult queryResult = appService.executeQuery(query);
 	}
 

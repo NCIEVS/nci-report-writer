@@ -152,7 +152,6 @@ public class DataUtils {
 	Statement stmt;
 	ResultSet rs;
 
-	private List supportedStandardReportTemplateList = new ArrayList();
 	private List supportedStandardReportList = new ArrayList();
 
 	private static List standardReportTemplateList = null;
@@ -173,11 +172,17 @@ public class DataUtils {
     private static HashMap csnv2codingSchemeNameMap = null;
     private static HashMap csnv2VersionMap = null;
 
+    private static List directionList = null;
 
     public DataUtils()
     {
+		directionList = new ArrayList();
+
 		adminTaskList = new ArrayList();
+
 		adminTaskList.add(new SelectItem("Administer Standard Reports"));
+		adminTaskList.add(new SelectItem("Maintain Report Status"));
+		adminTaskList.add(new SelectItem("Assign Report Status"));
 
 		userTaskList = new ArrayList();
 		userTaskList.add(new SelectItem("Retrieve Standard Reports"));
@@ -213,6 +218,8 @@ public class DataUtils {
 			{
 				adminTaskList = new ArrayList();
 				adminTaskList.add(new SelectItem("Administer Standard Reports"));
+				adminTaskList.add(new SelectItem("Add or Inactivate Report Status"));
+				adminTaskList.add(new SelectItem("Assign Report Status"));
 			}
 		    return adminTaskList;
 		}
@@ -227,13 +234,13 @@ public class DataUtils {
 		}
 	}
 
-	public static List getStandardReportTemplateList(Boolean isAdmin) {
-
-		if (isAdmin == null || isAdmin == Boolean.FALSE) return null;
+	//public static List getStandardReportTemplateList(Boolean isAdmin) {
+	public static List getStandardReportTemplateList() {
+		//if (isAdmin == null || isAdmin == Boolean.FALSE) return null;
 
         standardReportTemplateList = new ArrayList();
 
-        // To be modified:
+        // To be modified: retrieve the list from database using SDK writeable API
         standardReportTemplateList.add(new SelectItem("Structured Product Labeling (SPL) Report"));
         standardReportTemplateList.add(new SelectItem("FDA-UNII Subset Report"));
         standardReportTemplateList.add(new SelectItem("Individual Case Safety (ICS) Subset Report"));
@@ -242,6 +249,8 @@ public class DataUtils {
 
 	    return standardReportTemplateList;
 	}
+
+
 
 
 	public List getSupportedStandardReports() {
@@ -397,6 +406,16 @@ public class DataUtils {
 		return null;
 	}
 
+
+    public static String getCodingSchemeName(String key)
+    {
+ 		return (String) csnv2codingSchemeNameMap.get(key);
+	}
+
+    public static String getCodingSchemeVersion(String key)
+    {
+ 		return (String) csnv2VersionMap.get(key);
+	}
 
     public static Vector<String> getRepresentationalFormListData(String key)
     {

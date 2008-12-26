@@ -22,6 +22,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import javax.servlet.ServletContext;
+
 import javax.faces.model.SelectItem;
 
 
@@ -55,7 +57,7 @@ import javax.faces.model.SelectItem;
 
 public class UserSessionBean extends Object
 {
-	  private static Logger KLO_log = Logger.getLogger("LoginBean KLO");
+	  private static Logger KLO_log = Logger.getLogger("UserSessionBean KLO");
 
 	  Boolean isAdmin = null;
 
@@ -71,6 +73,7 @@ public class UserSessionBean extends Object
 	  private String rootConceptCode = null;
 
 	  private String selectedOntology = null;
+
 
 
       public void setIsAdmin(Boolean bool_obj)
@@ -157,8 +160,14 @@ public class UserSessionBean extends Object
 		  selectedTask = newValue;
 	  }
 
+	  public void reportSelectionChanged(ValueChangeEvent vce) {
+		  String newValue = (String) vce.getNewValue();
+          setSelectedStandardReportTemplate(newValue);
+	  }
+
 
 	  public List getStandardReportTemplateList() {
+		    /*
 		    HttpServletRequest request = getHttpRequest();
 			HttpSession session = request.getSession(false);
 
@@ -166,14 +175,17 @@ public class UserSessionBean extends Object
 			if (session != null) {
 				 isAdmin = (Boolean) request.getSession(true).getAttribute("isAdmin");
 			}
+			*/
 
-			List list = DataUtils.getStandardReportTemplateList(isAdmin);
+			//List list = DataUtils.getStandardReportTemplateList(isAdmin);
+			List list = DataUtils.getStandardReportTemplateList();
 			if (selectedStandardReportTemplate == null)
 			{
 			    if (list != null && list.size() > 0)
 			    {
 					SelectItem item = (SelectItem) list.get(0);
-					selectedStandardReportTemplate = item.getLabel();
+					//selectedStandardReportTemplate = item.getLabel();
+					setSelectedStandardReportTemplate(item.getLabel());
 			    }
 			}
 		    return list;
@@ -186,7 +198,9 @@ public class UserSessionBean extends Object
 
 
 	  public void setSelectedStandardReportTemplate(String selectedStandardReportTemplate) {
-		  this.selectedStandardReportTemplate = selectedStandardReportTemplate;
+		  HttpServletRequest request = getHttpRequest();
+		  request.getSession().setAttribute("selectedStandardReportTemplate", selectedStandardReportTemplate);
+ 		  this.selectedStandardReportTemplate = selectedStandardReportTemplate;
 	  }
 
 	  //taskSelectionChanged
@@ -204,16 +218,17 @@ public class UserSessionBean extends Object
 			  {
 				  return "add_standard_report_template";
 			  }
-
 			  return "administer_standard_reports";
 		  }
-		  else if (this.selectedTask.compareTo("Retrieve Standard Reports") == 0) return "retrieve_standard_reports";
+		  else if (this.selectedTask.compareTo("Retrieve Standard Reports") == 0)
+		     return "retrieve_standard_reports";
 
 		  return null;
 	  }
 
 	  public String addColumnAction() {
-
+KLO_log.warn("******************************************* addColumnAction() ");
+//add_standard_report_column.jsp
 		  return "add_standard_report_column";
 	  }
 
@@ -255,5 +270,36 @@ public class UserSessionBean extends Object
 
 		  return "generate_standard_report";
 	  }
+
+
+      public String addReportAction() {
+		  HttpServletRequest request = (HttpServletRequest)FacesContext.getCurrentInstance().getExternalContext().getRequest();
+
+          String codingSchemeNameAndVersion = (String) request.getSession().getAttribute("selectedOntology");
+          String codingSchemeName = DataUtils.getCodingSchemeName(codingSchemeNameAndVersion);
+          String codingSchemeVersion = DataUtils.getCodingSchemeVersion(codingSchemeNameAndVersion);
+
+          String rootConceptCode = (String) request.getParameter("rootConceptCode");
+          String selectedAssociation = (String) request.getSession().getAttribute("selectedAssociation");
+		  String selectedLevel = (String) request.getSession().getAttribute("selectedLevel");
+		  String selectedDirection = (String) request.getSession().getAttribute("selectedDirection");
+
+
+          KLO_log.warn("codingSchemeName: " + codingSchemeName);
+          KLO_log.warn("codingSchemeVersion: " + codingSchemeVersion);
+
+          KLO_log.warn("rootConceptCode: " + rootConceptCode);
+          KLO_log.warn("associationname: " + selectedAssociation);
+          KLO_log.warn("direction: " + selectedDirection);
+
+          KLO_log.warn("level: " + selectedLevel);
+
+          // Save results using SDK writable API.
+
+          return "generate_standard_report";
+
+	  }
+
+
 
   }

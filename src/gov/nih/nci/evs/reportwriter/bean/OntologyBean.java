@@ -17,6 +17,12 @@ import javax.faces.event.ActionEvent;
 import javax.faces.event.ValueChangeEvent;
 import javax.faces.model.ListDataModel;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
+import javax.servlet.ServletContext;
+
+
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 
@@ -108,6 +114,8 @@ import javax.faces.model.SelectItem;
 
 import gov.nih.nci.evs.reportwriter.utils.*;
 
+
+
 /**
   * <!-- LICENSE_TEXT_START -->
 * Copyright 2008 NGIT. This software was developed in conjunction with the National Cancer Institute,
@@ -139,6 +147,9 @@ import gov.nih.nci.evs.reportwriter.utils.*;
 
 public class OntologyBean //extends BaseBean
 {
+    private static Logger KLO_log = Logger.getLogger("OntologyBean KLO");
+
+
 	private static List _ontologies = null;
 
 	private org.LexGrid.LexBIG.LexBIGService.LexBIGService lbSvc = null;
@@ -153,6 +164,9 @@ public class OntologyBean //extends BaseBean
     private List associationList = null;
     private String selectedAssociation = null;
 
+    private String selectedDirection = null;
+
+    private List directionList = null;
 
 // Initialization
 
@@ -163,19 +177,12 @@ public class OntologyBean //extends BaseBean
   public void setSelectedOntology(String selectedOntology)
   {
 	   this.selectedOntology = selectedOntology;
+	   HttpServletRequest request = (HttpServletRequest)FacesContext.getCurrentInstance().getExternalContext().getRequest();
+	   request.getSession().setAttribute("selectedOntology", selectedOntology); // ontology name and version
   }
 
   public String getSelectedOntology() {
 	  return this.selectedOntology;
-  }
-
-  public void setSelectedAssociation(String selectedAssociation)
-  {
-	   this.selectedAssociation = selectedAssociation;
-  }
-
-  public String getSelectedAssociation() {
-	  return this.selectedAssociation;
   }
 
 
@@ -232,10 +239,28 @@ public class OntologyBean //extends BaseBean
 	}
 
 
+//////////////////////////////////////////////////////////////////////////////////////////////
+// Report Template Data
+//////////////////////////////////////////////////////////////////////////////////////////////
+
+
 	  public void ontologySelectionChanged(ValueChangeEvent vce) {
 		  String newValue = (String) vce.getNewValue();
           setSelectedOntology(newValue);
           associationList = getAssociationList();
+	  }
+
+
+
+	  public void setSelectedDirection(String selectedDirection)
+	  {
+		   this.selectedDirection = selectedDirection;
+		   HttpServletRequest request = (HttpServletRequest)FacesContext.getCurrentInstance().getExternalContext().getRequest();
+		   request.getSession().setAttribute("selectedDirection", selectedDirection);
+	  }
+
+	  public String getSelectedDirection() {
+		  return this.selectedDirection;
 	  }
 
 
@@ -245,9 +270,6 @@ public class OntologyBean //extends BaseBean
 		  {
 			  _ontologies = getOntologyList();
 		  }
-
-		  System.out.println("************************************** selectedOntology " + selectedOntology);
-
 
 		  if (associationList == null)
 		  {
@@ -298,6 +320,8 @@ public class OntologyBean //extends BaseBean
 
 	public void setSelectedLevel(String selectedLevel) {
 		this.selectedLevel = selectedLevel;
+		HttpServletRequest request = (HttpServletRequest)FacesContext.getCurrentInstance().getExternalContext().getRequest();
+		request.getSession().setAttribute("selectedLevel", selectedLevel);
 	}
 
 
@@ -308,8 +332,35 @@ public class OntologyBean //extends BaseBean
 	public void levelSelectionChanged(ValueChangeEvent event) {
 		if (event.getNewValue() == null) return;
 		//int id = Integer.parseInt((String) event.getNewValue());
+		String level = (String) event.getNewValue(); // change to integer before saving to database
+		setSelectedLevel(level);
 	}
 
+
+
+	  public String getSelectedAssociation() {
+		  return this.selectedAssociation;
+	  }
+
+
+	  public void setSelectedAssociation(String selectedAssociation) {
+		  this.selectedAssociation = selectedAssociation;
+		  HttpServletRequest request = (HttpServletRequest)FacesContext.getCurrentInstance().getExternalContext().getRequest();
+		  request.getSession().setAttribute("selectedAssociation", selectedAssociation);
+	  }
+
+
+	  public void associationSelectionChanged(ValueChangeEvent event) {
+		  if (event.getNewValue() == null) return;
+		  String associationName = (String) event.getNewValue();
+		  setSelectedAssociation(associationName);
+	  }
+
+
+
+//////////////////////////////////////////////////////////////////////////////////////////////
+// Report Column Data
+//////////////////////////////////////////////////////////////////////////////////////////////
 
 	private String selectedPropertyName = null;
 	private List propertyNameList = null;
@@ -317,6 +368,15 @@ public class OntologyBean //extends BaseBean
 
 
 	public List getPropertyNameList() {
+
+KLO_log.warn("***** getPropertyNameList()  ");
+
+		if (selectedOntology == null)
+		{
+	   		HttpServletRequest request = (HttpServletRequest)FacesContext.getCurrentInstance().getExternalContext().getRequest();
+	   		selectedOntology = (String) request.getSession().getAttribute("selectedOntology"); // ontology name and version
+        }
+
 		propertyNameListData = DataUtils.getPropertyNameListData(selectedOntology);
 		propertyNameList = new Vector<String>();
 		propertyNameList.add(new SelectItem(""));
@@ -353,6 +413,15 @@ public class OntologyBean //extends BaseBean
 
 
 	public List getRepresentationalFormList() {
+
+		KLO_log.warn("***** getRepresentationalFormList()  ");
+
+
+		if (selectedOntology == null)
+		{
+	   		HttpServletRequest request = (HttpServletRequest)FacesContext.getCurrentInstance().getExternalContext().getRequest();
+	   		selectedOntology = (String) request.getSession().getAttribute("selectedOntology"); // ontology name and version
+        }
 		representationalFormListData = DataUtils.getRepresentationalFormListData(selectedOntology);
 		representationalFormList = new ArrayList();
 		if (representationalFormListData != null) {
@@ -413,6 +482,14 @@ public class OntologyBean //extends BaseBean
 
 
 	public List getPropertyQualifierList() {
+
+			KLO_log.warn("***** getPropertyQualifierList()  ");
+
+		if (selectedOntology == null)
+		{
+	   		HttpServletRequest request = (HttpServletRequest)FacesContext.getCurrentInstance().getExternalContext().getRequest();
+	   		selectedOntology = (String) request.getSession().getAttribute("selectedOntology"); // ontology name and version
+        }
 		propertyQualifierListData = DataUtils.getPropertyQualifierListData(selectedOntology);
 		propertyQualifierList = new ArrayList();
 		propertyQualifierList.add(new SelectItem(""));
@@ -425,6 +502,18 @@ public class OntologyBean //extends BaseBean
 		}
 		return propertyQualifierList;
 	}
+
+
+	public List getDirectionList() {
+        directionList = new ArrayList();
+        directionList.add(new SelectItem("source"));
+        directionList.add(new SelectItem("target"));
+
+        setSelectedDirection("source");
+	    return directionList;
+	}
+
+
 
 	public void setSelectedPropertyQualifier(String selectedPropertyQualifier) {
 		this.selectedPropertyQualifier = selectedPropertyQualifier;
@@ -484,6 +573,14 @@ public class OntologyBean //extends BaseBean
 
 
 	public List getSourceList() {
+
+			KLO_log.warn("***** getSourceList()  ");
+
+		if (selectedOntology == null)
+		{
+	   		HttpServletRequest request = (HttpServletRequest)FacesContext.getCurrentInstance().getExternalContext().getRequest();
+	   		selectedOntology = (String) request.getSession().getAttribute("selectedOntology"); // ontology name and version
+        }
 		sourceListData = DataUtils.getSourceListData(selectedOntology);
 		sourceList = new ArrayList();
 		sourceList.add(new SelectItem(" "));
@@ -510,5 +607,6 @@ public class OntologyBean //extends BaseBean
 	public void sourceSelectionChanged(ValueChangeEvent event) {
 		if (event.getNewValue() == null) return;
 	}
+
 
 }

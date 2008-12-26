@@ -78,6 +78,7 @@
 											</td>									
 										</tr> 
 										
+																				
 										<tr class="dataRowDark">
 										
 											<td class="dataCellText">											
@@ -89,17 +90,10 @@
 												     <f:selectItems value="#{userSessionBean.propertyTypeList}" />
 												</h:selectOneMenu>											
 											</td>											
-										
-										        <!--
-											<td class="dataCellText">Property Type</td>
-											<td class="dataCellText"><input type="text" name="propertytype"></td>
-											-->
+		
 										</tr>
 										<tr class="dataRowLight">
-										        <!--
-											<td class="dataCellText">Property Name</td>
-											<td class="dataCellText"><input type="text" name="propertyname"></td>
-										        -->
+		
 											<td class="dataCellText">
 												<h:outputText value="Property Name" />
 											</td>
@@ -117,11 +111,7 @@
 											<td class="dataCellText"><input type="radio" name="preferred" value="yes" >Yes&nbsp;<input type="radio" name="preferred" value="no">No<input type="radio" name="preferred" value="na" checked>NA</td>
 										</tr>
 										<tr class="dataRowLight">
-										        <!--
-											<td class="dataCellText">Representational Form</td>
-											<td class="dataCellText"><input type="text" name="representationalForm"></td>
-											-->
-										
+												
 											<td class="dataCellText">
 												<h:outputText value="Representational Form" />
 											</td>
@@ -134,10 +124,7 @@
 											
 										</tr>
 										<tr class="dataRowDark">
-										        <!--
-											<td class="dataCellText">Source</td>
-											<td class="dataCellText"><input type="text" name="source"></td>
-											-->
+		
 											
 											<td class="dataCellText">
 												<h:outputText value="Source" />
@@ -152,11 +139,7 @@
 											
 										</tr>
 										<tr class="dataRowLight">
-										        <!--
-											<td class="dataCellText">Qualifier Name</td>
-											<td class="dataCellText"><input type="text" name="qualifiernname"></td>
-											-->
-											
+										
 											
 											<td class="dataCellText">
 												<h:outputText value="Property Qualifier" />
@@ -173,13 +156,7 @@
 											<td class="dataCellText">Qualifier Value</td>
 											<td class="dataCellText"><input type="text" name="qualifiervalue"></td>
 										</tr>
-										
-										<!--
-										<tr class="dataRowLight">
-											<td class="dataCellText">Delimiter</td>
-											<td class="dataCellText"><input type="text" name="delimeter" value="|"></td>
-										</tr>
-										-->
+		
 										
 										<tr class="dataRowLight">
 											<td class="dataCellText">
@@ -196,10 +173,13 @@
 										<tr class="dataRowDark">
 											<td class="dataCellText">Dependent Field (if applicable)</td>
 											<td class="dataCellText"><input type="text" name="dependentfield"></td>
-										</tr>										
+										</tr>
+										
+										
 									</table>
 								</td>
 							</tr>
+							
 							<tr>
 								<td align="right" class="actionSection">
 									<!-- bottom action buttons begins -->

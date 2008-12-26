@@ -75,37 +75,21 @@
 										</tr>
 										
 										<tr class="dataRowDark">
-                                                                                
-										<td class="dataCellText">Root Concept Code</td>
-                                                                                <!--
-										<td>
-										
-											<h:inputText
-												id="rootConceptCode"
-												value="#{userDataSession.rootConceptCode}">
-											</h:inputText>
-										
-										
-										</td>
-										-->
-										
-										<td class="dataCellText"><input type="text" name="rootConceptCode"></td>
+
+											<td class="dataCellText">Root Concept Code</td>
+
+											<td class="dataCellText"><input type="text" name="rootConceptCode"></td>
 										
 											
 										</tr>
 										<tr class="dataRowLight">
-										
-										<!--        
-											<td class="dataCellText">Association Name</td>
-											<td class="dataCellText"><input type="text" name="associationname"></td>
-										-->
 										
 											<td class="dataCellText">											
 												<h:outputText value="Association Name" />
 											</td>
 
 											<td class="dataCellText">
-												<h:selectOneMenu id="associationId" value="#{ontologyBean.selectedAssociation}" >
+												<h:selectOneMenu id="associationId" value="#{ontologyBean.selectedAssociation}" valueChangeListener="#{ontologyBean.associationSelectionChanged}" >
 												     <f:selectItems value="#{ontologyBean.associationList}" />
 												</h:selectOneMenu>											
 											</td>											
@@ -115,25 +99,33 @@
 										
 										
 										<tr class="dataRowDark">
+										
+										
 											<td class="dataCellText">Direction</td>
-											<td class="dataCellText"><input type="radio" name="direction" value="source" checked>Source&nbsp;<input type="radio" name="direction" value="target">Target<br></td>
+											
+											<td class="dataCellText">											
+												<h:selectOneRadio id="direction"
+													value="#{ontologyBean.selectedDirection}">
+													<f:selectItems value="#{ontologyBean.directionList}"/>
+												</h:selectOneRadio>
+											</td>
+
+											<!--
+											<td class="dataCellText"><input type="radio" name="direction" value="source" checked>Source&nbsp;<input type="radio" name="direction" value="target" >Target<br></td>
+											-->
 										</tr>
 										<tr class="dataRowLight">
-										<!--
-											<td class="dataCellText">Level</td>
-											<td class="dataCellText"><input type="text" name="level"></td>
-										-->
-										
-										
-										<td class="dataCellText">
-											<h:outputText value="Level" />
-										</td>
 
-										<td class="dataCellText">
-											<h:selectOneMenu id="LevelId" value="#{ontologyBean.selectedLevel}" valueChangeListener="#{ontologyBean.levelSelectionChanged}" >
-												<f:selectItems value="#{ontologyBean.levelList}" />
-											</h:selectOneMenu>
-										</td>										
+
+											<td class="dataCellText">
+												<h:outputText value="Level" />
+											</td>
+
+											<td class="dataCellText">
+												<h:selectOneMenu id="LevelId" value="#{ontologyBean.selectedLevel}" valueChangeListener="#{ontologyBean.levelSelectionChanged}" >
+													<f:selectItems value="#{ontologyBean.levelList}" />
+												</h:selectOneMenu>
+											</td>										
 										
 										
 										</tr>
@@ -146,7 +138,7 @@
 									<!-- bottom action buttons begins -->
 									<table cellpadding="4" cellspacing="0" border="0">
 										<tr>
-											<td><h:commandButton id="save" action="save" value="Save" /></td>
+											<td><h:commandButton id="save" action="#{userSessionBean.addReportAction}" value="Save" /></td>
 											<td><h:commandButton id="reset" action="reset" value="Reset" /></td>
 											<td><h:commandButton id="back" action="back" value="Back" /></td>
 											<td><h:commandButton id="next" action="#{userSessionBean.addColumnAction}" value="Next" /></td>

@@ -11,7 +11,9 @@
 
 	<!-- classpath -->
 	<path id="compile.classpath">
-		<pathelement path ="${webinf.dir}/lib/lexbig.jar"/>
+		<!-- <pathelement path ="${webinf.dir}/lib/lexbig.jar"/> -->
+		<pathelement path ="${webinf.dir}/lib/lbRuntime.jar"/>
+		
 		<pathelement path ="${webinf.dir}/lib/poi-contrib-3.2-FINAL-20081019.jar"/>
 		<pathelement path ="${webinf.dir}/lib/poi-3.2-FINAL-20081019.jar"/>
 		<pathelement path ="${webinf.dir}/lib/poi-scratchpad-3.2-FINAL-20081019.jar"/>
