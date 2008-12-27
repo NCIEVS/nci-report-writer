@@ -19,7 +19,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
 import org.apache.log4j.Logger;
-
+import gov.nih.nci.evs.reportwriter.utils.*;
 /**
   * <!-- LICENSE_TEXT_START -->
 * Copyright 2007 NGIT. This software was developed in conjunction with the National Cancer Institute,
@@ -148,10 +148,6 @@ public class LoginBean extends Object
   public String loginAction()
   {
 		String applicationName = "ncireportwriter";
-
-		//KLO_log.warn("applicationName: " + applicationName);
-		//KLO_log.warn("userid: " + userid);
-		//KLO_log.warn("password: " + password);
 		isAdmin = false;
 
 		//Get the user credentials from the database and login
@@ -162,13 +158,20 @@ public class LoginBean extends Object
 			{
 				FacesContext context = FacesContext.getCurrentInstance();
 			    HttpServletRequest request = (HttpServletRequest)context.getExternalContext().getRequest();
-			    HttpSession session = request.getSession(false);
+
+			    //HttpSession session = request.getSession(false);
+
+			    HttpSession session = request.getSession(); // true
 			    if (session != null) {
-					 request.getSession(true).setAttribute("uid", userid);
-					 request.getSession(true).setAttribute("password", password);
+					 //request.getSession(true).setAttribute("uid", userid);
+					 //request.getSession(true).setAttribute("password", password);
+					 session.setAttribute("uid", userid);
+					 session.setAttribute("password", password);
 				}
 				isAdmin = hasAdminPrivilege();
-				request.getSession(true).setAttribute("isAdmin", isAdmin);
+				//request.getSession(true).setAttribute("isAdmin", isAdmin);
+
+				session.setAttribute("isAdmin", isAdmin);
 				return "success";
 			}
 			else
@@ -183,6 +186,14 @@ public class LoginBean extends Object
 		return "failure";
 	  }
 
+
+	   public String logoutAction() {
+		  SessionUtil.getSession().invalidate();
+		  return "logout";
+	   }
+
+
+
 	  public void changeTaskSelection(ValueChangeEvent vce) {
 		 String newValue = (String)vce.getNewValue();
 		 this.selectedTask = newValue;
@@ -191,5 +202,10 @@ public class LoginBean extends Object
 	  public Object getService(String serviceBeanName) throws javax.naming.NamingException {
 		return ctx.lookup(serviceBeanName);
 	  }
+
+      public String logout() {
+         SessionUtil.getSession().invalidate();
+         return "logout";
+      }
 
   }
