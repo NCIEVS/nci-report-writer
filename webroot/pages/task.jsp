@@ -77,6 +77,8 @@
 									<table cellpadding="4" cellspacing="0" border="0">
 										<tr>
 											<td><h:commandButton id="next" action="#{userSessionBean.performTask}" value="Next" /></td>
+											<td><h:commandButton id="logout" action="#{loginBean.logoutAction}" value="Logout" /></td>
+																
 										</tr>
 									</table>
 									<!-- bottom action buttons end -->
