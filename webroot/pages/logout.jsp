@@ -2,12 +2,29 @@
 <%@ taglib uri="http://java.sun.com/jsf/html" prefix="h" %>
 <%@ taglib uri="http://java.sun.com/jsf/core" prefix="f" %> 
 
+<%
+String path = request.getContextPath();
+String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.getServerPort()+path+"/";
+HttpSession httpSession=request.getSession(true);
+httpSession.invalidate();
+%>
+
+
 <f:loadBundle basename="gov.nih.nci.evs.reportwriter.bean.Resources" var="reportwriterBundle"/>
 
 <%@ page contentType="text/html;charset=windows-1252"%>
 
 <html>
 <head>
+
+<base href="<%=basePath%>"/>
+
+<meta http-equiv="pragma" content="no-cache"/>
+<meta http-equiv="cache-control" content="no-cache"/>
+<meta http-equiv="expires" content="0"/>    
+<meta http-equiv="keywords" content="NCI Report Writer"/>
+<meta http-equiv="description" content="NCI Report Writer"/>
+
 <title>Home</title>
 <link rel="stylesheet" type="text/css" href="<%= request.getContextPath() %>/css/styleSheet.css" />
 <script src="script.js" type="text/javascript"></script>
