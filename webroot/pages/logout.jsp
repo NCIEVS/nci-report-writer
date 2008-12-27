@@ -5,12 +5,9 @@
 <%
 String path = request.getContextPath();
 String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.getServerPort()+path+"/";
-HttpSession httpSession=request.getSession(true);
+HttpSession httpSession=request.getSession(false);
 httpSession.invalidate();
 %>
-
-
-<f:loadBundle basename="gov.nih.nci.evs.reportwriter.bean.Resources" var="reportwriterBundle"/>
 
 <%@ page contentType="text/html;charset=windows-1252"%>
 
@@ -55,7 +52,7 @@ httpSession.invalidate();
                               <tr>
                                     <td height="20" width="100%" class="mainMenu">
                 
-<%@ include file="/pages/templates/menuBar.xhtml" %>
+<%@ include file="/pages/templates/menuBar1.xhtml" %>
                   
                                     </td>
                               </tr>
@@ -109,7 +106,7 @@ httpSession.invalidate();
                                       </tr>
                                       
                                       <tr>
-                                        <td class="txtHighlight">You have successfully logout. Thank you for visiting NCI Report Writer.</td>
+                                        <td class="txtHighlight">You have successfully logged out.</td>
                                       </tr>                                      
                                       
  
