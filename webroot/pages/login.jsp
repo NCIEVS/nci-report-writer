@@ -38,7 +38,7 @@
                               <tr>
                                     <td height="20" width="100%" class="mainMenu">
                 
-<%@ include file="/pages/templates/menuBar.xhtml" %>
+<%@ include file="/pages/templates/menuBar0.xhtml" %>
                   
                                     </td>
                               </tr>
