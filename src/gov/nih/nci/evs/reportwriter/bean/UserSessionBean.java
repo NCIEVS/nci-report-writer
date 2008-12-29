@@ -2,31 +2,19 @@
 package gov.nih.nci.evs.reportwriter.bean;
 
 import gov.nih.nci.evs.reportwriter.utils.DataUtils;
-import gov.nih.nci.security.AuthorizationManager;
-import gov.nih.nci.security.SecurityServiceProvider;
-import gov.nih.nci.security.authorization.domainobjects.Group;
-import gov.nih.nci.security.authorization.domainobjects.User;
+import gov.nih.nci.evs.reportwriter.utils.SDKClientUtil;
 
-import java.util.Iterator;
-import java.util.List;
-import java.util.Set;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Vector;
 
-
-import javax.faces.event.ValueChangeEvent;
-
-import org.apache.log4j.Logger;
-
-import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
+import javax.faces.event.ValueChangeEvent;
+import javax.faces.model.SelectItem;
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import javax.servlet.ServletContext;
-
-import javax.faces.model.SelectItem;
+import org.apache.log4j.Logger;
 
 
 /**
@@ -286,12 +274,20 @@ KLO_log.warn("******************************************* addColumnAction() ");
           String codingSchemeNameAndVersion = (String) request.getSession().getAttribute("selectedOntology");
           String codingSchemeName = DataUtils.getCodingSchemeName(codingSchemeNameAndVersion);
           String codingSchemeVersion = DataUtils.getCodingSchemeVersion(codingSchemeNameAndVersion);
-
+          String label = "FDA";
+          
           String rootConceptCode = (String) request.getParameter("rootConceptCode");
           String selectedAssociation = (String) request.getSession().getAttribute("selectedAssociation");
 		  String selectedLevel = (String) request.getSession().getAttribute("selectedLevel");
 		  String selectedDirection = (String) request.getSession().getAttribute("selectedDirection");
-
+		  Boolean direction = null;
+		  
+		  if(selectedDirection.equals(Boolean.TRUE))
+			  direction = true;
+		  else
+			  direction = false;
+		  
+		  char delimiter = '$';
 
           KLO_log.warn("codingSchemeName: " + codingSchemeName);
           KLO_log.warn("codingSchemeVersion: " + codingSchemeVersion);
@@ -303,13 +299,101 @@ KLO_log.warn("******************************************* addColumnAction() ");
           KLO_log.warn("level: " + selectedLevel);
 
           // Save results using SDK writable API.
-
+          try{
+        	  SDKClientUtil sdkclientutil = new SDKClientUtil();
+        	  if(sdkclientutil != null) {
+  				System.out.println("************************ sdkclientutil is NOT NULL ****************************");
+  				sdkclientutil.insertStandardReportTemplate(codingSchemeName, codingSchemeVersion, label, rootConceptCode, selectedAssociation, direction, Integer.parseInt(selectedLevel), delimiter);
+  				System.out.println("************************ sdkclientutil is NOT NULL ****************************");
+  			}
+  			else
+  				System.out.println("************************ sdkclientutil is NULL ****************************");
+  				//KLO_log.warn("************************ sdkclientutil is NULL ****************************");
+          } catch(Exception e) {
+        	  e.printStackTrace();
+          }
+          
           return "generate_standard_report";
 
 	  }
 
 
-	private String selectedReportStatus = null;
+
+      public String addReportColumnAction() {
+    	  
+    	  KLO_log.warn("************ addReportColumnAction() ***************** ");
+		  HttpServletRequest request = (HttpServletRequest)FacesContext.getCurrentInstance().getExternalContext().getRequest();
+
+		  String fieldlabel = (String) request.getParameter("fieldlabel");
+  		  String fieldType = (String) request.getSession().getAttribute("selectedDataCategory"); 
+  		  String propertyType = (String) request.getSession().getAttribute("selectedPropertyType");
+  		  String propertyName = (String) request.getSession().getAttribute("selectedPropertyName");
+  		  String representationalForm = (String) request.getSession().getAttribute("selectedRepresentationalForm");
+		  String source = (String) request.getSession().getAttribute("selectedSource");
+  		  String propertyQualifier = (String) request.getSession().getAttribute("selectedPropertyQualifier");
+  		  String qualifierValue = (String) request.getParameter("qualifierValue");
+  		  String conditionalColumnId = (String) request.getParameter("dependentfield");
+  		  int ccid = -1;
+  		  
+  		  if(conditionalColumnId != null)
+  			if(conditionalColumnId != "")
+  				ccid = Integer.parseInt(conditionalColumnId);
+  		  
+		  String preferred = (String) request.getParameter("preferred");
+  		  Boolean isPreferred = null;
+  		  if(preferred != null) {
+			  if(preferred.equalsIgnoreCase("yes"))
+				  isPreferred = Boolean.TRUE;
+			  if(preferred.equalsIgnoreCase("no"))
+				  isPreferred = Boolean.FALSE;
+  		  }
+  		  
+		  String selectedDirection = (String) request.getSession().getAttribute("selectedDirection");
+		  Boolean direction = null;
+		  if(selectedDirection != null) {
+			  if(selectedDirection.equals(Boolean.TRUE))
+				  direction = Boolean.TRUE;
+			  else
+				  direction = Boolean.FALSE;
+		  }
+		  
+		  String delim = (String) request.getSession().getAttribute("selectedDelimiter");
+		  char delimiter = ' ';
+		  if(delim != null)
+			  if(delim != "")
+				  delimiter = delim.charAt(0);
+		  
+		  KLO_log.warn("fieldlabel: " + fieldlabel);
+          KLO_log.warn("fieldType: " + fieldType);
+          KLO_log.warn("propertyType: " + propertyType);
+          KLO_log.warn("propertyName: " + propertyName);
+          KLO_log.warn("representationalForm: " + representationalForm);
+          KLO_log.warn("source: " + source);
+          KLO_log.warn("qualifierName: " + propertyQualifier);
+          KLO_log.warn("qualifierValue: " + qualifierValue);
+          KLO_log.warn("isPreferred: " + isPreferred);
+          KLO_log.warn("direction: " + direction);
+          KLO_log.warn("ccid: " + ccid);
+          KLO_log.warn("delimiter: " + delimiter);
+
+          // Save results using SDK writable API.
+          try{
+        	  SDKClientUtil sdkclientutil = new SDKClientUtil();
+        	  if(sdkclientutil != null) {
+  				sdkclientutil.insertReportColumn(fieldlabel, fieldType,	propertyType, propertyName,	isPreferred, representationalForm, source, propertyQualifier, qualifierValue, delimiter, ccid);
+  			}
+  			else
+  				KLO_log.warn("************************ sdkclientutil is NULL ****************************");
+          } catch(Exception e) {
+        	  e.printStackTrace();
+          }
+          
+          return "add_standard_report_column";
+
+	  }
+
+      
+    private String selectedReportStatus = null;
 	private List reportStatusList = null;
 	private Vector<String> reportStatusListData = null;
 
