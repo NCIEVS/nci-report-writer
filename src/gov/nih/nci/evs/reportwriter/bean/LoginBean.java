@@ -204,7 +204,10 @@ public class LoginBean extends Object
 	  }
 
       public String logout() {
-         SessionUtil.getSession().invalidate();
+		 if (SessionUtil.getSession() != null)
+		 {
+         	SessionUtil.getSession().invalidate();
+		 }
          return "logout";
       }
 

@@ -11,6 +11,8 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 import java.util.ArrayList;
+import java.util.Vector;
+
 
 import javax.faces.event.ValueChangeEvent;
 
@@ -220,6 +222,12 @@ public class UserSessionBean extends Object
 			  }
 			  return "administer_standard_reports";
 		  }
+		  else if (this.selectedTask.compareTo("Maintain Report Status") == 0)
+		     return "report_status";
+
+		  else if (this.selectedTask.compareTo("Assign Report Status") == 0)
+		     return "assign_report_status";
+
 		  else if (this.selectedTask.compareTo("Retrieve Standard Reports") == 0)
 		     return "retrieve_standard_reports";
 
@@ -301,5 +309,56 @@ KLO_log.warn("******************************************* addColumnAction() ");
 	  }
 
 
+	private String selectedReportStatus = null;
+	private List reportStatusList = null;
+	private Vector<String> reportStatusListData = null;
 
+
+	public List getReportStatusList() {
+		reportStatusListData = DataUtils.getReportStatusListData();
+		reportStatusList = new ArrayList();
+		for (int i=0; i<reportStatusListData.size(); i++) {
+			String t = (String) reportStatusListData.elementAt(i);
+			reportStatusList.add(new SelectItem(t));
+		}
+		if (reportStatusList != null && reportStatusList.size() > 0) {
+			selectedReportStatus = ((SelectItem) reportStatusList.get(0)).getLabel();
+		}
+		return reportStatusList;
+	}
+
+	public void setSelectedReportStatus(String selectedReportStatus) {
+		this.selectedReportStatus = selectedReportStatus;
+		HttpServletRequest request = (HttpServletRequest)FacesContext.getCurrentInstance().getExternalContext().getRequest();
+		request.getSession().setAttribute("selectedReportStatus", selectedReportStatus);
+	}
+
+
+	public String getSelectedReportStatus() {
+		return this.selectedReportStatus;
+	}
+
+	public void reportStatusSelectionChanged(ValueChangeEvent event) {
+		if (event.getNewValue() == null) return;
+		setSelectedReportStatus(selectedReportStatus);
+	}
+
+    public String addStatusAction() {
+		// to be modified
+		HttpServletRequest request = (HttpServletRequest)FacesContext.getCurrentInstance().getExternalContext().getRequest();
+		String statusValue = (String) request.getParameter("statusValue");
+		// save to database
+
+		return "report_status";
+
+	}
+
+    public String assignStatusAction() {
+		// to be modified
+		HttpServletRequest request = (HttpServletRequest)FacesContext.getCurrentInstance().getExternalContext().getRequest();
+		// save to database
+
+		return "assign_report_status";
+
+	}
   }
