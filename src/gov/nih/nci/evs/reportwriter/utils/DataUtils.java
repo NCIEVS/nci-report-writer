@@ -5,6 +5,7 @@ import java.sql.ResultSet;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Vector;
 
 import javax.faces.model.SelectItem;
 
@@ -218,7 +219,7 @@ public class DataUtils {
 			{
 				adminTaskList = new ArrayList();
 				adminTaskList.add(new SelectItem("Administer Standard Reports"));
-				adminTaskList.add(new SelectItem("Add or Inactivate Report Status"));
+				adminTaskList.add(new SelectItem("Maintain Report Status"));
 				adminTaskList.add(new SelectItem("Assign Report Status"));
 			}
 		    return adminTaskList;
@@ -525,5 +526,16 @@ public class DataUtils {
 		}
 		return null;
 	}
+
+
+	public static Vector<String> getReportStatusListData() {
+		// To be modified:
+		Vector<String> reportStatusListData = new Vector<String>();
+		reportStatusListData.add("DRAFT");
+		reportStatusListData.add("APPROVED");
+		return reportStatusListData;
+	}
+
+
 
 }

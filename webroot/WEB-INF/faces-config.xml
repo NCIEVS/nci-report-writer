@@ -142,8 +142,84 @@
 
     </navigation-case>
 
+
+    <navigation-case>
+
+     <from-outcome>assign_report_status</from-outcome>
+
+     <to-view-id>/pages/assign_report_status.jsp</to-view-id>
+
+    </navigation-case>
+
+
+
+    <navigation-case>
+
+     <from-outcome>report_status</from-outcome>
+
+     <to-view-id>/pages/report_status.jsp</to-view-id>
+
+    </navigation-case>
+    
+    
    </navigation-rule>
 
+
+  <navigation-rule>
+
+    <from-view-id>/pages/report_status.jsp</from-view-id>
+
+    <navigation-case>
+     <from-outcome>add</from-outcome>
+     <to-view-id>/pages/add_report_status.jsp</to-view-id>
+    </navigation-case>
+    
+    <navigation-case>
+     <from-outcome>back</from-outcome>
+     <to-view-id>/pages/task.jsp</to-view-id>
+    </navigation-case>
+  </navigation-rule>  
+  
+  
+  <navigation-rule>
+
+    <from-view-id>/pages/add_report_status.jsp</from-view-id>
+
+    <navigation-case>
+     <from-action>#{userSessionBean.addStatusAction}</from-action>
+     <from-outcome>report_status</from-outcome>
+     <to-view-id>/pages/report_status.jsp</to-view-id>
+    </navigation-case>
+
+    <navigation-case>
+     <from-outcome>back</from-outcome>
+     <to-view-id>/pages/report_status.jsp</to-view-id>
+    </navigation-case>
+
+
+  </navigation-rule>  
+   
+
+  <navigation-rule>
+
+    <from-view-id>/pages/assign_report_status.jsp</from-view-id>
+
+    <navigation-case>
+     <from-action>#{userSessionBean.assignStatusAction}</from-action>
+     <from-outcome>report_status</from-outcome>
+     <to-view-id>/pages/assign_report_status.jsp</to-view-id>
+    </navigation-case>
+
+    <navigation-case>
+     <from-outcome>back</from-outcome>
+     <to-view-id>/pages/task.jsp</to-view-id>
+    </navigation-case>
+
+
+  </navigation-rule>  
+  
+  
+  
   <navigation-rule>
 
     <from-view-id>/pages/retrieve_standard_reports.jsp</from-view-id>
