@@ -53,7 +53,6 @@ public class SDKClientUtil {
 
 	public SDKClientUtil() {
 
-
 	}
 
 	private CustomizedQuery createCustomizedQuery(
@@ -266,7 +265,6 @@ public class SDKClientUtil {
 
 
 	private ReportColumn createReportColumn(
-		int ID,
 		String label,
 		String fieldId,
 		String propertyType,
@@ -278,8 +276,8 @@ public class SDKClientUtil {
 		String qualifierValue,
 		char delimiter,
 		int conditionalColumnId) {
+		
 		ReportColumn reportColumn = new ReportColumn();
-		reportColumn.setId(ID);
 		reportColumn.setLabel(label);
 		reportColumn.setFieldId(fieldId);
 		reportColumn.setPropertyType(propertyType);
@@ -291,11 +289,11 @@ public class SDKClientUtil {
 		reportColumn.setQualifierValue(qualifierValue);
 		reportColumn.setDelimiter(delimiter);
 		reportColumn.setConditionalColumnId(conditionalColumnId);
+		
 		return reportColumn;
 	}
 
 	public void insertReportColumn(
-		int ID,
 		String label,
 		String fieldId,
 		String propertyType,
@@ -309,7 +307,6 @@ public class SDKClientUtil {
 		int conditionalColumnId) throws Exception {
 
 		ReportColumn reportColumn = createReportColumn(
-			ID,
 			label,
 			fieldId,
 			propertyType,
@@ -321,11 +318,12 @@ public class SDKClientUtil {
 			qualifierValue,
 			delimiter,
 			conditionalColumnId);
+		
+		//System.out.println("created report column instance... ");
 		insertReportColumn(reportColumn);
 	}
 
 	public void updateReportColumn(
-		int ID,
 		String label,
 		String fieldId,
 		String propertyType,
@@ -339,7 +337,6 @@ public class SDKClientUtil {
 		int conditionalColumn) throws Exception {
 
 		ReportColumn reportColumn = createReportColumn(
-			ID,
 			label,
 			fieldId,
 			propertyType,
@@ -355,7 +352,6 @@ public class SDKClientUtil {
 	}
 
 	public void deleteReportColumn(
-		int ID,
 		String label,
 		String fieldId,
 		String propertyType,
@@ -369,7 +365,6 @@ public class SDKClientUtil {
 		int conditionalColumn) throws Exception {
 
 		ReportColumn reportColumn = createReportColumn(
-			ID,
 			label,
 			fieldId,
 			propertyType,
@@ -385,9 +380,14 @@ public class SDKClientUtil {
 	}
 
 	public void insertReportColumn(ReportColumn reportColumn) throws Exception {
+		
+		//System.out.println("creating writeable app service... ");
 		WritableApplicationService appService = (WritableApplicationService)ApplicationServiceProvider.getApplicationService();
+		//System.out.println("creating query... ");
 		InsertExampleQuery query = new InsertExampleQuery(reportColumn);
+		//System.out.println("obtaining query results... ");
 		SDKQueryResult queryResult = appService.executeQuery(query);
+		//System.out.println("DONE inserting a report column... ");
 		//reportColumn = (ReportColumn)queryResult.getObjectResult();
 	}
 
@@ -655,7 +655,6 @@ public class SDKClientUtil {
 
 
 	private StandardReportTemplate createStandardReportTemplate(
-		int ID,
 		String codingSchemeName,
 		String codingSchemeVersion,
 		String label,
@@ -664,7 +663,10 @@ public class SDKClientUtil {
 		boolean direction,
 		int level,
 		char delimiter) {
+		
+		//System.out.println("************** SDCLIENT: In create method ********************");
 		StandardReportTemplate standardReportTemplate = new StandardReportTemplate();
+		//System.out.println("************** SDCLIENT: StandardReportTemplate ID is ********************"+ standardReportTemplate.getId());
 		standardReportTemplate.setCodingSchemeName(codingSchemeName);
 		standardReportTemplate.setCodingSchemeVersion(codingSchemeVersion);
 		standardReportTemplate.setLabel(label);
@@ -677,7 +679,6 @@ public class SDKClientUtil {
 	}
 
 	public void insertStandardReportTemplate(
-		int ID,
 		String codingSchemeName,
 		String codingSchemeVersion,
 		String label,
@@ -687,8 +688,8 @@ public class SDKClientUtil {
 		int level,
 		char delimiter) throws Exception {
 
+		//System.out.println("************** SDCLIENT: In insert method ********************");
 		StandardReportTemplate standardReportTemplate = createStandardReportTemplate(
-			ID,
 			codingSchemeName,
 			codingSchemeVersion,
 			label,
@@ -697,11 +698,11 @@ public class SDKClientUtil {
 			direction,
 			level,
 			delimiter);
+		System.out.println("************** SDCLIENT: Created template instance ********************");
 		insertStandardReportTemplate(standardReportTemplate);
 	}
 
 	public void updateStandardReportTemplate(
-		int ID,
 		String codingSchemeName,
 		String codingSchemeVersion,
 		String label,
@@ -712,7 +713,6 @@ public class SDKClientUtil {
 		char delimiter) throws Exception {
 
 		StandardReportTemplate standardReportTemplate = createStandardReportTemplate(
-			ID,
 			codingSchemeName,
 			codingSchemeVersion,
 			label,
@@ -725,7 +725,6 @@ public class SDKClientUtil {
 	}
 
 	public void deleteStandardReportTemplate(
-		int ID,
 		String codingSchemeName,
 		String codingSchemeVersion,
 		String label,
@@ -736,7 +735,6 @@ public class SDKClientUtil {
 		char delimiter) throws Exception {
 
 		StandardReportTemplate standardReportTemplate = createStandardReportTemplate(
-			ID,
 			codingSchemeName,
 			codingSchemeVersion,
 			label,
@@ -749,9 +747,13 @@ public class SDKClientUtil {
 	}
 
 	public void insertStandardReportTemplate(StandardReportTemplate standardReportTemplate) throws Exception {
+		//System.out.println("************** SDCLIENT: creating writeable app service ********************");
 		WritableApplicationService appService = (WritableApplicationService)ApplicationServiceProvider.getApplicationService();
+		//System.out.println("************** SDCLIENT: creating query ********************");
 		InsertExampleQuery query = new InsertExampleQuery(standardReportTemplate);
+		//System.out.println("************** SDCLIENT: obtaining query result ********************");
 		SDKQueryResult queryResult = appService.executeQuery(query);
+		//System.out.println("************** SDCLIENT: DONE... ********************");
 		//standardReportTemplate = (StandardReportTemplate)queryResult.getObjectResult();
 	}
 

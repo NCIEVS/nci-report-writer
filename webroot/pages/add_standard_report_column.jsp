@@ -63,7 +63,8 @@
 									
 										<tr class="dataRowDark">
 											<td class="dataCellText">Field Label</td>
-											<td class="dataCellText"><input type="text" name="fieldlabel"></td>
+											<td class="dataCellText">
+											<input type="text" name="fieldlabel"></td>
 										</tr>
 
 										<tr class="dataRowLight">
@@ -108,7 +109,10 @@
 										</tr>
 										<tr class="dataRowDark">
 											<td class="dataCellText">Is Preferred?</td>
-											<td class="dataCellText"><input type="radio" name="preferred" value="yes" >Yes&nbsp;<input type="radio" name="preferred" value="no">No<input type="radio" name="preferred" value="na" checked>NA</td>
+											<td class="dataCellText">
+											<input type="radio" name="preferred" value="yes" >Yes&nbsp;
+											<input type="radio" name="preferred" value="no">No
+											<input type="radio" name="preferred" value="na" checked>NA</td>
 										</tr>
 										<tr class="dataRowLight">
 												
@@ -154,7 +158,8 @@
 										</tr>
 										<tr class="dataRowDark">
 											<td class="dataCellText">Qualifier Value</td>
-											<td class="dataCellText"><input type="text" name="qualifiervalue"></td>
+											<td class="dataCellText">
+											<input type="text" name="qualifiervalue"></td>
 										</tr>
 		
 										
@@ -172,7 +177,8 @@
 
 										<tr class="dataRowDark">
 											<td class="dataCellText">Dependent Field (if applicable)</td>
-											<td class="dataCellText"><input type="text" name="dependentfield"></td>
+											<td class="dataCellText">
+											<input type="text" name="dependentfield"></td>
 										</tr>
 										
 										
@@ -185,7 +191,7 @@
 									<!-- bottom action buttons begins -->
 									<table cellpadding="4" cellspacing="0" border="0">
 										<tr>
-											<td><h:commandButton id="save" action="save" value="Save" /></td>
+											<td><h:commandButton id="save" action="#{userSessionBean.addReportColumnAction}" value="Save" /></td>
 											<td><h:commandButton id="reset" action="reset" value="Reset" /></td>
 											<td><h:commandButton id="back" action="back" value="Back" /></td>
 										</tr>

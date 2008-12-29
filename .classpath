@@ -21,7 +21,6 @@
 	<classpathentry kind="lib" path="webroot/WEB-INF/lib/jsf-impl.jar"/>
 	<classpathentry kind="lib" path="webroot/WEB-INF/lib/jstl.jar"/>
 	<classpathentry kind="lib" path="webroot/WEB-INF/lib/junit-3.8.1.jar"/>
-	<classpathentry kind="lib" path="webroot/WEB-INF/lib/lexbig.jar"/>
 	<classpathentry kind="lib" path="webroot/WEB-INF/lib/log4j-1.2.14.jar"/>
 	<classpathentry kind="lib" path="webroot/WEB-INF/lib/poi-3.2-FINAL-20081019.jar"/>
 	<classpathentry kind="lib" path="webroot/WEB-INF/lib/poi-contrib-3.2-FINAL-20081019.jar"/>
