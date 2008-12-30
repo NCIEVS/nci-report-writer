@@ -60,6 +60,15 @@
 							<tr>
 								<td>
 									<table summary="Enter summary of data here" cellpadding="3" cellspacing="0" border="0" class="dataTable" width="100%">
+										
+										<tr class="dataRowDark">
+
+											<td class="dataCellText">Label</td>
+
+											<td class="dataCellText"><input type="text" name="label"></td>
+											
+										</tr>
+										
 										<tr class="dataRowLight">
 										
 											<td class="dataCellText">											
