@@ -50,62 +50,52 @@ public class UserSessionBean extends Object
 	  private static Logger KLO_log = Logger.getLogger("UserSessionBean KLO");
 
 	  Boolean isAdmin = null;
-
-	  //long roleGroupId;
 	  String selectedTask = null;
 
 	  private List standardReportTemplateList = new ArrayList();
 	  private String selectedStandardReportTemplate = null;
-
 	  private String selectedPropertyType = null;
 	  private List propertyTypeList = new ArrayList();
 
 	  private String rootConceptCode = null;
-
 	  private String selectedOntology = null;
 
+	  private String selectedReportStatus = null;
+      private List reportStatusList = null;
+	  private Vector<String> reportStatusListData = null;
 
 
-      public void setIsAdmin(Boolean bool_obj)
-      {
+	  public void setIsAdmin(Boolean bool_obj) {
 		  this.isAdmin = bool_obj;
 	  }
 
-      public Boolean getIsAdmin()
-      {
+      public Boolean getIsAdmin() {
 		  return this.isAdmin;
 	  }
 
-	  public String getSelectedTask()
-	  {
+	  public String getSelectedTask() {
 		  return this.selectedTask;
 	  }
 
-	  public void setSelectedTask(String selectedTask)
-	  {
+	  public void setSelectedTask(String selectedTask) {
 		  this.selectedTask = selectedTask;
 	  }
 
-	  public String getSelectedPropertyType()
-	  {
+	  public String getSelectedPropertyType() {
 		  return this.selectedPropertyType;
 	  }
 
-	  public void setSelectedPropertyType(String selectedPropertyType)
-	  {
+	  public void setSelectedPropertyType(String selectedPropertyType) {
 		  this.selectedPropertyType = selectedPropertyType;
 	  }
 
-	  public String getSelectedOntology()
-	  {
+	  public String getSelectedOntology() {
 		  return this.selectedOntology;
 	  }
 
-	  public void setSelectedOntology(String selectedOntology)
-	  {
+	  public void setSelectedOntology(String selectedOntology) {
 		  this.selectedOntology = selectedOntology;
 	  }
-
 
 	  public HttpServletRequest getHttpRequest() {
 		  FacesContext context = FacesContext.getCurrentInstance();
@@ -114,8 +104,7 @@ public class UserSessionBean extends Object
 		  return request;
 	  }
 
-	  public List getTaskList()
-	  {
+	  public List getTaskList() {
 			HttpServletRequest request = getHttpRequest();
 			HttpSession session = request.getSession(false);
 
@@ -134,8 +123,7 @@ public class UserSessionBean extends Object
 	  }
 
 
-	  public List getPropertyTypeList()
-	  {
+	  public List getPropertyTypeList() {
 			List list = DataUtils.getPropertyTypeList();
 			if (selectedPropertyType == null) {
 				SelectItem item = (SelectItem) list.get(0);
@@ -150,6 +138,7 @@ public class UserSessionBean extends Object
 		  selectedTask = newValue;
 	  }
 
+	  
 	  public void reportSelectionChanged(ValueChangeEvent vce) {
 		  String newValue = (String) vce.getNewValue();
           setSelectedStandardReportTemplate(newValue);
@@ -157,24 +146,13 @@ public class UserSessionBean extends Object
 
 
 	  public List getStandardReportTemplateList() {
-		    /*
-		    HttpServletRequest request = getHttpRequest();
-			HttpSession session = request.getSession(false);
 
-			Boolean isAdmin = null;
-			if (session != null) {
-				 isAdmin = (Boolean) request.getSession(true).getAttribute("isAdmin");
-			}
-			*/
-
-			//List list = DataUtils.getStandardReportTemplateList(isAdmin);
 			List list = DataUtils.getStandardReportTemplateList();
 			if (selectedStandardReportTemplate == null)
 			{
 			    if (list != null && list.size() > 0)
 			    {
 					SelectItem item = (SelectItem) list.get(0);
-					//selectedStandardReportTemplate = item.getLabel();
 					setSelectedStandardReportTemplate(item.getLabel());
 			    }
 			}
@@ -200,6 +178,7 @@ public class UserSessionBean extends Object
 		  setSelectedTask(task);
 	  }
 
+	  
 	  public String performTask() {
 		  if (this.selectedTask.compareTo("Administer Standard Reports") == 0)
 		  {
@@ -222,12 +201,14 @@ public class UserSessionBean extends Object
 		  return null;
 	  }
 
+	  
 	  public String addColumnAction() {
-KLO_log.warn("******************************************* addColumnAction() ");
-//add_standard_report_column.jsp
+		  KLO_log.warn("******************************************* addColumnAction() ");
+		  // add_standard_report_column.jsp
 		  return "add_standard_report_column";
 	  }
 
+	  
 	  public String modifyColumnAction() {
           // not functional, to be modifid
           // need to track coding scheme
@@ -235,6 +216,7 @@ KLO_log.warn("******************************************* addColumnAction() ");
 		  return "add_standard_report_column";
 	  }
 
+	  
 	  public String insertbeforeColumnAction() {
           // not functional, to be modifid
           // need to track coding scheme
@@ -242,6 +224,7 @@ KLO_log.warn("******************************************* addColumnAction() ");
 		  return "add_standard_report_column";
 	  }
 
+	  
 	  public String insertafterColumnAction() {
           // not functional, to be modifid
           // need to track coding scheme
@@ -254,15 +237,17 @@ KLO_log.warn("******************************************* addColumnAction() ");
 		  return this.rootConceptCode;
 	  }
 
+	  
 	  public void setRootConceptCode(String rootConceptCode) {
 		  if (rootConceptCode == null) return;
 		  this.rootConceptCode = rootConceptCode;
 	  }
 
+	  
 	  public String selectFileAction() {
           // pop-up file selection dialog box (JNLP.jar)
           // update selectedFile
-          // show selectedFile to thre user
+          // show selectedFile to the user
 
 		  return "generate_standard_report";
 	  }
@@ -301,26 +286,16 @@ KLO_log.warn("******************************************* addColumnAction() ");
           // Save results using SDK writable API.
           try{
         	  SDKClientUtil sdkclientutil = new SDKClientUtil();
-        	  if(sdkclientutil != null) {
-  				System.out.println("************************ sdkclientutil is NOT NULL ****************************");
-  				sdkclientutil.insertStandardReportTemplate(codingSchemeName, codingSchemeVersion, label, rootConceptCode, selectedAssociation, direction, Integer.parseInt(selectedLevel), delimiter);
-  				System.out.println("************************ sdkclientutil is NOT NULL ****************************");
-  			}
-  			else
-  				System.out.println("************************ sdkclientutil is NULL ****************************");
-  				//KLO_log.warn("************************ sdkclientutil is NULL ****************************");
+  			  sdkclientutil.insertStandardReportTemplate(codingSchemeName, codingSchemeVersion, label, rootConceptCode, selectedAssociation, direction, Integer.parseInt(selectedLevel), delimiter);
           } catch(Exception e) {
         	  e.printStackTrace();
           }
           
           return "generate_standard_report";
-
 	  }
 
 
-
       public String addReportColumnAction() {
-    	  
     	  KLO_log.warn("************ addReportColumnAction() ***************** ");
 		  HttpServletRequest request = (HttpServletRequest)FacesContext.getCurrentInstance().getExternalContext().getRequest();
 
@@ -379,23 +354,13 @@ KLO_log.warn("******************************************* addColumnAction() ");
           // Save results using SDK writable API.
           try{
         	  SDKClientUtil sdkclientutil = new SDKClientUtil();
-        	  if(sdkclientutil != null) {
-  				sdkclientutil.insertReportColumn(fieldlabel, fieldType,	propertyType, propertyName,	isPreferred, representationalForm, source, propertyQualifier, qualifierValue, delimiter, ccid);
-  			}
-  			else
-  				KLO_log.warn("************************ sdkclientutil is NULL ****************************");
+        	  sdkclientutil.insertReportColumn(fieldlabel, fieldType,	propertyType, propertyName,	isPreferred, representationalForm, source, propertyQualifier, qualifierValue, delimiter, ccid);
           } catch(Exception e) {
         	  e.printStackTrace();
           }
           
           return "add_standard_report_column";
-
 	  }
-
-      
-    private String selectedReportStatus = null;
-	private List reportStatusList = null;
-	private Vector<String> reportStatusListData = null;
 
 
 	public List getReportStatusList() {
@@ -408,6 +373,7 @@ KLO_log.warn("******************************************* addColumnAction() ");
 		if (reportStatusList != null && reportStatusList.size() > 0) {
 			selectedReportStatus = ((SelectItem) reportStatusList.get(0)).getLabel();
 		}
+
 		return reportStatusList;
 	}
 
@@ -434,7 +400,6 @@ KLO_log.warn("******************************************* addColumnAction() ");
 		// save to database
 
 		return "report_status";
-
 	}
 
     public String assignStatusAction() {
@@ -443,6 +408,5 @@ KLO_log.warn("******************************************* addColumnAction() ");
 		// save to database
 
 		return "assign_report_status";
-
 	}
   }
