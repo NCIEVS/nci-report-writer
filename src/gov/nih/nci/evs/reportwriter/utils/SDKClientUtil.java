@@ -1,25 +1,25 @@
 package gov.nih.nci.evs.reportwriter.utils;
 
-import gov.nih.nci.evs.reportwriter.bean.*;
-import gov.nih.nci.evs.reportwriter.service.*;
-
-import java.io.File;
-import java.lang.reflect.Method;
-import java.lang.reflect.Modifier;
-import java.util.Date;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Enumeration;
-import java.util.jar.JarEntry;
-import java.util.jar.JarFile;
-
+import gov.nih.nci.evs.reportwriter.bean.CustomizedQuery;
+import gov.nih.nci.evs.reportwriter.bean.CustomizedReport;
+import gov.nih.nci.evs.reportwriter.bean.Report;
+import gov.nih.nci.evs.reportwriter.bean.ReportColumn;
+import gov.nih.nci.evs.reportwriter.bean.ReportFormat;
+import gov.nih.nci.evs.reportwriter.bean.ReportStatus;
+import gov.nih.nci.evs.reportwriter.bean.StandardReport;
+import gov.nih.nci.evs.reportwriter.bean.StandardReportTemplate;
+import gov.nih.nci.evs.reportwriter.service.StandardReportService;
+import gov.nih.nci.system.applicationservice.WritableApplicationService;
 import gov.nih.nci.system.client.ApplicationServiceProvider;
 import gov.nih.nci.system.query.SDKQueryResult;
 import gov.nih.nci.system.query.example.DeleteExampleQuery;
 import gov.nih.nci.system.query.example.InsertExampleQuery;
+import gov.nih.nci.system.query.example.SearchExampleQuery;
 import gov.nih.nci.system.query.example.UpdateExampleQuery;
-import gov.nih.nci.system.applicationservice.ApplicationService;
-import gov.nih.nci.system.applicationservice.WritableApplicationService;
+
+import java.lang.reflect.Method;
+import java.util.Collection;
+import java.util.Date;
 
 /**
   * <!-- LICENSE_TEXT_START -->
@@ -772,6 +772,60 @@ public class SDKClientUtil {
 		SDKQueryResult queryResult = appService.executeQuery(query);
 	}
 
+	public void testGetTemplateCollection() throws Exception {
+		
+		System.out.println("************** SDCLIENT testGetTemplateCollection: creating writeable app service ********************");
+		Collection<StandardReportTemplate> tc = null;
+		StandardReportService srs = new StandardReportService();
+		srs.setId(1001);
+		srs.setServiceURL("test");
+		
+		WritableApplicationService appService = (WritableApplicationService)ApplicationServiceProvider.getApplicationService();
+		System.out.println("************** SDCLIENT testGetTemplateCollection: creating query ********************");
+		SearchExampleQuery query = new SearchExampleQuery(srs);
+		System.out.println("************** SDCLIENT testGetTemplateCollection: obtaining query result ********************");
+		SDKQueryResult queryResult = appService.executeQuery(query);
+		
+		Class klass = StandardReportService.class;
+		Object o = (Object) srs;
+				
+		try {
+			
+			Collection results = appService.search(klass, o);
+			for(Object obj : results)
+			{
+				printObject(obj, klass);
+				tc = ((StandardReportService) obj).getTemplateCollection();
+				for(StandardReportTemplate t : tc) {
+					System.out.println("Template ID: " + t.getId());
+				}
+					
+				break;
+			}
+		} catch(Exception e) {
+			e.printStackTrace();
+		}
+			
+		System.out.println("************** SDCLIENT: DONE... ********************");
+		
+	}
 
+	
+	private void printObject(Object obj, Class klass) throws Exception {
+		System.out.println("Printing "+ klass.getName());
+		Method[] methods = klass.getMethods();
+		for(Method method:methods)
+		{
+			if(method.getName().startsWith("get") && !method.getName().equals("getClass"))
+			{
+				System.out.print("\t"+method.getName().substring(3)+":");
+				Object val = method.invoke(obj, (Object[])null);
+				if(val instanceof java.util.Set)
+					System.out.println("size="+((Collection)val).size());
+				else
+					System.out.println(val);
+			}
+		}
+	}
 
 }
