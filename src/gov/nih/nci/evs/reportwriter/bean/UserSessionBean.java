@@ -259,7 +259,7 @@ public class UserSessionBean extends Object
           String codingSchemeNameAndVersion = (String) request.getSession().getAttribute("selectedOntology");
           String codingSchemeName = DataUtils.getCodingSchemeName(codingSchemeNameAndVersion);
           String codingSchemeVersion = DataUtils.getCodingSchemeVersion(codingSchemeNameAndVersion);
-          String label = "FDA";
+          String label = (String) request.getParameter("label");
           
           String rootConceptCode = (String) request.getParameter("rootConceptCode");
           String selectedAssociation = (String) request.getSession().getAttribute("selectedAssociation");
@@ -274,18 +274,20 @@ public class UserSessionBean extends Object
 		  
 		  char delimiter = '$';
 
+		  KLO_log.warn("label: " + label);
           KLO_log.warn("codingSchemeName: " + codingSchemeName);
           KLO_log.warn("codingSchemeVersion: " + codingSchemeVersion);
-
           KLO_log.warn("rootConceptCode: " + rootConceptCode);
           KLO_log.warn("associationname: " + selectedAssociation);
           KLO_log.warn("direction: " + selectedDirection);
-
           KLO_log.warn("level: " + selectedLevel);
+          KLO_log.warn("delimiter: " + delimiter);
 
           // Save results using SDK writable API.
           try{
         	  SDKClientUtil sdkclientutil = new SDKClientUtil();
+        	  if(selectedLevel.equalsIgnoreCase("all"))
+        		  selectedLevel = "50";
   			  sdkclientutil.insertStandardReportTemplate(codingSchemeName, codingSchemeVersion, label, rootConceptCode, selectedAssociation, direction, Integer.parseInt(selectedLevel), delimiter);
           } catch(Exception e) {
         	  e.printStackTrace();
@@ -355,9 +357,11 @@ public class UserSessionBean extends Object
           try{
         	  SDKClientUtil sdkclientutil = new SDKClientUtil();
         	  sdkclientutil.insertReportColumn(fieldlabel, fieldType,	propertyType, propertyName,	isPreferred, representationalForm, source, propertyQualifier, qualifierValue, delimiter, ccid);
+        	  sdkclientutil.testGetTemplateCollection();
           } catch(Exception e) {
         	  e.printStackTrace();
           }
+ 
           
           return "add_standard_report_column";
 	  }
