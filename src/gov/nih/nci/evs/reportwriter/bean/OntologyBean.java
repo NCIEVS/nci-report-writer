@@ -1,6 +1,5 @@
 package gov.nih.nci.evs.reportwriter.bean;
 
-import org.LexGrid.LexBIG.LexBIGService.LexBIGServiceMetadata;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -22,10 +21,10 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import javax.servlet.ServletContext;
 
-
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 
+import org.LexGrid.LexBIG.LexBIGService.LexBIGServiceMetadata;
 import org.LexGrid.LexBIG.DataModel.Collections.CodingSchemeRenderingList;
 import org.LexGrid.LexBIG.DataModel.Collections.LocalNameList;
 import org.LexGrid.LexBIG.DataModel.Collections.ResolvedConceptReferenceList;
@@ -44,51 +43,33 @@ import org.LexGrid.naming.*;
 import org.LexGrid.LexBIG.Impl.Extensions.GenericExtensions.*;
 import org.LexGrid.LexBIG.LexBIGService.CodedNodeGraph;
 import org.LexGrid.concepts.Instruction;
-
 import org.LexGrid.LexBIG.DataModel.Collections.*;
-
 import org.LexGrid.LexBIG.DataModel.InterfaceElements.CodingSchemeRendering;
 import org.LexGrid.relations.Relations;
-
 import org.LexGrid.LexBIG.DataModel.InterfaceElements.ExtensionDescription;
 import org.LexGrid.LexBIG.DataModel.Collections.ExtensionDescriptionList;
-
 import org.LexGrid.LexBIG.Impl.CodedNodeSetImpl;
-
 import org.LexGrid.LexBIG.Utility.ConvenienceMethods;
-
 import org.LexGrid.LexBIG.Exceptions.LBException;
-
 import org.LexGrid.LexBIG.Utility.Iterators.ResolvedConceptReferencesIterator;
 import org.LexGrid.LexBIG.Utility.Constructors;
 
-
 import org.LexGrid.LexBIG.History.HistoryService;
 import org.LexGrid.LexBIG.Impl.History.NCIThesaurusHistoryServiceImpl;
-
 import org.LexGrid.LexBIG.DataModel.NCIHistory.*;
 import org.LexGrid.LexBIG.DataModel.Collections.NCIChangeEventList;
-
 import org.LexGrid.LexBIG.DataModel.NCIHistory.types.ChangeType;
-
 import org.LexGrid.LexBIG.DataModel.Collections.SystemReleaseList;
-
-
 import org.LexGrid.LexBIG.DataModel.Core.ConceptReference;
-
 import org.LexGrid.versions.SystemRelease;
 
 import org.LexGrid.codingSchemes.CodingSchemeVersion;
-
 import org.LexGrid.LexBIG.DataModel.Collections.CodingSchemeVersionList;
-
 import org.LexGrid.LexBIG.DataModel.Collections.NCIChangeEventList;
 import org.LexGrid.LexBIG.DataModel.NCIHistory.NCIChangeEvent;
 
 import org.LexGrid.naming.SupportedPropertyQualifier;
-
 import org.LexGrid.LexBIG.DataModel.InterfaceElements.ModuleDescription;
-
 import org.LexGrid.codingSchemes.Mappings;
 import org.LexGrid.LexBIG.LexBIGService.CodedNodeSet.PropertyType;
 
@@ -96,22 +77,17 @@ import org.apache.log4j.*;
 import org.apache.log4j.xml.*;
 
 import org.LexGrid.commonTypes.PropertyQualifier;
-
 import org.LexGrid.LexBIG.LexBIGService.CodedNodeSet.SearchDesignationOption;
 import org.LexGrid.LexBIG.Utility.LBConstants.MatchAlgorithms;
+import org.LexGrid.LexBIG.DataModel.Core.types.CodingSchemeVersionStatus;
 
 import java.util.Vector;
 import java.util.HashMap;
 
-import org.LexGrid.LexBIG.DataModel.Core.types.CodingSchemeVersionStatus;
-
 import java.util.Set;
-
 import java.text.NumberFormat;
 
-
 import javax.faces.model.SelectItem;
-
 import gov.nih.nci.evs.reportwriter.utils.*;
 
 
@@ -149,7 +125,6 @@ public class OntologyBean //extends BaseBean
 {
     private static Logger KLO_log = Logger.getLogger("OntologyBean KLO");
 
-
 	private static List _ontologies = null;
 
 	private org.LexGrid.LexBIG.LexBIGService.LexBIGService lbSvc = null;
@@ -170,24 +145,24 @@ public class OntologyBean //extends BaseBean
 
 // Initialization
 
-  protected void init() {
+    protected void init() {
       _ontologies = getOntologyList();
-  }
+    }
 
-  public void setSelectedOntology(String selectedOntology)
-  {
+  
+    public void setSelectedOntology(String selectedOntology) {
 	   this.selectedOntology = selectedOntology;
 	   HttpServletRequest request = (HttpServletRequest)FacesContext.getCurrentInstance().getExternalContext().getRequest();
 	   request.getSession().setAttribute("selectedOntology", selectedOntology); // ontology name and version
-  }
+    }
 
-  public String getSelectedOntology() {
+  
+    public String getSelectedOntology() {
 	  return this.selectedOntology;
-  }
+    }
 
 
-      public List getOntologyList()
-      {
+    public List getOntologyList() {
 		  _ontologies = DataUtils.getOntologyList();
 		  if (_ontologies != null && _ontologies.size() > 0)
 		  {
@@ -221,8 +196,8 @@ public class OntologyBean //extends BaseBean
 		}
 	}
 
-    public String[] getSortedKeys(HashMap map)
-    {
+	
+    public String[] getSortedKeys(HashMap map) {
 		if (map == null) return null;
 	    Set keyset = map.keySet();
 		String[] names = new String[keyset.size()];
@@ -251,14 +226,13 @@ public class OntologyBean //extends BaseBean
 	  }
 
 
-
-	  public void setSelectedDirection(String selectedDirection)
-	  {
+	  public void setSelectedDirection(String selectedDirection) {
 		   this.selectedDirection = selectedDirection;
 		   HttpServletRequest request = (HttpServletRequest)FacesContext.getCurrentInstance().getExternalContext().getRequest();
 		   request.getSession().setAttribute("selectedDirection", selectedDirection);
 	  }
 
+	  
 	  public String getSelectedDirection() {
 		  return this.selectedDirection;
 	  }
@@ -304,6 +278,7 @@ public class OntologyBean //extends BaseBean
 	private String selectedLevel = null;
 	private List levelList = null;
 
+	
 	public List getLevelList() {
 		int max_level = 20;
 		levelList = new ArrayList();
@@ -318,6 +293,7 @@ public class OntologyBean //extends BaseBean
 		return levelList;
 	}
 
+	
 	public void setSelectedLevel(String selectedLevel) {
 		this.selectedLevel = selectedLevel;
 		HttpServletRequest request = (HttpServletRequest)FacesContext.getCurrentInstance().getExternalContext().getRequest();
@@ -329,13 +305,13 @@ public class OntologyBean //extends BaseBean
 		return this.selectedLevel;
 	}
 
+	
 	public void levelSelectionChanged(ValueChangeEvent event) {
 		if (event.getNewValue() == null) return;
 		//int id = Integer.parseInt((String) event.getNewValue());
 		String level = (String) event.getNewValue(); // change to integer before saving to database
 		setSelectedLevel(level);
 	}
-
 
 
 	  public String getSelectedAssociation() {
@@ -369,7 +345,7 @@ public class OntologyBean //extends BaseBean
 
 	public List getPropertyNameList() {
 
-KLO_log.warn("***** getPropertyNameList()  ");
+    KLO_log.warn("***** getPropertyNameList()  ");
 
 		if (selectedOntology == null)
 		{
@@ -392,8 +368,12 @@ KLO_log.warn("***** getPropertyNameList()  ");
 		return propertyNameList;
 	}
 
+	
 	public void setSelectedPropertyName(String selectedPropertyName) {
 		this.selectedPropertyName = selectedPropertyName;
+		HttpServletRequest request = (HttpServletRequest)FacesContext.getCurrentInstance().getExternalContext().getRequest();
+		request.getSession().setAttribute("selectedPropertyName", selectedPropertyName);
+		
 	}
 
 
@@ -401,8 +381,11 @@ KLO_log.warn("***** getPropertyNameList()  ");
 		return this.selectedPropertyName;
 	}
 
+	
 	public void propertyNameSelectionChanged(ValueChangeEvent event) {
 		if (event.getNewValue() == null) return;
+		String newValue = (String) event.getNewValue();
+        setSelectedPropertyName(newValue);
 	}
 
 
@@ -437,8 +420,11 @@ KLO_log.warn("***** getPropertyNameList()  ");
 		return representationalFormList;
 	}
 
+	
 	public void setSelectedRepresentationalForm(String selectedRepresentationalForm) {
 		this.selectedRepresentationalForm = selectedRepresentationalForm;
+		HttpServletRequest request = (HttpServletRequest)FacesContext.getCurrentInstance().getExternalContext().getRequest();
+		request.getSession().setAttribute("selectedRepresentationalForm", selectedRepresentationalForm);
 	}
 
 
@@ -446,14 +432,18 @@ KLO_log.warn("***** getPropertyNameList()  ");
 		return this.selectedRepresentationalForm;
 	}
 
+	
 	public void representationalFormSelectionChanged(ValueChangeEvent event) {
 		if (event.getNewValue() == null) return;
+		String newValue = (String) event.getNewValue();
+        setSelectedRepresentationalForm(newValue);
 	}
 
 
 	private String selectedDelimiter = null;
 	private List delimiterList = null;
 
+	
 	public List getDelimiterList() {
 		delimiterList = new ArrayList();
 		delimiterList.add(new SelectItem(" "));
@@ -462,8 +452,11 @@ KLO_log.warn("***** getPropertyNameList()  ");
 		return delimiterList;
 	}
 
+	
 	public void setSelectedDelimiter(String selectedDelimiter) {
 		this.selectedDelimiter = selectedDelimiter;
+		HttpServletRequest request = (HttpServletRequest)FacesContext.getCurrentInstance().getExternalContext().getRequest();
+		request.getSession().setAttribute("selectedDelimiter", selectedDelimiter);
 	}
 
 
@@ -471,8 +464,11 @@ KLO_log.warn("***** getPropertyNameList()  ");
 		return this.selectedDelimiter;
 	}
 
+	
 	public void delimiterSelectionChanged(ValueChangeEvent event) {
 		if (event.getNewValue() == null) return;
+		String newValue = (String) event.getNewValue();
+        setSelectedDelimiter(newValue);
 	}
 
 
@@ -514,9 +510,10 @@ KLO_log.warn("***** getPropertyNameList()  ");
 	}
 
 
-
 	public void setSelectedPropertyQualifier(String selectedPropertyQualifier) {
 		this.selectedPropertyQualifier = selectedPropertyQualifier;
+		HttpServletRequest request = (HttpServletRequest)FacesContext.getCurrentInstance().getExternalContext().getRequest();
+		request.getSession().setAttribute("selectedPropertyQualifier", selectedPropertyQualifier);
 	}
 
 
@@ -524,8 +521,11 @@ KLO_log.warn("***** getPropertyNameList()  ");
 		return this.selectedPropertyQualifier;
 	}
 
+	
 	public void propertyQualifierSelectionChanged(ValueChangeEvent event) {
 		if (event.getNewValue() == null) return;
+		String newValue = (String) event.getNewValue();
+        setSelectedPropertyQualifier(newValue);
 	}
 
 
@@ -554,8 +554,11 @@ KLO_log.warn("***** getPropertyNameList()  ");
 		return dataCategoryList;
 	}
 
+	
 	public void setSelectedDataCategory(String selectedDataCategory) {
 		this.selectedDataCategory = selectedDataCategory;
+		HttpServletRequest request = (HttpServletRequest)FacesContext.getCurrentInstance().getExternalContext().getRequest();
+		request.getSession().setAttribute("selectedDataCategory", selectedDataCategory);
 	}
 
 
@@ -563,10 +566,14 @@ KLO_log.warn("***** getPropertyNameList()  ");
 		return this.selectedDataCategory;
 	}
 
+	
 	public void dataCategorySelectionChanged(ValueChangeEvent event) {
 		if (event.getNewValue() == null) return;
+		String newValue = (String) event.getNewValue();
+        setSelectedDataCategory(newValue);
 	}
 
+	
 	private String selectedSource = null;
 	private List sourceList = null;
 	private Vector<String> sourceListData = null;
@@ -595,8 +602,11 @@ KLO_log.warn("***** getPropertyNameList()  ");
 		return sourceList;
 	}
 
+	
 	public void setSelectedSource(String selectedSource) {
 		this.selectedSource = selectedSource;
+		HttpServletRequest request = (HttpServletRequest)FacesContext.getCurrentInstance().getExternalContext().getRequest();
+		request.getSession().setAttribute("selectedSource", selectedSource);
 	}
 
 
@@ -604,9 +614,10 @@ KLO_log.warn("***** getPropertyNameList()  ");
 		return this.selectedSource;
 	}
 
+	
 	public void sourceSelectionChanged(ValueChangeEvent event) {
 		if (event.getNewValue() == null) return;
+		String newValue = (String) event.getNewValue();
+        setSelectedSource(newValue);
 	}
-
-
 }

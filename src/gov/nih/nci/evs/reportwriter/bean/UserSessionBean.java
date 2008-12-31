@@ -87,8 +87,18 @@ public class UserSessionBean extends Object
 
 	  public void setSelectedPropertyType(String selectedPropertyType) {
 		  this.selectedPropertyType = selectedPropertyType;
+		  HttpServletRequest request = getHttpRequest();
+		  request.getSession().setAttribute("selectedPropertyType", selectedPropertyType);
 	  }
 
+	  
+	  public void propertyTypeSelectionChanged(ValueChangeEvent event) {
+		  if (event.getNewValue() == null) return;
+		  String newValue = (String) event.getNewValue();
+		  setSelectedPropertyType(newValue);
+	  }
+
+	  
 	  public String getSelectedOntology() {
 		  return this.selectedOntology;
 	  }
@@ -308,7 +318,7 @@ public class UserSessionBean extends Object
   		  String representationalForm = (String) request.getSession().getAttribute("selectedRepresentationalForm");
 		  String source = (String) request.getSession().getAttribute("selectedSource");
   		  String propertyQualifier = (String) request.getSession().getAttribute("selectedPropertyQualifier");
-  		  String qualifierValue = (String) request.getParameter("qualifierValue");
+  		  String qualifierValue = (String) request.getParameter("qualifiervalue");
   		  String conditionalColumnId = (String) request.getParameter("dependentfield");
   		  int ccid = -1;
   		  
@@ -356,7 +366,7 @@ public class UserSessionBean extends Object
           // Save results using SDK writable API.
           try{
         	  SDKClientUtil sdkclientutil = new SDKClientUtil();
-        	  sdkclientutil.insertReportColumn(fieldlabel, fieldType,	propertyType, propertyName,	isPreferred, representationalForm, source, propertyQualifier, qualifierValue, delimiter, ccid);
+        	  sdkclientutil.insertReportColumn(fieldlabel, fieldType, propertyType, propertyName, isPreferred, representationalForm, source, propertyQualifier, qualifierValue, delimiter, ccid);
         	  sdkclientutil.testGetTemplateCollection();
           } catch(Exception e) {
         	  e.printStackTrace();
@@ -410,6 +420,15 @@ public class UserSessionBean extends Object
 		// to be modified
 		HttpServletRequest request = (HttpServletRequest)FacesContext.getCurrentInstance().getExternalContext().getRequest();
 		// save to database
+		String reportTemplate = (String) request.getSession().getAttribute("selectedStandardReportTemplate");
+		String statusValue = (String) request.getSession().getAttribute("selectedReportStatus");
+		try{
+      	  SDKClientUtil sdkclientutil = new SDKClientUtil();
+      	  sdkclientutil.insertReportStatus(statusValue, reportTemplate, true);
+      	  sdkclientutil.testGetTemplateCollection();
+        } catch(Exception e) {
+      	  e.printStackTrace();
+        }
 
 		return "assign_report_status";
 	}
