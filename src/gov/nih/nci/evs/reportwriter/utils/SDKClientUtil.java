@@ -470,12 +470,10 @@ public class SDKClientUtil {
 
 
 	private ReportStatus createReportStatus(
-		int ID,
 		String label,
 		String description,
 		boolean active) {
 		ReportStatus reportStatus = new ReportStatus();
-		reportStatus.setId(ID);
 		reportStatus.setLabel(label);
 		reportStatus.setDescription(description);
 		reportStatus.setActive(active);
@@ -483,13 +481,11 @@ public class SDKClientUtil {
 	}
 
 	public void insertReportStatus(
-		int ID,
 		String label,
 		String description,
 		boolean active) throws Exception {
 
 		ReportStatus reportStatus = createReportStatus(
-			ID,
 			label,
 			description,
 			active);
@@ -497,13 +493,11 @@ public class SDKClientUtil {
 	}
 
 	public void updateReportStatus(
-		int ID,
 		String label,
 		String description,
 		boolean active) throws Exception {
 
 		ReportStatus reportStatus = createReportStatus(
-			ID,
 			label,
 			description,
 			active);
@@ -511,13 +505,11 @@ public class SDKClientUtil {
 	}
 
 	public void deleteReportStatus(
-		int ID,
 		String label,
 		String description,
 		boolean active) throws Exception {
 
 		ReportStatus reportStatus = createReportStatus(
-			ID,
 			label,
 			description,
 			active);
