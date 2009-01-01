@@ -17,6 +17,9 @@ import gov.nih.nci.system.query.example.InsertExampleQuery;
 import gov.nih.nci.system.query.example.SearchExampleQuery;
 import gov.nih.nci.system.query.example.UpdateExampleQuery;
 
+import gov.nih.nci.system.client.ApplicationServiceProvider;
+import gov.nih.nci.system.applicationservice.ApplicationService;
+
 import java.lang.reflect.Method;
 import java.util.Collection;
 import java.util.Date;
@@ -144,7 +147,7 @@ public class SDKClientUtil {
 	private CustomizedReport createCustomizedReport(int reportID) {
 		CustomizedReport customizedReport = new CustomizedReport();
 		customizedReport.setId(reportID);
-		
+
 		return customizedReport;
 	}
 
@@ -276,7 +279,7 @@ public class SDKClientUtil {
 		String qualifierValue,
 		char delimiter,
 		int conditionalColumnId) {
-		
+
 		ReportColumn reportColumn = new ReportColumn();
 		reportColumn.setLabel(label);
 		reportColumn.setFieldId(fieldId);
@@ -289,7 +292,7 @@ public class SDKClientUtil {
 		reportColumn.setQualifierValue(qualifierValue);
 		reportColumn.setDelimiter(delimiter);
 		reportColumn.setConditionalColumnId(conditionalColumnId);
-		
+
 		return reportColumn;
 	}
 
@@ -318,7 +321,7 @@ public class SDKClientUtil {
 			qualifierValue,
 			delimiter,
 			conditionalColumnId);
-		
+
 		//System.out.println("created report column instance... ");
 		insertReportColumn(reportColumn);
 	}
@@ -380,7 +383,7 @@ public class SDKClientUtil {
 	}
 
 	public void insertReportColumn(ReportColumn reportColumn) throws Exception {
-		
+
 		//System.out.println("creating writeable app service... ");
 		WritableApplicationService appService = (WritableApplicationService)ApplicationServiceProvider.getApplicationService();
 		//System.out.println("creating query... ");
@@ -542,7 +545,7 @@ public class SDKClientUtil {
 	private StandardReport createStandardReport(int reportID) {
 		StandardReport standardReport = new StandardReport();
 		standardReport.setId(reportID);
-		
+
 		return standardReport;
 	}
 
@@ -655,7 +658,7 @@ public class SDKClientUtil {
 		boolean direction,
 		int level,
 		char delimiter) {
-		
+
 		//System.out.println("************** SDCLIENT: In create method ********************");
 		StandardReportTemplate standardReportTemplate = new StandardReportTemplate();
 		//System.out.println("************** SDCLIENT: StandardReportTemplate ID is ********************"+ standardReportTemplate.getId());
@@ -765,24 +768,24 @@ public class SDKClientUtil {
 	}
 
 	public void testGetTemplateCollection() throws Exception {
-		
+
 		System.out.println("************** SDCLIENT testGetTemplateCollection: creating writeable app service ********************");
 		Collection<StandardReportTemplate> tc = null;
 		StandardReportService srs = new StandardReportService();
 		srs.setId(1001);
 		srs.setServiceURL("test");
-		
+
 		WritableApplicationService appService = (WritableApplicationService)ApplicationServiceProvider.getApplicationService();
 		System.out.println("************** SDCLIENT testGetTemplateCollection: creating query ********************");
 		SearchExampleQuery query = new SearchExampleQuery(srs);
 		System.out.println("************** SDCLIENT testGetTemplateCollection: obtaining query result ********************");
 		SDKQueryResult queryResult = appService.executeQuery(query);
-		
+
 		Class klass = StandardReportService.class;
 		Object o = (Object) srs;
-				
+
 		try {
-			
+
 			Collection results = appService.search(klass, o);
 			for(Object obj : results)
 			{
@@ -791,18 +794,18 @@ public class SDKClientUtil {
 				for(StandardReportTemplate t : tc) {
 					System.out.println("Template ID: " + t.getId());
 				}
-					
+
 				break;
 			}
 		} catch(Exception e) {
 			e.printStackTrace();
 		}
-			
+
 		System.out.println("************** SDCLIENT: DONE... ********************");
-		
+
 	}
 
-	
+
 	private void printObject(Object obj, Class klass) throws Exception {
 		System.out.println("Printing "+ klass.getName());
 		Method[] methods = klass.getMethods();
@@ -819,5 +822,54 @@ public class SDKClientUtil {
 			}
 		}
 	}
+
+
+    //FQName: gov.nih.nci.evs.reportwriter.bean.StandardReportTemplate
+    //String methodName = "setLabel";
+    //Key: "FDA Report";
+
+	public Object search(String FQName, String methodName, String key) {
+		try {
+			Class klass = Class.forName(FQName);
+			Object o = klass.newInstance();
+			Method[] methods = klass.getMethods();
+			Object[] params = new Object[1];
+			params[0] = key;
+			for(Method method:methods) {
+				if(method.getName().equals(methodName))
+				{
+					method.invoke(o, params);
+					break;
+				}
+			}
+
+			ApplicationService appService = ApplicationServiceProvider.getApplicationService();
+			Collection results = appService.search(klass, o);
+			if (results == null) return null;
+			Object[] a = results.toArray();
+			return a[0];
+		} catch(Exception e) {
+			e.printStackTrace();
+
+		}
+		return null;
+	}
+
+
+	public Object[] search(String FQName) {
+		try {
+			Class klass = Class.forName(FQName);
+			Object o = klass.newInstance();
+			ApplicationService appService = ApplicationServiceProvider.getApplicationService();
+			Collection results = appService.search(klass, o);
+			if (results == null) return null;
+			Object[] a = results.toArray();
+			return a;
+		} catch(Exception e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
+
 
 }
