@@ -117,6 +117,7 @@ import java.text.NumberFormat;
 import javax.faces.model.SelectItem;
 
 import gov.nih.nci.evs.reportwriter.utils.*;
+import gov.nih.nci.evs.reportwriter.bean.*;
 
 
 /**
@@ -242,11 +243,26 @@ public class DataUtils {
         standardReportTemplateList = new ArrayList();
 
         // To be modified: retrieve the list from database using SDK writeable API
+
+        try{
+            SDKClientUtil util = new SDKClientUtil();
+            String FQName = "gov.nih.nci.evs.reportwriter.bean.StandardReportTemplate";
+            Object[] objs = util.search(FQName);
+            for (int i=0; i<objs.length; i++)
+            {
+				StandardReportTemplate standardReportTemplate = (StandardReportTemplate) objs[i];
+				standardReportTemplateList.add(new SelectItem(standardReportTemplate.getLabel()));
+			}
+        } catch(Exception e) {
+        	e.printStackTrace();
+        }
+/*
         standardReportTemplateList.add(new SelectItem("Structured Product Labeling (SPL) Report"));
         standardReportTemplateList.add(new SelectItem("FDA-UNII Subset Report"));
         standardReportTemplateList.add(new SelectItem("Individual Case Safety (ICS) Subset Report"));
         standardReportTemplateList.add(new SelectItem("Center for Devices and Radiological Health (CDRH) Subset Report"));
         standardReportTemplateList.add(new SelectItem("FDA-SPL Country Code Report"));
+*/
 
 	    return standardReportTemplateList;
 	}
@@ -375,10 +391,21 @@ public class DataUtils {
 
     public static Vector<String> getPropertyNameListData(String key)
     {
+		if (csnv2codingSchemeNameMap == null)
+		{
+			setCodingSchemeMap();
+		}
+
 		String codingSchemeName = (String) csnv2codingSchemeNameMap.get(key);
-		if(codingSchemeName == null) return null;
+		if(codingSchemeName == null)
+		{
+			return null;
+		}
 		String version = (String) csnv2VersionMap.get(key);
-		if(version == null) return null;
+		if(version == null)
+		{
+			return null;
+		}
         return getPropertyNameListData(codingSchemeName, version);
 	}
 

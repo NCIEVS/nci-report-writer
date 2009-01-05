@@ -191,7 +191,7 @@
 									<!-- bottom action buttons begins -->
 									<table cellpadding="4" cellspacing="0" border="0">
 										<tr>
-											<td><h:commandButton id="save" action="#{userSessionBean.addReportColumnAction}" value="Save" /></td>
+											<td><h:commandButton id="save" action="#{userSessionBean.saveReportColumnAction}" value="Save" /></td>
 											<td><h:commandButton id="reset" action="reset" value="Reset" /></td>
 											<td><h:commandButton id="back" action="back" value="Back" /></td>
 										</tr>

@@ -149,14 +149,14 @@ public class OntologyBean //extends BaseBean
       _ontologies = getOntologyList();
     }
 
-  
+
     public void setSelectedOntology(String selectedOntology) {
 	   this.selectedOntology = selectedOntology;
 	   HttpServletRequest request = (HttpServletRequest)FacesContext.getCurrentInstance().getExternalContext().getRequest();
 	   request.getSession().setAttribute("selectedOntology", selectedOntology); // ontology name and version
     }
 
-  
+
     public String getSelectedOntology() {
 	  return this.selectedOntology;
     }
@@ -196,7 +196,7 @@ public class OntologyBean //extends BaseBean
 		}
 	}
 
-	
+
     public String[] getSortedKeys(HashMap map) {
 		if (map == null) return null;
 	    Set keyset = map.keySet();
@@ -232,7 +232,7 @@ public class OntologyBean //extends BaseBean
 		   request.getSession().setAttribute("selectedDirection", selectedDirection);
 	  }
 
-	  
+
 	  public String getSelectedDirection() {
 		  return this.selectedDirection;
 	  }
@@ -278,7 +278,7 @@ public class OntologyBean //extends BaseBean
 	private String selectedLevel = null;
 	private List levelList = null;
 
-	
+
 	public List getLevelList() {
 		int max_level = 20;
 		levelList = new ArrayList();
@@ -293,7 +293,7 @@ public class OntologyBean //extends BaseBean
 		return levelList;
 	}
 
-	
+
 	public void setSelectedLevel(String selectedLevel) {
 		this.selectedLevel = selectedLevel;
 		HttpServletRequest request = (HttpServletRequest)FacesContext.getCurrentInstance().getExternalContext().getRequest();
@@ -305,7 +305,7 @@ public class OntologyBean //extends BaseBean
 		return this.selectedLevel;
 	}
 
-	
+
 	public void levelSelectionChanged(ValueChangeEvent event) {
 		if (event.getNewValue() == null) return;
 		//int id = Integer.parseInt((String) event.getNewValue());
@@ -342,38 +342,43 @@ public class OntologyBean //extends BaseBean
 	private List propertyNameList = null;
 	private Vector<String> propertyNameListData = null;
 
-
 	public List getPropertyNameList() {
 
-    KLO_log.warn("***** getPropertyNameList()  ");
-
-		if (selectedOntology == null)
-		{
-	   		HttpServletRequest request = (HttpServletRequest)FacesContext.getCurrentInstance().getExternalContext().getRequest();
-	   		selectedOntology = (String) request.getSession().getAttribute("selectedOntology"); // ontology name and version
-        }
+   		HttpServletRequest request = (HttpServletRequest)FacesContext.getCurrentInstance().getExternalContext().getRequest();
+   		String selectedOntology = (String) request.getSession().getAttribute("selectedOntology"); // ontology name and version
 
 		propertyNameListData = DataUtils.getPropertyNameListData(selectedOntology);
 		propertyNameList = new Vector<String>();
 		propertyNameList.add(new SelectItem(""));
-		if (propertyNameListData != null) {
-			for (int i=0; i<propertyNameListData.size(); i++) {
-				String t = (String) propertyNameListData.elementAt(i);
-				propertyNameList.add(new SelectItem(t));
+
+		try {
+			if (propertyNameListData != null) {
+				for (int i=0; i<propertyNameListData.size(); i++) {
+					String t = (String) propertyNameListData.elementAt(i);
+
+				//System.out.println("=========================== getPropertyNameList() t  " + t);
+
+					propertyNameList.add(new SelectItem(t));
+				}
+				if (propertyNameList != null && propertyNameList.size() > 0) {
+					selectedPropertyName = ((SelectItem) propertyNameList.get(0)).getLabel();
+					setSelectedPropertyName(selectedPropertyName);
+				}
 			}
-			if (propertyNameList != null && propertyNameList.size() > 0) {
-				selectedPropertyName = ((SelectItem) propertyNameList.get(0)).getLabel();
-			}
-	    }
+
+	    } catch (Exception ex) {
+				System.out.println("=========================== getPropertyNameList() Exception  " + selectedOntology);
+			//ex.printStackTrace();
+		}
 		return propertyNameList;
 	}
 
-	
+
 	public void setSelectedPropertyName(String selectedPropertyName) {
 		this.selectedPropertyName = selectedPropertyName;
 		HttpServletRequest request = (HttpServletRequest)FacesContext.getCurrentInstance().getExternalContext().getRequest();
 		request.getSession().setAttribute("selectedPropertyName", selectedPropertyName);
-		
+
 	}
 
 
@@ -381,7 +386,7 @@ public class OntologyBean //extends BaseBean
 		return this.selectedPropertyName;
 	}
 
-	
+
 	public void propertyNameSelectionChanged(ValueChangeEvent event) {
 		if (event.getNewValue() == null) return;
 		String newValue = (String) event.getNewValue();
@@ -396,10 +401,6 @@ public class OntologyBean //extends BaseBean
 
 
 	public List getRepresentationalFormList() {
-
-		KLO_log.warn("***** getRepresentationalFormList()  ");
-
-
 		if (selectedOntology == null)
 		{
 	   		HttpServletRequest request = (HttpServletRequest)FacesContext.getCurrentInstance().getExternalContext().getRequest();
@@ -420,7 +421,7 @@ public class OntologyBean //extends BaseBean
 		return representationalFormList;
 	}
 
-	
+
 	public void setSelectedRepresentationalForm(String selectedRepresentationalForm) {
 		this.selectedRepresentationalForm = selectedRepresentationalForm;
 		HttpServletRequest request = (HttpServletRequest)FacesContext.getCurrentInstance().getExternalContext().getRequest();
@@ -432,7 +433,7 @@ public class OntologyBean //extends BaseBean
 		return this.selectedRepresentationalForm;
 	}
 
-	
+
 	public void representationalFormSelectionChanged(ValueChangeEvent event) {
 		if (event.getNewValue() == null) return;
 		String newValue = (String) event.getNewValue();
@@ -443,16 +444,17 @@ public class OntologyBean //extends BaseBean
 	private String selectedDelimiter = null;
 	private List delimiterList = null;
 
-	
+
 	public List getDelimiterList() {
 		delimiterList = new ArrayList();
 		delimiterList.add(new SelectItem(" "));
 		delimiterList.add(new SelectItem("|"));
 		delimiterList.add(new SelectItem("tab"));
+		setSelectedDelimiter("|");
 		return delimiterList;
 	}
 
-	
+
 	public void setSelectedDelimiter(String selectedDelimiter) {
 		this.selectedDelimiter = selectedDelimiter;
 		HttpServletRequest request = (HttpServletRequest)FacesContext.getCurrentInstance().getExternalContext().getRequest();
@@ -464,7 +466,7 @@ public class OntologyBean //extends BaseBean
 		return this.selectedDelimiter;
 	}
 
-	
+
 	public void delimiterSelectionChanged(ValueChangeEvent event) {
 		if (event.getNewValue() == null) return;
 		String newValue = (String) event.getNewValue();
@@ -478,9 +480,6 @@ public class OntologyBean //extends BaseBean
 
 
 	public List getPropertyQualifierList() {
-
-			KLO_log.warn("***** getPropertyQualifierList()  ");
-
 		if (selectedOntology == null)
 		{
 	   		HttpServletRequest request = (HttpServletRequest)FacesContext.getCurrentInstance().getExternalContext().getRequest();
@@ -521,7 +520,7 @@ public class OntologyBean //extends BaseBean
 		return this.selectedPropertyQualifier;
 	}
 
-	
+
 	public void propertyQualifierSelectionChanged(ValueChangeEvent event) {
 		if (event.getNewValue() == null) return;
 		String newValue = (String) event.getNewValue();
@@ -554,7 +553,7 @@ public class OntologyBean //extends BaseBean
 		return dataCategoryList;
 	}
 
-	
+
 	public void setSelectedDataCategory(String selectedDataCategory) {
 		this.selectedDataCategory = selectedDataCategory;
 		HttpServletRequest request = (HttpServletRequest)FacesContext.getCurrentInstance().getExternalContext().getRequest();
@@ -566,14 +565,14 @@ public class OntologyBean //extends BaseBean
 		return this.selectedDataCategory;
 	}
 
-	
+
 	public void dataCategorySelectionChanged(ValueChangeEvent event) {
 		if (event.getNewValue() == null) return;
 		String newValue = (String) event.getNewValue();
         setSelectedDataCategory(newValue);
 	}
 
-	
+
 	private String selectedSource = null;
 	private List sourceList = null;
 	private Vector<String> sourceListData = null;
@@ -602,7 +601,7 @@ public class OntologyBean //extends BaseBean
 		return sourceList;
 	}
 
-	
+
 	public void setSelectedSource(String selectedSource) {
 		this.selectedSource = selectedSource;
 		HttpServletRequest request = (HttpServletRequest)FacesContext.getCurrentInstance().getExternalContext().getRequest();
@@ -614,7 +613,7 @@ public class OntologyBean //extends BaseBean
 		return this.selectedSource;
 	}
 
-	
+
 	public void sourceSelectionChanged(ValueChangeEvent event) {
 		if (event.getNewValue() == null) return;
 		String newValue = (String) event.getNewValue();

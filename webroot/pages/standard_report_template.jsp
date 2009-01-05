@@ -65,7 +65,7 @@
 										
 
 <td class="dataCellText">
-	<h:selectOneMenu id="standardReportTemplateId" value="#{userSessionBean.selectedStandardReportTemplate}" valueChangeListener="#{userSessionBean.reportSelectionChanged}">
+	<h:selectOneMenu id="standardReportTemplateId" value="#{userSessionBean.selectedStandardReportTemplate}" valueChangeListener="#{userSessionBean.reportSelectionChanged}" immediate="true" onchange="submit()">
 	     <f:selectItems value="#{userSessionBean.standardReportTemplateList}"/>
 	</h:selectOneMenu>
 </td>
@@ -82,7 +82,7 @@
 									<table cellpadding="4" cellspacing="0" border="0">
 										<tr>
 											<td><h:commandButton id="add" action="add" value="Add" /></td>
-											<td><h:commandButton id="modify" action="modify" value="Modify" /></td>
+											<td><h:commandButton id="modify" action="#{userSessionBean.modifyReportTemplateAction}" value="Modify" /></td>
 											<td><h:commandButton id="generate" action="generate" value="Generate" /></td>
 											<td><h:commandButton id="review" action="review" value="Review" /></td>
 											<td><h:commandButton id="delete" action="delete" onclick="if (!confirm('You will lose all data entered. Are you sure?')) return false" value="Delete" /></td>

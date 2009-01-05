@@ -9,7 +9,8 @@
 <head>
 <title>Home</title>
 <link rel="stylesheet" type="text/css" href="<%= request.getContextPath() %>/css/styleSheet.css" />
-<script src="script.js" type="text/javascript"></script>
+<script src="<%= request.getContextPath() %>/js/script.js" type="text/javascript"></script>
+
 </head>
 <body>
 
@@ -147,7 +148,7 @@
 									<!-- bottom action buttons begins -->
 									<table cellpadding="4" cellspacing="0" border="0">
 										<tr>
-											<td><h:commandButton id="save" action="#{userSessionBean.addReportAction}" value="Save" /></td>
+											<td><h:commandButton id="save" action="#{userSessionBean.saveTemplateAction}" value="Save" /></td>
 											<td><h:commandButton id="reset" action="reset" value="Reset" /></td>
 											<td><h:commandButton id="back" action="back" value="Back" /></td>
 											<td><h:commandButton id="next" action="#{userSessionBean.addColumnAction}" value="Next" /></td>
