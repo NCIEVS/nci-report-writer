@@ -16,6 +16,9 @@ import javax.servlet.http.HttpSession;
 
 import org.apache.log4j.Logger;
 
+import java.util.Collection;
+
+
 
 /**
   * <!-- LICENSE_TEXT_START -->
@@ -91,14 +94,14 @@ public class UserSessionBean extends Object
 		  request.getSession().setAttribute("selectedPropertyType", selectedPropertyType);
 	  }
 
-	  
+
 	  public void propertyTypeSelectionChanged(ValueChangeEvent event) {
 		  if (event.getNewValue() == null) return;
 		  String newValue = (String) event.getNewValue();
 		  setSelectedPropertyType(newValue);
 	  }
 
-	  
+
 	  public String getSelectedOntology() {
 		  return this.selectedOntology;
 	  }
@@ -109,8 +112,7 @@ public class UserSessionBean extends Object
 
 	  public HttpServletRequest getHttpRequest() {
 		  FacesContext context = FacesContext.getCurrentInstance();
-		  HttpServletRequest request = (HttpServletRequest)context.getExternalContext().getRequest();
-
+		  HttpServletRequest request = (HttpServletRequest) context.getExternalContext().getRequest();
 		  return request;
 	  }
 
@@ -145,12 +147,14 @@ public class UserSessionBean extends Object
 
 	  public void changeTaskSelection(ValueChangeEvent vce) {
 		  String newValue = (String)vce.getNewValue();
+ 		  //KLO_log.warn("============== changeTaskSelection " + newValue);
 		  selectedTask = newValue;
 	  }
 
-	  
+
 	  public void reportSelectionChanged(ValueChangeEvent vce) {
 		  String newValue = (String) vce.getNewValue();
+		  //String oldValue = (String) vce.getOldValue();
           setSelectedStandardReportTemplate(newValue);
 	  }
 
@@ -162,8 +166,12 @@ public class UserSessionBean extends Object
 			{
 			    if (list != null && list.size() > 0)
 			    {
-					SelectItem item = (SelectItem) list.get(0);
-					setSelectedStandardReportTemplate(item.getLabel());
+					//KLO
+					if (getSelectedStandardReportTemplate() == null)
+					{
+						SelectItem item = (SelectItem) list.get(0);
+						setSelectedStandardReportTemplate(item.getLabel());
+				    }
 			    }
 			}
 		    return list;
@@ -176,9 +184,9 @@ public class UserSessionBean extends Object
 
 
 	  public void setSelectedStandardReportTemplate(String selectedStandardReportTemplate) {
+		  this.selectedStandardReportTemplate = selectedStandardReportTemplate;
 		  HttpServletRequest request = getHttpRequest();
 		  request.getSession().setAttribute("selectedStandardReportTemplate", selectedStandardReportTemplate);
- 		  this.selectedStandardReportTemplate = selectedStandardReportTemplate;
 	  }
 
 	  //taskSelectionChanged
@@ -188,7 +196,7 @@ public class UserSessionBean extends Object
 		  setSelectedTask(task);
 	  }
 
-	  
+
 	  public String performTask() {
 		  if (this.selectedTask.compareTo("Administer Standard Reports") == 0)
 		  {
@@ -211,14 +219,15 @@ public class UserSessionBean extends Object
 		  return null;
 	  }
 
-	  
+
 	  public String addColumnAction() {
-		  KLO_log.warn("******************************************* addColumnAction() ");
+		  //KLO_log.warn("******************************************* addColumnAction() ");
 		  // add_standard_report_column.jsp
 		  return "add_standard_report_column";
 	  }
 
-	  
+
+
 	  public String modifyColumnAction() {
           // not functional, to be modifid
           // need to track coding scheme
@@ -226,7 +235,7 @@ public class UserSessionBean extends Object
 		  return "add_standard_report_column";
 	  }
 
-	  
+
 	  public String insertbeforeColumnAction() {
           // not functional, to be modifid
           // need to track coding scheme
@@ -234,7 +243,7 @@ public class UserSessionBean extends Object
 		  return "add_standard_report_column";
 	  }
 
-	  
+
 	  public String insertafterColumnAction() {
           // not functional, to be modifid
           // need to track coding scheme
@@ -247,13 +256,13 @@ public class UserSessionBean extends Object
 		  return this.rootConceptCode;
 	  }
 
-	  
+
 	  public void setRootConceptCode(String rootConceptCode) {
 		  if (rootConceptCode == null) return;
 		  this.rootConceptCode = rootConceptCode;
 	  }
 
-	  
+
 	  public String selectFileAction() {
           // pop-up file selection dialog box (JNLP.jar)
           // update selectedFile
@@ -263,27 +272,44 @@ public class UserSessionBean extends Object
 	  }
 
 
-      public String addReportAction() {
+      //public String addReportAction() {
+	  public String saveTemplateAction() {
 		  HttpServletRequest request = (HttpServletRequest)FacesContext.getCurrentInstance().getExternalContext().getRequest();
-
           String codingSchemeNameAndVersion = (String) request.getSession().getAttribute("selectedOntology");
           String codingSchemeName = DataUtils.getCodingSchemeName(codingSchemeNameAndVersion);
           String codingSchemeVersion = DataUtils.getCodingSchemeVersion(codingSchemeNameAndVersion);
           String label = (String) request.getParameter("label");
-          
+
           String rootConceptCode = (String) request.getParameter("rootConceptCode");
           String selectedAssociation = (String) request.getSession().getAttribute("selectedAssociation");
 		  String selectedLevel = (String) request.getSession().getAttribute("selectedLevel");
 		  String selectedDirection = (String) request.getSession().getAttribute("selectedDirection");
 		  Boolean direction = null;
-		  
+
+		  // return to error page
+		  if (label == null || label.compareTo("") == 0)
+		  {
+			  KLO_log.warn("Incomplete data entry -- form not saved.");
+			  return "add_standard_report_template";
+		  }
+		  if (rootConceptCode == null || rootConceptCode.compareTo("") == 0)
+		  {
+			  KLO_log.warn("Incomplete data entry -- form not saved.");
+			  return "add_standard_report_template";
+		  }
+		  if (selectedLevel == null || selectedLevel.compareTo("") == 0)
+		  {
+			  KLO_log.warn("Incomplete data entry -- form not saved.");
+			  return "add_standard_report_template";
+		  }
+
 		  if(selectedDirection.equals(Boolean.TRUE))
 			  direction = true;
 		  else
 			  direction = false;
-		  
-		  char delimiter = '$';
 
+		  char delimiter = '$';
+/*
 		  KLO_log.warn("label: " + label);
           KLO_log.warn("codingSchemeName: " + codingSchemeName);
           KLO_log.warn("codingSchemeVersion: " + codingSchemeVersion);
@@ -292,40 +318,58 @@ public class UserSessionBean extends Object
           KLO_log.warn("direction: " + selectedDirection);
           KLO_log.warn("level: " + selectedLevel);
           KLO_log.warn("delimiter: " + delimiter);
-
+*/
           // Save results using SDK writable API.
           try{
         	  SDKClientUtil sdkclientutil = new SDKClientUtil();
         	  if(selectedLevel.equalsIgnoreCase("all"))
-        		  selectedLevel = "50";
-  			  sdkclientutil.insertStandardReportTemplate(codingSchemeName, codingSchemeVersion, label, rootConceptCode, selectedAssociation, direction, Integer.parseInt(selectedLevel), delimiter);
+        		  selectedLevel = "-1";
+  			  sdkclientutil.insertStandardReportTemplate(label, codingSchemeName, codingSchemeVersion, rootConceptCode, selectedAssociation, direction, Integer.parseInt(selectedLevel), delimiter);
+  			  setSelectedStandardReportTemplate(label);
           } catch(Exception e) {
         	  e.printStackTrace();
           }
-          
-          return "generate_standard_report";
+
+          //return "generate_standard_report";
+          return "standard_report_template";
 	  }
 
 
-      public String addReportColumnAction() {
-    	  KLO_log.warn("************ addReportColumnAction() ***************** ");
+
+      public StandardReportTemplate getStandardReportTemplate(String label) {
+          try{
+        	  SDKClientUtil sdkclientutil = new SDKClientUtil();
+        	  String FQName = "gov.nih.nci.evs.reportwriter.bean.StandardReportTemplate";
+        	  String methodName = "setLabel";
+        	  Object obj = sdkclientutil.search(FQName, methodName, label);
+			  StandardReportTemplate standardReportTemplate = (StandardReportTemplate) obj;
+			  return standardReportTemplate;
+          } catch(Exception e) {
+        	  e.printStackTrace();
+          }
+          return null;
+      }
+
+      //public String addReportColumnAction() {
+	  public String saveReportColumnAction() {
 		  HttpServletRequest request = (HttpServletRequest)FacesContext.getCurrentInstance().getExternalContext().getRequest();
 
 		  String fieldlabel = (String) request.getParameter("fieldlabel");
-  		  String fieldType = (String) request.getSession().getAttribute("selectedDataCategory"); 
+  		  String fieldType = (String) request.getSession().getAttribute("selectedDataCategory");
   		  String propertyType = (String) request.getSession().getAttribute("selectedPropertyType");
   		  String propertyName = (String) request.getSession().getAttribute("selectedPropertyName");
   		  String representationalForm = (String) request.getSession().getAttribute("selectedRepresentationalForm");
 		  String source = (String) request.getSession().getAttribute("selectedSource");
   		  String propertyQualifier = (String) request.getSession().getAttribute("selectedPropertyQualifier");
   		  String qualifierValue = (String) request.getParameter("qualifiervalue");
+
   		  String conditionalColumnId = (String) request.getParameter("dependentfield");
   		  int ccid = -1;
-  		  
+
   		  if(conditionalColumnId != null)
   			if(conditionalColumnId != "")
   				ccid = Integer.parseInt(conditionalColumnId);
-  		  
+
 		  String preferred = (String) request.getParameter("preferred");
   		  Boolean isPreferred = null;
   		  if(preferred != null) {
@@ -334,7 +378,8 @@ public class UserSessionBean extends Object
 			  if(preferred.equalsIgnoreCase("no"))
 				  isPreferred = Boolean.FALSE;
   		  }
-  		  
+
+/*
 		  String selectedDirection = (String) request.getSession().getAttribute("selectedDirection");
 		  Boolean direction = null;
 		  if(selectedDirection != null) {
@@ -343,37 +388,55 @@ public class UserSessionBean extends Object
 			  else
 				  direction = Boolean.FALSE;
 		  }
-		  
+*/
 		  String delim = (String) request.getSession().getAttribute("selectedDelimiter");
 		  char delimiter = ' ';
 		  if(delim != null)
-			  if(delim != "")
+		  {
+			  if(delim.length() > 0)
+			  {
 				  delimiter = delim.charAt(0);
-		  
+			  }
+		  }
+/*
 		  KLO_log.warn("fieldlabel: " + fieldlabel);
           KLO_log.warn("fieldType: " + fieldType);
           KLO_log.warn("propertyType: " + propertyType);
           KLO_log.warn("propertyName: " + propertyName);
+          KLO_log.warn("isPreferred: " + isPreferred);
           KLO_log.warn("representationalForm: " + representationalForm);
           KLO_log.warn("source: " + source);
           KLO_log.warn("qualifierName: " + propertyQualifier);
           KLO_log.warn("qualifierValue: " + qualifierValue);
-          KLO_log.warn("isPreferred: " + isPreferred);
-          KLO_log.warn("direction: " + direction);
-          KLO_log.warn("ccid: " + ccid);
-          KLO_log.warn("delimiter: " + delimiter);
 
+          //KLO_log.warn("direction: " + direction);
+          KLO_log.warn("delimiter: " + delimiter);
+          KLO_log.warn("ccid: " + ccid);
+*/
           // Save results using SDK writable API.
           try{
         	  SDKClientUtil sdkclientutil = new SDKClientUtil();
-        	  sdkclientutil.insertReportColumn(fieldlabel, fieldType, propertyType, propertyName, isPreferred, representationalForm, source, propertyQualifier, qualifierValue, delimiter, ccid);
-        	  sdkclientutil.testGetTemplateCollection();
+        	  String FQName = "gov.nih.nci.evs.reportwriter.bean.StandardReportTemplate";
+        	  String methodName = "setLabel";
+        	  String key = this.selectedStandardReportTemplate;
+        	  //Object search(String FQName, String methodName, String key)
+        	  Object obj = sdkclientutil.search(FQName, methodName, key);
+
+        	  ReportColumn col = sdkclientutil.createReportColumn(fieldlabel, fieldType, propertyType, propertyName, isPreferred, representationalForm, source, propertyQualifier, qualifierValue, delimiter, ccid);
+			  StandardReportTemplate standardReportTemplate = (StandardReportTemplate) obj;
+			  col.setReportTemplate(standardReportTemplate);
+              sdkclientutil.insertReportColumn(col);
+              //setSelectedStandardReportTemplate(standardReportTemplate.getLabel());
+        	  //sdkclientutil.insertReportColumn(fieldlabel, fieldType, propertyType, propertyName, isPreferred, representationalForm, source, propertyQualifier, qualifierValue, delimiter, ccid);
+        	  //sdkclientutil.testGetTemplateCollection();
+
+              request.getSession().setAttribute("selectedStandardReportTemplate", selectedStandardReportTemplate);
+
+
           } catch(Exception e) {
         	  e.printStackTrace();
           }
- 
-          
-          return "add_standard_report_column";
+          return "standard_report_column";
 	  }
 
 
@@ -425,11 +488,25 @@ public class UserSessionBean extends Object
 		try{
       	  SDKClientUtil sdkclientutil = new SDKClientUtil();
       	  sdkclientutil.insertReportStatus(statusValue, reportTemplate, true);
-      	  sdkclientutil.testGetTemplateCollection();
+      	  //sdkclientutil.testGetTemplateCollection();
         } catch(Exception e) {
       	  e.printStackTrace();
         }
 
 		return "assign_report_status";
 	}
+
+
+	  public String modifyReportTemplateAction() {
+		  HttpServletRequest request = getHttpRequest();
+		  request.getSession().setAttribute("selectedStandardReportTemplate", selectedStandardReportTemplate);
+
+          StandardReportTemplate standardReportTemplate = getStandardReportTemplate(selectedStandardReportTemplate);
+          String ontologyNameAndVersion = standardReportTemplate.getCodingSchemeName() + " (version: " + standardReportTemplate.getCodingSchemeVersion() + ")";
+          request.getSession().setAttribute("selectedOntology", ontologyNameAndVersion);
+
+		  return "standard_report_column";
+	  }
+
+
   }

@@ -82,13 +82,13 @@
 				</patternset>
 			</fileset>
 			<fileset dir="conf">
-							<patternset>
-								<include name="**/*.conf"/>
-								<include name="**/*.properties"/>
-								<include name="**/*.xml"/>
-								<include name="**/*.config"/>
-							</patternset>
-						</fileset>
+			<patternset>
+				<include name="**/*.conf"/>
+				<include name="**/*.properties"/>
+				<include name="**/*.xml"/>
+				<include name="**/*.config"/>
+			</patternset>
+		</fileset>
 		</copy>
 	</target>
 

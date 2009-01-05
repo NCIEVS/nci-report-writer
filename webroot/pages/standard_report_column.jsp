@@ -5,6 +5,9 @@
 
 <%@ page contentType="text/html;charset=windows-1252"%>
 
+<%@ page import="gov.nih.nci.evs.reportwriter.bean.*" %>
+<%@ page import="gov.nih.nci.evs.reportwriter.utils.*" %>
+
 <html>
 <head>
 <title>Home</title>
@@ -45,17 +48,33 @@
                               <tr>
                                     <td>
                          
-<!--_____ main content begins _____-->
+<!-- _____ main content begins _____ -->
 <h:form id="STANDARD_REPORT_FIELDSForm">
+
+<%
+Object[] objs = null;
+%>
+
 	<tr>
 		<td width="100%" valign="top"><br>
-		<!-- target of anchor to skip menus --><a name="content" />
+		<!-- target of anchor to skip menus -->
+		<a name="content" />
 			<table summary="" cellpadding="0" cellspacing="0" border="0" class="contentPage" width="600">
 				<tr>
 					<td>
 						<table summary="" cellpadding="0" cellspacing="0" border="0">
 							<tr>
+							<!--
 								<td class="dataTablePrimaryLabel" height="20">STANDARD REPORT FIELDS</td>
+							-->	
+								<td class="dataTablePrimaryLabel" height="20">
+								<% 
+								    String templat_label = (String) request.getSession().getAttribute("selectedStandardReportTemplate");
+								%>
+								    <%= templat_label %>
+								</td>
+								
+								
 							</tr>
 							<tr>
 								<td>
@@ -73,218 +92,91 @@
 											<th class="dataTableHeader" scope="col" align="center">Qualifier Name</th>
 											<th class="dataTableHeader" scope="col" align="center">Qualifier Value</th>
 											<th class="dataTableHeader" scope="col" align="center">Delimiter</th>
+											<th class="dataTableHeader" scope="col" align="center">Dependency</th>
 										</tr>
-										<tr class="dataRowLight">
-											<td class="dataCellText"><input type="radio" name="selectedcolumn" value="1"></td>
-											<td class="dataCellNumerical">1</td>
-											<td class="dataCellText">Contributing Source</td>
-											<td class="dataCellText">Property</td>
-											<td class="dataCellText">Generic</td>
-											<td class="dataCellText">Contributing Source</td>
-											<td class="dataCellText">null</td>
-											<td class="dataCellText">null</td>
-											<td class="dataCellText">null</td>
-											<td class="dataCellText">null</td>
-											<td class="dataCellText">null</td>
-											<td class="dataCellText">null</td>
-										</tr>
-										<tr class="dataRowDark">
-											<td class="dataCellText"><input type="radio" name="selectedcolumn" value="2"></td>
-											<td class="dataCellNumerical">2</td>
-											<td class="dataCellText">Subset Code</td>
-											<td class="dataCellText">Associated Concept Code</td>
-											<td class="dataCellText">null</td>
-											<td class="dataCellText">null</td>
-											<td class="dataCellText">null</td>
-											<td class="dataCellText">null</td>
-											<td class="dataCellText">null</td>
-											<td class="dataCellText">null</td>
-											<td class="dataCellText">null</td>
-											<td class="dataCellText">null</td>
-										</tr>
-										<tr class="dataRowLight">
-											<td class="dataCellText"><input type="radio" name="selectedcolumn" value="3"></td>
-											<td class="dataCellNumerical">3</td>
-											<td class="dataCellText">Subset Name</td>
-											<td class="dataCellText">Associated Concept Property</td>
-											<td class="dataCellText">Presentation</td>
-											<td class="dataCellText">Preferred_Name</td>
-											<td class="dataCellText">null</td>
-											<td class="dataCellText">null</td>
-											<td class="dataCellText">null</td>
-											<td class="dataCellText">null</td>
-											<td class="dataCellText">null</td>
-											<td class="dataCellText">null</td>
-										</tr>
-										<tr class="dataRowDark">
-											<td class="dataCellText"><input type="radio" name="selectedcolumn" value="4"></td>
-											<td class="dataCellNumerical">4</td>
-											<td class="dataCellText">Concept Code</td>
-											<td class="dataCellText">Code</td>
-											<td class="dataCellText">null</td>
-											<td class="dataCellText">null</td>
-											<td class="dataCellText">null</td>
-											<td class="dataCellText">null</td>
-											<td class="dataCellText">null</td>
-											<td class="dataCellText">null</td>
-											<td class="dataCellText">null</td>
-											<td class="dataCellText">null</td>
-										</tr>
-										<tr class="dataRowLight">
-											<td class="dataCellText"><input type="radio" name="selectedcolumn" value="5"></td>
-											<td class="dataCellNumerical">5</td>
-											<td class="dataCellText">Source Code</td>
-											<td class="dataCellText">Property Qualifier</td>
-											<td class="dataCellText">Presentation</td>
-											<td class="dataCellText">FULL_SYN</td>
-											<td class="dataCellText">null</td>
-											<td class="dataCellText">PT</td>
-											<td class="dataCellText">FDA</td>
-											<td class="dataCellText">source-code</td>
-											<td class="dataCellText">null</td>
-											<td class="dataCellText">null</td>
-										</tr>
-										<tr class="dataRowDark">
-											<td class="dataCellText"><input type="radio" name="selectedcolumn" value="6"></td>
-											<td class="dataCellNumerical">6</td>
-											<td class="dataCellText">Source PT</td>
-											<td class="dataCellText">Property</td>
-											<td class="dataCellText">Presentation</td>
-											<td class="dataCellText">FULL_SYN</td>
-											<td class="dataCellText">null</td>
-											<td class="dataCellText">PT</td>
-											<td class="dataCellText">FDA</td>
-											<td class="dataCellText">null</td>
-											<td class="dataCellText">null</td>
-											<td class="dataCellText">null</td>
-											
-										</tr>
-										<tr class="dataRowLight">
-											<td class="dataCellText"><input type="radio" name="selectedcolumn" value="7"></td>
-											<td class="dataCellNumerical">7</td>
-											<td class="dataCellText">Source Synonym(s)</td>
-											<td class="dataCellText">Property</td>
-											<td class="dataCellText">Presentation</td>
-											<td class="dataCellText">FULL_SYN</td>
-											<td class="dataCellText">null</td>
-											<td class="dataCellText">SY</td>
-											<td class="dataCellText">FDA</td>
-											<td class="dataCellText">null</td>
-											<td class="dataCellText">null</td>
-											<td class="dataCellText">tab</td>
-										</tr>
-										<tr class="dataRowDark">
-											<td class="dataCellText"><input type="radio" name="selectedcolumn" value="8"></td>
-											<td class="dataCellNumerical">8</td>
-											<td class="dataCellText">Source Definition</td>
-											<td class="dataCellText">Property</td>
-											<td class="dataCellText">Definition</td>
-											<td class="dataCellText">ALT_DEFINITION</td>
-											<td class="dataCellText">null</td>
-											<td class="dataCellText">null</td>
-											<td class="dataCellText">FDA</td>
-											<td class="dataCellText">null</td>
-											<td class="dataCellText">null</td>
-											<td class="dataCellText">null</td>
-										</tr>
-										<tr class="dataRowLight">
-											<td class="dataCellText"><input type="radio" name="selectedcolumn" value="9"></td>
-											<td class="dataCellNumerical">9</td>
-											<td class="dataCellText">NCI Definition</td>
-											<td class="dataCellText">Property</td>
-											<td class="dataCellText">Definition</td>
-											<td class="dataCellText">DEFINITION</td>
-											<td class="dataCellText">null</td>
-											<td class="dataCellText">null</td>
-											<td class="dataCellText">NCI</td>
-											<td class="dataCellText">null</td>
-											<td class="dataCellText">null</td>
-											<td class="dataCellText">null</td>
-										</tr>
-										<tr class="dataRowDark">
-											<td class="dataCellText"><input type="radio" name="selectedcolumn" value="10"></td>
-											<td class="dataCellNumerical">10</td>
-											<td class="dataCellText">Parent Code</td>
-											<td class="dataCellText">Parent Code</td>
-											<td class="dataCellText">null</td>
-											<td class="dataCellText">null</td>
-											<td class="dataCellText">null</td>
-											<td class="dataCellText">null</td>
-											<td class="dataCellText">null</td>
-											<td class="dataCellText">null</td>
-											<td class="dataCellText">null</td>
-											<td class="dataCellText">null</td>
-										</tr>
-										<tr class="dataRowLight">
-											<td class="dataCellText"><input type="radio" name="selectedcolumn" value="11"></td>
-											<td class="dataCellNumerical">11</td>
-											<td class="dataCellText">Parent Source Code</td>
-											<td class="dataCellText">Parent Property Qualifier</td>
-											<td class="dataCellText">Presentation</td>
-											<td class="dataCellText">FULL_SYN</td>
-											<td class="dataCellText">null</td>
-											<td class="dataCellText">PT</td>
-											<td class="dataCellText">FDA</td>
-											<td class="dataCellText">source-code</td>
-											<td class="dataCellText">null</td>
-											<td class="dataCellText">null</td>
-										</tr>
-										<tr class="dataRowDark">
-											<td class="dataCellText"><input type="radio" name="selectedcolumn" value="12"></td>
-											<td class="dataCellNumerical">12</td>
-											<td class="dataCellText">Parent Source PT</td>
-											<td class="dataCellText">Parent Property</td>
-											<td class="dataCellText">Presentation</td>
-											<td class="dataCellText">FULL_SYN</td>
-											<td class="dataCellText">null</td>
-											<td class="dataCellText">PT</td>
-											<td class="dataCellText">FDA</td>
-											<td class="dataCellText">null</td>
-											<td class="dataCellText">null</td>
-											<td class="dataCellText">null</td>
-										</tr>
-										<tr class="dataRowLight">
-											<td class="dataCellText"><input type="radio" name="selectedcolumn" value="13"></td>
-											<td class="dataCellNumerical">13</td>
-											<td class="dataCellText">Parent NCI PT</td>
-											<td class="dataCellText">Parent Property</td>
-											<td class="dataCellText">Presentation</td>
-											<td class="dataCellText">FULL_SYN</td>
-											<td class="dataCellText">null</td>
-											<td class="dataCellText">PT</td>
-											<td class="dataCellText">NCI</td>
-											<td class="dataCellText">null</td>
-											<td class="dataCellText">null</td>
-											<td class="dataCellText">null</td>
-										</tr>
-										<tr class="dataRowDark">
-											<td class="dataCellText"><input type="radio" name="selectedcolumn" value="14"></td>
-											<td class="dataCellNumerical">14</td>
-											<td class="dataCellText">2nd Parent Code</td>
-											<td class="dataCellText">Parent Code</td>
-											<td class="dataCellText">null</td>
-											<td class="dataCellText">null</td>
-											<td class="dataCellText">null</td>
-											<td class="dataCellText">null</td>
-											<td class="dataCellText">null</td>
-											<td class="dataCellText">null</td>
-											<td class="dataCellText">null</td>
-											<td class="dataCellText">null</td>
-										</tr>
-										<tr class="dataRowLight">
-											<td class="dataCellText"><input type="radio" name="selectedcolumn" value="15"></td>
-											<td class="dataCellNumerical">15</td>
-											<td class="dataCellText">2nd Parent NCI PT</td>
-											<td class="dataCellText">Parent Property</td>
-											<td class="dataCellText">Presentation</td>
-											<td class="dataCellText">FULL_SYN</td>
-											<td class="dataCellText">null</td>
-											<td class="dataCellText">PT</td>
-											<td class="dataCellText">NCI</td>
-											<td class="dataCellText">null</td>
-											<td class="dataCellText">null</td>
-											<td class="dataCellText">null</td>
-										</tr>
+										<% 
+											   try{
+											   
+String templatLabel = (String) request.getSession().getAttribute("selectedStandardReportTemplate");
+System.out.println("============== JSP " + templatLabel);
+
+
+												  SDKClientUtil sdkclientutil = new SDKClientUtil();
+												  String FQName = "gov.nih.nci.evs.reportwriter.bean.StandardReportTemplate";
+												  String methodName = "setLabel";
+												  Object obj = sdkclientutil.search(FQName, methodName, templatLabel);
+												  StandardReportTemplate standardReportTemplate = (StandardReportTemplate) obj;
+
+System.out.println("============== JSP " + standardReportTemplate.getLabel());
+												  
+												  if (standardReportTemplate == null)
+												  {
+										%>		  
+												      <tr>
+												          <td class="dataCellText">standardReportTemplate == null???</td>
+												      </tr>
+										<% 		      
+												      
+												  }
+											          java.util.Collection cc = standardReportTemplate.getColumnCollection();
+										          
+											          
+											          if (cc != null) {
+											          objs = cc.toArray();
+											          if (objs.length > 0) {
+												  for(int i=0; i<objs.length; i++) {
+												      gov.nih.nci.evs.reportwriter.bean.ReportColumn c = (gov.nih.nci.evs.reportwriter.bean.ReportColumn) objs[i];
+
+System.out.println("============== JSP " + c.getId());
+System.out.println("============== JSP " + c.getLabel());
+System.out.println("============== JSP " + c.getFieldId());
+System.out.println("============== JSP " + c.getPropertyType());
+System.out.println("============== JSP " + c.getPropertyName());
+System.out.println("============== JSP " + c.getIsPreferred());
+System.out.println("============== JSP " + c.getRepresentationalForm());
+System.out.println("============== JSP " + c.getSource());
+System.out.println("============== JSP " + c.getQualifierName());
+System.out.println("============== JSP " + c.getQualifierValue());
+System.out.println("============== JSP " + c.getDelimiter());
+System.out.println("============== JSP " + c.getConditionalColumnId());
+
+
+
+
+										%>
+												<tr>
+													<td class="dataCellText"> <input type="radio" name="selectedcolumn" value=<%= c.getId() %>></td>
+													<td class="dataCellNumerical"><%= c.getId() %></td>
+													
+													<!--
+													<td class="dataCellNumerical"><%= c.getFieldId() %></td>
+													-->
+													
+													<td class="dataCellText"><%= c.getLabel() %></td>
+													<td class="dataCellText"><%= c.getFieldId() %></td>
+													
+													<td class="dataCellText"><%= c.getPropertyType() %></td>
+													<td class="dataCellText"><%= c.getPropertyName() %></td>
+													<td class="dataCellText"><%= c.getIsPreferred() %></td>
+													<td class="dataCellText"><%= c.getRepresentationalForm() %></td>
+													<td class="dataCellText"><%= c.getSource() %></td>
+													<td class="dataCellText"><%= c.getQualifierName() %></td>
+													<td class="dataCellText"><%= c.getQualifierValue() %></td>
+													<td class="dataCellText"><%= c.getDelimiter() %></td>
+													<td class="dataCellNumerical"><%= c.getConditionalColumnId() %></td>
+													
+												</tr>
+										<% 
+													} 
+												    }
+												}
+
+											   } catch(Exception e) {
+												  e.printStackTrace();
+											   }							
+			   
+										%>	
+
 									</table>
 								</td>
 							</tr>
@@ -293,8 +185,20 @@
 									<!-- bottom action buttons begins -->
 									<table cellpadding="4" cellspacing="0" border="0">
 										<tr>
-											<td><h:commandButton id="insertbefore" action="insertbefore" value="InsertBefore" /></td>
-											<td><h:commandButton id="insertafter" action="insertafter" value="InsertAfter" /></td>
+										
+					<%					
+					if (objs.length > 0) {
+					%>
+											<td><h:commandButton id="insertbefore" action="#{userSessionBean.insertbeforeColumnAction}" value="InsertBefore" /></td>
+					                                                <td><h:commandButton id="insertafter" action="insertafter" value="InsertAfter" /></td>
+                                        <%
+                                        } else {
+                                        %>
+ 											<td><h:commandButton id="insertbefore" action="#{userSessionBean.insertbeforeColumnAction}" value="Add" /></td>
+                                        <%
+                                        }
+                                        %>
+                                        
 											<td><h:commandButton id="modify" action="modify" value="Modify" /></td>
 											<td><h:commandButton id="delete" action="delete" value="Delete" /></td>
 											<td><h:commandButton id="back" action="back" value="Back" /></td>

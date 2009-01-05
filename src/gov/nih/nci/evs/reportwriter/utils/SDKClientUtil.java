@@ -24,6 +24,8 @@ import java.lang.reflect.Method;
 import java.util.Collection;
 import java.util.Date;
 
+import org.apache.log4j.Logger;
+
 /**
   * <!-- LICENSE_TEXT_START -->
 * Copyright 2007 NGIT. This software was developed in conjunction with the National Cancer Institute,
@@ -53,6 +55,8 @@ import java.util.Date;
  */
 
 public class SDKClientUtil {
+
+	private static Logger KLO_log = Logger.getLogger("SDKClientUtil KLO");
 
 	public SDKClientUtil() {
 
@@ -267,7 +271,7 @@ public class SDKClientUtil {
 	}
 
 
-	private ReportColumn createReportColumn(
+	public ReportColumn createReportColumn(
 		String label,
 		String fieldId,
 		String propertyType,
@@ -650,9 +654,9 @@ public class SDKClientUtil {
 
 
 	private StandardReportTemplate createStandardReportTemplate(
+		String label,
 		String codingSchemeName,
 		String codingSchemeVersion,
-		String label,
 		String rootConceptCode,
 		String associationName,
 		boolean direction,
@@ -662,9 +666,9 @@ public class SDKClientUtil {
 		//System.out.println("************** SDCLIENT: In create method ********************");
 		StandardReportTemplate standardReportTemplate = new StandardReportTemplate();
 		//System.out.println("************** SDCLIENT: StandardReportTemplate ID is ********************"+ standardReportTemplate.getId());
+		standardReportTemplate.setLabel(label);
 		standardReportTemplate.setCodingSchemeName(codingSchemeName);
 		standardReportTemplate.setCodingSchemeVersion(codingSchemeVersion);
-		standardReportTemplate.setLabel(label);
 		standardReportTemplate.setRootConceptCode(rootConceptCode);
 		standardReportTemplate.setAssociationName(associationName);
 		standardReportTemplate.setDirection(direction);
@@ -674,9 +678,9 @@ public class SDKClientUtil {
 	}
 
 	public void insertStandardReportTemplate(
+		String label,
 		String codingSchemeName,
 		String codingSchemeVersion,
-		String label,
 		String rootConceptCode,
 		String associationName,
 		boolean direction,
@@ -685,9 +689,9 @@ public class SDKClientUtil {
 
 		//System.out.println("************** SDCLIENT: In insert method ********************");
 		StandardReportTemplate standardReportTemplate = createStandardReportTemplate(
+			label,
 			codingSchemeName,
 			codingSchemeVersion,
-			label,
 			rootConceptCode,
 			associationName,
 			direction,
@@ -698,9 +702,9 @@ public class SDKClientUtil {
 	}
 
 	public void updateStandardReportTemplate(
+		String label,
 		String codingSchemeName,
 		String codingSchemeVersion,
-		String label,
 		String rootConceptCode,
 		String associationName,
 		boolean direction,
@@ -708,9 +712,9 @@ public class SDKClientUtil {
 		char delimiter) throws Exception {
 
 		StandardReportTemplate standardReportTemplate = createStandardReportTemplate(
+			label,
 			codingSchemeName,
 			codingSchemeVersion,
-			label,
 			rootConceptCode,
 			associationName,
 			direction,
@@ -720,9 +724,9 @@ public class SDKClientUtil {
 	}
 
 	public void deleteStandardReportTemplate(
+		String label,
 		String codingSchemeName,
 		String codingSchemeVersion,
-		String label,
 		String rootConceptCode,
 		String associationName,
 		boolean direction,
@@ -730,9 +734,9 @@ public class SDKClientUtil {
 		char delimiter) throws Exception {
 
 		StandardReportTemplate standardReportTemplate = createStandardReportTemplate(
+			label,
 			codingSchemeName,
 			codingSchemeVersion,
-			label,
 			rootConceptCode,
 			associationName,
 			direction,
@@ -767,6 +771,7 @@ public class SDKClientUtil {
 		SDKQueryResult queryResult = appService.executeQuery(query);
 	}
 
+/*
 	public void testGetTemplateCollection() throws Exception {
 
 		System.out.println("************** SDCLIENT testGetTemplateCollection: creating writeable app service ********************");
@@ -804,7 +809,7 @@ public class SDKClientUtil {
 		System.out.println("************** SDCLIENT: DONE... ********************");
 
 	}
-
+*/
 
 	private void printObject(Object obj, Class klass) throws Exception {
 		System.out.println("Printing "+ klass.getName());
@@ -842,15 +847,14 @@ public class SDKClientUtil {
 					break;
 				}
 			}
-
 			ApplicationService appService = ApplicationServiceProvider.getApplicationService();
 			Collection results = appService.search(klass, o);
+
 			if (results == null) return null;
 			Object[] a = results.toArray();
 			return a[0];
 		} catch(Exception e) {
 			e.printStackTrace();
-
 		}
 		return null;
 	}

@@ -281,8 +281,9 @@
     </navigation-case>
   
     <navigation-case>
-     <from-outcome>modify</from-outcome>
-     <to-view-id>/pages/standard_report_column.jsp</to-view-id>
+       <from-action>#{userSessionBean.modifyReportTemplateAction}</from-action>
+       <from-outcome>standard_report_column</from-outcome>
+       <to-view-id>/pages/standard_report_column.jsp</to-view-id>
     </navigation-case>
   
 
@@ -302,19 +303,20 @@
       <from-outcome>back</from-outcome>
       <to-view-id>/pages/standard_report_template.jsp</to-view-id>
      </navigation-case>
-  
+<!--  
       <navigation-case>
        <from-action>#{userSessionBean.addColumnAction}</from-action> 
-       <from-outcome>add_standard_report_column</from-outcome>
-        <to-view-id>/pages/add_standard_report_column.jsp</to-view-id>
+       <from-outcome>standard_report_template</from-outcome>
+        <to-view-id>/pages/standard_report_template.jsp</to-view-id>
+     </navigation-case>
+-->
+
+      <navigation-case>
+       <from-action>#{userSessionBean.saveTemplateAction}</from-action> 
+       <from-outcome>standard_report_template</from-outcome>
+        <to-view-id>/pages/standard_report_template.jsp</to-view-id>
      </navigation-case>
  
-      <navigation-case>
-       <from-action>#{userSessionBean.saveReportAction}</from-action> 
-       <from-outcome>add_standard_report_template</from-outcome>
-        <to-view-id>/pages/add_standard_report_column.jsp</to-view-id>
-     </navigation-case>
-     
   </navigation-rule>
   
  
@@ -322,8 +324,15 @@
     <from-view-id>/pages/add_standard_report_column.jsp</from-view-id>
     <navigation-case>
      <from-outcome>back</from-outcome>
-     <to-view-id>/pages/add_standard_report_template.jsp</to-view-id>
+     <to-view-id>/pages/standard_report_column.jsp</to-view-id>
     </navigation-case>
+    
+    <navigation-case>
+     <from-action>#{userSessionBean.saveReportColumnAction}</from-action> 
+     <from-outcome>standard_report_column</from-outcome>
+     <to-view-id>/pages/standard_report_column.jsp</to-view-id>
+    </navigation-case>
+    
   </navigation-rule>
   
  
@@ -341,15 +350,15 @@
     <from-view-id>/pages/standard_report_column.jsp</from-view-id>
     
     <navigation-case>
-     <from-outcome>insertbefore</from-outcome>
-     <from-action>#{userSessionBean.insertbeforeColumnAction}</from-action>
-     <to-view-id>/pages/add_standard_report_column.jsp</to-view-id>
+       <from-action>#{userSessionBean.insertbeforeColumnAction}</from-action>
+       <from-outcome>add_standard_report_column</from-outcome>
+       <to-view-id>/pages/add_standard_report_column.jsp</to-view-id>
     </navigation-case>
 
     <navigation-case>
-     <from-outcome>insertafter</from-outcome>
-     <from-action>#{userSessionBean.insertafterColumnAction}</from-action>
-     <to-view-id>/pages/add_standard_report_column.jsp</to-view-id>
+       <from-action>#{userSessionBean.insertafterColumnAction}</from-action>
+       <from-outcome>insertafter</from-outcome>
+       <to-view-id>/pages/add_standard_report_column.jsp</to-view-id>
     </navigation-case>
 
     <navigation-case>
