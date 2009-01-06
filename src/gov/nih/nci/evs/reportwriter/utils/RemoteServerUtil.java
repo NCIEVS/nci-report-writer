@@ -1,32 +1,10 @@
 package gov.nih.nci.evs.reportwriter.utils;
 
-import java.io.IOException;
-import java.util.Properties;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
-import javax.security.auth.Subject;
-import javax.security.auth.callback.Callback;
-import javax.security.auth.callback.CallbackHandler;
-import javax.security.auth.callback.NameCallback;
-import javax.security.auth.callback.PasswordCallback;
-import javax.security.auth.callback.UnsupportedCallbackException;
-import javax.security.auth.login.LoginContext;
-import javax.security.auth.login.LoginException;
-
-import javax.naming.Context;
-import javax.naming.InitialContext;
-import javax.naming.NamingException;
-
-//import gov.nih.nci.system.applicationservice.*;
-//import gov.nih.nci.system.client.*;
+import gov.nih.nci.system.applicationservice.ApplicationService;
+import gov.nih.nci.system.applicationservice.EVSApplicationService;
+import gov.nih.nci.system.client.ApplicationServiceProvider;
 
 import org.LexGrid.LexBIG.LexBIGService.LexBIGService;
-import org.LexGrid.LexBIG.Impl.LexBIGServiceImpl;
-
-import org.LexGrid.concepts.Concept;
-import org.LexGrid.LexBIG.DataModel.Core.NameAndValue;
-import org.LexGrid.LexBIG.DataModel.Collections.NameAndValueList;
 
 /**
   * <!-- LICENSE_TEXT_START -->
@@ -58,7 +36,7 @@ import org.LexGrid.LexBIG.DataModel.Collections.NameAndValueList;
 
 public class RemoteServerUtil {
 
-	static private Logger s_logger = Logger.getLogger(RemoteServerUtil.class.getName());
+	//static private Logger s_logger = Logger.getLogger(RemoteServerUtil.class.getName());
 	static private String _serviceInfo = "EvsServiceInfo";
 
 	/**
@@ -67,12 +45,21 @@ public class RemoteServerUtil {
 	 */
 	public static LexBIGService createLexBIGService()
     {
+		EVSApplicationService appService = null;
 		LexBIGService lbSvc = null;
+		
 		try {
 			// to be modified
 		    // read URL from property file.
 			//String url = ReportWriterProperties.getProperties().getProperty(ReportWriterProperties.EVS_SERVER_URL);
-			return new LexBIGServiceImpl();
+			String serviceUrl = "http://lexevsapi-dev.nci.nih.gov:19580/lexevsapi42";
+			System.out.println("Calling getAppSrvc method...");
+			appService = (EVSApplicationService) ApplicationServiceProvider.getApplicationServiceFromUrl(serviceUrl, _serviceInfo);
+			System.out.println("Got AppSrvc ...");
+			lbSvc = (LexBIGService) appService;
+			System.out.println("Cast to lbSrvc ...");
+            return lbSvc;
+            //return new LexBIGServiceImpl();
     		//return (EVSApplicationService) ApplicationServiceProvider.getApplicationServiceFromUrl(url, _serviceInfo);
 
 	    } catch (Exception e) {

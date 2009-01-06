@@ -11,55 +11,86 @@
 
 	<!-- classpath -->
 	<path id="compile.classpath">
-		<!-- <pathelement path ="${webinf.dir}/lib/lexbig.jar"/> -->
-		<pathelement path ="${webinf.dir}/lib/lbRuntime.jar"/>
 		
-		<pathelement path ="${webinf.dir}/lib/poi-contrib-3.2-FINAL-20081019.jar"/>
-		<pathelement path ="${webinf.dir}/lib/poi-3.2-FINAL-20081019.jar"/>
-		<pathelement path ="${webinf.dir}/lib/poi-scratchpad-3.2-FINAL-20081019.jar"/>
-		<pathelement path ="${webinf.dir}/lib/servlet-api.jar"/>
-		<pathelement path ="${webinf.dir}/lib/reportwriter.jar"/>
-		<pathelement path ="${webinf.dir}/lib/standard.jar"/>
-		<pathelement path ="${webinf.dir}/lib/spring-1.2.8.jar"/>
-		<pathelement path ="${webinf.dir}/lib/mysql-connector-java-3.0.14-production-bin.jar"/>
-		<pathelement path ="${webinf.dir}/lib/log4j-1.2.14.jar"/>
-		<pathelement path ="${webinf.dir}/lib/junit-3.8.1.jar"/>
-		<pathelement path ="${webinf.dir}/lib/jta-1.0.1B.jar"/>
-		<pathelement path ="${webinf.dir}/lib/jstl.jar"/>
-		<pathelement path ="${webinf.dir}/lib/jsf-impl.jar"/>
-		<pathelement path ="${webinf.dir}/lib/jsf-api.jar"/>
-		<pathelement path ="${webinf.dir}/lib/jdom-1.1.jar"/>
-		<pathelement path ="${webinf.dir}/lib/hibernate-annotations-1.0.jar"/>
-		<pathelement path ="${webinf.dir}/lib/hibernate-3.2.0.ga.jar"/>
-		<pathelement path ="${webinf.dir}/lib/ejb3-persistence-1.0.1.jar"/>
-		<pathelement path ="${webinf.dir}/lib/ehcache-1.2.4.jar"/>
-		<pathelement path ="${webinf.dir}/lib/dom4j-1.6.1.jar"/>
-		<pathelement path ="${webinf.dir}/lib/csmapi-4.1.jar"/>
+		<pathelement path ="${webinf.dir}/lib/acegi-security-1.0.4.jar"/>
+		<pathelement path ="${webinf.dir}/lib/antlr-2.7.6.jar"/>
+		<pathelement path ="${webinf.dir}/lib/asm-1.5.3.jar"/>
+		<pathelement path ="${webinf.dir}/lib/asm-attrs-1.5.3.jar"/>
+		<pathelement path ="${webinf.dir}/lib/axis.jar"/>
+		<pathelement path ="${webinf.dir}/lib/c3p0-0.9.0.jar"/>
+	    		
+		<pathelement path ="${webinf.dir}/lib/caGrid-data-common-1.2.jar"/>
+		<pathelement path ="${webinf.dir}/lib/caGrid-data-utils-1.2.jar"/>
+		<pathelement path ="${webinf.dir}/lib/caGrid-metadata-data-1.2.jar"/>
+		<pathelement path ="${webinf.dir}/lib/caGrid-sdkQuery4-beans-1.2.jar"/>
+		<pathelement path ="${webinf.dir}/lib/caGrid-sdkQuery4-processor-1.2.jar"/>
+		
+		<pathelement path ="${webinf.dir}/lib/cglib-2.1_3.jar"/>
+		<pathelement path ="${webinf.dir}/lib/clm-4.1.jar"/>
+		
+		<pathelement path ="${webinf.dir}/lib/cog-jglobus.jar"/>
 		<pathelement path ="${webinf.dir}/lib/commons-logging-1.0.4.jar"/>
 		<pathelement path ="${webinf.dir}/lib/commons-lang-1.0.1.jar"/>
 		<pathelement path ="${webinf.dir}/lib/commons-digester.jar"/>
 		<pathelement path ="${webinf.dir}/lib/commons-dbcp-1.2.1.jar"/>
 		<pathelement path ="${webinf.dir}/lib/commons-collections-2.1.1.jar"/>
 		<pathelement path ="${webinf.dir}/lib/commons-beanutils.jar"/>
-		<pathelement path ="${webinf.dir}/lib/clm-4.1.jar"/>
-		<pathelement path ="${webinf.dir}/lib/cglib-2.1_3.jar"/>
-		<pathelement path ="${webinf.dir}/lib/c3p0-0.9.0.jar"/>
-		<pathelement path ="${webinf.dir}/lib/asm-attrs-1.5.3.jar"/>
-		<pathelement path ="${webinf.dir}/lib/asm-1.5.3.jar"/>
-		<pathelement path ="${webinf.dir}/lib/antlr-2.7.6.jar"/>
-		<pathelement path ="${webinf.dir}/lib/acegi-security-1.0.3.jar"/>
+		<pathelement path ="${webinf.dir}/lib/csmapi-4.1.jar"/>
+		
+		<pathelement path ="${webinf.dir}/lib/dlbadapter.jar"/>
+		<pathelement path ="${webinf.dir}/lib/dom4j-1.6.1.jar"/>
+		<pathelement path ="${webinf.dir}/lib/ehcache-1.2.4.jar"/>
+		<pathelement path ="${webinf.dir}/lib/ejb3-persistence-1.0.1.jar"/>
+		
+		
+		
+		<pathelement path ="${webinf.dir}/lib/hibernate3.jar"/>
+		<pathelement path ="${webinf.dir}/lib/hibernate-commons-annotations.jar"/>
+		<pathelement path ="${webinf.dir}/lib/hibernate-annotations-1.0.jar"/>
+		<pathelement path ="${webinf.dir}/lib/hibernate-3.2.0.ga.jar"/>
+		<pathelement path ="${webinf.dir}/lib/hibernate-validator.jar"/>
+				
+		<pathelement path ="${webinf.dir}/lib/jaxrpc.jar"/>
+		<pathelement path ="${webinf.dir}/lib/junit-3.8.1.jar"/>
+		<pathelement path ="${webinf.dir}/lib/jta.jar"/>
+		<pathelement path ="${webinf.dir}/lib/jta-1.0.1B.jar"/>
+		<pathelement path ="${webinf.dir}/lib/jstl.jar"/>
+		<pathelement path ="${webinf.dir}/lib/jsf-impl.jar"/>
+		<pathelement path ="${webinf.dir}/lib/jsf-api.jar"/>
+		<pathelement path ="${webinf.dir}/lib/jdom-1.1.jar"/>
 
-		<pathelement path ="${webinf.dir}/lib/rwdbserver-beans.jar"/>
+		<pathelement path ="${webinf.dir}/lib/lbRuntime.jar"/>
+		<pathelement path ="${webinf.dir}/lib/lexevsapi42-beans.jar"/>
+	    <pathelement path ="${webinf.dir}/lib/lexevsapi42-framework.jar"/>
+		<pathelement path ="${webinf.dir}/lib/lexbig.jar"/>
+		<pathelement path ="${webinf.dir}/lib/log4j-1.2.14.jar"/>
+		<pathelement path ="${webinf.dir}/lib/lucene-core-2.3.2.jar"/>
+		<pathelement path ="${webinf.dir}/lib/lucene-regex-2.3.2.jar"/>
+		<pathelement path ="${webinf.dir}/lib/lucene-snowball-2.3.2.jar"/>
+								
+		<pathelement path ="${webinf.dir}/lib/mysql-connector-java-3.0.14-production-bin.jar"/>
+		<pathelement path ="${webinf.dir}/lib/ojdbc14.jar"/>
+				
+		<pathelement path ="${webinf.dir}/lib/poi-contrib-3.2-FINAL-20081019.jar"/>
+		<pathelement path ="${webinf.dir}/lib/poi-3.2-FINAL-20081019.jar"/>
+		<pathelement path ="${webinf.dir}/lib/poi-scratchpad-3.2-FINAL-20081019.jar"/>
+
+	    <pathelement path ="${webinf.dir}/lib/rwdbserver-beans.jar"/>
 		<pathelement path ="${webinf.dir}/lib/rwdbserver-orm.jar"/>
 
-		<pathelement path ="${webinf.dir}/lib/sdk-client-framework.jar"/>
-		<pathelement path ="${webinf.dir}/lib/sdk-core.jar"/>
+	     <pathelement path ="${webinf.dir}/lib/sdk-client-framework.jar"/>
+		 <pathelement path ="${webinf.dir}/lib/sdk-core.jar"/>
+		<pathelement path ="${webinf.dir}/lib/sdk-security.jar"/>
 		<pathelement path ="${webinf.dir}/lib/sdk-writable-client-framework.jar"/>
-		<pathelement path ="${webinf.dir}/lib/sdk-writable-core.jar"/>
+		 <pathelement path ="${webinf.dir}/lib/sdk-writable-core.jar"/>
 		
-		<pathelement path ="${webinf.dir}/classes"/>
-		<pathelement path ="${classpath.external}"/>
-		<pathelement path ="${classpath}"/>
+		<pathelement path ="${webinf.dir}/lib/servlet-api.jar"/>
+		<pathelement path ="${webinf.dir}/lib/standard.jar"/>
+		<pathelement path ="${webinf.dir}/lib/spring-1.2.8.jar"/>
+		
+	    <pathelement path ="${webinf.dir}/classes"/>
+	    <pathelement path ="${classpath.external}"/>
+	    <pathelement path ="${classpath}"/>
 	</path>
 
 	<!-- define your folder for deployment -->
