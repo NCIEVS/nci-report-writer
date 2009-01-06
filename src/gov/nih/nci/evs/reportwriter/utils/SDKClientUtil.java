@@ -8,7 +8,6 @@ import gov.nih.nci.evs.reportwriter.bean.ReportFormat;
 import gov.nih.nci.evs.reportwriter.bean.ReportStatus;
 import gov.nih.nci.evs.reportwriter.bean.StandardReport;
 import gov.nih.nci.evs.reportwriter.bean.StandardReportTemplate;
-import gov.nih.nci.evs.reportwriter.service.StandardReportService;
 import gov.nih.nci.system.applicationservice.WritableApplicationService;
 import gov.nih.nci.system.client.ApplicationServiceProvider;
 import gov.nih.nci.system.query.SDKQueryResult;
@@ -587,68 +586,6 @@ public class SDKClientUtil {
 	public void deleteStandardReport(StandardReport standardReport) throws Exception {
 		WritableApplicationService appService = (WritableApplicationService)ApplicationServiceProvider.getApplicationService();
 		DeleteExampleQuery query = new DeleteExampleQuery(standardReport);
-		SDKQueryResult queryResult = appService.executeQuery(query);
-	}
-
-
-	private StandardReportService createStandardReportService(
-		int ID,
-		String serviceURL) {
-		StandardReportService standardReportService = new StandardReportService();
-		standardReportService.setId(ID);
-		standardReportService.setServiceURL(serviceURL);
-		return standardReportService;
-	}
-
-	public void insertStandardReportService(
-		int ID,
-		String serviceURL) throws Exception {
-
-		StandardReportService standardReportService = createStandardReportService(
-			ID,
-			serviceURL);
-		insertStandardReportService(standardReportService);
-	}
-
-	public void updateStandardReportService(
-		int ID,
-		String serviceURL) throws Exception {
-
-		StandardReportService standardReportService = createStandardReportService(
-			ID,
-			serviceURL);
-		updateStandardReportService(standardReportService);
-	}
-
-	public void deleteStandardReportService(
-		int ID,
-		String serviceURL) throws Exception {
-
-		StandardReportService standardReportService = createStandardReportService(
-			ID,
-			serviceURL);
-		deleteStandardReportService(standardReportService);
-	}
-
-	public void insertStandardReportService(StandardReportService standardReportService) throws Exception {
-		WritableApplicationService appService = (WritableApplicationService)ApplicationServiceProvider.getApplicationService();
-		InsertExampleQuery query = new InsertExampleQuery(standardReportService);
-		SDKQueryResult queryResult = appService.executeQuery(query);
-		//standardReportService = (StandardReportService)queryResult.getObjectResult();
-	}
-
-
-	public void updateStandardReportService(StandardReportService standardReportService) throws Exception {
-		WritableApplicationService appService = (WritableApplicationService)ApplicationServiceProvider.getApplicationService();
-		UpdateExampleQuery query = new UpdateExampleQuery(standardReportService);
-		SDKQueryResult queryResult = appService.executeQuery(query);
-		//standardReportService = (StandardReportService)queryResult.getObjectResult();
-	}
-
-
-	public void deleteStandardReportService(StandardReportService standardReportService) throws Exception {
-		WritableApplicationService appService = (WritableApplicationService)ApplicationServiceProvider.getApplicationService();
-		DeleteExampleQuery query = new DeleteExampleQuery(standardReportService);
 		SDKQueryResult queryResult = appService.executeQuery(query);
 	}
 
