@@ -292,8 +292,24 @@ public class DataUtils {
 
         try {
 			LexBIGService lbSvc = RemoteServerUtil.createLexBIGService();
+			System.out.println("Obtained lbsvc");
+			if(lbSvc == null)
+				System.out.println("lbSvc is NULL");
+			
+			String arg0 = "NCI Thesaurus";
+			CodingSchemeVersionOrTag arg1 = new CodingSchemeVersionOrTag();
+			arg1.setVersion("08.04d");
+			
+			lbSvc.resolveCodingScheme(arg0, arg1);
+			
 			CodingSchemeRenderingList csrl = lbSvc.getSupportedCodingSchemes();
+			System.out.println("Obtained csrl");
+			if(csrl == null)
+				System.out.println("csrl is NULL");
+			
 			CodingSchemeRendering[] csrs = csrl.getCodingSchemeRendering();
+			System.out.println("csrs length = " + csrs.length);
+			
 			for (int i=0; i<csrs.length; i++)
 			{
 				CodingSchemeRendering csr = csrs[i];
@@ -372,7 +388,10 @@ public class DataUtils {
 		try {
 			LexBIGService lbSvc = RemoteServerUtil.createLexBIGService();
 			scheme = lbSvc.resolveCodingScheme(codingSchemeName, vt);
-			if (scheme == null) return null;
+			if (scheme == null) {
+				System.out.println("scheme is NULL");
+				return null;
+			}
 
 			Vector<String> v = new Vector<String>();
 			SupportedAssociation[] assos = scheme.getMappings().getSupportedAssociation();

@@ -4,6 +4,9 @@ import gov.nih.nci.system.applicationservice.ApplicationService;
 import gov.nih.nci.system.applicationservice.EVSApplicationService;
 import gov.nih.nci.system.client.ApplicationServiceProvider;
 
+import org.LexGrid.LexBIG.DataModel.Collections.CodingSchemeRenderingList;
+import org.LexGrid.LexBIG.DataModel.Core.CodingSchemeVersionOrTag;
+import org.LexGrid.LexBIG.DataModel.InterfaceElements.CodingSchemeRendering;
 import org.LexGrid.LexBIG.LexBIGService.LexBIGService;
 
 /**
@@ -45,19 +48,38 @@ public class RemoteServerUtil {
 	 */
 	public static LexBIGService createLexBIGService()
     {
-		EVSApplicationService appService = null;
+		ApplicationService appService = null;
 		LexBIGService lbSvc = null;
 		
 		try {
 			// to be modified
 		    // read URL from property file.
 			//String url = ReportWriterProperties.getProperties().getProperty(ReportWriterProperties.EVS_SERVER_URL);
-			String serviceUrl = "http://lexevsapi-dev.nci.nih.gov:19580/lexevsapi42";
+			//String serviceUrl = "http://lexevsapi.nci.nih.gov/lexevsapi42";
 			System.out.println("Calling getAppSrvc method...");
-			appService = (EVSApplicationService) ApplicationServiceProvider.getApplicationServiceFromUrl(serviceUrl, _serviceInfo);
-			System.out.println("Got AppSrvc ...");
-			lbSvc = (LexBIGService) appService;
+			appService = (ApplicationService) ApplicationServiceProvider.getApplicationService( _serviceInfo);
+			System.out.println("Got AppSrvc ..."); 
+			EVSApplicationService eas = (EVSApplicationService) appService;
+			System.out.println("Got EVS AppSrvc ...");
+			lbSvc = (LexBIGService) eas;
 			System.out.println("Cast to lbSrvc ...");
+			
+			String arg0 = "NCI Thesaurus";
+			CodingSchemeVersionOrTag arg1 = new CodingSchemeVersionOrTag();
+			arg1.setVersion("08.04d");
+			System.out.println("resolving lbSrvc ...");
+			
+			lbSvc.resolveCodingScheme(arg0, arg1);
+			System.out.println("resolved ...");
+			
+			
+			CodingSchemeRenderingList csrl = lbSvc.getSupportedCodingSchemes();
+			System.out.println("Obtained csrl");
+			if(csrl == null)
+				System.out.println("csrl is NULL");
+			
+			CodingSchemeRendering[] csrs = csrl.getCodingSchemeRendering();
+			System.out.println("csrs length = " + csrs.length);
             return lbSvc;
             //return new LexBIGServiceImpl();
     		//return (EVSApplicationService) ApplicationServiceProvider.getApplicationServiceFromUrl(url, _serviceInfo);
