@@ -25,24 +25,27 @@
 		<pathelement path ="${webinf.dir}/lib/caGrid-sdkQuery4-beans-1.2.jar"/>
 		<pathelement path ="${webinf.dir}/lib/caGrid-sdkQuery4-processor-1.2.jar"/>
 		
-		<pathelement path ="${webinf.dir}/lib/cglib-2.1_3.jar"/>
+		<pathelement path ="${webinf.dir}/lib/cglib-2.1.3.jar"/>
 		<pathelement path ="${webinf.dir}/lib/clm-4.1.jar"/>
 		
+		<pathelement path ="${webinf.dir}/lib/cog-axis.jar"/>
 		<pathelement path ="${webinf.dir}/lib/cog-jglobus.jar"/>
 		<pathelement path ="${webinf.dir}/lib/commons-logging-1.0.4.jar"/>
+		<pathelement path ="${webinf.dir}/lib/commons-logging-1.1.jar"/>
 		<pathelement path ="${webinf.dir}/lib/commons-lang-1.0.1.jar"/>
 		<pathelement path ="${webinf.dir}/lib/commons-digester.jar"/>
+		<pathelement path ="${webinf.dir}/lib/commons-discovery-0.2.jar"/>
 		<pathelement path ="${webinf.dir}/lib/commons-dbcp-1.2.1.jar"/>
 		<pathelement path ="${webinf.dir}/lib/commons-collections-2.1.1.jar"/>
+		<pathelement path ="${webinf.dir}/lib/commons-collections-3.2.jar"/>
 		<pathelement path ="${webinf.dir}/lib/commons-beanutils.jar"/>
+		<pathelement path ="${webinf.dir}/lib/commons-codec-1.3.jar"/>
 		<pathelement path ="${webinf.dir}/lib/csmapi-4.1.jar"/>
 		
 		<pathelement path ="${webinf.dir}/lib/dlbadapter.jar"/>
 		<pathelement path ="${webinf.dir}/lib/dom4j-1.6.1.jar"/>
 		<pathelement path ="${webinf.dir}/lib/ehcache-1.2.4.jar"/>
 		<pathelement path ="${webinf.dir}/lib/ejb3-persistence-1.0.1.jar"/>
-		
-		
 		
 		<pathelement path ="${webinf.dir}/lib/hibernate3.jar"/>
 		<pathelement path ="${webinf.dir}/lib/hibernate-commons-annotations.jar"/>
