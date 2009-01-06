@@ -797,6 +797,33 @@ public class SDKClientUtil {
 	}
 
 
+	public Object search(String FQName, String methodName, int key) {
+		try {
+			Class klass = Class.forName(FQName);
+			Object o = klass.newInstance();
+			Method[] methods = klass.getMethods();
+			Object[] params = new Object[1];
+			params[0] = key;
+			for(Method method:methods) {
+				if(method.getName().equals(methodName))
+				{
+					method.invoke(o, params);
+					break;
+				}
+			}
+			ApplicationService appService = ApplicationServiceProvider.getApplicationService();
+			Collection results = appService.search(klass, o);
+
+			if (results == null) return null;
+			Object[] a = results.toArray();
+			return a[0];
+		} catch(Exception e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
+
+
 	public Object[] search(String FQName) {
 		try {
 			Class klass = Class.forName(FQName);

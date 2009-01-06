@@ -280,6 +280,14 @@
 
     </navigation-case>
   
+   
+    <navigation-case>
+       <from-action>#{userSessionBean.deleteReportTemplateAction}</from-action>
+       <from-outcome>standard_report_template</from-outcome>
+       <to-view-id>/pages/standard_report_template.jsp</to-view-id>
+    </navigation-case>
+    
+    
     <navigation-case>
        <from-action>#{userSessionBean.modifyReportTemplateAction}</from-action>
        <from-outcome>standard_report_column</from-outcome>
@@ -345,7 +353,6 @@
     </navigation-case>
   </navigation-rule>
   
-  
   <navigation-rule>
     <from-view-id>/pages/standard_report_column.jsp</from-view-id>
     
@@ -357,7 +364,7 @@
 
     <navigation-case>
        <from-action>#{userSessionBean.insertafterColumnAction}</from-action>
-       <from-outcome>insertafter</from-outcome>
+       <from-outcome>add_standard_report_column</from-outcome>
        <to-view-id>/pages/add_standard_report_column.jsp</to-view-id>
     </navigation-case>
 
@@ -365,6 +372,12 @@
      <from-outcome>modify</from-outcome>
      <from-action>#{userSessionBean.modifyColumnAction}</from-action>
      <to-view-id>/pages/add_standard_report_column.jsp</to-view-id>
+    </navigation-case>
+    
+    <navigation-case>
+     <from-action>#{userSessionBean.deleteColumnAction}</from-action>
+     <from-outcome>standard_report_column</from-outcome>
+     <to-view-id>/pages/standard_report_column.jsp</to-view-id>
     </navigation-case>
     
     <navigation-case>

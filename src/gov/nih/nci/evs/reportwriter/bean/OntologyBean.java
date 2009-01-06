@@ -580,8 +580,6 @@ public class OntologyBean //extends BaseBean
 
 	public List getSourceList() {
 
-			KLO_log.warn("***** getSourceList()  ");
-
 		if (selectedOntology == null)
 		{
 	   		HttpServletRequest request = (HttpServletRequest)FacesContext.getCurrentInstance().getExternalContext().getRequest();
