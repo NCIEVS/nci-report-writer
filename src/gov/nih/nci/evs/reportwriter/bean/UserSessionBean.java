@@ -251,6 +251,31 @@ public class UserSessionBean extends Object
 		  return "add_standard_report_column";
 	  }
 
+	  public String deleteColumnAction() {
+          // not functional, to be modifid
+          // need to track coding scheme
+          // track selected column number
+
+          //selectedcolumn
+		  HttpServletRequest request = (HttpServletRequest)FacesContext.getCurrentInstance().getExternalContext().getRequest();
+          String id_str = (String) request.getParameter("selectedcolumn");
+          int id = Integer.parseInt(id_str);
+
+System.out.println("deleting column with ID = " + id + " (yet to be implemented)" );
+
+          try{
+			  ReportColumn reportColumn = getReportColumn(id);
+        	  SDKClientUtil sdkclientutil = new SDKClientUtil();
+  			  sdkclientutil.deleteReportColumn(reportColumn);
+  			  //setSelectedStandardReportTemplate(label);
+
+          } catch(Exception e) {
+        	  e.printStackTrace();
+          }
+
+		  return "standard_report_column";
+	  }
+
 
 	  public String getRootConceptCode() {
 		  return this.rootConceptCode;
@@ -336,6 +361,28 @@ public class UserSessionBean extends Object
 
 
 
+	  public String deleteReportTemplateAction() {
+		  HttpServletRequest request = getHttpRequest();
+		  String template_label = (String) request.getSession().getAttribute("selectedStandardReportTemplate");
+
+		  KLO_log.warn("deleteReportTemplateAction: " + template_label);
+
+          try{
+			  StandardReportTemplate template = getStandardReportTemplate(template_label);
+        	  SDKClientUtil sdkclientutil = new SDKClientUtil();
+  			  sdkclientutil.deleteStandardReportTemplate(template);
+
+  			  //setSelectedStandardReportTemplate(label);
+  			  List list = getStandardReportTemplateList();
+
+          } catch(Exception e) {
+        	  e.printStackTrace();
+          }
+
+		  return "standard_report_template";
+	  }
+
+
       public StandardReportTemplate getStandardReportTemplate(String label) {
           try{
         	  SDKClientUtil sdkclientutil = new SDKClientUtil();
@@ -349,6 +396,22 @@ public class UserSessionBean extends Object
           }
           return null;
       }
+
+
+      public ReportColumn getReportColumn(int id) {
+          try{
+        	  SDKClientUtil sdkclientutil = new SDKClientUtil();
+        	  String FQName = "gov.nih.nci.evs.reportwriter.bean.ReportColumn";
+        	  String methodName = "setId";
+        	  Object obj = sdkclientutil.search(FQName, methodName, id);
+			  ReportColumn reportColumn = (ReportColumn) obj;
+			  return reportColumn;
+          } catch(Exception e) {
+        	  e.printStackTrace();
+          }
+          return null;
+      }
+
 
       //public String addReportColumnAction() {
 	  public String saveReportColumnAction() {

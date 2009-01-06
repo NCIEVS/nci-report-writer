@@ -127,19 +127,6 @@ System.out.println("============== JSP " + standardReportTemplate.getLabel());
 												  for(int i=0; i<objs.length; i++) {
 												      gov.nih.nci.evs.reportwriter.bean.ReportColumn c = (gov.nih.nci.evs.reportwriter.bean.ReportColumn) objs[i];
 
-System.out.println("============== JSP " + c.getId());
-System.out.println("============== JSP " + c.getLabel());
-System.out.println("============== JSP " + c.getFieldId());
-System.out.println("============== JSP " + c.getPropertyType());
-System.out.println("============== JSP " + c.getPropertyName());
-System.out.println("============== JSP " + c.getIsPreferred());
-System.out.println("============== JSP " + c.getRepresentationalForm());
-System.out.println("============== JSP " + c.getSource());
-System.out.println("============== JSP " + c.getQualifierName());
-System.out.println("============== JSP " + c.getQualifierValue());
-System.out.println("============== JSP " + c.getDelimiter());
-System.out.println("============== JSP " + c.getConditionalColumnId());
-
 
 
 
@@ -200,7 +187,7 @@ System.out.println("============== JSP " + c.getConditionalColumnId());
                                         %>
                                         
 											<td><h:commandButton id="modify" action="modify" value="Modify" /></td>
-											<td><h:commandButton id="delete" action="delete" value="Delete" /></td>
+											<td><h:commandButton id="delete" action="#{userSessionBean.deleteColumnAction}" value="Delete" /></td>
 											<td><h:commandButton id="back" action="back" value="Back" /></td>
 										</tr>
 									</table>
