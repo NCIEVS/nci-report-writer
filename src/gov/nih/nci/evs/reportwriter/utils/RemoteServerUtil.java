@@ -1,12 +1,6 @@
 package gov.nih.nci.evs.reportwriter.utils;
 
-import gov.nih.nci.system.applicationservice.ApplicationService;
-import gov.nih.nci.system.applicationservice.EVSApplicationService;
-import gov.nih.nci.system.client.ApplicationServiceProvider;
-
-import org.LexGrid.LexBIG.DataModel.Collections.CodingSchemeRenderingList;
-import org.LexGrid.LexBIG.DataModel.Core.CodingSchemeVersionOrTag;
-import org.LexGrid.LexBIG.DataModel.InterfaceElements.CodingSchemeRendering;
+import org.LexGrid.LexBIG.Impl.LexBIGServiceImpl;
 import org.LexGrid.LexBIG.LexBIGService.LexBIGService;
 
 /**
@@ -48,14 +42,17 @@ public class RemoteServerUtil {
 	 */
 	public static LexBIGService createLexBIGService()
     {
-		ApplicationService appService = null;
+		/*ApplicationService appService = null;
 		LexBIGService lbSvc = null;
-		
+		*/
 		try {
 			// to be modified
 		    // read URL from property file.
 			//String url = ReportWriterProperties.getProperties().getProperty(ReportWriterProperties.EVS_SERVER_URL);
+			
 			//String serviceUrl = "http://lexevsapi.nci.nih.gov/lexevsapi42";
+			
+			/*
 			System.out.println("Calling getAppSrvc method...");
 			appService = (ApplicationService) ApplicationServiceProvider.getApplicationService( _serviceInfo);
 			System.out.println("Got AppSrvc ..."); 
@@ -81,7 +78,8 @@ public class RemoteServerUtil {
 			CodingSchemeRendering[] csrs = csrl.getCodingSchemeRendering();
 			System.out.println("csrs length = " + csrs.length);
             return lbSvc;
-            //return new LexBIGServiceImpl();
+            */
+            return new LexBIGServiceImpl();
     		//return (EVSApplicationService) ApplicationServiceProvider.getApplicationServiceFromUrl(url, _serviceInfo);
 
 	    } catch (Exception e) {
