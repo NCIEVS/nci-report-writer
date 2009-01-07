@@ -15,8 +15,6 @@ import gov.nih.nci.system.query.example.DeleteExampleQuery;
 import gov.nih.nci.system.query.example.InsertExampleQuery;
 import gov.nih.nci.system.query.example.SearchExampleQuery;
 import gov.nih.nci.system.query.example.UpdateExampleQuery;
-
-import gov.nih.nci.system.client.ApplicationServiceProvider;
 import gov.nih.nci.system.applicationservice.ApplicationService;
 
 import java.lang.reflect.Method;
