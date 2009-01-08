@@ -424,6 +424,8 @@ System.out.println("deleting column with ID = " + id + " (yet to be implemented)
 		  HttpServletRequest request = (HttpServletRequest)FacesContext.getCurrentInstance().getExternalContext().getRequest();
 
 		  String fieldlabel = (String) request.getParameter("fieldlabel");
+		  String columnNumber_str = (String) request.getParameter("columnNumber");
+		  int columnNumber = Integer.parseInt(columnNumber_str);
   		  String fieldType = (String) request.getSession().getAttribute("selectedDataCategory");
   		  String propertyType = (String) request.getSession().getAttribute("selectedPropertyType");
   		  String propertyName = (String) request.getSession().getAttribute("selectedPropertyName");
@@ -491,7 +493,7 @@ System.out.println("deleting column with ID = " + id + " (yet to be implemented)
         	  //Object search(String FQName, String methodName, String key)
         	  Object obj = sdkclientutil.search(FQName, methodName, key);
 
-        	  ReportColumn col = sdkclientutil.createReportColumn(fieldlabel, fieldType, propertyType, propertyName, isPreferred, representationalForm, source, propertyQualifier, qualifierValue, delimiter, ccid);
+        	  ReportColumn col = sdkclientutil.createReportColumn(fieldlabel, columnNumber, fieldType, propertyType, propertyName, isPreferred, representationalForm, source, propertyQualifier, qualifierValue, delimiter, ccid);
 			  StandardReportTemplate standardReportTemplate = (StandardReportTemplate) obj;
 			  col.setReportTemplate(standardReportTemplate);
               sdkclientutil.insertReportColumn(col);
