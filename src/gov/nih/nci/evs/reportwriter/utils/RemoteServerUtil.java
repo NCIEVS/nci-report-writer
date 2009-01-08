@@ -1,6 +1,12 @@
 package gov.nih.nci.evs.reportwriter.utils;
 
-import org.LexGrid.LexBIG.Impl.LexBIGServiceImpl;
+import gov.nih.nci.system.applicationservice.ApplicationService;
+import gov.nih.nci.system.applicationservice.EVSApplicationService;
+import gov.nih.nci.system.client.ApplicationServiceProvider;
+
+import org.LexGrid.LexBIG.DataModel.Collections.CodingSchemeRenderingList;
+import org.LexGrid.LexBIG.DataModel.Core.CodingSchemeVersionOrTag;
+import org.LexGrid.LexBIG.DataModel.InterfaceElements.CodingSchemeRendering;
 import org.LexGrid.LexBIG.LexBIGService.LexBIGService;
 
 /**
@@ -40,36 +46,29 @@ public class RemoteServerUtil {
 	 * Establish a remote LexBIG connection.
 	 *
 	 */
-	public static LexBIGService createLexBIGService()
+	public static EVSApplicationService createLexBIGService()
     {
-		/*ApplicationService appService = null;
-		LexBIGService lbSvc = null;
-		*/
+		EVSApplicationService lbSvc = null;
+		//LexBIGService lbSvc = null;
+		
 		try {
 			// to be modified
 		    // read URL from property file.
 			//String url = ReportWriterProperties.getProperties().getProperty(ReportWriterProperties.EVS_SERVER_URL);
-			
-			//String serviceUrl = "http://lexevsapi.nci.nih.gov/lexevsapi42";
-			
-			/*
+			String serviceUrl = "http://lexevsapi.nci.nih.gov/lexevsapi42";
 			System.out.println("Calling getAppSrvc method...");
-			appService = (ApplicationService) ApplicationServiceProvider.getApplicationService( _serviceInfo);
-			System.out.println("Got AppSrvc ..."); 
-			EVSApplicationService eas = (EVSApplicationService) appService;
-			System.out.println("Got EVS AppSrvc ...");
-			lbSvc = (LexBIGService) eas;
-			System.out.println("Cast to lbSrvc ...");
-			
-			String arg0 = "NCI Thesaurus";
+			lbSvc = (EVSApplicationService) ApplicationServiceProvider.getApplicationServiceFromUrl(serviceUrl, _serviceInfo);
+			/*
+			String arg0 = "Medical Dictionary for Regulatory Activities Terminology (MedDRA)";
 			CodingSchemeVersionOrTag arg1 = new CodingSchemeVersionOrTag();
-			arg1.setVersion("08.04d");
-			System.out.println("resolving lbSrvc ...");
+			arg1.setVersion("10.1");
+			System.out.println("resolving meddra ...");
 			
 			lbSvc.resolveCodingScheme(arg0, arg1);
-			System.out.println("resolved ...");
+			System.out.println("resolved meddra...");
+			*/
 			
-			
+			/*
 			CodingSchemeRenderingList csrl = lbSvc.getSupportedCodingSchemes();
 			System.out.println("Obtained csrl");
 			if(csrl == null)
@@ -77,9 +76,10 @@ public class RemoteServerUtil {
 			
 			CodingSchemeRendering[] csrs = csrl.getCodingSchemeRendering();
 			System.out.println("csrs length = " + csrs.length);
-            return lbSvc;
             */
-            return new LexBIGServiceImpl();
+			
+			return lbSvc;
+            //return new LexBIGServiceImpl();
     		//return (EVSApplicationService) ApplicationServiceProvider.getApplicationServiceFromUrl(url, _serviceInfo);
 
 	    } catch (Exception e) {
