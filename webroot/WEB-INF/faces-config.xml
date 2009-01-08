@@ -224,12 +224,10 @@
 
     <from-view-id>/pages/retrieve_standard_reports.jsp</from-view-id>
 
-    <navigation-case>
-
-     <from-outcome>download</from-outcome>
-
-     <to-view-id>/pages/download.jsp</to-view-id>
-
+     <navigation-case>
+        <from-action>#{userSessionBean.downloadReportAction}</from-action>
+        <from-outcome>download</from-outcome>
+        <to-view-id>/pages/download.jsp</to-view-id>
     </navigation-case>
   </navigation-rule>  
     
@@ -272,12 +270,10 @@
 
    
 
-     <navigation-case>
-
-     <from-outcome>generate</from-outcome>
-
+    <navigation-case>
+     <from-action>#{userSessionBean.generateStandardReportAction}</from-action>
+     <from-outcome>generate_standard_report</from-outcome>
      <to-view-id>/pages/generate_standard_report.jsp</to-view-id>
-
     </navigation-case>
   
    
