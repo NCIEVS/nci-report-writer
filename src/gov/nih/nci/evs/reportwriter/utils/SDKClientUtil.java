@@ -272,6 +272,7 @@ public class SDKClientUtil {
 
 */
 
+/*
 	public ReportColumn createReportColumn(
 		String label,
 		String fieldId,
@@ -283,7 +284,7 @@ public class SDKClientUtil {
 		String qualifierName,
 		String qualifierValue,
 		char delimiter,
-		int conditionalColumnId) {
+		int conditionalColumnIdId) {
 
 		ReportColumn reportColumn = new ReportColumn();
 		reportColumn.setLabel(label);
@@ -296,12 +297,42 @@ public class SDKClientUtil {
 		reportColumn.setQualifierName(qualifierName);
 		reportColumn.setQualifierValue(qualifierValue);
 		reportColumn.setDelimiter(delimiter);
-		reportColumn.setConditionalColumnId(conditionalColumnId);
+		reportColumn.setConditionalColumnIdId(conditionalColumnIdId);
 
 		return reportColumn;
 	}
 
 	public void insertReportColumn(
+		String label,
+		String fieldId,
+		String propertyType,
+		String propertyName,
+		Boolean isPreferred,
+		String representationalForm,
+		String source,
+		String qualifierName,
+		String qualifierValue,
+		char delimiter,
+		int conditionalColumnIdId) throws Exception {
+
+		ReportColumn reportColumn = createReportColumn(
+			label,
+			fieldId,
+			propertyType,
+			propertyName,
+			isPreferred,
+			representationalForm,
+			source,
+			qualifierName,
+			qualifierValue,
+			delimiter,
+			conditionalColumnIdId);
+
+		//System.out.println("created report column instance... ");
+		insertReportColumn(reportColumn);
+	}
+
+	public void updateReportColumn(
 		String label,
 		String fieldId,
 		String propertyType,
@@ -326,36 +357,6 @@ public class SDKClientUtil {
 			qualifierValue,
 			delimiter,
 			conditionalColumnId);
-
-		//System.out.println("created report column instance... ");
-		insertReportColumn(reportColumn);
-	}
-
-	public void updateReportColumn(
-		String label,
-		String fieldId,
-		String propertyType,
-		String propertyName,
-		Boolean isPreferred,
-		String representationalForm,
-		String source,
-		String qualifierName,
-		String qualifierValue,
-		char delimiter,
-		int conditionalColumn) throws Exception {
-
-		ReportColumn reportColumn = createReportColumn(
-			label,
-			fieldId,
-			propertyType,
-			propertyName,
-			isPreferred,
-			representationalForm,
-			source,
-			qualifierName,
-			qualifierValue,
-			delimiter,
-			conditionalColumn);
 		updateReportColumn(reportColumn);
 	}
 
@@ -370,7 +371,7 @@ public class SDKClientUtil {
 		String qualifierName,
 		String qualifierValue,
 		char delimiter,
-		int conditionalColumn) throws Exception {
+		int conditionalColumnId) throws Exception {
 
 		ReportColumn reportColumn = createReportColumn(
 			label,
@@ -383,7 +384,7 @@ public class SDKClientUtil {
 			qualifierName,
 			qualifierValue,
 			delimiter,
-			conditionalColumn);
+			conditionalColumnId);
 		deleteReportColumn(reportColumn);
 	}
 
@@ -413,6 +414,149 @@ public class SDKClientUtil {
 		DeleteExampleQuery query = new DeleteExampleQuery(reportColumn);
 		SDKQueryResult queryResult = appService.executeQuery(query);
 	}
+*/
+
+	public ReportColumn createReportColumn(
+		String label,
+		int columnNumber,
+		String fieldId,
+		String propertyType,
+		String propertyName,
+		Boolean isPreferred,
+		String representationalForm,
+		String source,
+		String qualifierName,
+		String qualifierValue,
+		char delimiter,
+		int conditionalColumnId) {
+		ReportColumn reportColumn = new ReportColumn();
+		reportColumn.setLabel(label);
+		reportColumn.setColumnNumber(columnNumber);
+		reportColumn.setFieldId(fieldId);
+		reportColumn.setPropertyType(propertyType);
+		reportColumn.setPropertyName(propertyName);
+		reportColumn.setIsPreferred(isPreferred);
+		reportColumn.setRepresentationalForm(representationalForm);
+		reportColumn.setSource(source);
+		reportColumn.setQualifierName(qualifierName);
+		reportColumn.setQualifierValue(qualifierValue);
+		reportColumn.setDelimiter(delimiter);
+		reportColumn.setConditionalColumnId(conditionalColumnId);
+		return reportColumn;
+	}
+
+	public void insertReportColumn(
+		String label,
+		int columnNumber,
+		String fieldId,
+		String propertyType,
+		String propertyName,
+		Boolean isPreferred,
+		String representationalForm,
+		String source,
+		String qualifierName,
+		String qualifierValue,
+		char delimiter,
+		int conditionalColumnId) throws Exception {
+
+		ReportColumn reportColumn = createReportColumn(
+			label,
+			columnNumber,
+			fieldId,
+			propertyType,
+			propertyName,
+			isPreferred,
+			representationalForm,
+			source,
+			qualifierName,
+			qualifierValue,
+			delimiter,
+			conditionalColumnId);
+		insertReportColumn(reportColumn);
+	}
+
+	public void updateReportColumn(
+		String label,
+		int columnNumber,
+		String fieldId,
+		String propertyType,
+		String propertyName,
+		Boolean isPreferred,
+		String representationalForm,
+		String source,
+		String qualifierName,
+		String qualifierValue,
+		char delimiter,
+		int conditionalColumnId) throws Exception {
+
+		ReportColumn reportColumn = createReportColumn(
+			label,
+			columnNumber,
+			fieldId,
+			propertyType,
+			propertyName,
+			isPreferred,
+			representationalForm,
+			source,
+			qualifierName,
+			qualifierValue,
+			delimiter,
+			conditionalColumnId);
+		updateReportColumn(reportColumn);
+	}
+
+	public void deleteReportColumn(
+		String label,
+		int columnNumber,
+		String fieldId,
+		String propertyType,
+		String propertyName,
+		Boolean isPreferred,
+		String representationalForm,
+		String source,
+		String qualifierName,
+		String qualifierValue,
+		char delimiter,
+		int conditionalColumnId) throws Exception {
+
+		ReportColumn reportColumn = createReportColumn(
+			label,
+			columnNumber,
+			fieldId,
+			propertyType,
+			propertyName,
+			isPreferred,
+			representationalForm,
+			source,
+			qualifierName,
+			qualifierValue,
+			delimiter,
+			conditionalColumnId);
+		deleteReportColumn(reportColumn);
+	}
+
+	public void insertReportColumn(ReportColumn reportColumn) throws Exception {
+		WritableApplicationService appService = (WritableApplicationService)ApplicationServiceProvider.getApplicationService();
+		InsertExampleQuery query = new InsertExampleQuery(reportColumn);
+		SDKQueryResult queryResult = appService.executeQuery(query);
+		//reportColumn = (ReportColumn)queryResult.getObjectResult();
+	}
+
+
+	public void updateReportColumn(ReportColumn reportColumn) throws Exception {
+		WritableApplicationService appService = (WritableApplicationService)ApplicationServiceProvider.getApplicationService();
+		UpdateExampleQuery query = new UpdateExampleQuery(reportColumn);
+		SDKQueryResult queryResult = appService.executeQuery(query);
+		//reportColumn = (ReportColumn)queryResult.getObjectResult();
+	}
+
+
+	public void deleteReportColumn(ReportColumn reportColumn) throws Exception {
+		WritableApplicationService appService = (WritableApplicationService)ApplicationServiceProvider.getApplicationService();
+		DeleteExampleQuery query = new DeleteExampleQuery(reportColumn);
+		SDKQueryResult queryResult = appService.executeQuery(query);
+	}
+
 
 
 	private ReportFormat createReportFormat(

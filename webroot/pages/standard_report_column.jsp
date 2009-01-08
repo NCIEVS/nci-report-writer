@@ -81,6 +81,7 @@ Object[] objs = null;
 									<table summary="Enter summary of data here" cellpadding="3" cellspacing="0" border="0" class="dataTable" width="100%">
 										<tr>
 											<th class="dataTableHeader" scope="col" align="center">Data Field</th>
+											<th class="dataTableHeader" scope="col" align="center">Column Number</th>
 											<th class="dataTableHeader" scope="col" align="center">Field No</th>
 											<th class="dataTableHeader" scope="col" align="center">Field Label</th>
 											<th class="dataTableHeader" scope="col" align="center">Field Type</th>
@@ -133,12 +134,10 @@ System.out.println("============== JSP " + standardReportTemplate.getLabel());
 										%>
 												<tr>
 													<td class="dataCellText"> <input type="radio" name="selectedcolumn" value=<%= c.getId() %>></td>
+													<td class="dataCellNumerical"><%= c.getColumnNumber() %></td>
 													<td class="dataCellNumerical"><%= c.getId() %></td>
 													
-													<!--
-													<td class="dataCellNumerical"><%= c.getFieldId() %></td>
-													-->
-													
+												
 													<td class="dataCellText"><%= c.getLabel() %></td>
 													<td class="dataCellText"><%= c.getFieldId() %></td>
 													
@@ -177,7 +176,7 @@ System.out.println("============== JSP " + standardReportTemplate.getLabel());
 					if (objs.length > 0) {
 					%>
 											<td><h:commandButton id="insertbefore" action="#{userSessionBean.insertbeforeColumnAction}" value="InsertBefore" /></td>
-					                                                <td><h:commandButton id="insertafter" action="insertafter" value="InsertAfter" /></td>
+					                                                <td><h:commandButton id="insertafter" action="#{userSessionBean.insertafterColumnAction}" value="InsertAfter" /></td>
                                         <%
                                         } else {
                                         %>
