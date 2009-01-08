@@ -8,6 +8,8 @@ import gov.nih.nci.evs.reportwriter.bean.ReportFormat;
 import gov.nih.nci.evs.reportwriter.bean.ReportStatus;
 import gov.nih.nci.evs.reportwriter.bean.StandardReport;
 import gov.nih.nci.evs.reportwriter.bean.StandardReportTemplate;
+import gov.nih.nci.evs.reportwriter.bean.User;
+
 import gov.nih.nci.system.applicationservice.WritableApplicationService;
 import gov.nih.nci.system.client.ApplicationServiceProvider;
 import gov.nih.nci.system.query.SDKQueryResult;
@@ -15,6 +17,7 @@ import gov.nih.nci.system.query.example.DeleteExampleQuery;
 import gov.nih.nci.system.query.example.InsertExampleQuery;
 import gov.nih.nci.system.query.example.SearchExampleQuery;
 import gov.nih.nci.system.query.example.UpdateExampleQuery;
+
 import gov.nih.nci.system.applicationservice.ApplicationService;
 
 import java.lang.reflect.Method;
@@ -189,7 +192,7 @@ public class SDKClientUtil {
 		SDKQueryResult queryResult = appService.executeQuery(query);
 	}
 
-
+/*
 	private Report createReport(
 		int ID,
 		String label,
@@ -267,6 +270,7 @@ public class SDKClientUtil {
 		SDKQueryResult queryResult = appService.executeQuery(query);
 	}
 
+*/
 
 	public ReportColumn createReportColumn(
 		String label,
@@ -622,7 +626,6 @@ public class SDKClientUtil {
 		int level,
 		char delimiter) throws Exception {
 
-		//System.out.println("************** SDCLIENT: In insert method ********************");
 		StandardReportTemplate standardReportTemplate = createStandardReportTemplate(
 			label,
 			codingSchemeName,
@@ -632,7 +635,6 @@ public class SDKClientUtil {
 			direction,
 			level,
 			delimiter);
-		System.out.println("************** SDCLIENT: Created template instance ********************");
 		insertStandardReportTemplate(standardReportTemplate);
 	}
 
@@ -705,46 +707,50 @@ public class SDKClientUtil {
 		DeleteExampleQuery query = new DeleteExampleQuery(standardReportTemplate);
 		SDKQueryResult queryResult = appService.executeQuery(query);
 	}
+
 
-/*
-	public void testGetTemplateCollection() throws Exception {
-
-		System.out.println("************** SDCLIENT testGetTemplateCollection: creating writeable app service ********************");
-		Collection<StandardReportTemplate> tc = null;
-		StandardReportService srs = new StandardReportService();
-		srs.setId(1001);
-		srs.setServiceURL("test");
-
-		WritableApplicationService appService = (WritableApplicationService)ApplicationServiceProvider.getApplicationService();
-		System.out.println("************** SDCLIENT testGetTemplateCollection: creating query ********************");
-		SearchExampleQuery query = new SearchExampleQuery(srs);
-		System.out.println("************** SDCLIENT testGetTemplateCollection: obtaining query result ********************");
-		SDKQueryResult queryResult = appService.executeQuery(query);
-
-		Class klass = StandardReportService.class;
-		Object o = (Object) srs;
-
-		try {
-
-			Collection results = appService.search(klass, o);
-			for(Object obj : results)
-			{
-				printObject(obj, klass);
-				tc = ((StandardReportService) obj).getTemplateCollection();
-				for(StandardReportTemplate t : tc) {
-					System.out.println("Template ID: " + t.getId());
-				}
-
-				break;
-			}
-		} catch(Exception e) {
-			e.printStackTrace();
-		}
-
-		System.out.println("************** SDCLIENT: DONE... ********************");
-
+	public gov.nih.nci.evs.reportwriter.bean.User createUser(String loginName) {
+		User user = new User();
+		user.setLoginName(loginName);
+		return user;
 	}
-*/
+
+	public void insertUser(String loginName) throws Exception {
+		User user = createUser(loginName);
+		insertUser(user);
+	}
+
+	public void updateUser(String loginName) throws Exception {
+		User user = createUser(loginName);
+		updateUser(user);
+	}
+
+	public void deleteUser(String loginName) throws Exception {
+		User user = createUser(loginName);
+		deleteUser(user);
+	}
+
+	public void insertUser(User user) throws Exception {
+		WritableApplicationService appService = (WritableApplicationService)ApplicationServiceProvider.getApplicationService();
+		InsertExampleQuery query = new InsertExampleQuery(user);
+		SDKQueryResult queryResult = appService.executeQuery(query);
+		//user = (User)queryResult.getObjectResult();
+	}
+
+
+	public void updateUser(User user) throws Exception {
+		WritableApplicationService appService = (WritableApplicationService)ApplicationServiceProvider.getApplicationService();
+		UpdateExampleQuery query = new UpdateExampleQuery(user);
+		SDKQueryResult queryResult = appService.executeQuery(query);
+		//user = (User)queryResult.getObjectResult();
+	}
+
+
+	public void deleteUser(User user) throws Exception {
+		WritableApplicationService appService = (WritableApplicationService)ApplicationServiceProvider.getApplicationService();
+		DeleteExampleQuery query = new DeleteExampleQuery(user);
+		SDKQueryResult queryResult = appService.executeQuery(query);
+	}
 
 	private void printObject(Object obj, Class klass) throws Exception {
 		System.out.println("Printing "+ klass.getName());

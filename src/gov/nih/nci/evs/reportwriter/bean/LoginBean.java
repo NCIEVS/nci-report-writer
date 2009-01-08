@@ -145,6 +145,25 @@ public class LoginBean extends Object
   }
 
 
+  public gov.nih.nci.evs.reportwriter.bean.User getUser(String loginName) {
+	  try{
+		  SDKClientUtil sdkclientutil = new SDKClientUtil();
+		  String FQName = "gov.nih.nci.evs.reportwriter.bean.User";
+		  String methodName = "setLoginName";
+
+System.out.println("Searching for user " + 	loginName);
+
+		  Object obj = sdkclientutil.search(FQName, methodName, loginName);
+		  if (obj == null) return null;
+		  gov.nih.nci.evs.reportwriter.bean.User user = (gov.nih.nci.evs.reportwriter.bean.User) obj;
+		  return user;
+	  } catch(Exception e) {
+		  //e.printStackTrace();
+	  }
+	  return null;
+  }
+
+
   public String loginAction()
   {
 		String applicationName = "ncireportwriter";
@@ -163,8 +182,6 @@ public class LoginBean extends Object
 
 			    HttpSession session = request.getSession(); // true
 			    if (session != null) {
-					 //request.getSession(true).setAttribute("uid", userid);
-					 //request.getSession(true).setAttribute("password", password);
 					 session.setAttribute("uid", userid);
 					 session.setAttribute("password", password);
 				}
@@ -172,6 +189,28 @@ public class LoginBean extends Object
 				//request.getSession(true).setAttribute("isAdmin", isAdmin);
 
 				session.setAttribute("isAdmin", isAdmin);
+
+                gov.nih.nci.evs.reportwriter.bean.User user = getUser(userid);
+                if (user == null)
+                {
+					 KLO_log.warn("User object does not exist -- " + userid);
+					 System.out.println("User object does not exist -- " + userid);
+
+					 try{
+						  SDKClientUtil sdkclientutil = new SDKClientUtil();
+						  gov.nih.nci.evs.reportwriter.bean.User newuser = (gov.nih.nci.evs.reportwriter.bean.User) sdkclientutil.createUser(userid);
+						  sdkclientutil.insertUser(newuser);
+
+					 } catch(Exception e) {
+						  e.printStackTrace();
+					 }
+				}
+				else
+				{
+					KLO_log.warn("User object found -- " + userid);
+					System.out.println("User object found -- " + userid);
+				}
+
 				return "success";
 			}
 			else
