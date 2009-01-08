@@ -1,6 +1,9 @@
 
 package gov.nih.nci.evs.reportwriter.bean;
 
+import java.io.File;
+
+
 import gov.nih.nci.evs.reportwriter.utils.DataUtils;
 import gov.nih.nci.evs.reportwriter.utils.SDKClientUtil;
 
@@ -51,6 +54,9 @@ import java.util.Collection;
 public class UserSessionBean extends Object
 {
 	  private static Logger KLO_log = Logger.getLogger("UserSessionBean KLO");
+
+      // to be modified:
+      static String download_dir = "c://ncireportwriter_download";
 
 	  Boolean isAdmin = null;
 	  String selectedTask = null;
@@ -569,6 +575,60 @@ System.out.println("deleting column with ID = " + id + " (yet to be implemented)
           request.getSession().setAttribute("selectedOntology", ontologyNameAndVersion);
 
 		  return "standard_report_column";
+	  }
+
+
+	  public String generateStandardReportAction() {
+		  HttpServletRequest request = getHttpRequest();
+		  request.getSession().setAttribute("selectedStandardReportTemplate", selectedStandardReportTemplate);
+
+          StandardReportTemplate standardReportTemplate = getStandardReportTemplate(selectedStandardReportTemplate);
+          //String ontologyNameAndVersion = standardReportTemplate.getCodingSchemeName() + " (version: " + standardReportTemplate.getCodingSchemeVersion() + ")";
+
+          //request.getSession().setAttribute("selectedOntology", ontologyNameAndVersion);
+
+		  return "generate_standard_report";
+	  }
+
+	  public String downloadReportAction() {
+		  HttpServletRequest request = getHttpRequest();
+		  request.getSession().setAttribute("selectedStandardReportTemplate", selectedStandardReportTemplate);
+
+          StandardReportTemplate standardReportTemplate = getStandardReportTemplate(selectedStandardReportTemplate);
+          //String ontologyNameAndVersion = standardReportTemplate.getCodingSchemeName() + " (version: " + standardReportTemplate.getCodingSchemeVersion() + ")";
+
+System.out.println("downloading report " + selectedStandardReportTemplate);
+
+
+          File dir = new File(download_dir);
+          if (!dir.exists())
+          {
+System.out.println("Unable to download the specified report -- download directory does not exist. ");
+               // create an error page (general purpose with the message being a session parameter)
+		  }
+
+		  File[] fileList = dir.listFiles();
+		  int len=fileList.length;
+		  while (len > 0) {
+				len--;
+				if (!fileList[len].isDirectory()) {
+					String name = fileList[len].getName();
+					System.out.println("File found in the download directory: " + name);
+				}
+		  }
+
+          //request.getSession().setAttribute("selectedOntology", ontologyNameAndVersion);
+
+          // find available reports in the download directory
+
+          // for each file in the directory, find if the report has been approved.
+          // if not, display a message page indicating such.
+
+
+          // otherwise, route to generate_standard_report
+
+
+		  return "generate_standard_report";
 	  }
 
 
