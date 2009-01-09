@@ -92,6 +92,7 @@ public class DataUtils {
 		adminTaskList.add(new SelectItem("Administer Standard Reports"));
 		adminTaskList.add(new SelectItem("Maintain Report Status"));
 		adminTaskList.add(new SelectItem("Assign Report Status"));
+		adminTaskList.add(new SelectItem("Retrieve Standard Reports"));
 
 		userTaskList = new ArrayList();
 		userTaskList.add(new SelectItem("Retrieve Standard Reports"));
@@ -129,6 +130,7 @@ public class DataUtils {
 				adminTaskList.add(new SelectItem("Administer Standard Reports"));
 				adminTaskList.add(new SelectItem("Maintain Report Status"));
 				adminTaskList.add(new SelectItem("Assign Report Status"));
+				adminTaskList.add(new SelectItem("Retrieve Standard Reports"));
 			}
 		    return adminTaskList;
 		}
@@ -199,19 +201,10 @@ public class DataUtils {
 
         try {
 			EVSApplicationService lbSvc = RemoteServerUtil.createLexBIGService();
-			System.out.println("Obtained lbsvc");
-			if(lbSvc == null)
-				System.out.println("lbSvc is NULL");
-
-
 			CodingSchemeRenderingList csrl = lbSvc.getSupportedCodingSchemes();
-			System.out.println("Obtained csrl");
-			if(csrl == null)
-				System.out.println("csrl is NULL");
+			if(csrl == null) System.out.println("csrl is NULL");
 
 			CodingSchemeRendering[] csrs = csrl.getCodingSchemeRendering();
-			System.out.println("csrs length = " + csrs.length);
-
 			for (int i=0; i<csrs.length; i++)
 			{
 				CodingSchemeRendering csr = csrs[i];
@@ -227,8 +220,6 @@ public class DataUtils {
 
 					CodingScheme scheme = null;
 					try {
-
-						System.out.println("******** Resolving coding scheme ********** " + formalname + " Version: " + vt.getVersion());
 						scheme = lbSvc.resolveCodingScheme(formalname, vt);
 						if (scheme != null)
 						{
@@ -240,9 +231,6 @@ public class DataUtils {
 							csnv2codingSchemeNameMap.put(value, formalname);
 							csnv2VersionMap.put(value, representsVersion);
 
-						}
-						else {
-							System.out.println("******** RCS ********** "+ formalname + " is null");
 						}
 
 				    } catch (Exception e) {
@@ -259,9 +247,6 @@ public class DataUtils {
 								csnv2codingSchemeNameMap.put(value, formalname);
 								csnv2VersionMap.put(value, representsVersion);
 
-							}
-							else {
-								System.out.println("******** RCS ********** "+ urn + " is null");
 							}
 
 						} catch (Exception ex) {
@@ -280,18 +265,11 @@ public class DataUtils {
 									csnv2VersionMap.put(value, representsVersion);
 
 								}
-								else {
-									System.out.println("******** RCS ********** "+ localname + " is null");
-								}
 							} catch (Exception e2) {
 								e2.printStackTrace();
                             }
 					    }
 					}
-				    // Added to test is we can make method calls on meddra
-					/*if(vt.getVersion().equals("10.1"))
-						scheme.getSource();*/
-
 			    }
 
 			}

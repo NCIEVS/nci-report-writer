@@ -84,7 +84,7 @@
 											<td><h:commandButton id="add" action="add" value="Add" /></td>
 											<td><h:commandButton id="modify" action="#{userSessionBean.modifyReportTemplateAction}" value="Modify" /></td>
 											<td><h:commandButton id="generate" action="#{userSessionBean.generateStandardReportAction}" value="Generate" /></td>
-											<td><h:commandButton id="review" action="review" value="Review" /></td>
+											<!-- <td><h:commandButton id="review" action="review" value="Review" /></td> -->
 											<td><h:commandButton id="delete" action="#{userSessionBean.deleteReportTemplateAction}" onclick="if (!confirm('You will lose all data entered. Are you sure?')) return false" value="Delete" /></td>
 											<td><h:commandButton id="back" action="back" value="Back" /></td>
 										</tr>

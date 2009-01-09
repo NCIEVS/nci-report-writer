@@ -293,7 +293,7 @@ System.out.println("deleting column with ID = " + id + " (yet to be implemented)
 		  this.rootConceptCode = rootConceptCode;
 	  }
 
-
+/*
 	  public String selectFileAction() {
           // pop-up file selection dialog box (JNLP.jar)
           // update selectedFile
@@ -301,7 +301,7 @@ System.out.println("deleting column with ID = " + id + " (yet to be implemented)
 
 		  return "generate_standard_report";
 	  }
-
+*/
 
       //public String addReportAction() {
 	  public String saveTemplateAction() {
@@ -387,6 +387,9 @@ System.out.println("deleting column with ID = " + id + " (yet to be implemented)
 
 		  return "standard_report_template";
 	  }
+
+
+
 
 
       public StandardReportTemplate getStandardReportTemplate(String label) {
@@ -582,14 +585,30 @@ System.out.println("deleting column with ID = " + id + " (yet to be implemented)
 
 	  public String generateStandardReportAction() {
 		  HttpServletRequest request = getHttpRequest();
-		  request.getSession().setAttribute("selectedStandardReportTemplate", selectedStandardReportTemplate);
+		  //request.getSession().setAttribute("selectedStandardReportTemplate", selectedStandardReportTemplate);
 
           StandardReportTemplate standardReportTemplate = getStandardReportTemplate(selectedStandardReportTemplate);
           //String ontologyNameAndVersion = standardReportTemplate.getCodingSchemeName() + " (version: " + standardReportTemplate.getCodingSchemeVersion() + ")";
 
           //request.getSession().setAttribute("selectedOntology", ontologyNameAndVersion);
 
-		  return "generate_standard_report";
+          // Threading???
+
+          // Instantiate Report Generation Service
+          // Generate report
+
+
+          // Create a StandardReport Record
+
+          // create messsage
+
+          String message = "You request has been received. Both tab-delimited and Mcrosoft Excel fomatted "
+          + standardReportTemplate.getLabel() + "s will be generated and placed in the designated output directory.";
+
+          request.getSession().setAttribute("message", message);
+
+
+		  return "message"; // replaced by a messsage page (back button)
 	  }
 
 	  public String downloadReportAction() {
@@ -606,7 +625,10 @@ System.out.println("downloading report " + selectedStandardReportTemplate);
           if (!dir.exists())
           {
 System.out.println("Unable to download the specified report -- download directory does not exist. ");
-               // create an error page (general purpose with the message being a session parameter)
+String message = "Unable to download " + selectedStandardReportTemplate + " -- download directory does not exist. ";
+request.getSession().setAttribute("message", message);
+return "message";
+
 		  }
 
 		  File[] fileList = dir.listFiles();
@@ -623,14 +645,44 @@ System.out.println("Unable to download the specified report -- download director
 
           // find available reports in the download directory
 
-          // for each file in the directory, find if the report has been approved.
+          // Check if selectedStandardReportTemplate has been approved.
+
+          // to be implemented:
+          boolean approved = true;
+
+
+          if (approved)
+          {
+			  return "download";
+		  }
+		  else
+		  {
+			  String message = "The " + selectedStandardReportTemplate + " has not been approved for download.";
+			  request.getSession().setAttribute("message", message);
+			  return "message";
+		  }
           // if not, display a message page indicating such.
 
 
           // otherwise, route to generate_standard_report
 
 
-		  return "generate_standard_report";
+		  //return "generate_standard_report";
+
+	  }
+
+	  public String saveStatusAction() {
+		  HttpServletRequest request = getHttpRequest();
+		  request.getSession().setAttribute("selectedStandardReportTemplate", selectedStandardReportTemplate);
+
+          StandardReportTemplate standardReportTemplate = getStandardReportTemplate(selectedStandardReportTemplate);
+
+          String message = "The "
+          + standardReportTemplate.getLabel() + " has been approved. It is now ready for download.";
+
+          request.getSession().setAttribute("message", message);
+
+		  return "message"; // replaced by a messsage page (back button)
 	  }
 
 

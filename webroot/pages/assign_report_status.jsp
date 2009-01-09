@@ -96,8 +96,8 @@
 									<!-- bottom action buttons begins -->
 									<table cellpadding="4" cellspacing="0" border="0">
 										<tr>
-											<td><h:commandButton id="assign" action="#{userSessionBean.assignStatusAction}" value="Assign" /></td>
-											<td><h:commandButton id="back" action="back" value="Back" /></td>
+											<td><h:commandButton id="save" action="#{userSessionBean.saveStatusAction}" value="Save" /></td>
+											<td><h:commandButton id="cancel" action="back" value="Back" /></td>
 										</tr>
 									</table>
 									<!-- bottom action buttons end -->
