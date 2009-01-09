@@ -1,13 +1,11 @@
 package gov.nih.nci.evs.reportwriter.utils;
 
-import gov.nih.nci.system.applicationservice.ApplicationService;
 import gov.nih.nci.system.applicationservice.EVSApplicationService;
 import gov.nih.nci.system.client.ApplicationServiceProvider;
+import gov.nih.nci.evs.reportwriter.properties.ReportWriterProperties;
 
-import org.LexGrid.LexBIG.DataModel.Collections.CodingSchemeRenderingList;
-import org.LexGrid.LexBIG.DataModel.Core.CodingSchemeVersionOrTag;
-import org.LexGrid.LexBIG.DataModel.InterfaceElements.CodingSchemeRendering;
-import org.LexGrid.LexBIG.LexBIGService.LexBIGService;
+import java.util.Hashtable;
+import java.util.Properties;
 
 /**
   * <!-- LICENSE_TEXT_START -->
@@ -41,22 +39,40 @@ public class RemoteServerUtil {
 	//static private Logger s_logger = Logger.getLogger(RemoteServerUtil.class.getName());
 	static private String _serviceInfo = "EvsServiceInfo";
 
+	private Properties systemProperties = null;
+
+    private ReportWriterProperties reportwriterProperties = null;
+
+    /** The Constant serviceUrl_SYSPROPERTY. */
+    private static final String SERVICEURL_SYSPROPERTY = "EVS_SERVICE_URL";
+
+    /** The Constant LEXBIG_SYSPROPERTY. */
+    private static final String DOWNLOADDIR_SYSPROPERTY = "REPORT_DOWNLOAD_DIRECTORY";
+
+    public RemoteServerUtil() throws Exception {
+        try {
+	        reportwriterProperties = ReportWriterProperties.getInstance();
+	
+	        System.setProperty(SERVICEURL_SYSPROPERTY, reportwriterProperties.getServiceUrl());
+	        System.setProperty(DOWNLOADDIR_SYSPROPERTY, reportwriterProperties.getDownloadDir());
+	    }
+        catch (Exception e) {
+            throw new Exception("Properties initialization failed");
+        }
+    }
+    
 	/**
 	 * Establish a remote LexBIG connection.
 	 *
 	 */
-	public static EVSApplicationService createLexBIGService()
-    {
-		EVSApplicationService lbSvc = null;
-		String serviceUrl = "http://lexevsapi.nci.nih.gov/lexevsapi42";
-		return createLexBIGService(serviceUrl);
-	}
-
-	public static EVSApplicationService createLexBIGService(String serviceUrl)
+	public EVSApplicationService createLexBIGService()
     {
 		EVSApplicationService lbSvc = null;
 		try {
+		    // read URL from property file.
+			String serviceUrl = reportwriterProperties.getProperty(SERVICEURL_SYSPROPERTY);
 			lbSvc = (EVSApplicationService) ApplicationServiceProvider.getApplicationServiceFromUrl(serviceUrl, _serviceInfo);
+
 			return lbSvc;
 
 	    } catch (Exception e) {
@@ -64,4 +80,22 @@ public class RemoteServerUtil {
             return null;
         }
 	}
+	
+	/**
+	 * Establish a remote LexBIG connection.
+	 *
+	 */
+	public EVSApplicationService createLexBIGService(String url)
+    {
+		EVSApplicationService lbSvc = null;
+		try {
+		    lbSvc = (EVSApplicationService) ApplicationServiceProvider.getApplicationServiceFromUrl(url, _serviceInfo);
+
+			return lbSvc;
+	    } catch (Exception e) {
+			e.printStackTrace();
+            return null;
+        }
+	}
+
 }
