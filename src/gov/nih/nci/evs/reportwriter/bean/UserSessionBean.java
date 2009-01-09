@@ -6,6 +6,7 @@ import java.io.File;
 
 import gov.nih.nci.evs.reportwriter.utils.DataUtils;
 import gov.nih.nci.evs.reportwriter.utils.SDKClientUtil;
+import gov.nih.nci.evs.reportwriter.service.StandardReportService;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -590,14 +591,11 @@ KLO_log.warn("User session bean getReportStatusList calling DataUtils.getReportS
 
 	  public String generateStandardReportAction() {
 		  HttpServletRequest request = getHttpRequest();
-		  //request.getSession().setAttribute("selectedStandardReportTemplate", selectedStandardReportTemplate);
-
           StandardReportTemplate standardReportTemplate = getStandardReportTemplate(selectedStandardReportTemplate);
-          //String ontologyNameAndVersion = standardReportTemplate.getCodingSchemeName() + " (version: " + standardReportTemplate.getCodingSchemeVersion() + ")";
 
-          //request.getSession().setAttribute("selectedOntology", ontologyNameAndVersion);
-
-          // Threading???
+          // Need to create a thread for this:
+          String outputDir = "c://ncireportwriter_download_dir"; // to be read from a property file
+          Boolean retval = new StandardReportService().generateStandardReport(outputDir, selectedStandardReportTemplate);
 
           // Instantiate Report Generation Service
           // Generate report

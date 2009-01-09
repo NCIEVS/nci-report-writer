@@ -20,6 +20,7 @@ import javax.servlet.http.HttpSession;
 
 import org.apache.log4j.Logger;
 import gov.nih.nci.evs.reportwriter.utils.*;
+
 /**
   * <!-- LICENSE_TEXT_START -->
 * Copyright 2007 NGIT. This software was developed in conjunction with the National Cancer Institute,
