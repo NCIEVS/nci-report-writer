@@ -201,7 +201,8 @@ public class DataUtils {
 
 
         try {
-			EVSApplicationService lbSvc = RemoteServerUtil.createLexBIGService();
+        	RemoteServerUtil rsu = new RemoteServerUtil();
+			EVSApplicationService lbSvc = rsu.createLexBIGService();
 			CodingSchemeRenderingList csrl = lbSvc.getSupportedCodingSchemes();
 			if(csrl == null) System.out.println("csrl is NULL");
 
@@ -299,7 +300,8 @@ public class DataUtils {
 
 		CodingScheme scheme = null;
 		try {
-			EVSApplicationService lbSvc = RemoteServerUtil.createLexBIGService();
+			RemoteServerUtil rsu = new RemoteServerUtil();
+			EVSApplicationService lbSvc = rsu.createLexBIGService();
 			scheme = lbSvc.resolveCodingScheme(codingSchemeName, vt);
 			if (scheme == null) {
 				System.out.println("scheme is NULL");
@@ -349,7 +351,8 @@ public class DataUtils {
 		}
 		CodingScheme scheme = null;
 		try {
-			EVSApplicationService lbSvc = RemoteServerUtil.createLexBIGService();
+			RemoteServerUtil rsu = new RemoteServerUtil();
+			EVSApplicationService lbSvc = rsu.createLexBIGService();
 			scheme = lbSvc.resolveCodingScheme(codingSchemeName, vt);
 			if (scheme == null) return null;
 			Vector<String> propertyNameListData = new Vector<String>();
@@ -394,7 +397,8 @@ public class DataUtils {
 		}
 		CodingScheme scheme = null;
 		try {
-			EVSApplicationService lbSvc = RemoteServerUtil.createLexBIGService();
+			RemoteServerUtil rsu = new RemoteServerUtil();
+			EVSApplicationService lbSvc = rsu.createLexBIGService();
 			scheme = lbSvc.resolveCodingScheme(codingSchemeName, vt);
 			if (scheme == null) return null;
 			Vector<String> propertyNameListData = new Vector<String>();
@@ -431,7 +435,8 @@ public class DataUtils {
 		}
 		CodingScheme scheme = null;
 		try {
-			EVSApplicationService lbSvc = RemoteServerUtil.createLexBIGService();
+			RemoteServerUtil rsu = new RemoteServerUtil();
+			EVSApplicationService lbSvc = rsu.createLexBIGService();
 			scheme = lbSvc.resolveCodingScheme(codingSchemeName, vt);
 			if (scheme == null) return null;
 			Vector<String> propertyQualifierListData = new Vector<String>();
@@ -466,7 +471,8 @@ public class DataUtils {
 		}
 		CodingScheme scheme = null;
 		try {
-			EVSApplicationService lbSvc = RemoteServerUtil.createLexBIGService();
+			RemoteServerUtil rsu = new RemoteServerUtil();
+			EVSApplicationService lbSvc = rsu.createLexBIGService();
 			scheme = lbSvc.resolveCodingScheme(codingSchemeName, vt);
 			if (scheme == null) return null;
 			Vector<String> sourceListData = new Vector<String>();
