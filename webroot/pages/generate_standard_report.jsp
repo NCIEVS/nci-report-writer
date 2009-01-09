@@ -72,7 +72,7 @@
 									<!-- bottom action buttons begins -->
 									<table cellpadding="4" cellspacing="0" border="0">
 										<tr>
-											<td><h:commandButton id="generate" action="generate" value="Generate" /></td>
+											<td><h:commandButton id="generate" action="#{userSessionBean.startReportGenerationAction}" value="Generate" /></td>
 											<td><h:commandButton id="back" action="back" value="Back" /></td>
 										</tr>
 									</table>

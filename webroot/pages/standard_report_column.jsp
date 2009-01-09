@@ -129,8 +129,6 @@ System.out.println("============== JSP " + standardReportTemplate.getLabel());
 												      gov.nih.nci.evs.reportwriter.bean.ReportColumn c = (gov.nih.nci.evs.reportwriter.bean.ReportColumn) objs[i];
 
 
-
-
 										%>
 												<tr>
 													<td class="dataCellText"> <input type="radio" name="selectedcolumn" value=<%= c.getId() %>></td>
@@ -186,7 +184,10 @@ System.out.println("============== JSP " + standardReportTemplate.getLabel());
                                         %>
                                         
 											<td><h:commandButton id="modify" action="modify" value="Modify" /></td>
-											<td><h:commandButton id="delete" action="#{userSessionBean.deleteColumnAction}" value="Delete" /></td>
+											<td><h:commandButton id="delete" action="#{userSessionBean.deleteColumnAction}" onclick="if (!confirm('You will lose all data entered. Are you sure?')) return false" value="Delete" /></td>
+											
+	
+											
 											<td><h:commandButton id="back" action="back" value="Back" /></td>
 										</tr>
 									</table>
