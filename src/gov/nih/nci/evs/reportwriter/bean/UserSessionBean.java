@@ -515,6 +515,11 @@ System.out.println("deleting column with ID = " + id + " (yet to be implemented)
 
 
 	public List getReportStatusList() {
+
+KLO_log.warn("User session bean getReportStatusList: ");
+
+KLO_log.warn("User session bean getReportStatusList calling DataUtils.getReportStatusListData: ");
+
 		reportStatusListData = DataUtils.getReportStatusListData();
 		reportStatusList = new ArrayList();
 		for (int i=0; i<reportStatusListData.size(); i++) {
@@ -677,8 +682,8 @@ return "message";
 
           StandardReportTemplate standardReportTemplate = getStandardReportTemplate(selectedStandardReportTemplate);
 
-          String message = "The "
-          + standardReportTemplate.getLabel() + " has been approved. It is now ready for download.";
+          String message = "The status of the "
+          + standardReportTemplate.getLabel() + " has been updated successfully.";
 
           request.getSession().setAttribute("message", message);
 

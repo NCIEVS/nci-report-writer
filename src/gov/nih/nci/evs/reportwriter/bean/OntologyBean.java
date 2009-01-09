@@ -449,7 +449,8 @@ public class OntologyBean //extends BaseBean
 		delimiterList = new ArrayList();
 		delimiterList.add(new SelectItem(" "));
 		delimiterList.add(new SelectItem("|"));
-		delimiterList.add(new SelectItem("tab"));
+		delimiterList.add(new SelectItem("$"));
+		//delimiterList.add(new SelectItem("tab")); // used for separating fields/columns
 		setSelectedDelimiter("|");
 		return delimiterList;
 	}

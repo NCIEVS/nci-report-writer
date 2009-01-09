@@ -109,14 +109,14 @@
   <navigation-rule>
 
     <from-view-id>/pages/task.jsp</from-view-id>
-
+<!--
     <navigation-case>
         <from-outcome>logout</from-outcome>
         <from-action>#{loginBean.logoutAction}</from-action>
         <to-view-id>/pages/logout.jsp</to-view-id> 
         <redirect/>
    </navigation-case>
-
+-->
 
     <navigation-case>
 
