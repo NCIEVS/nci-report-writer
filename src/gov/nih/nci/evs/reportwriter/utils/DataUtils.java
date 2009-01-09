@@ -26,6 +26,7 @@ import org.LexGrid.naming.SupportedPropertyQualifier;
 import org.LexGrid.naming.SupportedRepresentationalForm;
 import org.LexGrid.naming.SupportedSource;
 
+import gov.nih.nci.evs.reportwriter.bean.*;
 
 /**
   * <!-- LICENSE_TEXT_START -->
@@ -487,10 +488,54 @@ public class DataUtils {
 
 
 	public static Vector<String> getReportStatusListData() {
-		// To be modified:
 		Vector<String> reportStatusListData = new Vector<String>();
-		reportStatusListData.add("DRAFT");
-		reportStatusListData.add("APPROVED");
+        try{
+            SDKClientUtil util = new SDKClientUtil();
+            String FQName = "gov.nih.nci.evs.reportwriter.bean.ReportStatus";
+            Object[] objs = util.search(FQName);
+
+            if (objs != null && objs.length > 0)
+            {
+				for (int i=0; i<objs.length; i++)
+				{
+					ReportStatus reportStatus = (ReportStatus) objs[i];
+					reportStatusListData.add(reportStatus.getLabel());
+				}
+		    }
+		    else
+		    {
+				// Initial status (DRAFT and APPROVED)
+				String label = "DRAFT";
+				String description = "Report is a draft, not ready for download.";
+				boolean active = true;
+				try {
+					util.insertReportStatus(label, description, active);
+				} catch (Exception ex) {
+ 					System.out.println("====== insertReportStatus DRAFT failed." );
+				}
+
+				label = "APPROVED";
+				description = "Report has been approved for download by users";
+				active = true;
+				try {
+					util.insertReportStatus(label, description, active);
+				} catch (Exception ex) {
+					System.out.println("====== insertReportStatus APPROVED failed." );
+				}
+
+				objs = util.search(FQName);
+				if (objs != null && objs.length > 0)
+				{
+					for (int i=0; i<objs.length; i++)
+					{
+						ReportStatus reportStatus = (ReportStatus) objs[i];
+						reportStatusListData.add(reportStatus.getLabel());
+					}
+				}
+			}
+        } catch(Exception e) {
+        	e.printStackTrace();
+        }
 		return reportStatusListData;
 	}
 
