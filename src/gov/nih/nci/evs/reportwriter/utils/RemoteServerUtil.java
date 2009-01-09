@@ -38,7 +38,6 @@ import org.LexGrid.LexBIG.LexBIGService.LexBIGService;
  */
 
 public class RemoteServerUtil {
-
 	//static private Logger s_logger = Logger.getLogger(RemoteServerUtil.class.getName());
 	static private String _serviceInfo = "EvsServiceInfo";
 
@@ -49,38 +48,16 @@ public class RemoteServerUtil {
 	public static EVSApplicationService createLexBIGService()
     {
 		EVSApplicationService lbSvc = null;
-		//LexBIGService lbSvc = null;
-		
+		String serviceUrl = "http://lexevsapi.nci.nih.gov/lexevsapi42";
+		return createLexBIGService(serviceUrl);
+	}
+
+	public static EVSApplicationService createLexBIGService(String serviceUrl)
+    {
+		EVSApplicationService lbSvc = null;
 		try {
-			// to be modified
-		    // read URL from property file.
-			//String url = ReportWriterProperties.getProperties().getProperty(ReportWriterProperties.EVS_SERVER_URL);
-			String serviceUrl = "http://lexevsapi.nci.nih.gov/lexevsapi42";
-			System.out.println("Calling getAppSrvc method...");
 			lbSvc = (EVSApplicationService) ApplicationServiceProvider.getApplicationServiceFromUrl(serviceUrl, _serviceInfo);
-			/*
-			String arg0 = "Medical Dictionary for Regulatory Activities Terminology (MedDRA)";
-			CodingSchemeVersionOrTag arg1 = new CodingSchemeVersionOrTag();
-			arg1.setVersion("10.1");
-			System.out.println("resolving meddra ...");
-			
-			lbSvc.resolveCodingScheme(arg0, arg1);
-			System.out.println("resolved meddra...");
-			*/
-			
-			/*
-			CodingSchemeRenderingList csrl = lbSvc.getSupportedCodingSchemes();
-			System.out.println("Obtained csrl");
-			if(csrl == null)
-				System.out.println("csrl is NULL");
-			
-			CodingSchemeRendering[] csrs = csrl.getCodingSchemeRendering();
-			System.out.println("csrs length = " + csrs.length);
-            */
-			
 			return lbSvc;
-            //return new LexBIGServiceImpl();
-    		//return (EVSApplicationService) ApplicationServiceProvider.getApplicationServiceFromUrl(url, _serviceInfo);
 
 	    } catch (Exception e) {
 			e.printStackTrace();
