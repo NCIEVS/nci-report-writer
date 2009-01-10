@@ -15,9 +15,86 @@ import org.LexGrid.LexBIG.Impl.LexBIGServiceImpl;
 import org.LexGrid.LexBIG.LexBIGService.LexBIGService;
 
 
+import org.LexGrid.LexBIG.DataModel.Collections.LocalNameList;
+import org.LexGrid.LexBIG.DataModel.Collections.ModuleDescriptionList;
+import org.LexGrid.LexBIG.DataModel.InterfaceElements.ModuleDescription;
+
+
+import org.LexGrid.LexBIG.Utility.Iterators.ResolvedConceptReferencesIterator;
+import org.LexGrid.LexBIG.DataModel.Collections.ConceptReferenceList;
+
+import org.LexGrid.LexBIG.DataModel.Core.ConceptReference;
+
+import org.LexGrid.LexBIG.LexBIGService.CodedNodeGraph;
+
+import org.LexGrid.LexBIG.DataModel.Collections.NameAndValueList;
+import org.LexGrid.LexBIG.DataModel.Core.NameAndValue;
+
+import org.LexGrid.LexBIG.DataModel.Collections.AssociationList;
+import org.LexGrid.LexBIG.DataModel.Core.AssociatedConcept;
+import org.LexGrid.LexBIG.DataModel.Core.Association;
+import org.LexGrid.LexBIG.DataModel.Collections.AssociatedConceptList;
+
+import org.LexGrid.codingSchemes.CodingScheme;
+import org.LexGrid.concepts.Definition;
+import org.LexGrid.concepts.Comment;
+import org.LexGrid.concepts.Instruction;
+import org.LexGrid.concepts.Presentation;
+
+import org.apache.log4j.Logger;
+
+import org.LexGrid.LexBIG.Exceptions.LBResourceUnavailableException;
+import org.LexGrid.LexBIG.Exceptions.LBInvocationException;
+
+import org.LexGrid.LexBIG.Utility.ConvenienceMethods;
+import org.LexGrid.commonTypes.EntityDescription;
+
+import org.LexGrid.concepts.ConceptProperty;
+import org.LexGrid.commonTypes.Property;
+import org.LexGrid.LexBIG.DataModel.Core.CodingSchemeVersionOrTag;
+
+import org.LexGrid.LexBIG.DataModel.Collections.AssociationList;
+import org.LexGrid.LexBIG.DataModel.Collections.ConceptReferenceList;
+import org.LexGrid.LexBIG.DataModel.Collections.LocalNameList;
+import org.LexGrid.LexBIG.DataModel.Collections.ResolvedConceptReferenceList;
+import org.LexGrid.LexBIG.DataModel.Core.AssociatedConcept;
+import org.LexGrid.LexBIG.DataModel.Core.Association;
+import org.LexGrid.LexBIG.DataModel.Core.CodingSchemeSummary;
+import org.LexGrid.LexBIG.DataModel.Core.CodingSchemeVersionOrTag;
+import org.LexGrid.LexBIG.DataModel.Core.ResolvedConceptReference;
+import org.LexGrid.LexBIG.Exceptions.LBException;
+import org.LexGrid.LexBIG.Impl.LexBIGServiceImpl;
+import org.LexGrid.LexBIG.LexBIGService.LexBIGService;
+import org.LexGrid.LexBIG.LexBIGService.CodedNodeSet.ActiveOption;
+import org.LexGrid.LexBIG.Utility.ConvenienceMethods;
+import org.LexGrid.commonTypes.EntityDescription;
+import org.LexGrid.commonTypes.Property;
+import org.LexGrid.concepts.Concept;
+import org.LexGrid.concepts.ConceptProperty;
+
+import org.LexGrid.relations.Relations;
+import org.LexGrid.commonTypes.PropertyQualifier;
+import org.LexGrid.commonTypes.Source;
+
+
+import gov.nih.nci.system.client.ApplicationServiceProvider;
+import gov.nih.nci.system.applicationservice.ApplicationService;
+
+import java.lang.reflect.Method;
+import java.util.Collection;
+import java.util.Date;
+
+//import gov.nih.nci.evs.reportwriter.bean.*;
+//import gov.nih.nci.evs.reportwriter.bean.StandardReportTemplate;
+//import gov.nih.nci.evs.reportwriter.bean.ReportColumn;
+
+import gov.nih.nci.evs.reportwriter.utils.*;
+import gov.nih.nci.evs.reportwriter.bean.*;
+
+
 /**
   * <!-- LICENSE_TEXT_START -->
-* Copyright 2007 NGIT. This software was developed in conjunction with the National Cancer Institute,
+* Copyright 2008 NGIT. This software was developed in conjunction with the National Cancer Institute,
 * and so to the extent government employees are co-authors, any rights in such works shall be subject to Title 17 of the United States Code, section 105.
 * Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:
 * 1. Redistributions of source code must retain the above copyright notice, this list of conditions and the disclaimer of Article 3, below. Redistributions
@@ -60,8 +137,8 @@ public class StandardReportService {
 	*/
 	public StandardReportService() {
 		try {
-        	RemoteServerUtil rsu = new RemoteServerUtil();
-			this.lbSvc = rsu.createLexBIGService();
+			this.lbSvc = RemoteServerUtil.createLexBIGService();
+
 		} catch (Exception ex) {
 			ex.printStackTrace();
 		}
@@ -72,8 +149,7 @@ public class StandardReportService {
 			Boolean retval = connect(url);
 			if (retval == Boolean.TRUE)
 			{
-	        	RemoteServerUtil rsu = new RemoteServerUtil();
-				this.lbSvc = rsu.createLexBIGService(url);
+				this.lbSvc = RemoteServerUtil.createLexBIGService(url);
 			}
 		} catch (Exception ex) {
 			ex.printStackTrace();
@@ -136,7 +212,7 @@ public class StandardReportService {
 	}
 
 
-    public Boolean generateStandardReport(String outputDir, String standardReportLabel)
+    public Boolean generateStandardReport(String outputDir, String standardReportLabel, String uid)
     {
 		System.out.println("Output directory: " + outputDir);
 		File dir = new File(outputDir);
@@ -159,7 +235,7 @@ public class StandardReportService {
 			System.out.println("Output directory: " + outputDir + " exists.");
 		}
 
-		String pathname = outputDir + File.separator + standardReportLabel;
+		String pathname = outputDir + File.separator + standardReportLabel + ".txt";
 		pathname = pathname.replaceAll(" ", "_");
 		System.out.println(pathname);
 
@@ -253,9 +329,82 @@ public class StandardReportService {
 		// generate report:
 
         closePrintWriter(pw);
+
+        // createStandardReport -- need user's loginName
+        // StandardReport extends Report
+        // private StandardReportTemplate template;
+
         System.out.println("Output file " + pathname + " generated.");
+
+        // convert tab-delimited file to Excel (to be implemented)
+
 		return Boolean.TRUE;
 
+	}
+
+	private void createStandardReport(
+		String label,
+		String pathName,
+
+        String templateLabel,
+		String format,
+		String status,
+		String uid) {
+
+		// Method called upon generation of two reports (tab-delimited and Excel)
+
+		// if ReportFormat does not exist -- createReportFormat
+
+        try{
+        	  SDKClientUtil sdkclientutil = new SDKClientUtil();
+        	  String FQName = "gov.nih.nci.evs.reportwriter.bean.StandardReport";
+        	  String methodName = "setLabel";
+        	  String key = label;
+        	  //Object obj = sdkclientutil.search(FQName, methodName, key);
+        	  Object[] objs = sdkclientutil.search(FQName);
+
+        	  if (objs != null)
+        	  {
+				  // report already exists, delete it
+				  for (int i=0; i<objs.length; i++)
+				  {
+                  	  StandardReport report = (StandardReport) objs[i];
+                  	  String reportlabel = report.getLabel();
+                  	  if (label.compareTo(reportlabel) == 0)
+                  	  {
+						  sdkclientutil.deleteStandardReport(report);
+					  }
+				  }
+ 			  }
+
+              java.util.Date lastModified = new Date(); // system date (to be added)
+        	  StandardReport report = sdkclientutil.createStandardReport(label, lastModified, pathName);
+
+			  StandardReportTemplate standardReportTemplate = null; // to be implemented
+        	  FQName = "gov.nih.nci.evs.reportwriter.bean.StandardReportTemplate";
+        	  methodName = "setLabel";
+        	  key = label;
+
+              Object template_obj = sdkclientutil.search(FQName, methodName, templateLabel);
+              if (template_obj != null)
+              {
+				  report.setTemplate((StandardReportTemplate) template_obj);
+			  }
+
+			  ReportFormat reportformat = null; // to be implemented
+			  report.setFormat(reportformat);
+
+			  ReportStatus reportstatus = null; // to be implemented
+			  report.setStatus(reportstatus);
+
+			  gov.nih.nci.evs.reportwriter.bean.User user = null; // to be implemented
+			  report.setCreatedBy(user);
+
+              sdkclientutil.insertStandardReport(report);
+
+          } catch(Exception e) {
+        	  e.printStackTrace();
+          }
 	}
 
 
@@ -267,7 +416,7 @@ public class StandardReportService {
 		   String outputfile = standardReportLabel;
 		   outputfile.replaceAll(" ", "_");
 		   String outputDir = "G:\\ReportWriter\\test";
-		   Boolean retval = standardReportService.generateStandardReport(outputDir, standardReportLabel);
+		   Boolean retval = standardReportService.generateStandardReport(outputDir, standardReportLabel, "kimong");
 
 	   } catch (Exception e) {
 		   System.out.println("REQUEST FAILED !!!");

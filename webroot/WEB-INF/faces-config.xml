@@ -314,13 +314,11 @@
       <from-outcome>back</from-outcome>
       <to-view-id>/pages/standard_report_template.jsp</to-view-id>
      </navigation-case>
-<!--  
-      <navigation-case>
-       <from-action>#{userSessionBean.addColumnAction}</from-action> 
-       <from-outcome>standard_report_template</from-outcome>
-        <to-view-id>/pages/standard_report_template.jsp</to-view-id>
+     
+     <navigation-case>
+      <from-outcome>reset</from-outcome>
+      <to-view-id>/pages/add_standard_report_template.jsp</to-view-id>
      </navigation-case>
--->
 
       <navigation-case>
        <from-action>#{userSessionBean.saveTemplateAction}</from-action> 

@@ -36,43 +36,24 @@ import java.util.Properties;
  */
 
 public class RemoteServerUtil {
-	//static private Logger s_logger = Logger.getLogger(RemoteServerUtil.class.getName());
 	static private String _serviceInfo = "EvsServiceInfo";
-
 	private Properties systemProperties = null;
 
-    private ReportWriterProperties reportwriterProperties = null;
+    public RemoteServerUtil() {
 
-    /** The Constant serviceUrl_SYSPROPERTY. */
-    private static final String SERVICEURL_SYSPROPERTY = "EVS_SERVICE_URL";
-
-    /** The Constant LEXBIG_SYSPROPERTY. */
-    private static final String DOWNLOADDIR_SYSPROPERTY = "REPORT_DOWNLOAD_DIRECTORY";
-
-    public RemoteServerUtil() throws Exception {
-        try {
-	        reportwriterProperties = ReportWriterProperties.getInstance();
-	
-	        System.setProperty(SERVICEURL_SYSPROPERTY, reportwriterProperties.getServiceUrl());
-	        System.setProperty(DOWNLOADDIR_SYSPROPERTY, reportwriterProperties.getDownloadDir());
-	    }
-        catch (Exception e) {
-            throw new Exception("Properties initialization failed");
-        }
     }
-    
+
 	/**
 	 * Establish a remote LexBIG connection.
 	 *
 	 */
-	public EVSApplicationService createLexBIGService()
+	public static EVSApplicationService createLexBIGService()
     {
 		EVSApplicationService lbSvc = null;
-		try {
-		    // read URL from property file.
-			String serviceUrl = reportwriterProperties.getProperty(SERVICEURL_SYSPROPERTY);
-			lbSvc = (EVSApplicationService) ApplicationServiceProvider.getApplicationServiceFromUrl(serviceUrl, _serviceInfo);
 
+		try {
+			String serviceUrl = ReportWriterProperties.getProperty(ReportWriterProperties.EVS_SERVICE_URL);
+			lbSvc = (EVSApplicationService) ApplicationServiceProvider.getApplicationServiceFromUrl(serviceUrl, _serviceInfo);
 			return lbSvc;
 
 	    } catch (Exception e) {
@@ -80,12 +61,12 @@ public class RemoteServerUtil {
             return null;
         }
 	}
-	
+
 	/**
 	 * Establish a remote LexBIG connection.
 	 *
 	 */
-	public EVSApplicationService createLexBIGService(String url)
+	public static EVSApplicationService createLexBIGService(String url)
     {
 		EVSApplicationService lbSvc = null;
 		try {

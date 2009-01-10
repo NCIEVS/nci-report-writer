@@ -3,10 +3,10 @@ package gov.nih.nci.evs.reportwriter.bean;
 
 import java.io.File;
 
-
 import gov.nih.nci.evs.reportwriter.utils.DataUtils;
 import gov.nih.nci.evs.reportwriter.utils.SDKClientUtil;
 import gov.nih.nci.evs.reportwriter.service.StandardReportService;
+import gov.nih.nci.evs.reportwriter.properties.ReportWriterProperties;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -26,7 +26,7 @@ import java.util.Collection;
 
 /**
   * <!-- LICENSE_TEXT_START -->
-* Copyright 2007 NGIT. This software was developed in conjunction with the National Cancer Institute,
+* Copyright 2008 NGIT. This software was developed in conjunction with the National Cancer Institute,
 * and so to the extent government employees are co-authors, any rights in such works shall be subject to Title 17 of the United States Code, section 105.
 * Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:
 * 1. Redistributions of source code must retain the above copyright notice, this list of conditions and the disclaimer of Article 3, below. Redistributions
@@ -55,9 +55,6 @@ import java.util.Collection;
 public class UserSessionBean extends Object
 {
 	  private static Logger KLO_log = Logger.getLogger("UserSessionBean KLO");
-
-      // to be modified:
-      static String download_dir = "c://ncireportwriter_download";
 
 	  Boolean isAdmin = null;
 	  String selectedTask = null;
@@ -124,20 +121,19 @@ public class UserSessionBean extends Object
 	  }
 
 	  public List getTaskList() {
-			HttpServletRequest request = getHttpRequest();
-			HttpSession session = request.getSession(false);
+		  HttpServletRequest request = getHttpRequest();
+		  HttpSession session = request.getSession(false);
 
-			Boolean isAdmin = null;
-			if (session != null) {
-				 isAdmin = (Boolean) request.getSession(true).getAttribute("isAdmin");
-			}
+		  Boolean isAdmin = null;
+		  if (session != null) {
+			 isAdmin = (Boolean) request.getSession(true).getAttribute("isAdmin");
+		  }
 
-			List list = DataUtils.getTaskList(isAdmin);
-			if (selectedTask == null) {
-				SelectItem item = (SelectItem) list.get(0);
-				selectedTask = item.getLabel();
-			}
-
+		  List list = DataUtils.getTaskList(isAdmin);
+		  if (selectedTask == null) {
+		     SelectItem item = (SelectItem) list.get(0);
+		    selectedTask = item.getLabel();
+		  }
 		  return DataUtils.getTaskList(isAdmin);
 	  }
 
@@ -173,7 +169,6 @@ public class UserSessionBean extends Object
 			{
 			    if (list != null && list.size() > 0)
 			    {
-					//KLO
 					if (getSelectedStandardReportTemplate() == null)
 					{
 						SelectItem item = (SelectItem) list.get(0);
@@ -516,11 +511,6 @@ System.out.println("deleting column with ID = " + id + " (yet to be implemented)
 
 
 	public List getReportStatusList() {
-
-KLO_log.warn("User session bean getReportStatusList: ");
-
-KLO_log.warn("User session bean getReportStatusList calling DataUtils.getReportStatusListData: ");
-
 		reportStatusListData = DataUtils.getReportStatusListData();
 		reportStatusList = new ArrayList();
 		for (int i=0; i<reportStatusListData.size(); i++) {
@@ -593,9 +583,26 @@ KLO_log.warn("User session bean getReportStatusList calling DataUtils.getReportS
 		  HttpServletRequest request = getHttpRequest();
           StandardReportTemplate standardReportTemplate = getStandardReportTemplate(selectedStandardReportTemplate);
 
+		  String uid = (String) request.getSession().getAttribute("uid");
+
           // Need to create a thread for this:
-          String outputDir = "c://ncireportwriter_download_dir"; // to be read from a property file
-          Boolean retval = new StandardReportService().generateStandardReport(outputDir, selectedStandardReportTemplate);
+          //String outputDir = "c://ncireportwriter_download_dir"; // to be read from a property file
+
+
+
+
+          String download_dir = null;
+          try {
+        	  download_dir = ReportWriterProperties.getInstance().getProperty(ReportWriterProperties.REPORT_DOWNLOAD_DIRECTORY);
+		  } catch (Exception ex) {
+
+		  }
+
+System.out.println("download_dir " + download_dir);
+
+
+//String download_dir = "c://ncireportwriter_download_dir";
+          Boolean retval = new StandardReportService().generateStandardReport(download_dir, selectedStandardReportTemplate, uid);
 
           // Instantiate Report Generation Service
           // Generate report
@@ -623,6 +630,12 @@ KLO_log.warn("User session bean getReportStatusList calling DataUtils.getReportS
 
 System.out.println("downloading report " + selectedStandardReportTemplate);
 
+          String download_dir = null;
+          try {
+        	  download_dir = ReportWriterProperties.getProperty(ReportWriterProperties.REPORT_DOWNLOAD_DIRECTORY);
+		  } catch (Exception ex) {
+
+		  }
 
           File dir = new File(download_dir);
           if (!dir.exists())

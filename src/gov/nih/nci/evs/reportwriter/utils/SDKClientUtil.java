@@ -28,7 +28,7 @@ import org.apache.log4j.Logger;
 
 /**
   * <!-- LICENSE_TEXT_START -->
-* Copyright 2007 NGIT. This software was developed in conjunction with the National Cancer Institute,
+* Copyright 2008 NGIT. This software was developed in conjunction with the National Cancer Institute,
 * and so to the extent government employees are co-authors, any rights in such works shall be subject to Title 17 of the United States Code, section 105.
 * Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:
 * 1. Redistributions of source code must retain the above copyright notice, this list of conditions and the disclaimer of Article 3, below. Redistributions
@@ -690,26 +690,53 @@ public class SDKClientUtil {
 		SDKQueryResult queryResult = appService.executeQuery(query);
 	}
 
+/////////////////////////////////////////////////////////////////////////
+// StandardReport extends Report
 
-	private StandardReport createStandardReport(int reportID) {
+	public StandardReport createStandardReport(
+		String label,
+		Date lastModified,
+		String pathName) {
 		StandardReport standardReport = new StandardReport();
-		standardReport.setId(reportID);
-
+		standardReport.setLabel(label);
+		standardReport.setLastModified(lastModified);
+		standardReport.setPathName(pathName);
 		return standardReport;
 	}
 
-	public void insertStandardReport(int reportID) throws Exception {
-		StandardReport standardReport = createStandardReport(reportID);
+	public void insertStandardReport(
+		String label,
+		Date lastModified,
+		String pathName) throws Exception {
+
+		StandardReport standardReport = createStandardReport(
+			label,
+			lastModified,
+			pathName);
 		insertStandardReport(standardReport);
 	}
 
-	public void updateStandardReport(int reportID) throws Exception {
-		StandardReport standardReport = createStandardReport(reportID);
+	public void updateStandardReport(
+		String label,
+		Date lastModified,
+		String pathName) throws Exception {
+
+		StandardReport standardReport = createStandardReport(
+			label,
+			lastModified,
+			pathName);
 		updateStandardReport(standardReport);
 	}
 
-	public void deleteStandardReport(int reportID) throws Exception {
-		StandardReport standardReport = createStandardReport(reportID);
+	public void deleteStandardReport(
+		String label,
+		Date lastModified,
+		String pathName) throws Exception {
+
+		StandardReport standardReport = createStandardReport(
+			label,
+			lastModified,
+			pathName);
 		deleteStandardReport(standardReport);
 	}
 
@@ -734,6 +761,12 @@ public class SDKClientUtil {
 		DeleteExampleQuery query = new DeleteExampleQuery(standardReport);
 		SDKQueryResult queryResult = appService.executeQuery(query);
 	}
+
+
+
+
+///////////////////////////////////////////////////////////////////////////////////////////////
+
 
 
 	private StandardReportTemplate createStandardReportTemplate(
@@ -959,6 +992,39 @@ public class SDKClientUtil {
 					break;
 				}
 			}
+			ApplicationService appService = ApplicationServiceProvider.getApplicationService();
+			Collection results = appService.search(klass, o);
+
+			if (results == null) return null;
+			Object[] a = results.toArray();
+			return a[0];
+		} catch(Exception e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
+
+
+	public Object search(String FQName, String[] methodName, String[] key) {
+		try {
+			Class klass = Class.forName(FQName);
+			Object o = klass.newInstance();
+			Method[] methods = klass.getMethods();
+			int dim = key.length;
+
+			for (int i=0; i<dim; i++) {
+				String method_name = methodName[i];
+				String value = key[i];
+				Object[] params = new Object[1];
+				params[0] = value;
+
+				for(Method method:methods) {
+					if(method.getName().equals(method_name)) {
+						method.invoke(o, params);
+						break;
+					}
+				}
+		    }
 			ApplicationService appService = ApplicationServiceProvider.getApplicationService();
 			Collection results = appService.search(klass, o);
 

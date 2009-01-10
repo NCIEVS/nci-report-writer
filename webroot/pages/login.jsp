@@ -35,14 +35,15 @@
                     </td>
                     <td valign="top" width="100%">
                          <table summary="" cellpadding="0" cellspacing="0" border="0" width="100%" height="100%">
+                         
                               <tr>
                                     <td height="20" width="100%" class="mainMenu">
-                
+               
 <%@ include file="/pages/templates/menuBar0.xhtml" %>
-                  
+                 
                                     </td>
                               </tr>
-                              
+                             
               
 <!--_____ main content begins _____-->
 
