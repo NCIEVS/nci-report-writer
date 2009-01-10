@@ -99,7 +99,6 @@ Object[] objs = null;
 											   try{
 											   
 String templatLabel = (String) request.getSession().getAttribute("selectedStandardReportTemplate");
-System.out.println("============== JSP " + templatLabel);
 
 
 												  SDKClientUtil sdkclientutil = new SDKClientUtil();
@@ -108,19 +107,7 @@ System.out.println("============== JSP " + templatLabel);
 												  Object obj = sdkclientutil.search(FQName, methodName, templatLabel);
 												  StandardReportTemplate standardReportTemplate = (StandardReportTemplate) obj;
 
-System.out.println("============== JSP " + standardReportTemplate.getLabel());
-												  
-												  if (standardReportTemplate == null)
-												  {
-										%>		  
-												      <tr>
-												          <td class="dataCellText">standardReportTemplate == null???</td>
-												      </tr>
-										<% 		      
-												      
-												  }
 											          java.util.Collection cc = standardReportTemplate.getColumnCollection();
-										          
 											          
 											          if (cc != null) {
 											          objs = cc.toArray();
@@ -171,7 +158,7 @@ System.out.println("============== JSP " + standardReportTemplate.getLabel());
 										<tr>
 										
 					<%					
-					if (objs.length > 0) {
+					if (objs.length == -1) {
 					%>
 											<td><h:commandButton id="insertbefore" action="#{userSessionBean.insertbeforeColumnAction}" value="InsertBefore" /></td>
 					                                                <td><h:commandButton id="insertafter" action="#{userSessionBean.insertafterColumnAction}" value="InsertAfter" /></td>
@@ -186,7 +173,6 @@ System.out.println("============== JSP " + standardReportTemplate.getLabel());
 											<td><h:commandButton id="modify" action="modify" value="Modify" /></td>
 											<td><h:commandButton id="delete" action="#{userSessionBean.deleteColumnAction}" onclick="if (!confirm('You will lose all data entered. Are you sure?')) return false" value="Delete" /></td>
 											
-	
 											
 											<td><h:commandButton id="back" action="back" value="Back" /></td>
 										</tr>

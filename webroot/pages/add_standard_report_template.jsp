@@ -151,7 +151,6 @@
 											<td><h:commandButton id="save" action="#{userSessionBean.saveTemplateAction}" value="Save" /></td>
 											<td><h:commandButton id="reset" action="reset" value="Reset" /></td>
 											<td><h:commandButton id="back" action="back" value="Back" /></td>
-											<td><h:commandButton id="next" action="#{userSessionBean.addColumnAction}" value="Next" /></td>
 										</tr>
 									</table>
 									<!-- bottom action buttons end -->
