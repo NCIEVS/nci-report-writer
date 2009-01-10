@@ -25,6 +25,12 @@
                       <td><img src="<%= request.getContextPath() %>/images/mainMenuSeparator.gif" width="1" height="16" alt="" /></td>
                       
                       -->
+ 
+                       <td height="20" class="mainMenuItem" onmouseover="changeMenuStyle(this,'mainMenuItemOver'),showCursor()" onmouseout="changeMenuStyle(this,'mainMenuItem'),hideCursor()" >
+                         
+                         <a class="mainMenuLink" href="<%= request.getContextPath() %>/pages/logout.jsf">LOGOUT</a>
+                      
+                      </td>
                       
                    </tr>
                   </table>
