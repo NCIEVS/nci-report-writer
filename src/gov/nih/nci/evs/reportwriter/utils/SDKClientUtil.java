@@ -560,40 +560,32 @@ public class SDKClientUtil {
 
 
 	private ReportFormat createReportFormat(
-		int ID,
 		String description) {
 		ReportFormat reportFormat = new ReportFormat();
-		reportFormat.setId(ID);
 		reportFormat.setDescription(description);
 		return reportFormat;
 	}
 
 	public void insertReportFormat(
-		int ID,
 		String description) throws Exception {
 
 		ReportFormat reportFormat = createReportFormat(
-			ID,
 			description);
 		insertReportFormat(reportFormat);
 	}
 
 	public void updateReportFormat(
-		int ID,
 		String description) throws Exception {
 
 		ReportFormat reportFormat = createReportFormat(
-			ID,
 			description);
 		updateReportFormat(reportFormat);
 	}
 
 	public void deleteReportFormat(
-		int ID,
 		String description) throws Exception {
 
 		ReportFormat reportFormat = createReportFormat(
-			ID,
 			description);
 		deleteReportFormat(reportFormat);
 	}

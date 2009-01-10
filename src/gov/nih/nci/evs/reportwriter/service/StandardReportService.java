@@ -338,11 +338,78 @@ public class StandardReportService {
 
         // convert tab-delimited file to Excel (to be implemented)
 
+
+
 		return Boolean.TRUE;
 
 	}
 
-	private void createStandardReport(
+
+	private Boolean validReport(
+          String standardReportTemplate_value,
+		  String reportFormat_value,
+		  String reportStatus_value,
+		  String user_value) {
+
+        try{
+        	    SDKClientUtil sdkclientutil = new SDKClientUtil();
+
+				String FQName = null;
+				String methodName = null;
+				String key = null;
+
+				StandardReportTemplate standardReportTemplate = null;
+				FQName = "gov.nih.nci.evs.reportwriter.bean.StandardReportTemplate";
+				methodName = "setLabel";
+				key = standardReportTemplate_value;
+				Object standardReportTemplate_obj = sdkclientutil.search(FQName, methodName, key);
+				if (standardReportTemplate_obj == null) {
+					System.out.println("Object " + standardReportTemplate_value + " not found.");
+					return Boolean.FALSE;
+				}
+
+				ReportFormat reportFormat = null;
+				FQName = "gov.nih.nci.evs.reportwriter.bean.ReportFormat";
+				methodName = "setDescription";
+				key = reportFormat_value;
+				Object reportFormat_obj = sdkclientutil.search(FQName, methodName, key);
+				if (reportFormat_obj == null) {
+					System.out.println("Object " + reportFormat_value + " not found.");
+					return Boolean.FALSE;
+				}
+
+				ReportStatus reportStatus = null;
+				FQName = "gov.nih.nci.evs.reportwriter.bean.ReportStatus";
+				methodName = "setLabel";
+				key = reportStatus_value;
+				Object reportStatus_obj = sdkclientutil.search(FQName, methodName, key);
+				if (reportStatus_obj == null) {
+					System.out.println("Object " + reportStatus_value + " not found.");
+					return Boolean.FALSE;
+				}
+
+				User user = null;
+				FQName = "gov.nih.nci.evs.reportwriter.bean.User";
+				methodName = "setLoginName";
+				key = user_value;
+				Object user_obj = sdkclientutil.search(FQName, methodName, key);
+				if (user_obj == null) {
+					System.out.println("Object " + user_value + " not found.");
+					return Boolean.FALSE;
+				}
+
+				return Boolean.TRUE;
+
+          } catch(Exception e) {
+        	  e.printStackTrace();
+          }
+
+          return null;
+
+	}
+
+
+	private Boolean createStandardReport(
 		String label,
 		String pathName,
 
@@ -356,11 +423,18 @@ public class StandardReportService {
 		// if ReportFormat does not exist -- createReportFormat
 
         try{
+			  Boolean retval = validReport(templateLabel, format, status, uid);
+			  if (retval != Boolean.FALSE)
+			  {
+				  System.out.println("Report object not created.");
+				  return Boolean.FALSE;
+			  }
+
+
         	  SDKClientUtil sdkclientutil = new SDKClientUtil();
         	  String FQName = "gov.nih.nci.evs.reportwriter.bean.StandardReport";
         	  String methodName = "setLabel";
         	  String key = label;
-        	  //Object obj = sdkclientutil.search(FQName, methodName, key);
         	  Object[] objs = sdkclientutil.search(FQName);
 
         	  if (objs != null)
@@ -377,34 +451,65 @@ public class StandardReportService {
 				  }
  			  }
 
-              java.util.Date lastModified = new Date(); // system date (to be added)
+              java.util.Date lastModified = new Date(); // system date
         	  StandardReport report = sdkclientutil.createStandardReport(label, lastModified, pathName);
 
-			  StandardReportTemplate standardReportTemplate = null; // to be implemented
+			  StandardReportTemplate standardReportTemplate = null;
         	  FQName = "gov.nih.nci.evs.reportwriter.bean.StandardReportTemplate";
         	  methodName = "setLabel";
         	  key = label;
 
-              Object template_obj = sdkclientutil.search(FQName, methodName, templateLabel);
+              Object template_obj = sdkclientutil.search(FQName, methodName, key);
               if (template_obj != null)
               {
 				  report.setTemplate((StandardReportTemplate) template_obj);
 			  }
 
-			  ReportFormat reportformat = null; // to be implemented
-			  report.setFormat(reportformat);
+			  ReportFormat reportformat = null;
+        	  FQName = "gov.nih.nci.evs.reportwriter.bean.ReportFormat";
+        	  methodName = "setDescription";
+        	  key = format;
 
-			  ReportStatus reportstatus = null; // to be implemented
-			  report.setStatus(reportstatus);
+              Object format_obj = sdkclientutil.search(FQName, methodName, key);
+              if (format_obj != null)
+              {
+				  report.setFormat((ReportFormat) format_obj);
+			  }
+			  else
+			  {
+				  System.out.println("Format " + format + " not found -- report not created.");
+			  }
 
-			  gov.nih.nci.evs.reportwriter.bean.User user = null; // to be implemented
-			  report.setCreatedBy(user);
+			  ReportStatus reportstatus = null;
+        	  FQName = "gov.nih.nci.evs.reportwriter.bean.ReportStatus";
+        	  methodName = "setLabel";
+        	  key = status;
+
+              Object status_obj = sdkclientutil.search(FQName, methodName, key);
+              if (status_obj != null)
+              {
+				  report.setStatus((ReportStatus) status_obj);
+			  }
+
+			  gov.nih.nci.evs.reportwriter.bean.User user = null;
+        	  FQName = "gov.nih.nci.evs.reportwriter.bean.User";
+        	  methodName = "setLoginName";
+        	  key = uid;
+
+              Object user_obj = sdkclientutil.search(FQName, methodName, key);
+              if (user_obj != null)
+              {
+				  report.setCreatedBy((gov.nih.nci.evs.reportwriter.bean.User) user_obj);
+			  }
 
               sdkclientutil.insertStandardReport(report);
 
           } catch(Exception e) {
         	  e.printStackTrace();
+        	  return Boolean.FALSE;
           }
+
+          return Boolean.TRUE;
 	}
 
 

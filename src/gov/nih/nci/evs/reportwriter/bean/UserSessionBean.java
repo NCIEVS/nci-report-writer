@@ -71,6 +71,10 @@ public class UserSessionBean extends Object
       private List reportStatusList = null;
 	  private Vector<String> reportStatusListData = null;
 
+	  private String selectedReportFormat = null;
+      private List reportFormatList = null;
+	  private Vector<String> reportFormatListData = null;
+
 
 	  public void setIsAdmin(Boolean bool_obj) {
 		  this.isAdmin = bool_obj;
@@ -510,6 +514,37 @@ System.out.println("deleting column with ID = " + id + " (yet to be implemented)
 	  }
 
 
+
+	public List getReportFormatList() {
+		reportFormatListData = DataUtils.getReportFormatListData();
+		reportFormatList = new ArrayList();
+		for (int i=0; i<reportFormatListData.size(); i++) {
+			String t = (String) reportFormatListData.elementAt(i);
+			reportFormatList.add(new SelectItem(t));
+		}
+		if (reportFormatList != null && reportFormatList.size() > 0) {
+			selectedReportFormat = ((SelectItem) reportFormatList.get(0)).getLabel();
+		}
+
+		return reportFormatList;
+	}
+
+	public void setSelectedReportFormat(String selectedReportFormat) {
+		this.selectedReportFormat = selectedReportFormat;
+		HttpServletRequest request = (HttpServletRequest)FacesContext.getCurrentInstance().getExternalContext().getRequest();
+		request.getSession().setAttribute("selectedReportFormat", selectedReportFormat);
+	}
+
+	public String getSelectedReportFormat() {
+		return this.selectedReportFormat;
+	}
+
+	public void ReportFormatSelectionChanged(ValueChangeEvent event) {
+		if (event.getNewValue() == null) return;
+		setSelectedReportFormat(selectedReportFormat);
+	}
+
+
 	public List getReportStatusList() {
 		reportStatusListData = DataUtils.getReportStatusListData();
 		reportStatusList = new ArrayList();
@@ -530,7 +565,6 @@ System.out.println("deleting column with ID = " + id + " (yet to be implemented)
 		request.getSession().setAttribute("selectedReportStatus", selectedReportStatus);
 	}
 
-
 	public String getSelectedReportStatus() {
 		return this.selectedReportStatus;
 	}
@@ -539,6 +573,10 @@ System.out.println("deleting column with ID = " + id + " (yet to be implemented)
 		if (event.getNewValue() == null) return;
 		setSelectedReportStatus(selectedReportStatus);
 	}
+
+
+
+
 
     public String addStatusAction() {
 		// to be modified
@@ -632,9 +670,15 @@ System.out.println("downloading report " + selectedStandardReportTemplate);
 
           String download_dir = null;
           try {
-        	  download_dir = ReportWriterProperties.getProperty(ReportWriterProperties.REPORT_DOWNLOAD_DIRECTORY);
+        	  download_dir = ReportWriterProperties.getInstance().getProperty(ReportWriterProperties.REPORT_DOWNLOAD_DIRECTORY);
+
+System.out.println("download_dir " + download_dir);
+
 		  } catch (Exception ex) {
 
+			  String message = "Server error -- download directory not found.";
+			  request.getSession().setAttribute("message", message);
+		  	  return "message";
 		  }
 
           File dir = new File(download_dir);

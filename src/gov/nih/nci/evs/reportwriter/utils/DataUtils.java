@@ -546,5 +546,108 @@ public class DataUtils {
 	}
 
 
+	public static Vector<String> getReportFormatListData() {
+		Vector<String> reportFormatListData = new Vector<String>();
+        try{
+            SDKClientUtil util = new SDKClientUtil();
+            String FQName = "gov.nih.nci.evs.reportwriter.bean.ReportFormat";
+            Object[] objs = util.search(FQName);
+
+            if (objs != null && objs.length > 0)
+            {
+				for (int i=0; i<objs.length; i++)
+				{
+					ReportFormat reportFormat = (ReportFormat) objs[i];
+					reportFormatListData.add(reportFormat.getDescription());
+				}
+		    }
+		    else
+		    {
+				String description = "Text (tab delimited)";
+				try {
+					util.insertReportFormat(description);
+				} catch (Exception ex) {
+ 					System.out.println("====== insertReportFormat " + description + " failed." );
+				}
+
+				description = "Microsoft Office Excel";
+				try {
+					util.insertReportFormat(description);
+				} catch (Exception ex) {
+					System.out.println("====== insertReportFormat " + description + " failed." );
+				}
+
+				objs = util.search(FQName);
+				if (objs != null && objs.length > 0)
+				{
+					for (int i=0; i<objs.length; i++)
+					{
+						ReportFormat reportFormat = (ReportFormat) objs[i];
+						reportFormatListData.add(reportFormat.getDescription());
+					}
+				}
+			}
+        } catch(Exception e) {
+        	e.printStackTrace();
+        }
+		return reportFormatListData;
+	}
+
+
+	public static List getAvailableReportFormat() {
+		List list = new ArrayList();
+        try{
+            SDKClientUtil util = new SDKClientUtil();
+            String FQName = "gov.nih.nci.evs.reportwriter.bean.ReportFormat";
+            Object[] objs = util.search(FQName);
+
+            if (objs == null || objs.length == 0)
+		    {
+				String description = "Text (tab delimited)";
+				try {
+					util.insertReportFormat(description);
+				} catch (Exception ex) {
+ 					System.out.println("====== insertReportFormat " + description + " failed." );
+				}
+
+				description = "Microsoft Office Excel";
+				try {
+					util.insertReportFormat(description);
+				} catch (Exception ex) {
+					System.out.println("====== insertReportFormat " + description + " failed." );
+				}
+
+				objs = util.search(FQName);
+				if (objs != null && objs.length > 0)
+				{
+					for (int i=0; i<objs.length; i++)
+					{
+						ReportFormat reportFormat = (ReportFormat) objs[i];
+						list.add(reportFormat);
+					}
+				}
+			}
+
+
+            else //if (objs != null && objs.length > 0)
+            {
+				for (int i=0; i<objs.length; i++)
+				{
+					ReportFormat reportFormat = (ReportFormat) objs[i];
+					list.add(reportFormat);
+				}
+		    }
+
+        } catch(Exception e) {
+        	e.printStackTrace();
+        }
+		return list;
+	}
+
+
+
+	public static String int2String(Integer int_obj) {
+    	return Integer.toString(int_obj);
+	}
 
 }
