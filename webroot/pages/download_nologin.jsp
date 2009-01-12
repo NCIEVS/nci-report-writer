@@ -42,7 +42,7 @@
                               <tr>
                                     <td height="20" width="100%" class="mainMenu">
                 
-<%@ include file="/pages/templates/menuBar.xhtml" %>
+<%@ include file="/pages/templates/menuBar_skip.xhtml" %>
                   
                                     </td>
                               </tr>
@@ -51,9 +51,7 @@
                                     <td>
                          
 <!--_____ main content begins _____-->
-<h:form id="DOWNLOAD_REPORTForm">
-
-
+<h:form id="DOWNLOAD_STANDARD_REPORTSForm">
 	<tr>
 		<td width="100%" valign="top"><br>
 		<!-- target of anchor to skip menus --><a name="content" />
@@ -62,48 +60,17 @@
 					<td>
 						<table summary="" cellpadding="0" cellspacing="0" border="0">
 							<tr>
-								<td class="dataTablePrimaryLabel" height="20">DOWNLOAD REPORT</td>
+								<td class="dataTablePrimaryLabel" height="20">DOWNLOAD STANDARD REPORTS</td>
 							</tr>
 							<tr>
 								<td>
 									<table summary="Enter summary of data here" cellpadding="3" cellspacing="0" border="0" class="dataTable" width="100%">
-
-<%
-String formatId = null;
-String formatDescription = null;
-String template = (String) request.getSession().getAttribute("selectedStandardReportTemplate");
-String templateId = null;
-try {
-	SDKClientUtil sdkclientutil = new SDKClientUtil();
-	String FQName = "gov.nih.nci.evs.reportwriter.bean.StandardReportTemplate";
-	String methodName = "setLabel";
-	Object obj = sdkclientutil.search(FQName, methodName, template);
-	StandardReportTemplate standardReportTemplate = (StandardReportTemplate) obj;
-	templateId = (String) DataUtils.int2String(standardReportTemplate.getId());
-	
-} catch (Exception ex) {
-
-}
-
-
-List list = DataUtils.getAvailableReportFormat();
-
-if (list != null && list.size() > 0)
-{
-		for (int i=0; i<list.size(); i++)
-		{
-			ReportFormat reportFormat = (ReportFormat) list.get(i);
-			formatId = (String) DataUtils.int2String(reportFormat.getId());
-			formatDescription = reportFormat.getDescription();
-%>
-			<tr class="dataRowLight">
-				<td class="dataCellText"><a href="<%=request.getContextPath() %>/fileServlet?template=<%=templateId%>&format=<%=formatId%>" ><%=template%> (<%=formatDescription%>)</a></td>
-			</tr>
-<%			
-		}
-}
-%>
-
+										<tr class="dataRowLight">
+											<td class="dataCellText"><a href="<%=request.getContextPath() %>/fileServlet?format=text" >Structured Product Labeling (SPL) Report (text)</a></td>
+										</tr>
+										<tr class="dataRowDark">
+											<td class="dataCellText"><a href="<%=request.getContextPath() %>/fileServlet?format=excel" >Structured Product Labeling (SPL) Report (Excel)</a></td>
+										</tr>
 									</table>
 								</td>
 							</tr>
@@ -112,7 +79,7 @@ if (list != null && list.size() > 0)
 									<!-- bottom action buttons begins -->
 									<table cellpadding="4" cellspacing="0" border="0">
 										<tr>
-											<td><h:commandButton id="back" action="back" value="Back" /></td>
+											<td><input type="button" id="back" value="Back" onclick="history.go(-1)" /></td>
 										</tr>
 									</table>
 									<!-- bottom action buttons end -->

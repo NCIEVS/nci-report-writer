@@ -767,7 +767,7 @@ public class SDKClientUtil {
 		String codingSchemeVersion,
 		String rootConceptCode,
 		String associationName,
-		boolean direction,
+		Boolean direction,
 		int level,
 		char delimiter) {
 
@@ -791,7 +791,7 @@ public class SDKClientUtil {
 		String codingSchemeVersion,
 		String rootConceptCode,
 		String associationName,
-		boolean direction,
+		Boolean direction,
 		int level,
 		char delimiter) throws Exception {
 
@@ -813,7 +813,7 @@ public class SDKClientUtil {
 		String codingSchemeVersion,
 		String rootConceptCode,
 		String associationName,
-		boolean direction,
+		Boolean direction,
 		int level,
 		char delimiter) throws Exception {
 
@@ -835,7 +835,7 @@ public class SDKClientUtil {
 		String codingSchemeVersion,
 		String rootConceptCode,
 		String associationName,
-		boolean direction,
+		Boolean direction,
 		int level,
 		char delimiter) throws Exception {
 

@@ -314,7 +314,10 @@ System.out.println("deleting column with ID = " + id + " (yet to be implemented)
           String rootConceptCode = (String) request.getParameter("rootConceptCode");
           String selectedAssociation = (String) request.getSession().getAttribute("selectedAssociation");
 		  String selectedLevel = (String) request.getSession().getAttribute("selectedLevel");
-		  String selectedDirection = (String) request.getSession().getAttribute("selectedDirection");
+		  //String selectedDirection = (String) request.getSession().getAttribute("selectedDirection");
+
+		  String direction_str = (String) request.getParameter("direction");
+
 		  Boolean direction = null;
 
 		  // return to error page
@@ -334,27 +337,52 @@ System.out.println("deleting column with ID = " + id + " (yet to be implemented)
 			  return "add_standard_report_template";
 		  }
 
+/*
 		  if(selectedDirection.equals(Boolean.TRUE))
 			  direction = true;
 		  else
 			  direction = false;
+*/
+          //KLO
+		  if(direction_str.compareToIgnoreCase("source") == 0)
+			  direction = Boolean.FALSE;
+		  else
+			  direction = Boolean.TRUE;
 
 		  char delimiter = '$';
-/*
+
 		  KLO_log.warn("label: " + label);
           KLO_log.warn("codingSchemeName: " + codingSchemeName);
           KLO_log.warn("codingSchemeVersion: " + codingSchemeVersion);
           KLO_log.warn("rootConceptCode: " + rootConceptCode);
           KLO_log.warn("associationname: " + selectedAssociation);
-          KLO_log.warn("direction: " + selectedDirection);
+
+          KLO_log.warn("direction: " + direction);
+
           KLO_log.warn("level: " + selectedLevel);
           KLO_log.warn("delimiter: " + delimiter);
-*/
+
           // Save results using SDK writable API.
+
           try{
         	  SDKClientUtil sdkclientutil = new SDKClientUtil();
+
+				StandardReportTemplate standardReportTemplate = null;
+				String FQName = "gov.nih.nci.evs.reportwriter.bean.StandardReportTemplate";
+				String methodName = "setLabel";
+				String key = label;
+				Object standardReportTemplate_obj = sdkclientutil.search(FQName, methodName, key);
+				if (standardReportTemplate_obj != null) {
+					  String message = "Unable to save -- the report template with the specified label, " + label + ", already exists. ";
+					  request.getSession().setAttribute("message", message);
+					  return "message";
+				}
+
+
         	  if(selectedLevel.equalsIgnoreCase("all"))
+        	  {
         		  selectedLevel = "-1";
+			  }
   			  sdkclientutil.insertStandardReportTemplate(label, codingSchemeName, codingSchemeVersion, rootConceptCode, selectedAssociation, direction, Integer.parseInt(selectedLevel), delimiter);
   			  setSelectedStandardReportTemplate(label);
           } catch(Exception e) {
@@ -625,9 +653,6 @@ System.out.println("deleting column with ID = " + id + " (yet to be implemented)
 
           // Need to create a thread for this:
           //String outputDir = "c://ncireportwriter_download_dir"; // to be read from a property file
-
-
-
 
           String download_dir = null;
           try {

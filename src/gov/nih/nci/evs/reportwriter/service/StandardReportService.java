@@ -83,10 +83,7 @@ import gov.nih.nci.system.applicationservice.ApplicationService;
 import java.lang.reflect.Method;
 import java.util.Collection;
 import java.util.Date;
-
-//import gov.nih.nci.evs.reportwriter.bean.*;
-//import gov.nih.nci.evs.reportwriter.bean.StandardReportTemplate;
-//import gov.nih.nci.evs.reportwriter.bean.ReportColumn;
+import java.util.Vector;
 
 import gov.nih.nci.evs.reportwriter.utils.*;
 import gov.nih.nci.evs.reportwriter.bean.*;
@@ -212,9 +209,90 @@ public class StandardReportService {
 	}
 
 
+    public void printReportHeading(PrintWriter pw, ReportColumn[] cols) {
+		String columnHeadings = "";
+		String delimeter_str = "\t";
+		if (cols == null)
+		{
+			return;
+		}
+		for (int i=0; i<cols.length; i++)
+		{
+			ReportColumn rc = (ReportColumn) cols[i];
+			columnHeadings = columnHeadings + rc.getLabel();
+			if (i<cols.length-1) columnHeadings = columnHeadings + delimeter_str;
+		}
+		pw.println(columnHeadings);
+	}
+
+
+    private void traverse(PrintWriter pw, String scheme, String version, String tag, String code, String hierarchyAssociationName,
+                          String associationName, boolean direction, int level, int maxLevel, ReportColumn[] cols)
+    {
+		//System.out.println("Level: " + level + "\tmaxLevel: " + maxLevel);
+		if (maxLevel != -1 && level > maxLevel) return;
+
+		String matchAlgorithm = "exactMatch";
+		EVSApplicationService lbSvc = new RemoteServerUtil().createLexBIGService();
+
+//		LexBIGUtils lexBIGUtils = new LexBIGUtils(lbSvc);
+
+		//Concept root = lexBIGUtils.getConceptByCode(scheme, version, tag, code);
+
+		Concept root = DataUtils.getConceptByCode(scheme, version, tag, code);
+		if (root == null) {
+			System.out.println("DataUtils.getConceptByCode return null?????????????????");
+			return;
+		} else {
+			System.out.println("DataUtils.getConceptByCode return concept " + root.getId());
+		}
+
+		String delim = "$";
+
+		Vector v = new Vector();
+		DataUtils util = new DataUtils();
+
+        //level++;
+System.out.println("DIRECTION: " + direction);
+
+        if (direction)
+        {
+System.out.println("getAssociationTargets: " + direction);
+
+			//v = lexBIGUtils.getAssociationTargets(lexBIGUtils.getLexBIGService(), scheme, version, root.getId(), associationName);
+			v = util.getAssociationTargets(scheme, version, root.getId(), associationName);
+		}
+		else
+		{
+			v = util.getAssociationSources(scheme, version, root.getId(), associationName);//, matchAlgorithm);
+		}
+
+// associated concepts (i.e., concepts in subset)
+        for (int i=0; i<v.size(); i++)
+        {
+			Concept c = (Concept) v.elementAt(i);
+			pw.println(root.getId() + delim + root.getEntityDescription().getContent() + delim + c.getId() + delim + c.getEntityDescription().getContent());
+		}
+
+        Vector<Concept> subconcept_vec = util.getAssociationTargets(scheme, version, root.getId(), hierarchyAssociationName);
+        if (subconcept_vec == null | subconcept_vec.size() == 0) return;
+        level++;
+        for (int k=0; k<subconcept_vec.size(); k++)
+        {
+ 			Concept concept = (Concept) subconcept_vec.elementAt(k);
+ 			String subconcep_code = concept.getId();
+            traverse(pw, scheme, version, tag, subconcep_code, hierarchyAssociationName, associationName, direction, level, maxLevel, cols);
+		}
+	}
+
+
+
     public Boolean generateStandardReport(String outputDir, String standardReportLabel, String uid)
     {
 		System.out.println("Output directory: " + outputDir);
+		System.out.println("standardReportLabel: " + standardReportLabel);
+		System.out.println("uid: " + uid);
+
 		File dir = new File(outputDir);
 		if (!dir.exists())
 		{
@@ -237,7 +315,7 @@ public class StandardReportService {
 
 		String pathname = outputDir + File.separator + standardReportLabel + ".txt";
 		pathname = pathname.replaceAll(" ", "_");
-		System.out.println(pathname);
+		System.out.println("Full path name: " + pathname);
 
         StandardReportTemplate standardReportTemplate = null;
         try{
@@ -246,8 +324,12 @@ public class StandardReportService {
         	String methodName = "setLabel";
         	Object obj = sdkclientutil.search(FQName, methodName, standardReportLabel);
 			standardReportTemplate = (StandardReportTemplate) obj;
+			System.out.println("standardReportTemplate ID: " + standardReportTemplate.getId());
+			System.out.println("standardReportTemplate label: " + standardReportTemplate.getLabel());
+
 	    } catch(Exception e) {
-		    e.printStackTrace();
+			System.out.println("Error finding standardReportTemplate label: " + standardReportLabel);
+		    return Boolean.FALSE;
 	    }
 
         if (standardReportTemplate == null)
@@ -255,12 +337,20 @@ public class StandardReportService {
 			System.out.println("Unable to identify report label " + standardReportLabel + " -- report not generated." );
 			return Boolean.FALSE;
 		}
+		else
+		{
+			System.out.println("Report template  " + standardReportLabel + " found.");
+		}
 
 		PrintWriter pw = openPrintWriter(pathname);
 		if (pw == null)
 		{
 			System.out.println("Unable to create output file " + pathname + " - please check privilege setting.");
 			return Boolean.FALSE;
+		}
+		else
+		{
+			System.out.println("opened PrintWriter " + pathname );
 		}
 
 		int id = -1;
@@ -278,6 +368,7 @@ public class StandardReportService {
 		codingSchemeVersion = standardReportTemplate.getCodingSchemeVersion();
 		rootConceptCode = standardReportTemplate.getRootConceptCode();
 		associationName = standardReportTemplate.getAssociationName();
+		boolean direction = standardReportTemplate.getDirection();
 		level = standardReportTemplate.getLevel();
 		Character delimiter = standardReportTemplate.getDelimiter();
 
@@ -287,16 +378,49 @@ public class StandardReportService {
 		pw.println("CodingSchemeVersion: " + codingSchemeVersion);
 		pw.println("Root: " + rootConceptCode);
 		pw.println("AssociationName: " + associationName);
+		pw.println("Direction: " + direction);
 		pw.println("Level: " + level);
 		pw.println("Delimiter: " + delimiter);
+
+		System.out.println("ID: " + id);
+		System.out.println("Label: " + label);
+		System.out.println("CodingSchemeName: " + codingSchemeName);
+		System.out.println("CodingSchemeVersion: " + codingSchemeVersion);
+		System.out.println("Root: " + rootConceptCode);
+		System.out.println("AssociationName: " + associationName);
+		System.out.println("Direction: " + direction);
+		System.out.println("Level: " + level);
+		System.out.println("Delimiter: " + delimiter);
 
 		String columnHeadings = "";
 		String delimeter_str = "\t";
 
+/*
+    public void printReportHeading(PrintWriter pw, ReportColumn[] cols) {
+*/
+
+
+        Object[] objs = null;
 	    java.util.Collection cc = standardReportTemplate.getColumnCollection();
-	    Object[] objs = null;
+	    if (cc == null)
+	    {
+			System.out.println("standardReportTemplate.getColumnCollection returns NULL?????????????");
+		}
+		else
+		{
+			objs = cc.toArray();
+			System.out.println("standardReportTemplate.getColumnCollection objs: -------------------------" + objs.length);
+		}
+
+
+System.out.println("Start For Loop: -------------------------" + objs.length);
+
+	    ReportColumn[] cols = null;
 	    if (cc != null) {
-	        objs = cc.toArray();
+
+			System.out.println("standardReportTemplate.getColumnCollection -------------------------" + objs.length);
+	        cols = new ReportColumn[objs.length];
+
 	        if (objs.length > 0) {
                 for(int i=0; i<objs.length; i++) {
 	                gov.nih.nci.evs.reportwriter.bean.ReportColumn col = (gov.nih.nci.evs.reportwriter.bean.ReportColumn) objs[i];
@@ -315,8 +439,10 @@ public class StandardReportService {
 					pw.println("Delimiter: " + col.getDelimiter());
 					pw.println("ConditionalColumnIdD: " + col.getConditionalColumnId());
 
-					columnHeadings = columnHeadings + col.getLabel();
-					if (i<objs.length-1) columnHeadings = columnHeadings + delimeter_str;
+					cols[i] = col;
+
+					//columnHeadings = columnHeadings + col.getLabel();
+					//if (i<objs.length-1) columnHeadings = columnHeadings + delimeter_str;
 
 				}
 			}
@@ -324,11 +450,38 @@ public class StandardReportService {
 
         pw.println("\n\n");
 
-		pw.println(columnHeadings);
+System.out.println("Calling printReportHeading -------------------------");
 
-		// generate report:
+
+System.out.println("********** Start generating report..." + pathname);
+
+
+        String scheme = standardReportTemplate.getCodingSchemeName();
+        String version = standardReportTemplate.getCodingSchemeVersion();
+        String code = standardReportTemplate.getRootConceptCode();
+        associationName = standardReportTemplate.getAssociationName();
+        level = standardReportTemplate.getLevel();
+
+        String tag = null;
+
+        int curr_level = 0;
+        int max_level = standardReportTemplate.getLevel();
+        if (max_level == -1) max_level = 1;//100;
+        //boolean direction = standardReportTemplate.getDirection();
+
+        printReportHeading(pw, cols);
+        String matchAlgorithm = "exactMatch";
+
+        Vector hierarchicalAssoName_vec = new DataUtils().getHierarchyAssociationId(scheme, version);
+        if (hierarchicalAssoName_vec == null || hierarchicalAssoName_vec.size() == 0) return Boolean.FALSE;
+
+        String hierarchicalAssoName = (String) hierarchicalAssoName_vec.elementAt(0);
+
+		System.out.println("********** traverse..." );
+        traverse(pw, scheme, version, tag, code, hierarchicalAssoName, associationName, direction, curr_level, max_level, cols);
 
         closePrintWriter(pw);
+        // convert to Excel:
 
         // createStandardReport -- need user's loginName
         // StandardReport extends Report

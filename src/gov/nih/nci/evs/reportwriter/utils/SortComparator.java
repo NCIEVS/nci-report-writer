@@ -1,11 +1,20 @@
 package gov.nih.nci.evs.reportwriter.utils;
 
-import javax.faces.context.*;
-import javax.servlet.http.*;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Vector;
+import java.util.Collections;
+
+import java.util.Comparator;
+
+import org.LexGrid.concepts.Concept;
+import org.LexGrid.LexBIG.DataModel.Core.AssociatedConcept;
 
 /**
   * <!-- LICENSE_TEXT_START -->
-* Copyright 2007 NGIT. This software was developed in conjunction with the National Cancer Institute,
+* Copyright 2008 NGIT. This software was developed in conjunction with the National Cancer Institute,
 * and so to the extent government employees are co-authors, any rights in such works shall be subject to Title 17 of the United States Code, section 105.
 * Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:
 * 1. Redistributions of source code must retain the above copyright notice, this list of conditions and the disclaimer of Article 3, below. Redistributions
@@ -30,11 +39,49 @@ import javax.servlet.http.*;
   * @author EVS Team
   * @version 1.0
  */
- 
-public class SessionUtil {
-   public static HttpSession getSession() {
-      ExternalContext externalContext = FacesContext.getCurrentInstance().getExternalContext();
-      HttpSession session = (HttpSession) externalContext.getSession(true);
-      return session;
-   }
+
+public class SortComparator implements Comparator<Object>{
+
+    private static int SORT_BY_NAME = 1;
+    private static int SORT_BY_CODE = 2;
+    private int sort_option = SORT_BY_NAME;
+
+    public SortComparator()
+    {
+
+	}
+
+    public SortComparator(int sort_option)
+    {
+		this.sort_option = sort_option;
+	}
+
+
+    private String getKey(Object c, int sort_option)
+    {
+		if (c == null) return "NULL";
+	    if (c instanceof org.LexGrid.concepts.Concept)
+	    {
+			org.LexGrid.concepts.Concept concept = (org.LexGrid.concepts.Concept) c;
+			if (sort_option == SORT_BY_CODE) return concept.getId();
+			return concept.getEntityDescription().getContent();
+
+		}
+
+	    else if (c instanceof AssociatedConcept)
+	    {
+			AssociatedConcept ac = (AssociatedConcept) c;
+			if (sort_option == SORT_BY_CODE) return ac.getConceptCode();
+			return ac.getEntityDescription().getContent();
+		}
+	    return c.toString();
+    }
+
+
+
+    public int compare(Object object1, Object object2) {
+        String key1 = getKey(object1, sort_option);
+        String key2 = getKey(object2, sort_option);
+        return key1.compareTo(key2);
+    }
 }
