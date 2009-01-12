@@ -21,7 +21,7 @@
 
     <servlet>
         <servlet-name>fileServlet</servlet-name>
-        <servlet-class>servlet.FileServlet</servlet-class>
+        <servlet-class>gov.nih.nci.evs.reportwriter.servlet.FileServlet</servlet-class>
         <load-on-startup>1</load-on-startup>
     </servlet>
 

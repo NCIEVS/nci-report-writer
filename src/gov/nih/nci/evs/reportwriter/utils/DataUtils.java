@@ -1,5 +1,8 @@
 package gov.nih.nci.evs.reportwriter.utils;
 
+import java.io.*;
+import java.util.*;
+
 import gov.nih.nci.evs.reportwriter.bean.StandardReportTemplate;
 import gov.nih.nci.system.applicationservice.EVSApplicationService;
 
@@ -10,21 +13,118 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Vector;
+import java.util.HashSet;
+import java.util.Arrays;
 
 import javax.faces.model.SelectItem;
 
-import org.LexGrid.LexBIG.DataModel.Collections.CodingSchemeRenderingList;
+import org.LexGrid.LexBIG.DataModel.Collections.ResolvedConceptReferenceList;
+import org.LexGrid.LexBIG.DataModel.Collections.SortOptionList;
 import org.LexGrid.LexBIG.DataModel.Core.CodingSchemeSummary;
 import org.LexGrid.LexBIG.DataModel.Core.CodingSchemeVersionOrTag;
-import org.LexGrid.LexBIG.DataModel.Core.types.CodingSchemeVersionStatus;
-import org.LexGrid.LexBIG.DataModel.InterfaceElements.CodingSchemeRendering;
+import org.LexGrid.LexBIG.DataModel.Core.ResolvedConceptReference;
+import org.LexGrid.LexBIG.Exceptions.LBException;
+import org.LexGrid.LexBIG.Impl.LexBIGServiceImpl;
+import org.LexGrid.LexBIG.LexBIGService.CodedNodeSet;
 import org.LexGrid.LexBIG.LexBIGService.LexBIGService;
+import org.LexGrid.LexBIG.LexBIGService.CodedNodeSet.PropertyType;
+import org.LexGrid.LexBIG.LexBIGService.CodedNodeSet.SearchDesignationOption;
+import org.LexGrid.LexBIG.Utility.Constructors;
+import org.LexGrid.LexBIG.Utility.LBConstants.MatchAlgorithms;
+import org.LexGrid.concepts.Concept;
+
+import org.LexGrid.LexBIG.DataModel.Collections.CodingSchemeRenderingList;
+import org.LexGrid.LexBIG.DataModel.InterfaceElements.CodingSchemeRendering;
+
+import org.LexGrid.LexBIG.DataModel.Collections.LocalNameList;
+import org.LexGrid.LexBIG.DataModel.Collections.ModuleDescriptionList;
+import org.LexGrid.LexBIG.DataModel.InterfaceElements.ModuleDescription;
+
+
+import org.LexGrid.LexBIG.Utility.Iterators.ResolvedConceptReferencesIterator;
+import org.LexGrid.LexBIG.DataModel.Collections.ConceptReferenceList;
+
+import org.LexGrid.LexBIG.DataModel.Core.ConceptReference;
+
+import org.LexGrid.LexBIG.LexBIGService.CodedNodeGraph;
+
+import org.LexGrid.LexBIG.DataModel.Collections.NameAndValueList;
+import org.LexGrid.LexBIG.DataModel.Core.NameAndValue;
+
+import org.LexGrid.LexBIG.DataModel.Collections.AssociationList;
+import org.LexGrid.LexBIG.DataModel.Core.AssociatedConcept;
+import org.LexGrid.LexBIG.DataModel.Core.Association;
+import org.LexGrid.LexBIG.DataModel.Collections.AssociatedConceptList;
+
 import org.LexGrid.codingSchemes.CodingScheme;
+import org.LexGrid.concepts.Definition;
+import org.LexGrid.concepts.Comment;
+import org.LexGrid.concepts.Instruction;
+import org.LexGrid.concepts.Presentation;
+
+//import org.LexGrid.relations.Relations;
+
+import org.apache.log4j.Logger;
+
+import org.LexGrid.LexBIG.Exceptions.LBResourceUnavailableException;
+import org.LexGrid.LexBIG.Exceptions.LBInvocationException;
+
+import org.LexGrid.LexBIG.Utility.ConvenienceMethods;
+import org.LexGrid.commonTypes.EntityDescription;
+
+import org.LexGrid.concepts.ConceptProperty;
+import org.LexGrid.commonTypes.Property;
+import org.LexGrid.LexBIG.DataModel.Core.CodingSchemeVersionOrTag;
+
+import org.LexGrid.LexBIG.DataModel.Collections.AssociationList;
+import org.LexGrid.LexBIG.DataModel.Collections.ConceptReferenceList;
+import org.LexGrid.LexBIG.DataModel.Collections.LocalNameList;
+import org.LexGrid.LexBIG.DataModel.Collections.ResolvedConceptReferenceList;
+import org.LexGrid.LexBIG.DataModel.Core.AssociatedConcept;
+import org.LexGrid.LexBIG.DataModel.Core.Association;
+import org.LexGrid.LexBIG.DataModel.Core.CodingSchemeSummary;
+import org.LexGrid.LexBIG.DataModel.Core.CodingSchemeVersionOrTag;
+import org.LexGrid.LexBIG.DataModel.Core.ResolvedConceptReference;
+import org.LexGrid.LexBIG.Exceptions.LBException;
+import org.LexGrid.LexBIG.Impl.LexBIGServiceImpl;
+import org.LexGrid.LexBIG.LexBIGService.LexBIGService;
+import org.LexGrid.LexBIG.LexBIGService.CodedNodeSet.ActiveOption;
+import org.LexGrid.LexBIG.Utility.ConvenienceMethods;
+import org.LexGrid.commonTypes.EntityDescription;
+import org.LexGrid.commonTypes.Property;
+import org.LexGrid.concepts.Concept;
+import org.LexGrid.concepts.ConceptProperty;
+
+import org.LexGrid.relations.Relations;
+
+import org.LexGrid.commonTypes.PropertyQualifier;
+
+import org.LexGrid.commonTypes.Source;
+import org.LexGrid.naming.SupportedSource;
+
+import org.LexGrid.naming.SupportedPropertyQualifier;
+import org.LexGrid.LexBIG.DataModel.Core.types.CodingSchemeVersionStatus;
+
 import org.LexGrid.naming.SupportedAssociation;
+import org.LexGrid.naming.SupportedAssociationQualifier;
+
 import org.LexGrid.naming.SupportedProperty;
 import org.LexGrid.naming.SupportedPropertyQualifier;
 import org.LexGrid.naming.SupportedRepresentationalForm;
 import org.LexGrid.naming.SupportedSource;
+
+import org.LexGrid.LexBIG.DataModel.Collections.AssociatedConceptList;
+import org.LexGrid.LexBIG.DataModel.Collections.AssociationList;
+import org.LexGrid.LexBIG.DataModel.Core.AssociatedConcept;
+import org.LexGrid.LexBIG.DataModel.Core.Association;
+import org.LexGrid.LexBIG.DataModel.Core.CodingSchemeSummary;
+import org.LexGrid.LexBIG.DataModel.Core.CodingSchemeVersionOrTag;
+import org.LexGrid.LexBIG.Exceptions.LBException;
+import org.LexGrid.LexBIG.Extensions.Generic.LexBIGServiceConvenienceMethods;
+import org.LexGrid.LexBIG.Impl.LexBIGServiceImpl;
+import org.LexGrid.LexBIG.LexBIGService.LexBIGService;
+import org.LexGrid.codingSchemes.Mappings;
+import org.LexGrid.naming.SupportedHierarchy;
 
 import gov.nih.nci.evs.reportwriter.bean.*;
 
@@ -83,6 +183,34 @@ public class DataUtils {
     private static HashMap csnv2VersionMap = null;
 
     private static List directionList = null;
+
+
+    //==================================================================================
+
+    public static String TYPE_ROLE = "type_role";
+    public static String TYPE_ASSOCIATION = "type_association";
+
+	public static int ALL = 0;
+	public static int PREFERRED_ONLY = 1;
+	public static int NON_PREFERRED_ONLY = 2;
+
+	static int RESOLVE_SOURCE = 1;
+	static int RESOLVE_TARGET = -1;
+	static int RESTRICT_SOURCE = -1;
+	static int RESTRICT_TARGET = 1;
+
+	public static final int SEARCH_NAME_CODE = 1;
+	public static final int SEARCH_DEFINITION = 2;
+
+	public static final int SEARCH_PROPERTY_VALUE = 3;
+	public static final int SEARCH_ROLE_VALUE = 6;
+	public static final int SEARCH_ASSOCIATION_VALUE = 7;
+
+	static final List<String> STOP_WORDS = Arrays.asList(new String[] {
+		"a", "an", "and", "by", "for", "of", "on", "in", "nos", "the", "to", "with"});
+
+    //==================================================================================
+
 
     public DataUtils()
     {
@@ -645,9 +773,311 @@ public class DataUtils {
 	}
 
 
-
 	public static String int2String(Integer int_obj) {
-    	return Integer.toString(int_obj);
+		if (int_obj == null)
+		{
+			return null;
+		}
+
+		String retstr = Integer.toString(int_obj);
+    	return retstr;
 	}
+
+
+
+//==================================================================================================================================
+
+	public static Concept getConceptByCode(String codingSchemeName, String vers, String ltag, String code)
+	{
+        try {
+			EVSApplicationService lbSvc = new RemoteServerUtil().createLexBIGService();
+			if (lbSvc == null)
+			{
+				System.out.println("lbSvc == null???");
+				return null;
+			}
+
+			CodingSchemeVersionOrTag versionOrTag = new CodingSchemeVersionOrTag();
+			versionOrTag.setVersion(vers);
+
+			ConceptReferenceList crefs =
+				createConceptReferenceList(
+					new String[] {code}, codingSchemeName);
+
+			CodedNodeSet cns = null;
+
+			try {
+				cns = lbSvc.getCodingSchemeConcepts(codingSchemeName, versionOrTag);
+		    } catch (Exception e1) {
+				e1.printStackTrace();
+			}
+
+			cns = cns.restrictToCodes(crefs);
+			ResolvedConceptReferenceList matches = cns.resolveToList(null, null, null, 1);
+
+			if (matches == null)
+			{
+				System.out.println("Concep not found.");
+				return null;
+			}
+
+			// Analyze the result ...
+			if (matches.getResolvedConceptReferenceCount() > 0) {
+				ResolvedConceptReference ref =
+					(ResolvedConceptReference) matches.enumerateResolvedConceptReference().nextElement();
+
+				Concept entry = ref.getReferencedEntry();
+				return entry;
+			}
+		 } catch (Exception e) {
+			 e.printStackTrace();
+			 return null;
+		 }
+		 return null;
+	}
+
+
+
+	public Vector getAssociationTargets(String scheme, String version, String code, String assocName)
+	{
+		CodingSchemeVersionOrTag csvt = new CodingSchemeVersionOrTag();
+		if (version != null) csvt.setVersion(version);
+		ResolvedConceptReferenceList matches = null;
+		Vector v = new Vector();
+		try {
+			EVSApplicationService lbSvc = new RemoteServerUtil().createLexBIGService();
+			if (lbSvc == null)
+			{
+				System.out.println("lbSvc == null???");
+				return null;
+			}
+			CodedNodeGraph cng = lbSvc.getNodeGraph(scheme, csvt, null);
+			matches = cng.resolveAsList(
+					ConvenienceMethods.createConceptReference(code, scheme),
+					true, false, 1, 1, new LocalNameList(), null, null, 1024);
+
+			if (matches.getResolvedConceptReferenceCount() > 0) {
+				Enumeration<ResolvedConceptReference> refEnum =
+					matches .enumerateResolvedConceptReference();
+
+				while (refEnum.hasMoreElements()) {
+					ResolvedConceptReference ref = refEnum.nextElement();
+					AssociationList sourceof = ref.getSourceOf();
+					Association[] associations = sourceof.getAssociation();
+
+					for (int i = 0; i < associations.length; i++) {
+						Association assoc = associations[i];
+
+
+						String associationName = assoc.getAssociationName();
+
+						if (associationName.compareTo(associationName) == 0)
+						{
+							AssociatedConcept[] acl = assoc.getAssociatedConcepts().getAssociatedConcept();
+							for (int j = 0; j < acl.length; j++) {
+								AssociatedConcept ac = acl[j];
+								v.add(ac.getReferencedEntry());
+							}
+					    }
+					}
+				}
+			}
+
+		} catch (Exception ex) {
+			ex.printStackTrace();
+		}
+		return v;
+    }
+
+
+
+	public Vector getAssociationSources(String scheme, String version, String code, String assocName)
+	{
+		CodingSchemeVersionOrTag csvt = new CodingSchemeVersionOrTag();
+		if (version != null) csvt.setVersion(version);
+		ResolvedConceptReferenceList matches = null;
+		Vector v = new Vector();
+		try {
+			EVSApplicationService lbSvc = new RemoteServerUtil().createLexBIGService();
+			CodedNodeGraph cng = lbSvc.getNodeGraph(scheme, csvt, null);
+			matches = cng.resolveAsList(
+					ConvenienceMethods.createConceptReference(code, scheme),
+					false, true, 1, 1, new LocalNameList(), null, null, 1024);
+
+			if (matches.getResolvedConceptReferenceCount() > 0) {
+				Enumeration<ResolvedConceptReference> refEnum =
+					matches .enumerateResolvedConceptReference();
+
+				while (refEnum.hasMoreElements()) {
+					ResolvedConceptReference ref = refEnum.nextElement();
+					AssociationList targetof = ref.getTargetOf();
+					Association[] associations = targetof.getAssociation();
+
+					for (int i = 0; i < associations.length; i++) {
+						Association assoc = associations[i];
+						String associationName = assoc.getAssociationName();
+
+						if (associationName.compareTo(associationName) == 0)
+						{
+							AssociatedConcept[] acl = assoc.getAssociatedConcepts().getAssociatedConcept();
+							for (int j = 0; j < acl.length; j++) {
+								AssociatedConcept ac = acl[j];
+								v.add(ac.getReferencedEntry());
+							}
+					    }
+					}
+				}
+			}
+
+		} catch (Exception ex) {
+			ex.printStackTrace();
+		}
+		return v;
+    }
+
+	public static ConceptReferenceList createConceptReferenceList(String[] codes, String codingSchemeName)
+	{
+		if (codes == null)
+		{
+			return null;
+		}
+		ConceptReferenceList list = new ConceptReferenceList();
+		for (int i = 0; i < codes.length; i++)
+		{
+			ConceptReference cr = new ConceptReference();
+			cr.setCodingScheme(codingSchemeName);
+			cr.setConceptCode(codes[i]);
+			list.addConceptReference(cr);
+		}
+		return list;
+	}
+
+	public Vector getSubconceptCodes(String scheme, String version, String code) { //throws LBException{
+		long ms = System.currentTimeMillis();
+		Vector v = new Vector();
+		try {
+			EVSApplicationService lbSvc = new RemoteServerUtil().createLexBIGService();
+			LexBIGServiceConvenienceMethods lbscm = (LexBIGServiceConvenienceMethods) lbSvc.getGenericExtension("LexBIGServiceConvenienceMethods");
+			lbscm.setLexBIGService(lbSvc);
+
+			CodingSchemeVersionOrTag csvt = new CodingSchemeVersionOrTag();
+			csvt.setVersion(version);
+			String desc = null;
+			try {
+				desc = lbscm.createCodeNodeSet(new String[] {code}, scheme, csvt)
+					.resolveToList(null, null, null, 1)
+					.getResolvedConceptReference(0)
+					.getEntityDescription().getContent();
+
+			} catch (Exception e) {
+				desc = "<not found>";
+
+			}
+
+			// Iterate through all hierarchies and levels ...
+			String[] hierarchyIDs = lbscm.getHierarchyIDs(scheme, csvt);
+			for (int k = 0; k < hierarchyIDs.length; k++) {
+				String hierarchyID = hierarchyIDs[k];
+				AssociationList associations = null;
+				associations = null;
+				try {
+					associations = lbscm.getHierarchyLevelNext(scheme, csvt, hierarchyID, code, false, null);
+				} catch (Exception e) {
+					System.out.println("getSubconceptCodes Step 5a - Exception lbscm.getHierarchyLevelNext  ");
+					return v;
+				}
+
+				for (int i = 0; i < associations.getAssociationCount(); i++) {
+					Association assoc = associations.getAssociation(i);
+					AssociatedConceptList concepts = assoc.getAssociatedConcepts();
+					for (int j = 0; j < concepts.getAssociatedConceptCount(); j++) {
+						AssociatedConcept concept = concepts.getAssociatedConcept(j);
+						String nextCode = concept.getConceptCode();
+						v.add(nextCode);
+					}
+				}
+			}
+		} catch (Exception ex) {
+			 //ex.printStackTrace();
+		}
+		/*
+		finally {
+			System.out.println("Run time (ms): " + (System.currentTimeMillis() - ms));
+		}
+		*/
+		return v;
+	}
+
+
+	public Vector getSuperconceptCodes(String scheme, String version, String code) { //throws LBException{
+		long ms = System.currentTimeMillis();
+		Vector v = new Vector();
+		try {
+			EVSApplicationService lbSvc = new RemoteServerUtil().createLexBIGService();
+			LexBIGServiceConvenienceMethods lbscm = (LexBIGServiceConvenienceMethods) lbSvc.getGenericExtension("LexBIGServiceConvenienceMethods");
+			lbscm.setLexBIGService(lbSvc);
+			CodingSchemeVersionOrTag csvt = new CodingSchemeVersionOrTag();
+			csvt.setVersion(version);
+			String desc = null;
+			try {
+				desc = lbscm.createCodeNodeSet(new String[] {code}, scheme, csvt)
+					.resolveToList(null, null, null, 1)
+					.getResolvedConceptReference(0)
+					.getEntityDescription().getContent();
+			} catch (Exception e) {
+				desc = "<not found>";
+			}
+
+			// Iterate through all hierarchies and levels ...
+			String[] hierarchyIDs = lbscm.getHierarchyIDs(scheme, csvt);
+			for (int k = 0; k < hierarchyIDs.length; k++) {
+				String hierarchyID = hierarchyIDs[k];
+				AssociationList associations = lbscm.getHierarchyLevelPrev(scheme, csvt, hierarchyID, code, false, null);
+				for (int i = 0; i < associations.getAssociationCount(); i++) {
+					Association assoc = associations.getAssociation(i);
+					AssociatedConceptList concepts = assoc.getAssociatedConcepts();
+					for (int j = 0; j < concepts.getAssociatedConceptCount(); j++) {
+						AssociatedConcept concept = concepts.getAssociatedConcept(j);
+						String nextCode = concept.getConceptCode();
+						v.add(nextCode);
+					}
+				}
+			}
+		} catch (Exception ex) {
+			ex.printStackTrace();
+		} finally {
+			System.out.println("Run time (ms): " + (System.currentTimeMillis() - ms));
+		}
+		return v;
+	}
+
+    public Vector getHierarchyAssociationId(String scheme, String version) {
+
+		Vector association_vec = new Vector();
+		try {
+			EVSApplicationService lbSvc = new RemoteServerUtil().createLexBIGService();
+
+            // Will handle secured ontologies later.
+            CodingSchemeVersionOrTag versionOrTag = new CodingSchemeVersionOrTag();
+            versionOrTag.setVersion(version);
+            CodingScheme cs = lbSvc.resolveCodingScheme(scheme, versionOrTag);
+            Mappings mappings = cs.getMappings();
+            SupportedHierarchy[] hierarchies = mappings.getSupportedHierarchy();
+            java.lang.String[] ids = hierarchies[0].getAssociationIds();
+
+            for (int i=0; i<ids.length; i++)
+            {
+				System.out.println("association id: " + ids[i]);
+				if (!association_vec.contains(ids[i])) {
+					association_vec.add(ids[i]);
+			    }
+			}
+
+		} catch (Exception ex) {
+			ex.printStackTrace();
+		}
+		return association_vec;
+	}
+
 
 }

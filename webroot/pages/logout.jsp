@@ -70,7 +70,7 @@ httpSession.invalidate();
                     
 					        <!-- banner begins -->
 					        <tr>
-					              <td class="bannerHome"><img src="<%= request.getContextPath() %>/images/bannerHome.gif" height="140"></td>
+					              <td class="bannerHome"><img src="<%= request.getContextPath() %>/images/bannerHome.jpg" height="140"></td>
 					        </tr>
 					        <!-- banner begins -->
 

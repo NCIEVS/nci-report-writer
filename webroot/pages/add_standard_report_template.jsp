@@ -107,7 +107,7 @@
 										
 										</tr>
 										
-										
+										<!--
 										<tr class="dataRowDark">
 										
 										
@@ -120,10 +120,16 @@
 												</h:selectOneRadio>
 											</td>
 
-											<!--
-											<td class="dataCellText"><input type="radio" name="direction" value="source" checked>Source&nbsp;<input type="radio" name="direction" value="target" >Target<br></td>
-											-->
 										</tr>
+										-->
+										
+										<tr class="dataRowDark">
+											<td class="dataCellText">Direction</td>
+											<td class="dataCellText">
+											<input type="radio" name="direction" value="source" checked>Source&nbsp;
+											<input type="radio" name="direction" value="target">Target</td>
+										</tr>										
+										
 										<tr class="dataRowLight">
 
 
