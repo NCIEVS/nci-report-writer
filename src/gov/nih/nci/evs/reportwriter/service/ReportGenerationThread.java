@@ -345,10 +345,31 @@ System.out.println("********** Start generating report..." + pathname);
 
         // convert tab-delimited file to Excel (to be implemented)
 
+        String reportFormat_value = "Text (tab delimited)";
+        String reportStatus_value = "DRAFT";
 
+	    Boolean bool_obj = new StandardReportService().createStandardReport(
+			standardReportLabel + ".txt",
+			pathname,
+            standardReportTemplate.getLabel(),
+            reportFormat_value = "Text (tab delimited)",
+            reportStatus_value = "DRAFT",
+            uid);
 
-		return Boolean.TRUE;
+/*
+        // convert to Excel
 
+        // create xls report record
+
+	    bool_obj = new StandardReportService().createStandardReport(
+			standardReportLabel + ".xls",
+			pathname,
+            standardReportTemplate.getLabel(),
+            reportFormat_value = "Microsoft Office Excel",
+            reportStatus_value = "DRAFT",
+            uid);
+*/
+		return bool_obj;
 	}
 
     public void printReportHeading(PrintWriter pw, ReportColumn[] cols) {

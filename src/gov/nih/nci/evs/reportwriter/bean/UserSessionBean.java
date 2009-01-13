@@ -11,6 +11,7 @@ import gov.nih.nci.evs.reportwriter.properties.ReportWriterProperties;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Vector;
+import java.util.HashSet;
 
 import javax.faces.context.FacesContext;
 import javax.faces.event.ValueChangeEvent;
@@ -60,7 +61,13 @@ public class UserSessionBean extends Object
 	  String selectedTask = null;
 
 	  private List standardReportTemplateList = new ArrayList();
+	  private List standardReportTemplateList_draft = new ArrayList(); // for templates with reports already been generated
+	  private List standardReportTemplateList_approved = new ArrayList(); // for templates with reports already been generated
+
 	  private String selectedStandardReportTemplate = null;
+	  private String selectedStandardReportTemplate_draft = null;
+	  private String selectedStandardReportTemplate_approved = null;
+
 	  private String selectedPropertyType = null;
 	  private List propertyTypeList = new ArrayList();
 
@@ -161,10 +168,18 @@ public class UserSessionBean extends Object
 
 	  public void reportSelectionChanged(ValueChangeEvent vce) {
 		  String newValue = (String) vce.getNewValue();
-		  //String oldValue = (String) vce.getOldValue();
           setSelectedStandardReportTemplate(newValue);
 	  }
 
+	  public void reportSelectionChanged_draft(ValueChangeEvent vce) {
+		  String newValue = (String) vce.getNewValue();
+          setSelectedStandardReportTemplate_draft(newValue);
+	  }
+
+	  public void reportSelectionChanged_approved(ValueChangeEvent vce) {
+		  String newValue = (String) vce.getNewValue();
+          setSelectedStandardReportTemplate_approved(newValue);
+	  }
 
 	  public List getStandardReportTemplateList() {
 
@@ -195,6 +210,117 @@ public class UserSessionBean extends Object
 		  request.getSession().setAttribute("selectedStandardReportTemplate", selectedStandardReportTemplate);
 	  }
 
+
+	  public List getStandardReportTemplateList_draft() {
+          // Find all templates with reports already been generated
+          List list = new ArrayList();
+          HashSet hset = new HashSet();
+          try{
+        	  SDKClientUtil sdkclientutil = new SDKClientUtil();
+			  StandardReportTemplate standardReportTemplate = null;
+			  String FQName = "gov.nih.nci.evs.reportwriter.bean.StandardReport";
+			  Object[] objs = sdkclientutil.search(FQName);
+			  if (objs != null && objs.length > 0) {
+				  for (int i=0; i<objs.length; i++)
+				  {
+					  StandardReport standardReport = (StandardReport) objs[i];
+					  ReportStatus rs = standardReport.getStatus();
+					  String status = rs.getLabel();
+					  if (status.compareTo("DRAFT") == 0) {
+                          if (!hset.contains(standardReportTemplate.getLabel())) {
+							  hset.add(standardReportTemplate.getLabel());
+                          	  list.add(new SelectItem(standardReportTemplate.getLabel()));
+						  }
+					  }
+					  // only shows DRAFT reports
+					  /*
+					  standardReportTemplate = standardReport.getTemplate();
+					  if (standardReportTemplate != null)
+					  {
+					  	  list.add(new SelectItem(standardReportTemplate.getLabel()));
+					  }
+					  */
+				  }
+
+				  if (list == null)
+				  {
+					  if (list != null && list.size() > 0)
+					  {
+						  SelectItem item = (SelectItem) list.get(0);
+						  setSelectedStandardReportTemplate_draft(item.getLabel());
+					  }
+				  }
+		      }
+		  } catch (Exception ex) {
+			  ex.printStackTrace();
+		  }
+		  return list;
+	  }
+
+
+	  public String getSelectedStandardReportTemplate_draft() {
+		  return this.selectedStandardReportTemplate_draft;
+	  }
+
+
+	  public void setSelectedStandardReportTemplate_draft(String selectedStandardReportTemplate_draft) {
+		  this.selectedStandardReportTemplate_draft = selectedStandardReportTemplate_draft;
+		  HttpServletRequest request = getHttpRequest();
+		  request.getSession().setAttribute("selectedStandardReportTemplate_draft", selectedStandardReportTemplate_draft);
+	  }
+
+
+
+	  public List getStandardReportTemplateList_approved() {
+          List list = new ArrayList();
+          HashSet hset = new HashSet();
+          try{
+        	  SDKClientUtil sdkclientutil = new SDKClientUtil();
+			  StandardReportTemplate standardReportTemplate = null;
+			  String FQName = "gov.nih.nci.evs.reportwriter.bean.StandardReport";
+			  Object[] objs = sdkclientutil.search(FQName);
+			  if (objs != null && objs.length > 0) {
+				  for (int i=0; i<objs.length; i++)
+				  {
+					  StandardReport standardReport = (StandardReport) objs[i];
+					  ReportStatus rs = standardReport.getStatus();
+					  String status = rs.getLabel();
+					  if (status.compareTo("APPROVED") == 0) {
+						  standardReportTemplate = standardReport.getTemplate();
+                          if (!hset.contains(standardReportTemplate.getLabel())) {
+							  hset.add(standardReportTemplate.getLabel());
+                          	  list.add(new SelectItem(standardReportTemplate.getLabel()));
+						  }
+					  }
+				  }
+
+				  if (list == null)
+				  {
+					  if (list != null && list.size() > 0)
+					  {
+						  SelectItem item = (SelectItem) list.get(0);
+						  setSelectedStandardReportTemplate_approved(item.getLabel());
+					  }
+				  }
+		      }
+		  } catch (Exception ex) {
+			  ex.printStackTrace();
+		  }
+		  return list;
+	  }
+
+
+	  public String getSelectedStandardReportTemplate_approved() {
+		  return this.selectedStandardReportTemplate_approved;
+	  }
+
+
+	  public void setSelectedStandardReportTemplate_approved(String selectedStandardReportTemplate_draft) {
+		  this.selectedStandardReportTemplate_approved = selectedStandardReportTemplate_approved;
+		  HttpServletRequest request = getHttpRequest();
+		  request.getSession().setAttribute("selectedStandardReportTemplate_approved", selectedStandardReportTemplate_approved);
+	  }
+
 	  //taskSelectionChanged
 	  public void taskSelectionChanged(ValueChangeEvent event) {
 		  if (event.getNewValue() == null) return;
@@ -214,14 +340,46 @@ public class UserSessionBean extends Object
 			  return "administer_standard_reports";
 		  }
 		  else if (this.selectedTask.compareTo("Maintain Report Status") == 0)
-		     return "report_status";
+		      return "report_status";
 
-		  else if (this.selectedTask.compareTo("Assign Report Status") == 0)
-		     return "assign_report_status";
+		  else if (this.selectedTask.compareTo("Assign Report Status") == 0) {
+		      // Check if there is any DRAFT report waiting for approval:
+              standardReportTemplateList_draft = getStandardReportTemplateList_draft();
+              if (standardReportTemplateList_draft != null && standardReportTemplateList_draft.size() > 0)
+              {
+				  return "assign_report_status";
+			  }
+			  else
+			  {
+				  String message = "No draft report is found. ";
+				  HttpServletRequest request = (HttpServletRequest)FacesContext.getCurrentInstance().getExternalContext().getRequest();
+				  request.getSession().setAttribute("message", message);
+				  return "message";
+			  }
 
-		  else if (this.selectedTask.compareTo("Retrieve Standard Reports") == 0)
-		     return "retrieve_standard_reports";
-
+	      } else if (this.selectedTask.compareTo("Retrieve Standard Reports") == 0) {
+			  HttpServletRequest request = (HttpServletRequest)FacesContext.getCurrentInstance().getExternalContext().getRequest();
+			  Boolean isAdmin = (Boolean) request.getSession().getAttribute("isAdmin");
+			  if (isAdmin != null && isAdmin.equals(Boolean.TRUE))
+			  {
+				  return "retrieve_standard_reports";
+			  }
+			  else
+			  {
+				  // Check if there is any APPROVED report waiting for approval:
+				  standardReportTemplateList_approved = getStandardReportTemplateList_approved();
+				  if (standardReportTemplateList_approved != null && standardReportTemplateList_approved.size() > 0)
+				  {
+					  return "retrieve_standard_reports";
+				  }
+				  else
+				  {
+					  String message = "No approved report is found. ";
+					  request.getSession().setAttribute("message", message);
+					  return "message";
+				  }
+		      }
+		  }
 		  return null;
 	  }
 
@@ -616,18 +774,51 @@ System.out.println("deleting column with ID = " + id + " (yet to be implemented)
 	}
 
     public String assignStatusAction() {
-		// to be modified
 		HttpServletRequest request = (HttpServletRequest)FacesContext.getCurrentInstance().getExternalContext().getRequest();
 		// save to database
-		String reportTemplate = (String) request.getSession().getAttribute("selectedStandardReportTemplate");
+		String reportTemplate = (String) request.getSession().getAttribute("selectedStandardReportTemplate_draft");
 		String statusValue = (String) request.getSession().getAttribute("selectedReportStatus");
-		try{
-      	  SDKClientUtil sdkclientutil = new SDKClientUtil();
-      	  sdkclientutil.insertReportStatus(statusValue, reportTemplate, true);
-      	  //sdkclientutil.testGetTemplateCollection();
+
+System.out.println("assignStatusAction 	reportTemplate " + reportTemplate);
+System.out.println("assignStatusAction 	statusValue " + statusValue);
+
+
+        try{
+            SDKClientUtil sdkclientutil = new SDKClientUtil();
+		    StandardReportTemplate standardReportTemplate = null;
+		    String FQName = "gov.nih.nci.evs.reportwriter.bean.StandardReport";
+		    Object[] objs = sdkclientutil.search(FQName);
+		    if (objs != null && objs.length > 0) {
+			    for (int i=0; i<objs.length; i++)
+			    {
+			   	    StandardReport standardReport = (StandardReport) objs[i];
+			   	    standardReportTemplate = standardReport.getTemplate();
+			   	    if (standardReportTemplate != null)
+			   	    {
+						if (reportTemplate.compareTo(standardReportTemplate.getLabel()) == 0)
+						{
+							FQName = "gov.nih.nci.evs.reportwriter.bean.ReportStatus";
+							String methodName = "setLabel";
+							String key = statusValue;
+
+							Object status_obj = sdkclientutil.search(FQName, methodName, key);
+							if (status_obj != null)
+							{
+							    standardReport.setStatus((ReportStatus) status_obj);
+
+System.out.println("updateStandardReport to " + statusValue);
+
+							    sdkclientutil.updateStandardReport(standardReport);
+							}
+						}
+					}
+				}
+			}
         } catch(Exception e) {
-      	  e.printStackTrace();
+      	    e.printStackTrace();
         }
+
+        standardReportTemplateList_draft = getStandardReportTemplateList_draft();
 
 		return "assign_report_status";
 	}
@@ -650,9 +841,27 @@ System.out.println("deleting column with ID = " + id + " (yet to be implemented)
           StandardReportTemplate standardReportTemplate = getStandardReportTemplate(selectedStandardReportTemplate);
 
 		  String uid = (String) request.getSession().getAttribute("uid");
+		  if (uid == null)
+		  {
+			  String message = "You must first login to perform this function.";
+			  request.getSession().setAttribute("message", message);
+			  return "message";
+		  }
 
-          // Need to create a thread for this:
-          //String outputDir = "c://ncireportwriter_download_dir"; // to be read from a property file
+          String reportFormat_value = "Text (tab delimited)";
+          String reportStatus_value = "DRAFT";
+
+		  String message = new StandardReportService().validReport(
+			  selectedStandardReportTemplate,
+			  reportFormat_value,
+			  reportStatus_value,
+			  uid);
+
+		  if (message.compareTo("success") != 0)
+		  {
+			  request.getSession().setAttribute("message", message);
+			  return "message";
+		  }
 
           String download_dir = null;
           try {
@@ -661,28 +870,23 @@ System.out.println("deleting column with ID = " + id + " (yet to be implemented)
 
 		  }
 
-System.out.println("download_dir " + download_dir);
-
-
-//String download_dir = "c://ncireportwriter_download_dir";
+		  System.out.println("download_dir " + download_dir);
           Boolean retval = new StandardReportService().generateStandardReport(download_dir, selectedStandardReportTemplate, uid);
 
           // Instantiate Report Generation Service
           // Generate report
 
-
           // Create a StandardReport Record
 
           // create messsage
 
-          String message = "You request has been received. Both tab-delimited and Mcrosoft Excel fomatted "
-          + standardReportTemplate.getLabel() + "s will be generated and placed in the designated output directory.";
-
+          message = "You request has been received. The report, " + standardReportTemplate.getLabel()
+          + ", in tab-delimited and Microsft Excel formats will be generated and placed in the designated output directory."
+          + " Please review and assign an APPROVED status before making it available to the users.";
           request.getSession().setAttribute("message", message);
-
-
 		  return "message"; // replaced by a messsage page (back button)
 	  }
+
 
 	  public String downloadReportAction() {
 		  HttpServletRequest request = getHttpRequest();
@@ -696,12 +900,11 @@ System.out.println("downloading report " + selectedStandardReportTemplate);
           String download_dir = null;
           try {
         	  download_dir = ReportWriterProperties.getInstance().getProperty(ReportWriterProperties.REPORT_DOWNLOAD_DIRECTORY);
-
 System.out.println("download_dir " + download_dir);
 
 		  } catch (Exception ex) {
 
-			  String message = "Server error -- download directory not found.";
+			  String message = "Unable to download the specified report -- download directory does not exist -- check with system administrator.";
 			  request.getSession().setAttribute("message", message);
 		  	  return "message";
 		  }
@@ -709,11 +912,10 @@ System.out.println("download_dir " + download_dir);
           File dir = new File(download_dir);
           if (!dir.exists())
           {
-System.out.println("Unable to download the specified report -- download directory does not exist. ");
-String message = "Unable to download " + selectedStandardReportTemplate + " -- download directory does not exist. ";
-request.getSession().setAttribute("message", message);
-return "message";
-
+				System.out.println("Unable to download the specified report -- download directory does not exist. ");
+				String message = "Unable to download " + selectedStandardReportTemplate + " -- download directory does not exist. ";
+				request.getSession().setAttribute("message", message);
+				return "message";
 		  }
 
 		  File[] fileList = dir.listFiles();
@@ -734,8 +936,6 @@ return "message";
 
           // to be implemented:
           boolean approved = true;
-
-
           if (approved)
           {
 			  return "download";
@@ -753,8 +953,8 @@ return "message";
 
 
 		  //return "generate_standard_report";
-
 	  }
+
 
 	  public String saveStatusAction() {
 		  HttpServletRequest request = getHttpRequest();

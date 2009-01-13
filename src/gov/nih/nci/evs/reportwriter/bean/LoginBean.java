@@ -151,9 +151,6 @@ public class LoginBean extends Object
 		  SDKClientUtil sdkclientutil = new SDKClientUtil();
 		  String FQName = "gov.nih.nci.evs.reportwriter.bean.User";
 		  String methodName = "setLoginName";
-
-System.out.println("Searching for user " + 	loginName);
-
 		  Object obj = sdkclientutil.search(FQName, methodName, loginName);
 		  if (obj == null) return null;
 		  gov.nih.nci.evs.reportwriter.bean.User user = (gov.nih.nci.evs.reportwriter.bean.User) obj;
@@ -178,25 +175,18 @@ System.out.println("Searching for user " + 	loginName);
 			{
 				FacesContext context = FacesContext.getCurrentInstance();
 			    HttpServletRequest request = (HttpServletRequest)context.getExternalContext().getRequest();
-
-			    //HttpSession session = request.getSession(false);
-
 			    HttpSession session = request.getSession(); // true
 			    if (session != null) {
 					 session.setAttribute("uid", userid);
-					 session.setAttribute("password", password);
+					 //session.setAttribute("password", password);
 				}
 				isAdmin = hasAdminPrivilege();
-				//request.getSession(true).setAttribute("isAdmin", isAdmin);
-
 				session.setAttribute("isAdmin", isAdmin);
 
                 gov.nih.nci.evs.reportwriter.bean.User user = getUser(userid);
                 if (user == null)
                 {
-					 KLO_log.warn("User object does not exist -- " + userid);
-					 System.out.println("User object does not exist -- " + userid);
-
+                     // Synchronize with CSM User table
 					 try{
 						  SDKClientUtil sdkclientutil = new SDKClientUtil();
 						  gov.nih.nci.evs.reportwriter.bean.User newuser = (gov.nih.nci.evs.reportwriter.bean.User) sdkclientutil.createUser(userid);
@@ -206,11 +196,13 @@ System.out.println("Searching for user " + 	loginName);
 						  e.printStackTrace();
 					 }
 				}
+				/*
 				else
 				{
 					KLO_log.warn("User object found -- " + userid);
 					System.out.println("User object found -- " + userid);
 				}
+				*/
 
 				return "success";
 			}

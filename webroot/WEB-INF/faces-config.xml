@@ -151,7 +151,13 @@
 
     </navigation-case>
 
+    <navigation-case>
 
+     <from-outcome>message</from-outcome>
+
+     <to-view-id>/pages/message.jsp</to-view-id>
+
+    </navigation-case>
 
     <navigation-case>
 

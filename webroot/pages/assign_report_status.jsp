@@ -5,6 +5,9 @@
 
 <%@ page contentType="text/html;charset=windows-1252"%>
 
+<%@ page import="gov.nih.nci.evs.reportwriter.bean.*" %>
+<%@ page import="gov.nih.nci.evs.reportwriter.utils.*" %>
+
 <html>
 <head>
 <title>Home</title>
@@ -67,8 +70,8 @@
 						
 
 <td class="dataCellText">
-	<h:selectOneMenu id="standardReportTemplateId" value="#{userSessionBean.selectedStandardReportTemplate}" valueChangeListener="#{userSessionBean.reportSelectionChanged}">
-	     <f:selectItems value="#{userSessionBean.standardReportTemplateList}"/>
+	<h:selectOneMenu id="standardReportTemplateId" value="#{userSessionBean.selectedStandardReportTemplate_draft}" valueChangeListener="#{userSessionBean.reportSelectionChanged_draft}">
+	     <f:selectItems value="#{userSessionBean.standardReportTemplateList_draft}"/>
 	</h:selectOneMenu>
 </td>
 
@@ -96,7 +99,7 @@
 									<!-- bottom action buttons begins -->
 									<table cellpadding="4" cellspacing="0" border="0">
 										<tr>
-											<td><h:commandButton id="save" action="#{userSessionBean.saveStatusAction}" value="Save" /></td>
+											<td><h:commandButton id="save" action="#{userSessionBean.assignStatusAction}" value="Save" /></td>
 											<td><h:commandButton id="cancel" action="back" value="Back" /></td>
 										</tr>
 									</table>

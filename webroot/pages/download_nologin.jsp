@@ -65,12 +65,24 @@
 							<tr>
 								<td>
 									<table summary="Enter summary of data here" cellpadding="3" cellspacing="0" border="0" class="dataTable" width="100%">
-										<tr class="dataRowLight">
+									
+<!--_____ to be replaced by dynamically generated download section _____-->	
+
+
+
+
+
+
+									        <tr class="dataRowLight">
 											<td class="dataCellText"><a href="<%=request.getContextPath() %>/fileServlet?format=text" >Structured Product Labeling (SPL) Report (text)</a></td>
 										</tr>
 										<tr class="dataRowDark">
 											<td class="dataCellText"><a href="<%=request.getContextPath() %>/fileServlet?format=excel" >Structured Product Labeling (SPL) Report (Excel)</a></td>
 										</tr>
+										
+										
+										
+										
 									</table>
 								</td>
 							</tr>
