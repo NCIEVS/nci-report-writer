@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="windows-1252"?>
-<XMI xmi.version="1.1" xmlns:UML="omg.org/UML1.3" timestamp="2009-01-08 13:14:07">
+<XMI xmi.version="1.1" xmlns:UML="omg.org/UML1.3" timestamp="2009-01-13 09:51:30">
 	<XMI.header>
 		<XMI.documentation>
 			<XMI.exporter>Enterprise Architect</XMI.exporter>
@@ -46,7 +46,7 @@
 										<UML:TaggedValue tag="package" value="EAPK_0E619F9D_B66B_413d_AA72_EA0D23CA17FA"/>
 										<UML:TaggedValue tag="date_created" value="2001-07-01 00:00:00"/>
 										<UML:TaggedValue tag="date_modified" value="2001-01-07 10:07:25"/>
-										<UML:TaggedValue tag="genfile" value="C:\Documents and Settings\Rajasimhah\Desktop\ReportWriter\Design\MASTER\Data Model.SQL"/>
+										<UML:TaggedValue tag="genfile" value="C:\Documents and Settings\Rajasimhah\Desktop\ReportWriter\Design\CWD\Data Model.SQL"/>
 										<UML:TaggedValue tag="tagged" value="0"/>
 										<UML:TaggedValue tag="package2" value="EAID_DF69483D_A770_4b4f_A41F_E3CD306137C5"/>
 										<UML:TaggedValue tag="package_name" value="Logical View"/>
@@ -195,10 +195,8 @@
 											</UML:ModelElement.stereotype>
 											<UML:ModelElement.taggedValue>
 												<UML:TaggedValue tag="type" value="VARCHAR"/>
-												<UML:TaggedValue tag="length" value="50"/>
+												<UML:TaggedValue tag="length" value="255"/>
 												<UML:TaggedValue tag="ordered" value="0"/>
-												<UML:TaggedValue tag="precision" value="0"/>
-												<UML:TaggedValue tag="scale" value="0"/>
 												<UML:TaggedValue tag="stereotype" value="column"/>
 												<UML:TaggedValue tag="collection" value="false"/>
 												<UML:TaggedValue tag="position" value="1"/>
@@ -222,10 +220,8 @@
 											</UML:ModelElement.stereotype>
 											<UML:ModelElement.taggedValue>
 												<UML:TaggedValue tag="type" value="VARCHAR"/>
-												<UML:TaggedValue tag="length" value="50"/>
+												<UML:TaggedValue tag="length" value="255"/>
 												<UML:TaggedValue tag="ordered" value="0"/>
-												<UML:TaggedValue tag="precision" value="0"/>
-												<UML:TaggedValue tag="scale" value="0"/>
 												<UML:TaggedValue tag="stereotype" value="column"/>
 												<UML:TaggedValue tag="collection" value="false"/>
 												<UML:TaggedValue tag="position" value="2"/>
@@ -249,10 +245,8 @@
 											</UML:ModelElement.stereotype>
 											<UML:ModelElement.taggedValue>
 												<UML:TaggedValue tag="type" value="VARCHAR"/>
-												<UML:TaggedValue tag="length" value="50"/>
+												<UML:TaggedValue tag="length" value="255"/>
 												<UML:TaggedValue tag="ordered" value="0"/>
-												<UML:TaggedValue tag="precision" value="0"/>
-												<UML:TaggedValue tag="scale" value="0"/>
 												<UML:TaggedValue tag="stereotype" value="column"/>
 												<UML:TaggedValue tag="collection" value="false"/>
 												<UML:TaggedValue tag="position" value="3"/>
@@ -330,10 +324,8 @@
 											</UML:ModelElement.stereotype>
 											<UML:ModelElement.taggedValue>
 												<UML:TaggedValue tag="type" value="VARCHAR"/>
-												<UML:TaggedValue tag="length" value="50"/>
+												<UML:TaggedValue tag="length" value="255"/>
 												<UML:TaggedValue tag="ordered" value="0"/>
-												<UML:TaggedValue tag="precision" value="0"/>
-												<UML:TaggedValue tag="scale" value="0"/>
 												<UML:TaggedValue tag="stereotype" value="column"/>
 												<UML:TaggedValue tag="collection" value="false"/>
 												<UML:TaggedValue tag="position" value="6"/>
@@ -654,10 +646,8 @@
 											</UML:ModelElement.stereotype>
 											<UML:ModelElement.taggedValue>
 												<UML:TaggedValue tag="type" value="VARCHAR"/>
-												<UML:TaggedValue tag="length" value="100"/>
+												<UML:TaggedValue tag="length" value="255"/>
 												<UML:TaggedValue tag="ordered" value="0"/>
-												<UML:TaggedValue tag="precision" value="0"/>
-												<UML:TaggedValue tag="scale" value="0"/>
 												<UML:TaggedValue tag="stereotype" value="column"/>
 												<UML:TaggedValue tag="collection" value="false"/>
 												<UML:TaggedValue tag="position" value="1"/>
@@ -993,10 +983,8 @@
 											</UML:ModelElement.stereotype>
 											<UML:ModelElement.taggedValue>
 												<UML:TaggedValue tag="type" value="VARCHAR"/>
-												<UML:TaggedValue tag="length" value="50"/>
+												<UML:TaggedValue tag="length" value="255"/>
 												<UML:TaggedValue tag="ordered" value="0"/>
-												<UML:TaggedValue tag="precision" value="0"/>
-												<UML:TaggedValue tag="scale" value="0"/>
 												<UML:TaggedValue tag="stereotype" value="column"/>
 												<UML:TaggedValue tag="collection" value="false"/>
 												<UML:TaggedValue tag="position" value="2"/>
@@ -1020,10 +1008,8 @@
 											</UML:ModelElement.stereotype>
 											<UML:ModelElement.taggedValue>
 												<UML:TaggedValue tag="type" value="VARCHAR"/>
-												<UML:TaggedValue tag="length" value="50"/>
+												<UML:TaggedValue tag="length" value="255"/>
 												<UML:TaggedValue tag="ordered" value="0"/>
-												<UML:TaggedValue tag="precision" value="0"/>
-												<UML:TaggedValue tag="scale" value="0"/>
 												<UML:TaggedValue tag="stereotype" value="column"/>
 												<UML:TaggedValue tag="collection" value="false"/>
 												<UML:TaggedValue tag="position" value="3"/>
@@ -1047,10 +1033,8 @@
 											</UML:ModelElement.stereotype>
 											<UML:ModelElement.taggedValue>
 												<UML:TaggedValue tag="type" value="VARCHAR"/>
-												<UML:TaggedValue tag="length" value="50"/>
+												<UML:TaggedValue tag="length" value="255"/>
 												<UML:TaggedValue tag="ordered" value="0"/>
-												<UML:TaggedValue tag="precision" value="0"/>
-												<UML:TaggedValue tag="scale" value="0"/>
 												<UML:TaggedValue tag="stereotype" value="column"/>
 												<UML:TaggedValue tag="collection" value="false"/>
 												<UML:TaggedValue tag="position" value="4"/>
@@ -1074,10 +1058,8 @@
 											</UML:ModelElement.stereotype>
 											<UML:ModelElement.taggedValue>
 												<UML:TaggedValue tag="type" value="VARCHAR"/>
-												<UML:TaggedValue tag="length" value="50"/>
+												<UML:TaggedValue tag="length" value="255"/>
 												<UML:TaggedValue tag="ordered" value="0"/>
-												<UML:TaggedValue tag="precision" value="0"/>
-												<UML:TaggedValue tag="scale" value="0"/>
 												<UML:TaggedValue tag="stereotype" value="column"/>
 												<UML:TaggedValue tag="collection" value="false"/>
 												<UML:TaggedValue tag="position" value="5"/>
@@ -1128,10 +1110,8 @@
 											</UML:ModelElement.stereotype>
 											<UML:ModelElement.taggedValue>
 												<UML:TaggedValue tag="type" value="VARCHAR"/>
-												<UML:TaggedValue tag="length" value="50"/>
+												<UML:TaggedValue tag="length" value="255"/>
 												<UML:TaggedValue tag="ordered" value="0"/>
-												<UML:TaggedValue tag="precision" value="0"/>
-												<UML:TaggedValue tag="scale" value="0"/>
 												<UML:TaggedValue tag="stereotype" value="column"/>
 												<UML:TaggedValue tag="collection" value="false"/>
 												<UML:TaggedValue tag="position" value="7"/>
@@ -1155,10 +1135,8 @@
 											</UML:ModelElement.stereotype>
 											<UML:ModelElement.taggedValue>
 												<UML:TaggedValue tag="type" value="VARCHAR"/>
-												<UML:TaggedValue tag="length" value="50"/>
+												<UML:TaggedValue tag="length" value="255"/>
 												<UML:TaggedValue tag="ordered" value="0"/>
-												<UML:TaggedValue tag="precision" value="0"/>
-												<UML:TaggedValue tag="scale" value="0"/>
 												<UML:TaggedValue tag="stereotype" value="column"/>
 												<UML:TaggedValue tag="collection" value="false"/>
 												<UML:TaggedValue tag="position" value="8"/>
@@ -1182,10 +1160,8 @@
 											</UML:ModelElement.stereotype>
 											<UML:ModelElement.taggedValue>
 												<UML:TaggedValue tag="type" value="VARCHAR"/>
-												<UML:TaggedValue tag="length" value="50"/>
+												<UML:TaggedValue tag="length" value="255"/>
 												<UML:TaggedValue tag="ordered" value="0"/>
-												<UML:TaggedValue tag="precision" value="0"/>
-												<UML:TaggedValue tag="scale" value="0"/>
 												<UML:TaggedValue tag="stereotype" value="column"/>
 												<UML:TaggedValue tag="collection" value="false"/>
 												<UML:TaggedValue tag="position" value="9"/>
@@ -1209,10 +1185,8 @@
 											</UML:ModelElement.stereotype>
 											<UML:ModelElement.taggedValue>
 												<UML:TaggedValue tag="type" value="VARCHAR"/>
-												<UML:TaggedValue tag="length" value="50"/>
+												<UML:TaggedValue tag="length" value="255"/>
 												<UML:TaggedValue tag="ordered" value="0"/>
-												<UML:TaggedValue tag="precision" value="0"/>
-												<UML:TaggedValue tag="scale" value="0"/>
 												<UML:TaggedValue tag="stereotype" value="column"/>
 												<UML:TaggedValue tag="collection" value="false"/>
 												<UML:TaggedValue tag="position" value="10"/>
@@ -1544,13 +1518,11 @@
 											</UML:ModelElement.stereotype>
 											<UML:ModelElement.taggedValue>
 												<UML:TaggedValue tag="type" value="VARCHAR"/>
-												<UML:TaggedValue tag="length" value="50"/>
+												<UML:TaggedValue tag="length" value="255"/>
 												<UML:TaggedValue tag="ordered" value="0"/>
-												<UML:TaggedValue tag="precision" value="0"/>
-												<UML:TaggedValue tag="scale" value="0"/>
 												<UML:TaggedValue tag="stereotype" value="column"/>
 												<UML:TaggedValue tag="collection" value="false"/>
-												<UML:TaggedValue tag="position" value="2"/>
+												<UML:TaggedValue tag="position" value="1"/>
 												<UML:TaggedValue tag="lowerBound" value="1"/>
 												<UML:TaggedValue tag="upperBound" value="1"/>
 												<UML:TaggedValue tag="duplicates" value="0"/>
@@ -2423,10 +2395,8 @@
 											</UML:ModelElement.stereotype>
 											<UML:ModelElement.taggedValue>
 												<UML:TaggedValue tag="type" value="VARCHAR"/>
-												<UML:TaggedValue tag="length" value="50"/>
+												<UML:TaggedValue tag="length" value="255"/>
 												<UML:TaggedValue tag="ordered" value="0"/>
-												<UML:TaggedValue tag="precision" value="0"/>
-												<UML:TaggedValue tag="scale" value="0"/>
 												<UML:TaggedValue tag="stereotype" value="column"/>
 												<UML:TaggedValue tag="collection" value="false"/>
 												<UML:TaggedValue tag="position" value="1"/>
@@ -2477,10 +2447,8 @@
 											</UML:ModelElement.stereotype>
 											<UML:ModelElement.taggedValue>
 												<UML:TaggedValue tag="type" value="VARCHAR"/>
-												<UML:TaggedValue tag="length" value="50"/>
+												<UML:TaggedValue tag="length" value="255"/>
 												<UML:TaggedValue tag="ordered" value="0"/>
-												<UML:TaggedValue tag="precision" value="0"/>
-												<UML:TaggedValue tag="scale" value="0"/>
 												<UML:TaggedValue tag="stereotype" value="column"/>
 												<UML:TaggedValue tag="collection" value="false"/>
 												<UML:TaggedValue tag="position" value="3"/>
@@ -2890,10 +2858,8 @@
 											</UML:ModelElement.stereotype>
 											<UML:ModelElement.taggedValue>
 												<UML:TaggedValue tag="type" value="VARCHAR"/>
-												<UML:TaggedValue tag="length" value="50"/>
+												<UML:TaggedValue tag="length" value="255"/>
 												<UML:TaggedValue tag="ordered" value="0"/>
-												<UML:TaggedValue tag="precision" value="0"/>
-												<UML:TaggedValue tag="scale" value="0"/>
 												<UML:TaggedValue tag="stereotype" value="column"/>
 												<UML:TaggedValue tag="collection" value="false"/>
 												<UML:TaggedValue tag="position" value="1"/>
@@ -2917,10 +2883,8 @@
 											</UML:ModelElement.stereotype>
 											<UML:ModelElement.taggedValue>
 												<UML:TaggedValue tag="type" value="VARCHAR"/>
-												<UML:TaggedValue tag="length" value="50"/>
+												<UML:TaggedValue tag="length" value="255"/>
 												<UML:TaggedValue tag="ordered" value="0"/>
-												<UML:TaggedValue tag="precision" value="0"/>
-												<UML:TaggedValue tag="scale" value="0"/>
 												<UML:TaggedValue tag="stereotype" value="column"/>
 												<UML:TaggedValue tag="collection" value="false"/>
 												<UML:TaggedValue tag="position" value="2"/>
@@ -2944,10 +2908,8 @@
 											</UML:ModelElement.stereotype>
 											<UML:ModelElement.taggedValue>
 												<UML:TaggedValue tag="type" value="VARCHAR"/>
-												<UML:TaggedValue tag="length" value="50"/>
+												<UML:TaggedValue tag="length" value="255"/>
 												<UML:TaggedValue tag="ordered" value="0"/>
-												<UML:TaggedValue tag="precision" value="0"/>
-												<UML:TaggedValue tag="scale" value="0"/>
 												<UML:TaggedValue tag="stereotype" value="column"/>
 												<UML:TaggedValue tag="collection" value="false"/>
 												<UML:TaggedValue tag="position" value="3"/>
@@ -3207,10 +3169,8 @@
 											</UML:ModelElement.stereotype>
 											<UML:ModelElement.taggedValue>
 												<UML:TaggedValue tag="type" value="VARCHAR"/>
-												<UML:TaggedValue tag="length" value="50"/>
+												<UML:TaggedValue tag="length" value="255"/>
 												<UML:TaggedValue tag="ordered" value="0"/>
-												<UML:TaggedValue tag="precision" value="0"/>
-												<UML:TaggedValue tag="scale" value="0"/>
 												<UML:TaggedValue tag="stereotype" value="column"/>
 												<UML:TaggedValue tag="collection" value="false"/>
 												<UML:TaggedValue tag="position" value="1"/>
@@ -3234,10 +3194,8 @@
 											</UML:ModelElement.stereotype>
 											<UML:ModelElement.taggedValue>
 												<UML:TaggedValue tag="type" value="VARCHAR"/>
-												<UML:TaggedValue tag="length" value="50"/>
+												<UML:TaggedValue tag="length" value="255"/>
 												<UML:TaggedValue tag="ordered" value="0"/>
-												<UML:TaggedValue tag="precision" value="0"/>
-												<UML:TaggedValue tag="scale" value="0"/>
 												<UML:TaggedValue tag="stereotype" value="column"/>
 												<UML:TaggedValue tag="collection" value="false"/>
 												<UML:TaggedValue tag="position" value="2"/>
@@ -5744,7 +5702,7 @@
 				<UML:TaggedValue tag="version" value="1.0"/>
 				<UML:TaggedValue tag="author" value="rajasimhah"/>
 				<UML:TaggedValue tag="created_date" value="2001-07-01 00:00:00"/>
-				<UML:TaggedValue tag="modified_date" value="2009-01-08 13:05:48"/>
+				<UML:TaggedValue tag="modified_date" value="2009-01-13 09:50:51"/>
 				<UML:TaggedValue tag="package" value="EAPK_DF69483D_A770_4b4f_A41F_E3CD306137C5"/>
 				<UML:TaggedValue tag="type" value="Logical"/>
 				<UML:TaggedValue tag="swimlanes" value="locked=false;orientation=0;width=0;inbar=false;names=false;color=0;bold=false;fcol=0;;cls=0;"/>
@@ -5757,10 +5715,10 @@
 				<UML:DiagramElement geometry="Left=556;Top=417;Right=893;Bottom=579;" subject="EAID_8374065C_D8DB_4c29_9330_A2441E285F38" seqno="1" style="DUID=AE75A048;"/>
 				<UML:DiagramElement geometry="Left=7;Top=353;Right=389;Bottom=554;" subject="EAID_DCABFDF7_8AC1_42e6_8C03_CB6CD6871B8F" seqno="2" style="DUID=0A8FBDA3;"/>
 				<UML:DiagramElement geometry="Left=1156;Top=9;Right=1350;Bottom=141;" subject="EAID_6F754920_5BB8_4edf_B6AE_3BA17DAF5407" seqno="3" style="DUID=81BA88C9;"/>
-				<UML:DiagramElement geometry="Left=1166;Top=158;Right=1358;Bottom=303;" subject="EAID_DCE9EC9C_54AB_472f_8EA6_0A1FB20DF66F" seqno="4" style="DUID=BC0522D2;"/>
+				<UML:DiagramElement geometry="Left=1156;Top=161;Right=1348;Bottom=306;" subject="EAID_DCE9EC9C_54AB_472f_8EA6_0A1FB20DF66F" seqno="4" style="DUID=BC0522D2;"/>
 				<UML:DiagramElement geometry="Left=25;Top=600;Right=396;Bottom=935;" subject="EAID_6F5C4E9E_0FE5_4f9d_9D42_EC756225150B" seqno="5" style="DUID=1A68989A;"/>
-				<UML:DiagramElement geometry="Left=940;Top=636;Right=1370;Bottom=889;" subject="EAID_0CC6011E_7D03_4c1b_B9A7_E68DA65DB58D" seqno="6" style="DUID=80A7B029;"/>
-				<UML:DiagramElement geometry="Left=985;Top=319;Right=1368;Bottom=507;" subject="EAID_A64D304D_7C6B_43be_87A4_0824D7DF5691" seqno="7" style="DUID=1761B816;"/>
+				<UML:DiagramElement geometry="Left=924;Top=667;Right=1354;Bottom=920;" subject="EAID_0CC6011E_7D03_4c1b_B9A7_E68DA65DB58D" seqno="6" style="DUID=80A7B029;"/>
+				<UML:DiagramElement geometry="Left=962;Top=342;Right=1345;Bottom=530;" subject="EAID_A64D304D_7C6B_43be_87A4_0824D7DF5691" seqno="7" style="DUID=1761B816;"/>
 				<UML:DiagramElement geometry="Left=572;Top=4;Right=813;Bottom=270;" subject="EAID_B4A7AE4B_9FAD_435b_BABC_B6EA6ECD5665" seqno="8" style="DUID=47D0366A;"/>
 				<UML:DiagramElement geometry="Left=34;Top=34;Right=274;Bottom=196;" subject="EAID_523F5455_8D55_4f2f_9D4F_0F647FD54CCC" seqno="9" style="DUID=143E6E2C;"/>
 				<UML:DiagramElement geometry="SX=9;SY=-93;EX=25;EY=-9;EDGE=3;$LLB=CX=17:CY=14:OX=0:OY=0:HDN=0:BLD=0:ITA=0:UND=0:CLR=-1:ALN=0:DIR=0:ROT=0;LLT=CX=298:CY=14:OX=176:OY=26:HDN=0:BLD=0:ITA=0:UND=0:CLR=-1:ALN=0:DIR=0:ROT=0;LMT=CX=145:CY=14:OX=0:OY=0:HDN=0:BLD=0:ITA=0:UND=0:CLR=-1:ALN=0:DIR=0:ROT=0;LMB=CX=26:CY=14:OX=0:OY=0:HDN=0:BLD=0:ITA=0:UND=0:CLR=-1:ALN=0:DIR=0:ROT=0;LRT=CX=190:CY=14:OX=-113:OY=37:HDN=0:BLD=0:ITA=0:UND=0:CLR=-1:ALN=0:DIR=0:ROT=0;LRB=CX=19:CY=14:OX=0:OY=0:HDN=0:BLD=0:ITA=0:UND=0:CLR=-1:ALN=0:DIR=0:ROT=0;IRHS=;ILHS=;Path=555:-939$555:-621$;" subject="EAID_861F67A6_ABF6_428c_9449_7EF558FF5415" style="Mode=2;EOID=80A7B029;SOID=1761B816;Color=-1;LWidth=0;Hidden=0;"/>
