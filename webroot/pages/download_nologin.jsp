@@ -8,7 +8,9 @@
 <%@ page import="gov.nih.nci.evs.reportwriter.bean.*" %>
 <%@ page import="gov.nih.nci.evs.reportwriter.utils.*" %>
 
-<%@ page import="java.util.List" %>
+<%@ page import="java.util.Date" %>
+<%@ page import="java.text.SimpleDateFormat" %>
+
 
 <html>
 <head>
@@ -42,7 +44,7 @@
                               <tr>
                                     <td height="20" width="100%" class="mainMenu">
                 
-<%@ include file="/pages/templates/menuBar_skip.xhtml" %>
+<%@ include file="/pages/templates/menuBar.xhtml" %>
                   
                                     </td>
                               </tr>
@@ -51,7 +53,7 @@
                                     <td>
                          
 <!--_____ main content begins _____-->
-<h:form id="DOWNLOAD_STANDARD_REPORTSForm">
+<h:form id="AVAILABLE_STANDARD_REPORTSForm">
 	<tr>
 		<td width="100%" valign="top"><br>
 		<!-- target of anchor to skip menus --><a name="content" />
@@ -60,27 +62,185 @@
 					<td>
 						<table summary="" cellpadding="0" cellspacing="0" border="0">
 							<tr>
-								<td class="dataTablePrimaryLabel" height="20">DOWNLOAD STANDARD REPORTS</td>
+								<td class="dataTablePrimaryLabel" height="20">STANDARD REPORTS</td>
 							</tr>
 							<tr>
 								<td>
 									<table summary="Enter summary of data here" cellpadding="3" cellspacing="0" border="0" class="dataTable" width="100%">
-									
-<!--_____ to be replaced by dynamically generated download section _____-->	
+										<tr>
+											<th class="dataTableHeader" scope="col" align="center">Report Label</th>
+											<th class="dataTableHeader" scope="col" align="center">Format</th>
+											<th class="dataTableHeader" scope="col" align="center">Coding Scheme</th>
+											<th class="dataTableHeader" scope="col" align="center">Version</th>
+											<th class="dataTableHeader" scope="col" align="center">Last Modified</th>
+										</tr>
+										
+
+<%
+        try{
+            SDKClientUtil sdkclientutil = new SDKClientUtil();
+	    StandardReportTemplate standardReportTemplate = null;
+	    String FQName = "gov.nih.nci.evs.reportwriter.bean.StandardReport";
+	    Object[] objs = sdkclientutil.search(FQName);
+	    int n = 0;
+	    if (objs != null && objs.length > 0) {
+		    for (int i=0; i<objs.length; i++)
+		    {
+			    StandardReport standardReport = (StandardReport) objs[i];
+			    ReportFormat reportFormat = standardReport.getFormat();
+			    standardReportTemplate = standardReport.getTemplate();
+			    if (reportFormat != null && standardReportTemplate != null)
+			    {
+			          String label = standardReportTemplate.getLabel();
+				  String format = reportFormat.getDescription();
+				  String codingScheme = standardReportTemplate.getCodingSchemeName();
+				  String version = standardReportTemplate.getCodingSchemeVersion();
+				  Date lastModified = standardReport.getLastModified();
+				  String date_str = null;
+				  if (lastModified != null)
+				  {
+				      SimpleDateFormat formatter = new SimpleDateFormat("MM/dd/yyyy");
+				      date_str = formatter.format(lastModified);
+				  }
+				  if (n % 2 == 0)
+				  {
+				  %>
+				      <tr class="dataRowLight">
+				  <%    
+				  }
+				  else
+				  {
+				  %>
+				      <tr class="dataRowDark"> 
+				  <%    
+				  }
+				  
+				  Integer id = standardReportTemplate.getId();
+				  String templateId = id.toString();
+				  
+				  Integer format_id = reportFormat.getId();
+				  String formatId = format_id.toString();
 
 
+%>
+<td class="dataCellText"><a href="<%=request.getContextPath() %>/fileServlet?template=<%=templateId%>&format=<%=formatId%>" ><%=label%></a></td>
+										
+											<td class="dataCellText"><%=format%></td>
+											<td class="dataCellText"><%=codingScheme%></td>
+											<td class="dataCellText"><%=version%></td>
+											<td class="dataCellText"><%=date_str%></td>
+										</tr>
+										
+										
+<%
+                                  n++; 
+			    }
+		   }
+	    }
+        } catch(Exception e) {
+      	    e.printStackTrace();
+        }
+
+%>
 
 
+<!--
 
-
-									        <tr class="dataRowLight">
-											<td class="dataCellText"><a href="<%=request.getContextPath() %>/fileServlet?format=text" >Structured Product Labeling (SPL) Report (text)</a></td>
+										<tr class="dataRowLight">
+											<td class="dataCellText">Structured Product Labeling (SPL) Report</td>
+											<td class="dataCellText">Text (tab delimited)</td>
+											<td class="dataCellText">NCI Thesaurus</td>
+											<td class="dataCellText">08.06d</td>
+											<td class="dataCellText">01/13/2009</td>
 										</tr>
 										<tr class="dataRowDark">
-											<td class="dataCellText"><a href="<%=request.getContextPath() %>/fileServlet?format=excel" >Structured Product Labeling (SPL) Report (Excel)</a></td>
+											<td class="dataCellText">Structured Product Labeling (SPL) Report</td>
+											<td class="dataCellText">Microsoft Office Excel</td>
+											<td class="dataCellText">NCI Thesaurus</td>
+											<td class="dataCellText">08.06d</td>
+											<td class="dataCellText">01/13/2009</td>
 										</tr>
 										
 										
+										
+										
+										
+										
+										<tr class="dataRowLight">
+											<td class="dataCellText">Structured Product Labeling (SPL) Report</td>
+											<td class="dataCellText">Text (tab delimited)</td>
+											<td class="dataCellText">NCI Thesaurus</td>
+											<td class="dataCellText">08.06d</td>
+											<td class="dataCellText">01/13/2009</td>
+										</tr>
+										<tr class="dataRowDark">
+											<td class="dataCellText">Structured Product Labeling (SPL) Report</td>
+											<td class="dataCellText">Microsoft Office Excel</td>
+											<td class="dataCellText">NCI Thesaurus</td>
+											<td class="dataCellText">08.06d</td>
+											<td class="dataCellText">01/13/2009</td>
+										</tr>
+										
+										
+										
+										
+										<tr class="dataRowLight">
+											<td class="dataCellText">FDA-UNII Subset Report</td>
+											<td class="dataCellText">Text (tab delimited)</td>
+											<td class="dataCellText">NCI Thesaurus</td>
+											<td class="dataCellText">08.06d</td>
+											<td class="dataCellText">01/13/2009</td>
+										</tr>
+										<tr class="dataRowDark">
+											<td class="dataCellText">FDA-UNII Subset Report</td>
+											<td class="dataCellText">Microsoft Office Excel</td>
+											<td class="dataCellText">NCI Thesaurus</td>
+											<td class="dataCellText">08.06d</td>
+											<td class="dataCellText">01/13/2009</td>
+										</tr>
+										<tr class="dataRowLight">
+											<td class="dataCellText">Individual Case Safety (ICS) Subset Report</td>
+											<td class="dataCellText">Text (tab delimited)</td>
+											<td class="dataCellText">NCI Thesaurus</td>
+											<td class="dataCellText">08.06d</td>
+											<td class="dataCellText">01/13/2009</td>
+										</tr>
+										<tr class="dataRowDark">
+											<td class="dataCellText">Individual Case Safety (ICS) Subset Report</td>
+											<td class="dataCellText">Microsoft Office Excel</td>
+											<td class="dataCellText">NCI Thesaurus</td>
+											<td class="dataCellText">08.06d</td>
+											<td class="dataCellText">01/13/2009</td>
+										</tr>
+										<tr class="dataRowLight">
+											<td class="dataCellText">Center for Devices and Radiological Health (CDRH) Subset Report</td>
+											<td class="dataCellText">Text (tab delimited)</td>
+											<td class="dataCellText">NCI Thesaurus</td>
+											<td class="dataCellText">08.06d</td>
+											<td class="dataCellText">01/13/2009</td>
+										</tr>
+										<tr class="dataRowDark">
+											<td class="dataCellText">Center for Devices and Radiological Health (CDRH) Subset Report</td>
+											<td class="dataCellText">Microsoft Office Excel</td>
+											<td class="dataCellText">NCI Thesaurus</td>
+											<td class="dataCellText">08.06d</td>
+											<td class="dataCellText">01/13/2009</td>
+										</tr>
+										<tr class="dataRowLight">
+											<td class="dataCellText">FDA-SPL Country Code Report</td>
+											<td class="dataCellText">Text (tab delimited)</td>
+											<td class="dataCellText">NCI Thesaurus</td>
+											<td class="dataCellText">08.06d</td>
+											<td class="dataCellText">01/13/2009</td>
+										</tr>
+										<tr class="dataRowDark">
+											<td class="dataCellText">FDA-SPL Country Code Report</td>
+											<td class="dataCellText">Microsoft Office Excel</td>
+											<td class="dataCellText">NCI Thesaurus</td>
+											<td class="dataCellText">08.06d</td>
+											<td class="dataCellText">01/13/2009</td>
+										</tr>
+-->										
 										
 										
 									</table>
@@ -91,7 +251,7 @@
 									<!-- bottom action buttons begins -->
 									<table cellpadding="4" cellspacing="0" border="0">
 										<tr>
-											<td><input type="button" id="back" value="Back" onclick="history.go(-1)" /></td>
+											<td><h:commandButton id="back" action="back" value="Back" /></td>
 										</tr>
 									</table>
 									<!-- bottom action buttons end -->
