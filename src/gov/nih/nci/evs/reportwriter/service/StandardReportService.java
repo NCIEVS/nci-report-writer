@@ -180,6 +180,8 @@ public class StandardReportService {
 
     public Boolean generateStandardReport(String outputDir, String standardReportLabel, String uid)
     {
+
+
         Thread reportgeneration_thread = new Thread(new ReportGenerationThread(outputDir, standardReportLabel, uid));
         reportgeneration_thread.start();
 
@@ -187,13 +189,21 @@ public class StandardReportService {
 	}
 
 
-	private Boolean validReport(
+	public String validReport(
           String standardReportTemplate_value,
 		  String reportFormat_value,
 		  String reportStatus_value,
 		  String user_value) {
 
         try{
+			    Boolean bool_obj = initializeReportFormats();
+			    bool_obj = initializeReportStatus();
+
+			    if (standardReportTemplate_value == null) return "Report template not specified.";
+			    if (reportFormat_value == null) return "Report format not specified.";
+			    if (reportStatus_value == null) return "Report status not specified.";
+			    if (user_value == null) return "User authentication failed.";
+
         	    SDKClientUtil sdkclientutil = new SDKClientUtil();
 
 				String FQName = null;
@@ -207,7 +217,7 @@ public class StandardReportService {
 				Object standardReportTemplate_obj = sdkclientutil.search(FQName, methodName, key);
 				if (standardReportTemplate_obj == null) {
 					System.out.println("Object " + standardReportTemplate_value + " not found.");
-					return Boolean.FALSE;
+					return "Unidentifiable report template label -- " + standardReportTemplate_value;
 				}
 
 				ReportFormat reportFormat = null;
@@ -217,7 +227,7 @@ public class StandardReportService {
 				Object reportFormat_obj = sdkclientutil.search(FQName, methodName, key);
 				if (reportFormat_obj == null) {
 					System.out.println("Object " + reportFormat_value + " not found.");
-					return Boolean.FALSE;
+					return "Unidentifiable report format -- " + reportFormat_value;
 				}
 
 				ReportStatus reportStatus = null;
@@ -227,7 +237,7 @@ public class StandardReportService {
 				Object reportStatus_obj = sdkclientutil.search(FQName, methodName, key);
 				if (reportStatus_obj == null) {
 					System.out.println("Object " + reportStatus_value + " not found.");
-					return Boolean.FALSE;
+					return "Unidentifiable report status -- " + reportStatus_value;
 				}
 
 				User user = null;
@@ -237,21 +247,21 @@ public class StandardReportService {
 				Object user_obj = sdkclientutil.search(FQName, methodName, key);
 				if (user_obj == null) {
 					System.out.println("Object " + user_value + " not found.");
-					return Boolean.FALSE;
+					return "Unidentifiable user -- " + user_value;
 				}
 
-				return Boolean.TRUE;
+				return "success";
 
           } catch(Exception e) {
         	  e.printStackTrace();
           }
 
-          return null;
+          return "Report validation falied";
 
 	}
 
 
-	private Boolean createStandardReport(
+	public Boolean createStandardReport(
 		String label,
 		String pathName,
 
@@ -261,23 +271,25 @@ public class StandardReportService {
 		String uid) {
 
 		// Method called upon generation of two reports (tab-delimited and Excel)
-
-		// if ReportFormat does not exist -- createReportFormat
-
         try{
-			  Boolean retval = validReport(templateLabel, format, status, uid);
-			  if (retval != Boolean.FALSE)
+
+System.out.println("createStandardReport Step 1  -- validReport ");
+
+			  String msg = validReport(templateLabel, format, status, uid);
+			  if (msg.compareTo("success") != 0)
 			  {
 				  System.out.println("Report object not created.");
 				  return Boolean.FALSE;
 			  }
-
 
         	  SDKClientUtil sdkclientutil = new SDKClientUtil();
         	  String FQName = "gov.nih.nci.evs.reportwriter.bean.StandardReport";
         	  String methodName = "setLabel";
         	  String key = label;
         	  Object[] objs = sdkclientutil.search(FQName);
+
+
+System.out.println("createStandardReport Step 2  -- delete old report objects from database. ");
 
         	  if (objs != null)
         	  {
@@ -293,19 +305,32 @@ public class StandardReportService {
 				  }
  			  }
 
+System.out.println("createStandardReport Step 3  -- create StandardReport object. ");
+
               java.util.Date lastModified = new Date(); // system date
         	  StandardReport report = sdkclientutil.createStandardReport(label, lastModified, pathName);
+
+System.out.println("createStandardReport Step 4  -- assign template. ");
 
 			  StandardReportTemplate standardReportTemplate = null;
         	  FQName = "gov.nih.nci.evs.reportwriter.bean.StandardReportTemplate";
         	  methodName = "setLabel";
-        	  key = label;
+
+System.out.println("************* Report template: " + label);
+        	  key = templateLabel;
 
               Object template_obj = sdkclientutil.search(FQName, methodName, key);
               if (template_obj != null)
               {
 				  report.setTemplate((StandardReportTemplate) template_obj);
 			  }
+			  else
+			  {
+System.out.println("************* Report template: " + label + " not found???");
+
+			  }
+
+System.out.println("createStandardReport Step 5  -- assign format. ");
 
 			  ReportFormat reportformat = null;
         	  FQName = "gov.nih.nci.evs.reportwriter.bean.ReportFormat";
@@ -322,6 +347,9 @@ public class StandardReportService {
 				  System.out.println("Format " + format + " not found -- report not created.");
 			  }
 
+System.out.println("createStandardReport Step 6  -- assign status. ");
+
+
 			  ReportStatus reportstatus = null;
         	  FQName = "gov.nih.nci.evs.reportwriter.bean.ReportStatus";
         	  methodName = "setLabel";
@@ -332,6 +360,8 @@ public class StandardReportService {
               {
 				  report.setStatus((ReportStatus) status_obj);
 			  }
+
+System.out.println("createStandardReport Step 7  -- assign user. ");
 
 			  gov.nih.nci.evs.reportwriter.bean.User user = null;
         	  FQName = "gov.nih.nci.evs.reportwriter.bean.User";
@@ -344,6 +374,8 @@ public class StandardReportService {
 				  report.setCreatedBy((gov.nih.nci.evs.reportwriter.bean.User) user_obj);
 			  }
 
+System.out.println("createStandardReport Step 8  -- insertStandardReport. ");
+
               sdkclientutil.insertStandardReport(report);
 
           } catch(Exception e) {
@@ -353,6 +385,71 @@ public class StandardReportService {
 
           return Boolean.TRUE;
 	}
+
+	public Boolean initializeReportStatus() {
+        try{
+            SDKClientUtil util = new SDKClientUtil();
+            String FQName = "gov.nih.nci.evs.reportwriter.bean.ReportStatus";
+            Object[] objs = util.search(FQName);
+
+            if (objs == null || objs.length == 0) {
+
+				// Initial status (DRAFT and APPROVED)
+				String label = "DRAFT";
+				String description = "Report is a draft, not ready for download.";
+				boolean active = true;
+				try {
+					util.insertReportStatus(label, description, active);
+				} catch (Exception ex) {
+ 					System.out.println("====== insertReportStatus DRAFT failed." );
+				}
+
+				label = "APPROVED";
+				description = "Report has been approved for download by users";
+				active = true;
+				try {
+					util.insertReportStatus(label, description, active);
+				} catch (Exception ex) {
+					System.out.println("====== insertReportStatus APPROVED failed." );
+				}
+			}
+        } catch(Exception e) {
+        	e.printStackTrace();
+        	return Boolean.FALSE;
+        }
+		return Boolean.TRUE;
+	}
+
+
+    public Boolean initializeReportFormats() {
+        try{
+            SDKClientUtil util = new SDKClientUtil();
+            String FQName = "gov.nih.nci.evs.reportwriter.bean.ReportFormat";
+            Object[] objs = util.search(FQName);
+
+            if (objs == null || objs.length == 0) {
+				String description = "Text (tab delimited)";
+				try {
+					util.insertReportFormat(description);
+				} catch (Exception ex) {
+ 					System.out.println("====== insertReportFormat " + description + " failed." );
+				}
+
+				description = "Microsoft Office Excel";
+				try {
+					util.insertReportFormat(description);
+				} catch (Exception ex) {
+					System.out.println("====== insertReportFormat " + description + " failed." );
+				}
+
+			}
+        } catch(Exception e) {
+        	e.printStackTrace();
+        	return Boolean.FALSE;
+        }
+		return Boolean.TRUE;
+	}
+
 
 
     public static void main(String[] args) {

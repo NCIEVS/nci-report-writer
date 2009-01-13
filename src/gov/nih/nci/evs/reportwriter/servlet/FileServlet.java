@@ -41,6 +41,8 @@ import java.io.InputStream;
 import gov.nih.nci.evs.reportwriter.utils.*;
 import gov.nih.nci.evs.reportwriter.bean.*;
 
+import javax.servlet.RequestDispatcher;
+
 /**
   * <!-- LICENSE_TEXT_START -->
 * Copyright 2008 NGIT. This software was developed in conjunction with the National Cancer Institute,
@@ -122,11 +124,15 @@ public final class FileServlet extends HttpServlet {
    * @exception ServletException if a servlet exception occurs
    */
 
-  public void sendErrorResponse(HttpServletResponse response, String message) throws IOException, ServletException {
-      response.setContentType("text/html");
-	  PrintWriter out = response.getWriter();
-	  out.write(message);
-      out.close();
+  public void sendErrorResponse(HttpServletRequest request, HttpServletResponse response, String message) throws IOException, ServletException {
+      HttpSession session = request.getSession(false);
+      if (session != null) {
+          session.setAttribute("message", message);
+
+		  String nextJSP = "/pages/message.jsf";
+		  RequestDispatcher dispatcher = getServletContext().getRequestDispatcher(nextJSP);
+		  dispatcher.forward(request, response);
+      }
   }
 
 
@@ -217,10 +223,9 @@ public final class FileServlet extends HttpServlet {
 			SDKClientUtil sdkclientutil = new SDKClientUtil();
 			Object reportFormat_obj = sdkclientutil.search(FQName, methodName, format_id);
 			if (reportFormat_obj == null) {
-				System.out.println("Format ID " + format_id + " not found.");
-
-				//sendErrorResponse(response, message);
-				//return;
+				System.out.println("Format ID " + format_id + " not found -- check with system administrator.");
+				sendErrorResponse(request, response, message);
+				return;
 			}
 			else
 			{
@@ -231,7 +236,6 @@ public final class FileServlet extends HttpServlet {
 			// Get StandardReportTemplate from database
 
 			message = "Template ID " + templateId + " not found.";
-
 			try {
 				// Get all gov.nih.nci.evs.reportwriter.bean.StandardReportTemplate
 				// Find ov.nih.nci.evs.reportwriter.bean.StandardReport with matched template and format
@@ -244,7 +248,7 @@ public final class FileServlet extends HttpServlet {
 				Object standardReportTemplate_obj = sdkclientutil.search(FQName, methodName, template_id);
 				if (standardReportTemplate_obj == null) {
 					System.out.println("Template ID " + templateId + " not found.");
-					sendErrorResponse(response, message);
+					sendErrorResponse(request, response, message);
 				}
 
 				standardReportTemplate = (StandardReportTemplate) standardReportTemplate_obj;
@@ -255,7 +259,7 @@ public final class FileServlet extends HttpServlet {
 				Object[] objs = sdkclientutil.search(FQName);
 				if (objs == null || objs.length == 0)
 				{
-					sendErrorResponse(response, message);
+					sendErrorResponse(request, response, message);
 				}
 				else
 				{
@@ -266,21 +270,45 @@ public final class FileServlet extends HttpServlet {
 						if (srt.getId() == standardReportTemplate.getId())
 						{
 							ReportFormat rf = standardReport.getFormat();
-							if (rf.getId() == format_id)
+							if (rf != null && rf.getId() == format_id)
 							{
-								sendResponse(response, standardReport);
+								// The specified report is found.
+								HttpSession session = request.getSession(false);
+								Boolean isAdmin = (Boolean) session.getAttribute("isAdmin");
+								if (isAdmin != null && isAdmin.equals(Boolean.TRUE))
+								{
+									sendResponse(response, standardReport);
+								}
+								else
+								{
+									//Check if the report has been approved:
+									ReportStatus rs = standardReport.getStatus();
+									if (rs != null) {
+										String approved = "APPROVED";
+										if (approved.equals(rs.getLabel()))
+										{
+											sendResponse(response, standardReport);
+										}
+										else
+										{
+											sendErrorResponse(request, response, "The selected report has not yet been approved.");
+										}
+									} else {
+										sendErrorResponse(request, response, "The selected report has not yet been approved.");
+									}
+								}
 							}
 						}
 					}
 			    }
 
 			} catch (Exception ex) {
-				sendErrorResponse(response, message);
+				sendErrorResponse(request, response, message);
 			}
 
 
 		} catch (Exception ex) {
-			sendErrorResponse(response, message);
+			sendErrorResponse(request, response, message);
 		}
     }
 }
