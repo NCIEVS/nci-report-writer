@@ -278,12 +278,9 @@
 
    
 
-   <navigation-case>
-
+    <navigation-case>
      <from-outcome>back</from-outcome>
-
      <to-view-id>/pages/task.jsp</to-view-id>
-
     </navigation-case>
 
    
@@ -301,17 +298,52 @@
        <to-view-id>/pages/standard_report_template.jsp</to-view-id>
     </navigation-case>
     
-    
     <navigation-case>
        <from-action>#{userSessionBean.modifyReportTemplateAction}</from-action>
-       <from-outcome>standard_report_column</from-outcome>
-       <to-view-id>/pages/standard_report_column.jsp</to-view-id>
+       <from-outcome>modify_standard_report_template</from-outcome>
+       <to-view-id>/pages/modify_standard_report_template.jsp</to-view-id>
+    </navigation-case>
+
+    <navigation-case>
+       <from-action>#{userSessionBean.modifyReportTemplateAction}</from-action>
+       <from-outcome>message</from-outcome>
+       <to-view-id>/pages/message.jsp</to-view-id>
     </navigation-case>
   
   
+     <navigation-case>
+       <from-action>#{userSessionBean.editReportContentAction}</from-action>
+       <from-outcome>standard_report_column</from-outcome>
+       <to-view-id>/pages/standard_report_column.jsp</to-view-id>
+    </navigation-case>
+    
    </navigation-rule>
  
  
+    <navigation-rule>
+  
+      <from-view-id>/pages/modify_standard_report_template.jsp</from-view-id>
+       <navigation-case>
+        <from-action>#{userSessionBean.saveModifiedTemplateAction}</from-action> 
+        <from-outcome>message</from-outcome>
+         <to-view-id>/pages/message.jsp</to-view-id>
+     </navigation-case>
+     
+       <navigation-case>
+        <from-action>#{userSessionBean.saveModifiedTemplateAction}</from-action> 
+        <from-outcome>standard_report_template</from-outcome>
+         <to-view-id>/pages/standard_report_template.jsp</to-view-id>
+     </navigation-case>
+
+    <navigation-case>
+     <from-outcome>back</from-outcome>
+     <to-view-id>/pages/standard_report_template.jsp</to-view-id>
+    </navigation-case>
+
+     
+   </navigation-rule>  
+     
+     
    <navigation-rule>
  
      <from-view-id>/pages/add_standard_report_template.jsp</from-view-id>
@@ -391,6 +423,18 @@
   </navigation-rule>
  
 
+  <navigation-rule>
+
+    <from-view-id>/pages/download_nologin.jsp</from-view-id>
+
+    <navigation-case>
+     <from-outcome>back</from-outcome>
+     <to-view-id>/pages/login.jsp</to-view-id>
+    </navigation-case>
+    
+  </navigation-rule>  
+  
+  
 <managed-bean>
 
   <managed-bean-name>loginBean</managed-bean-name>

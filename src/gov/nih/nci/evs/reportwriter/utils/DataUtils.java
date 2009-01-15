@@ -128,9 +128,13 @@ import org.LexGrid.naming.SupportedHierarchy;
 
 import gov.nih.nci.evs.reportwriter.bean.*;
 
+import org.LexGrid.LexBIG.DataModel.InterfaceElements.RenderingDetail;
+import org.LexGrid.LexBIG.DataModel.Collections.CodingSchemeTagList;
+
+
 /**
   * <!-- LICENSE_TEXT_START -->
-* Copyright 2008 NGIT. This software was developed in conjunction with the National Cancer Institute,
+* Copyright 2008,2009 NGIT. This software was developed in conjunction with the National Cancer Institute,
 * and so to the extent government employees are co-authors, any rights in such works shall be subject to Title 17 of the United States Code, section 105.
 * Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:
 * 1. Redistributions of source code must retain the above copyright notice, this list of conditions and the disclaimer of Article 3, below. Redistributions
@@ -154,6 +158,10 @@ import gov.nih.nci.evs.reportwriter.bean.*;
 /**
   * @author EVS Team
   * @version 1.0
+  *
+  * Modification history
+  *     Initial implementation kim.ong@ngc.com
+  *
  */
 
 public class DataUtils {
@@ -186,9 +194,6 @@ public class DataUtils {
 
 
     //==================================================================================
-
-    public static String TYPE_ROLE = "type_role";
-    public static String TYPE_ASSOCIATION = "type_association";
 
 	public static int ALL = 0;
 	public static int PREFERRED_ONLY = 1;
@@ -233,16 +238,16 @@ public class DataUtils {
 	}
 
 	public static List getPropertyTypeList() {
-
+//COMMENT, DEFINITION, INSTRUCTION, PRESENTATION, GENERIC
 		if (propertyTypeList == null)
 		{
 			propertyTypeList = new ArrayList();
 			propertyTypeList.add(new SelectItem(""));
-			propertyTypeList.add(new SelectItem("Comment"));
-			propertyTypeList.add(new SelectItem("Definition"));
-			propertyTypeList.add(new SelectItem("Generic"));
-			propertyTypeList.add(new SelectItem("Instruction"));
-			propertyTypeList.add(new SelectItem("Presentation"));
+			propertyTypeList.add(new SelectItem("COMMENT"));
+			propertyTypeList.add(new SelectItem("DEFINITION"));
+			propertyTypeList.add(new SelectItem("GENERIC"));
+			propertyTypeList.add(new SelectItem("INSTRUCTION"));
+			propertyTypeList.add(new SelectItem("PRESENTATION"));
 		}
 	    return propertyTypeList;
 	}
@@ -317,6 +322,28 @@ public class DataUtils {
 	    return _ontologies;
     }
 
+    public static Boolean validateCodingScheme(String formalname, String version) {
+		if (csnv2codingSchemeNameMap == null || csnv2VersionMap == null)
+		{
+			setCodingSchemeMap();
+			return validateCodingScheme(formalname, version);
+		}
+
+		String key = formalname + " (version: " + version + ")";
+System.out.println("DataUtils 	validateCodingScheme key: " + key);
+        if (csnv2codingSchemeNameMap.get(key) == null || csnv2VersionMap.get(key) == null )
+        {
+System.out.println("DataUtils 	Boolean.FALSE ");
+
+			return Boolean.FALSE;
+		}
+		else
+		{
+System.out.println("DataUtils 	Boolean.TRUE ");
+
+			return Boolean.TRUE;
+		}
+	}
 
     private static void setCodingSchemeMap()
 	{
@@ -867,10 +894,9 @@ public class DataUtils {
 
 					for (int i = 0; i < associations.length; i++) {
 						Association assoc = associations[i];
-
-
+						//KLO
+						assoc = processForAnonomousNodes(assoc);
 						String associationName = assoc.getAssociationName();
-
 						if (associationName.compareTo(associationName) == 0)
 						{
 							AssociatedConcept[] acl = assoc.getAssociatedConcepts().getAssociatedConcept();
@@ -915,8 +941,9 @@ public class DataUtils {
 
 					for (int i = 0; i < associations.length; i++) {
 						Association assoc = associations[i];
+						//KLO
+						assoc = processForAnonomousNodes(assoc);
 						String associationName = assoc.getAssociationName();
-
 						if (associationName.compareTo(associationName) == 0)
 						{
 							AssociatedConcept[] acl = assoc.getAssociatedConcepts().getAssociatedConcept();
@@ -1079,5 +1106,108 @@ public class DataUtils {
 		return association_vec;
 	}
 
+	public static String getVocabularyVersionByTag(String codingSchemeName, String ltag)
+	{
+		 if (codingSchemeName == null) return null;
+		 try {
+			 EVSApplicationService lbSvc = new RemoteServerUtil().createLexBIGService();
+			 CodingSchemeRenderingList lcsrl = lbSvc.getSupportedCodingSchemes();
+			 CodingSchemeRendering[] csra = lcsrl.getCodingSchemeRendering();
+			 for (int i=0; i<csra.length; i++)
+			 {
+				CodingSchemeRendering csr = csra[i];
+				CodingSchemeSummary css = csr.getCodingSchemeSummary();
+				if (css.getFormalName().compareTo(codingSchemeName) == 0 || css.getLocalName().compareTo(codingSchemeName) == 0)
+				{
+					if (ltag == null) return css.getRepresentsVersion();
+					RenderingDetail rd = csr.getRenderingDetail();
+					CodingSchemeTagList cstl = rd.getVersionTags();
+					java.lang.String[] tags = cstl.getTag();
+					for (int j=0; j<tags.length; j++)
+					{
+						String version_tag = (String) tags[j];
+						if (version_tag.compareToIgnoreCase(ltag) == 0)
+						{
+							return css.getRepresentsVersion();
+						}
+					}
+				}
+			 }
+	     } catch (Exception e) {
+			 e.printStackTrace();
+		 }
+		 System.out.println("Version corresponding to tag " + ltag + " is not found " + " in " + codingSchemeName);
+		 return null;
+	 }
+
+	public static Vector<String> getVersionListData(String codingSchemeName) {
+
+        Vector<String> v = new Vector();
+		try {
+        	RemoteServerUtil rsu = new RemoteServerUtil();
+			EVSApplicationService lbSvc = rsu.createLexBIGService();
+			CodingSchemeRenderingList csrl = lbSvc.getSupportedCodingSchemes();
+			if(csrl == null) System.out.println("csrl is NULL");
+
+			CodingSchemeRendering[] csrs = csrl.getCodingSchemeRendering();
+			for (int i=0; i<csrs.length; i++)
+			{
+				CodingSchemeRendering csr = csrs[i];
+            	Boolean isActive = csr.getRenderingDetail().getVersionStatus().equals(CodingSchemeVersionStatus.ACTIVE);
+				if (isActive != null && isActive.equals(Boolean.TRUE))
+				{
+					CodingSchemeSummary css = csr.getCodingSchemeSummary();
+					String formalname = css.getFormalName();
+					if (formalname.compareTo(codingSchemeName) == 0)
+					{
+						String representsVersion = css.getRepresentsVersion();
+						v.add(representsVersion);
+					}
+				}
+			}
+	   } catch (Exception ex) {
+
+	   }
+	   return v;
+   }
+
+   public static String getFileName(String pathname) {
+	   File file = new File(pathname);
+       String filename = file.getName();
+       return filename;
+   }
+
+
+    protected Association processForAnonomousNodes(Association assoc){
+		//clone Association except associatedConcepts
+		Association temp = new Association();
+		temp.setAssociatedData(assoc.getAssociatedData());
+		temp.setAssociationName(assoc.getAssociationName());
+		temp.setAssociationReference(assoc.getAssociationReference());
+		temp.setDirectionalName(assoc.getDirectionalName());
+		temp.setAssociatedConcepts(new AssociatedConceptList());
+
+		for(int i = 0; i < assoc.getAssociatedConcepts().getAssociatedConceptCount(); i++)
+		{
+			//Conditionals to deal with anonymous nodes and UMLS top nodes "V-X"
+			//The first three allow UMLS traversal to top node.
+			//The last two are specific to owl anonymous nodes which can act like false
+			//top nodes.
+			if(
+				assoc.getAssociatedConcepts().getAssociatedConcept(i).getReferencedEntry() != null &&
+				assoc.getAssociatedConcepts().getAssociatedConcept(i).getReferencedEntry().getIsAnonymous() != null &&
+				assoc.getAssociatedConcepts().getAssociatedConcept(i).getReferencedEntry().getIsAnonymous() != false &&
+				!assoc.getAssociatedConcepts().getAssociatedConcept(i).getConceptCode().equals("@") &&
+				!assoc.getAssociatedConcepts().getAssociatedConcept(i).getConceptCode().equals("@@")
+				)
+			{
+				//do nothing
+			}
+			else{
+				temp.getAssociatedConcepts().addAssociatedConcept(assoc.getAssociatedConcepts().getAssociatedConcept(i));
+			}
+		}
+		return temp;
+	}
 
 }

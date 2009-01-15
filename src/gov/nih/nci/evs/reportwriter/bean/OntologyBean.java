@@ -94,7 +94,7 @@ import gov.nih.nci.evs.reportwriter.utils.*;
 
 /**
   * <!-- LICENSE_TEXT_START -->
-* Copyright 2008 NGIT. This software was developed in conjunction with the National Cancer Institute,
+* Copyright 2008,2009 NGIT. This software was developed in conjunction with the National Cancer Institute,
 * and so to the extent government employees are co-authors, any rights in such works shall be subject to Title 17 of the United States Code, section 105.
 * Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:
 * 1. Redistributions of source code must retain the above copyright notice, this list of conditions and the disclaimer of Article 3, below. Redistributions
@@ -118,6 +118,10 @@ import gov.nih.nci.evs.reportwriter.utils.*;
 /**
   * @author EVS Team
   * @version 1.0
+  *
+  * Modification history
+  *     Initial implementation kim.ong@ngc.com
+  *
  */
 
 
@@ -581,12 +585,40 @@ public class OntologyBean //extends BaseBean
 
 	public List getSourceList() {
 
+
+System.out.println("*** getSourceList ");
+        HttpServletRequest request = (HttpServletRequest)FacesContext.getCurrentInstance().getExternalContext().getRequest();
 		if (selectedOntology == null)
 		{
-	   		HttpServletRequest request = (HttpServletRequest)FacesContext.getCurrentInstance().getExternalContext().getRequest();
 	   		selectedOntology = (String) request.getSession().getAttribute("selectedOntology"); // ontology name and version
+		    String templateLabel = (String) request.getSession().getAttribute("selectedStandardReportTemplate");
+            try{
+        	    SDKClientUtil sdkclientutil = new SDKClientUtil();
+				StandardReportTemplate standardReportTemplate = null;
+				String FQName = "gov.nih.nci.evs.reportwriter.bean.StandardReportTemplate";
+				String methodName = "setLabel";
+				String key = templateLabel;
+				Object standardReportTemplate_obj = sdkclientutil.search(FQName, methodName, key);
+				if (standardReportTemplate_obj != null) {
+					standardReportTemplate = (StandardReportTemplate) standardReportTemplate_obj;
+					String ontologyNameAndVersion = standardReportTemplate.getCodingSchemeName() + " (version: " + standardReportTemplate.getCodingSchemeVersion() + ")";
+					request.getSession().setAttribute("selectedOntology", ontologyNameAndVersion);
+				}
+			} catch (Exception ex) {
+
+			}
         }
+
+
+ System.out.println("*** selectedOntology " + selectedOntology);
+
+
+
+
+
 		sourceListData = DataUtils.getSourceListData(selectedOntology);
+
+
 		sourceList = new ArrayList();
 		sourceList.add(new SelectItem(" "));
 		for (int i=0; i<sourceListData.size(); i++) {
@@ -618,4 +650,6 @@ public class OntologyBean //extends BaseBean
 		String newValue = (String) event.getNewValue();
         setSelectedSource(newValue);
 	}
+
+
 }

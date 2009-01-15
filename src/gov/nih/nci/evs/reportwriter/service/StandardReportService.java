@@ -56,11 +56,9 @@ import org.LexGrid.concepts.Presentation;
 import org.LexGrid.relations.Relations;
 import org.apache.log4j.Logger;
 
-
-
 /**
   * <!-- LICENSE_TEXT_START -->
-* Copyright 2008 NGIT. This software was developed in conjunction with the National Cancer Institute,
+* Copyright 2008,2009 NGIT. This software was developed in conjunction with the National Cancer Institute,
 * and so to the extent government employees are co-authors, any rights in such works shall be subject to Title 17 of the United States Code, section 105.
 * Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:
 * 1. Redistributions of source code must retain the above copyright notice, this list of conditions and the disclaimer of Article 3, below. Redistributions
@@ -84,6 +82,10 @@ import org.apache.log4j.Logger;
 /**
   * @author EVS Team
   * @version 1.0
+  *
+  * Modification history
+  *     Initial implementation kim.ong@ngc.com
+  *
  */
 
 public class StandardReportService {
@@ -180,8 +182,6 @@ public class StandardReportService {
 
     public Boolean generateStandardReport(String outputDir, String standardReportLabel, String uid)
     {
-
-
         Thread reportgeneration_thread = new Thread(new ReportGenerationThread(outputDir, standardReportLabel, uid));
         reportgeneration_thread.start();
 
@@ -273,7 +273,7 @@ public class StandardReportService {
 		// Method called upon generation of two reports (tab-delimited and Excel)
         try{
 
-System.out.println("createStandardReport Step 1  -- validReport ");
+System.out.println("Validing report ");
 
 			  String msg = validReport(templateLabel, format, status, uid);
 			  if (msg.compareTo("success") != 0)
@@ -289,7 +289,7 @@ System.out.println("createStandardReport Step 1  -- validReport ");
         	  Object[] objs = sdkclientutil.search(FQName);
 
 
-System.out.println("createStandardReport Step 2  -- delete old report objects from database. ");
+System.out.println("Deleting old report objects from database. ");
 
         	  if (objs != null)
         	  {
@@ -305,18 +305,16 @@ System.out.println("createStandardReport Step 2  -- delete old report objects fr
 				  }
  			  }
 
-System.out.println("createStandardReport Step 3  -- create StandardReport object. ");
+System.out.println("Creating StandardReport object. ");
 
               java.util.Date lastModified = new Date(); // system date
         	  StandardReport report = sdkclientutil.createStandardReport(label, lastModified, pathName);
-
-System.out.println("createStandardReport Step 4  -- assign template. ");
 
 			  StandardReportTemplate standardReportTemplate = null;
         	  FQName = "gov.nih.nci.evs.reportwriter.bean.StandardReportTemplate";
         	  methodName = "setLabel";
 
-System.out.println("************* Report template: " + label);
+System.out.println("Report template: " + label);
         	  key = templateLabel;
 
               Object template_obj = sdkclientutil.search(FQName, methodName, key);
@@ -326,11 +324,11 @@ System.out.println("************* Report template: " + label);
 			  }
 			  else
 			  {
-System.out.println("************* Report template: " + label + " not found???");
-
+System.out.println("WARNING: Report template: " + label + " not found???");
+                  return Boolean.FALSE;
 			  }
 
-System.out.println("createStandardReport Step 5  -- assign format. ");
+System.out.println("Assigning report format. ");
 
 			  ReportFormat reportformat = null;
         	  FQName = "gov.nih.nci.evs.reportwriter.bean.ReportFormat";
@@ -344,11 +342,11 @@ System.out.println("createStandardReport Step 5  -- assign format. ");
 			  }
 			  else
 			  {
-				  System.out.println("Format " + format + " not found -- report not created.");
+				  System.out.println("WARNING: Format " + format + " not found -- report not created.");
+				  return Boolean.FALSE;
 			  }
 
-System.out.println("createStandardReport Step 6  -- assign status. ");
-
+System.out.println("Assigning report status. ");
 
 			  ReportStatus reportstatus = null;
         	  FQName = "gov.nih.nci.evs.reportwriter.bean.ReportStatus";
@@ -361,7 +359,7 @@ System.out.println("createStandardReport Step 6  -- assign status. ");
 				  report.setStatus((ReportStatus) status_obj);
 			  }
 
-System.out.println("createStandardReport Step 7  -- assign user. ");
+System.out.println("Assigning user. ");
 
 			  gov.nih.nci.evs.reportwriter.bean.User user = null;
         	  FQName = "gov.nih.nci.evs.reportwriter.bean.User";
@@ -374,7 +372,7 @@ System.out.println("createStandardReport Step 7  -- assign user. ");
 				  report.setCreatedBy((gov.nih.nci.evs.reportwriter.bean.User) user_obj);
 			  }
 
-System.out.println("createStandardReport Step 8  -- insertStandardReport. ");
+System.out.println("Writing record to database. ");
 
               sdkclientutil.insertStandardReport(report);
 

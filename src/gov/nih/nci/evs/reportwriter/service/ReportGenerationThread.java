@@ -57,10 +57,9 @@ import org.LexGrid.relations.Relations;
 import org.apache.log4j.Logger;
 
 
-
 /**
   * <!-- LICENSE_TEXT_START -->
-* Copyright 2008 NGIT. This software was developed in conjunction with the National Cancer Institute,
+* Copyright 2008,2009 NGIT. This software was developed in conjunction with the National Cancer Institute,
 * and so to the extent government employees are co-authors, any rights in such works shall be subject to Title 17 of the United States Code, section 105.
 * Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:
 * 1. Redistributions of source code must retain the above copyright notice, this list of conditions and the disclaimer of Article 3, below. Redistributions
@@ -84,6 +83,10 @@ import org.apache.log4j.Logger;
 /**
   * @author EVS Team
   * @version 1.0
+  *
+  * Modification history
+  *     Initial implementation kim.ong@ngc.com
+  *
  */
 
 public class ReportGenerationThread implements Runnable
@@ -143,6 +146,27 @@ public class ReportGenerationThread implements Runnable
 
     public Boolean generateStandardReport(String outputDir, String standardReportLabel, String uid)
     {
+        StandardReportTemplate standardReportTemplate = null;
+        try{
+        	SDKClientUtil sdkclientutil = new SDKClientUtil();
+        	String FQName = "gov.nih.nci.evs.reportwriter.bean.StandardReportTemplate";
+        	String methodName = "setLabel";
+        	Object obj = sdkclientutil.search(FQName, methodName, standardReportLabel);
+			standardReportTemplate = (StandardReportTemplate) obj;
+			System.out.println("standardReportTemplate ID: " + standardReportTemplate.getId());
+			System.out.println("standardReportTemplate label: " + standardReportTemplate.getLabel());
+
+	    } catch(Exception e) {
+			System.out.println("Unable to identify report label " + standardReportLabel + " -- report not generated." );
+		    return Boolean.FALSE;
+	    }
+
+        if (standardReportTemplate == null)
+        {
+			System.out.println("Unable to identify report label " + standardReportLabel + " -- report not generated." );
+			return Boolean.FALSE;
+		}
+
 		System.out.println("Output directory: " + outputDir);
 		System.out.println("standardReportLabel: " + standardReportLabel);
 		System.out.println("uid: " + uid);
@@ -167,34 +191,11 @@ public class ReportGenerationThread implements Runnable
 			System.out.println("Output directory: " + outputDir + " exists.");
 		}
 
-		String pathname = outputDir + File.separator + standardReportLabel + ".txt";
+        String version = standardReportTemplate.getCodingSchemeVersion();
+        // append verision to the report file name:
+		String pathname = outputDir + File.separator + standardReportLabel + "__" + version + ".txt";
 		pathname = pathname.replaceAll(" ", "_");
 		System.out.println("Full path name: " + pathname);
-
-        StandardReportTemplate standardReportTemplate = null;
-        try{
-        	SDKClientUtil sdkclientutil = new SDKClientUtil();
-        	String FQName = "gov.nih.nci.evs.reportwriter.bean.StandardReportTemplate";
-        	String methodName = "setLabel";
-        	Object obj = sdkclientutil.search(FQName, methodName, standardReportLabel);
-			standardReportTemplate = (StandardReportTemplate) obj;
-			System.out.println("standardReportTemplate ID: " + standardReportTemplate.getId());
-			System.out.println("standardReportTemplate label: " + standardReportTemplate.getLabel());
-
-	    } catch(Exception e) {
-			System.out.println("Error finding standardReportTemplate label: " + standardReportLabel);
-		    return Boolean.FALSE;
-	    }
-
-        if (standardReportTemplate == null)
-        {
-			System.out.println("Unable to identify report label " + standardReportLabel + " -- report not generated." );
-			return Boolean.FALSE;
-		}
-		else
-		{
-			System.out.println("Report template  " + standardReportLabel + " found.");
-		}
 
 		PrintWriter pw = openPrintWriter(pathname);
 		if (pw == null)
@@ -226,16 +227,6 @@ public class ReportGenerationThread implements Runnable
 		level = standardReportTemplate.getLevel();
 		Character delimiter = standardReportTemplate.getDelimiter();
 
-		pw.println("ID: " + id);
-		pw.println("Label: " + label);
-		pw.println("CodingSchemeName: " + codingSchemeName);
-		pw.println("CodingSchemeVersion: " + codingSchemeVersion);
-		pw.println("Root: " + rootConceptCode);
-		pw.println("AssociationName: " + associationName);
-		pw.println("Direction: " + direction);
-		pw.println("Level: " + level);
-		pw.println("Delimiter: " + delimiter);
-
 		System.out.println("ID: " + id);
 		System.out.println("Label: " + label);
 		System.out.println("CodingSchemeName: " + codingSchemeName);
@@ -249,11 +240,6 @@ public class ReportGenerationThread implements Runnable
 		String columnHeadings = "";
 		String delimeter_str = "\t";
 
-/*
-    public void printReportHeading(PrintWriter pw, ReportColumn[] cols) {
-*/
-
-
         Object[] objs = null;
 	    java.util.Collection cc = standardReportTemplate.getColumnCollection();
 	    if (cc == null)
@@ -263,55 +249,38 @@ public class ReportGenerationThread implements Runnable
 		else
 		{
 			objs = cc.toArray();
-			System.out.println("standardReportTemplate.getColumnCollection objs: -------------------------" + objs.length);
 		}
-
-
-System.out.println("Start For Loop: -------------------------" + objs.length);
 
 	    ReportColumn[] cols = null;
 	    if (cc != null) {
-
-			System.out.println("standardReportTemplate.getColumnCollection -------------------------" + objs.length);
 	        cols = new ReportColumn[objs.length];
-
 	        if (objs.length > 0) {
                 for(int i=0; i<objs.length; i++) {
 	                gov.nih.nci.evs.reportwriter.bean.ReportColumn col = (gov.nih.nci.evs.reportwriter.bean.ReportColumn) objs[i];
 
-					pw.println("\nReport Column:");
-					pw.println("ID: " + col.getId());
-					pw.println("Label: " + col.getLabel());
-					pw.println("Column Number: " + col.getColumnNumber());
-					pw.println("PropertyType: " + col.getPropertyType());
-					pw.println("PropertyName: " + col.getPropertyName());
-					pw.println("IsPreferred: " + col.getIsPreferred());
-					pw.println("RepresentationalForm: " + col.getRepresentationalForm());
-					pw.println("Source: " + col.getSource());
-					pw.println("QualifierName: " + col.getQualifierName());
-					pw.println("QualifierValue: " + col.getQualifierValue());
-					pw.println("Delimiter: " + col.getDelimiter());
-					pw.println("ConditionalColumnIdD: " + col.getConditionalColumnId());
+					System.out.println("\nReport Column:");
+					System.out.println("ID: " + col.getId());
+					System.out.println("Label: " + col.getLabel());
+					System.out.println("Column Number: " + col.getColumnNumber());
+					System.out.println("PropertyType: " + col.getPropertyType());
+					System.out.println("PropertyName: " + col.getPropertyName());
+					System.out.println("IsPreferred: " + col.getIsPreferred());
+					System.out.println("RepresentationalForm: " + col.getRepresentationalForm());
+					System.out.println("Source: " + col.getSource());
+					System.out.println("QualifierName: " + col.getQualifierName());
+					System.out.println("QualifierValue: " + col.getQualifierValue());
+					System.out.println("Delimiter: " + col.getDelimiter());
+					System.out.println("ConditionalColumnIdD: " + col.getConditionalColumnId());
 
 					cols[i] = col;
-
-					//columnHeadings = columnHeadings + col.getLabel();
-					//if (i<objs.length-1) columnHeadings = columnHeadings + delimeter_str;
-
 				}
 			}
 		}
 
-        pw.println("\n\n");
-
-System.out.println("Calling printReportHeading -------------------------");
-
-
-System.out.println("********** Start generating report..." + pathname);
-
+		System.out.println("********** Start generating report..." + pathname);
 
         String scheme = standardReportTemplate.getCodingSchemeName();
-        String version = standardReportTemplate.getCodingSchemeVersion();
+        version = standardReportTemplate.getCodingSchemeVersion();
         String code = standardReportTemplate.getRootConceptCode();
         associationName = standardReportTemplate.getAssociationName();
         level = standardReportTemplate.getLevel();
@@ -320,20 +289,20 @@ System.out.println("********** Start generating report..." + pathname);
 
         int curr_level = 0;
         int max_level = standardReportTemplate.getLevel();
-        if (max_level == -1) max_level = 1;//100;
-        //boolean direction = standardReportTemplate.getDirection();
+
+// *********************** To be modified: (add an entry in property file)
+        if (max_level == -1) max_level = 100;
 
         printReportHeading(pw, cols);
-        String matchAlgorithm = "exactMatch";
 
         Vector hierarchicalAssoName_vec = new DataUtils().getHierarchyAssociationId(scheme, version);
-        if (hierarchicalAssoName_vec == null || hierarchicalAssoName_vec.size() == 0) return Boolean.FALSE;
+        if (hierarchicalAssoName_vec == null || hierarchicalAssoName_vec.size() == 0)
+        {
+			return Boolean.FALSE;
+		}
 
         String hierarchicalAssoName = (String) hierarchicalAssoName_vec.elementAt(0);
-
-		System.out.println("********** traverse..." );
         traverse(pw, scheme, version, tag, code, hierarchicalAssoName, associationName, direction, curr_level, max_level, cols);
-
         closePrintWriter(pw);
         // convert to Excel:
 
@@ -373,6 +342,12 @@ System.out.println("********** Start generating report..." + pathname);
 	}
 
     public void printReportHeading(PrintWriter pw, ReportColumn[] cols) {
+
+		if (cols == null)
+		{
+			System.out.println("** In printReportHeading numbe of ReportColumn: cols == null ??? ");
+		}
+
 		String columnHeadings = "";
 		String delimeter_str = "\t";
 		if (cols == null)
@@ -388,53 +363,62 @@ System.out.println("********** Start generating report..." + pathname);
 		pw.println(columnHeadings);
 	}
 
+    private void writeColumnData(PrintWriter pw, String scheme, String version, Concept root, Concept c, String delim, ReportColumn[] cols) {
+		//pw.println(root.getId() + delim + root.getEntityDescription().getContent() + delim + c.getId() + delim + c.getEntityDescription().getContent());
+    	String output_line = "";
+		for (int i=0; i<cols.length; i++)
+		{
+			ReportColumn rc = (ReportColumn) cols[i];
+			String s = getReportColumnValue(scheme, version, root, c, rc);
+            if (i == 0)
+            {
+				output_line = s;
+			}
+			else
+			{
+				output_line = output_line + "\t" + s;
+			}
+		}
+        pw.println(output_line);
+	}
 
     private void traverse(PrintWriter pw, String scheme, String version, String tag, String code, String hierarchyAssociationName,
                           String associationName, boolean direction, int level, int maxLevel, ReportColumn[] cols)
     {
 		//System.out.println("Level: " + level + "\tmaxLevel: " + maxLevel);
 		if (maxLevel != -1 && level > maxLevel) return;
-
-		String matchAlgorithm = "exactMatch";
 		EVSApplicationService lbSvc = new RemoteServerUtil().createLexBIGService();
-
-//		LexBIGUtils lexBIGUtils = new LexBIGUtils(lbSvc);
-
-		//Concept root = lexBIGUtils.getConceptByCode(scheme, version, tag, code);
 
 		Concept root = DataUtils.getConceptByCode(scheme, version, tag, code);
 		if (root == null) {
-			System.out.println("DataUtils.getConceptByCode return null?????????????????");
+			System.out.println("WARNING: Concept with code " + code + " not found.");
 			return;
 		} else {
-			System.out.println("DataUtils.getConceptByCode return concept " + root.getId());
+			System.out.println("Level: " + level + " Subset: " + root.getId());
 		}
 
-		String delim = "$";
+		String delim = "\t";
 
 		Vector v = new Vector();
 		DataUtils util = new DataUtils();
-
-        //level++;
-System.out.println("DIRECTION: " + direction);
-
         if (direction)
         {
-System.out.println("getAssociationTargets: " + direction);
-
-			//v = lexBIGUtils.getAssociationTargets(lexBIGUtils.getLexBIGService(), scheme, version, root.getId(), associationName);
 			v = util.getAssociationTargets(scheme, version, root.getId(), associationName);
 		}
 		else
 		{
-			v = util.getAssociationSources(scheme, version, root.getId(), associationName);//, matchAlgorithm);
+			v = util.getAssociationSources(scheme, version, root.getId(), associationName);
 		}
 
-// associated concepts (i.e., concepts in subset)
+		// associated concepts (i.e., concepts in subset)
+        if (v == null) return;
+		System.out.println("Subset size: " + v.size());
+
         for (int i=0; i<v.size(); i++)
         {
+			// subset member element
 			Concept c = (Concept) v.elementAt(i);
-			pw.println(root.getId() + delim + root.getEntityDescription().getContent() + delim + c.getId() + delim + c.getEntityDescription().getContent());
+			writeColumnData(pw, scheme, version, root, c, delim, cols);
 		}
 
         Vector<Concept> subconcept_vec = util.getAssociationTargets(scheme, version, root.getId(), hierarchyAssociationName);
@@ -446,7 +430,336 @@ System.out.println("getAssociationTargets: " + direction);
  			String subconcep_code = concept.getId();
             traverse(pw, scheme, version, tag, subconcep_code, hierarchyAssociationName, associationName, direction, level, maxLevel, cols);
 		}
+
 	}
+
+    public String getReportColumnValue(String scheme, String version, Concept root, Concept node, ReportColumn rc)
+    {
+		String field_Id = rc.getFieldId();
+		String property_name = rc.getPropertyName();
+		String qualifier_name = rc.getQualifierName();
+		String source = rc.getSource();
+		String qualifier_value = rc.getQualifierValue();
+		String representational_form = rc.getRepresentationalForm();
+
+		// check:
+		Boolean isPreferred = rc.getIsPreferred();
+
+        String property_type = rc.getPropertyType();
+		char delimiter_ch = rc.getDelimiter();
+		String delimiter = "" + delimiter_ch;
+
+		if (isNull(field_Id)) field_Id= null;
+		if (isNull(property_name)) property_name = null;
+		if (isNull(qualifier_name)) qualifier_name = null;
+		if (isNull(source)) source = null;
+		if (isNull(qualifier_value)) qualifier_value = null;
+		if (isNull(representational_form)) representational_form = null;
+		if (isNull(property_type)) property_type = null;
+		if (isNull(delimiter)) delimiter = null;
+
+		if (field_Id.equals("Code")) return node.getId();
+        if (field_Id.equals("Associated Concept Code")) return root.getId();
+        if (field_Id.equals("Parent Code"))
+        {
+        //   find parent concepts
+             return "parent code";
+		}
+
+        Concept concept = node;
+        if (field_Id.indexOf("Associated") != -1)
+        {
+			concept = root;
+		}
+
+        // to be implemented
+        else if (field_Id.indexOf("Parent") != -1)
+        {
+			// to be implemented
+			return "parent attributes";
+		}
+
+		Property[] properties = null;
+
+		if (property_type.compareToIgnoreCase("GENERIC")== 0)
+		{
+			properties = concept.getConceptProperty();
+		}
+		else if (property_type.compareToIgnoreCase("PRESENTATION")== 0)
+		{
+			properties = concept.getPresentation();
+		}
+		else if (property_type.compareToIgnoreCase("INSTRUCTION")== 0)
+		{
+			properties = concept.getInstruction();
+		}
+		else if (property_type.compareToIgnoreCase("COMMENT")== 0)
+		{
+			properties = concept.getComment();
+		}
+		else if (property_type.compareToIgnoreCase("DEFINITION")== 0)
+		{
+			properties = concept.getDefinition();
+		}
+
+        String return_str = "";
+        int num_matches = 0;
+
+        if (field_Id.indexOf("Property Qualifier") != -1)
+		{
+			//getRepresentationalForm
+			boolean match = false;
+			for (int i=0; i<properties.length; i++)
+			{
+				qualifier_value = null;
+				Property p = properties[i];
+				if (p.getPropertyName().compareTo(property_name) == 0) // focus on matching property
+				{
+					match = true;
+
+					//<P90><![CDATA[<term-name>Black</term-name><term-group>PT</term-group><term-source>CDC</term-source><source-code>2056-0</source-code>]]></P90>
+
+					if (source != null || representational_form != null || qualifier_name != null || isPreferred != null)
+					{
+                    // compare isPreferred
+
+						if (isPreferred != null && p instanceof Presentation)
+						{
+System.out.println("\t\t** isPreferred: " + isPreferred);
+							Presentation presentation = (Presentation) p;
+							Boolean is_pref = presentation.getIsPreferred();
+	                        if (is_pref == null)
+	                        {
+								match = false;
+							}
+							else if (!is_pref.equals(isPreferred))
+							{
+System.out.println("!is_pref.equals(isPreferred): " + "match = false");
+								match = false;
+							}
+						}
+
+						// match representational_form
+						if (match)
+						{
+							if (representational_form != null && p instanceof Presentation)
+							{
+								Presentation presentation = (Presentation) p;
+	System.out.println("\t\t** RepresentationalForm: " + presentation.getRepresentationalForm());
+								if (presentation.getRepresentationalForm().compareTo(representational_form) != 0)
+								{
+
+	System.out.println("representational_form != null: " + representational_form);
+	System.out.println("getRepresentationalForm: " + "match = false");
+
+									match = false;
+								}
+							}
+						}
+
+						// match qualifier
+						if (match)
+						{
+							if (qualifier_name != null) // match property qualifier, if needed
+							{
+
+System.out.println("\t\t** qualifier_name: " + qualifier_name);
+
+								boolean match_found = false;
+								PropertyQualifier[] qualifiers = p.getPropertyQualifier();
+								if (qualifiers != null)
+								{
+									for (int j=0; j<qualifiers.length; j++)
+									{
+										PropertyQualifier q = qualifiers[j];
+										String name = q.getPropertyQualifierId();
+										String value = q.getContent();
+										if (qualifier_name.compareTo(name) == 0)
+										{
+											match_found = true;
+											qualifier_value = value;
+											break;
+										}
+									}
+							    }
+								if (!match_found)
+								{
+
+System.out.println("qualifier_name: " + "match = false");
+
+
+									match = false;
+								}
+							}
+						}
+						// match source
+						if (match)
+						{
+							if (source != null) //match source
+							{
+System.out.println("\t\t** source: " + source);
+								boolean match_found = false;
+								Source[] sources = p.getSource();
+								for (int j=0; j<sources.length; j++)
+								{
+									Source src = sources[j];
+									if (src.getContent().compareTo(source) == 0)
+									{
+										match_found = true;
+										break;
+									}
+								}
+								if (!match_found)
+								{
+	System.out.println("source: " + "match = false");
+									match = false;
+								}
+							}
+						}
+					}
+				}
+				if (match && qualifier_value != null) {
+					num_matches++;
+					if (num_matches == 1)
+					{
+						return_str = qualifier_value;
+					}
+					else
+					{
+						return_str = return_str + delimiter + qualifier_value;
+					}
+				}
+			}
+			return return_str;
+		}
+
+		else if (field_Id.compareToIgnoreCase("Property") == 0 || field_Id.compareToIgnoreCase("Associated concept property") == 0
+		                                                       || field_Id.compareToIgnoreCase("Parent property") == 0)
+		{
+			for (int i=0; i<properties.length; i++)
+			{
+				boolean match = false;
+				Property p = properties[i];
+
+
+				if (p.getPropertyName().compareTo(property_name) == 0) // focus on matching property
+				{
+					match = true;
+
+					if (source != null || representational_form != null || qualifier_name != null || isPreferred != null)
+					{
+                    // compare isPreferred
+						if (isPreferred != null && p instanceof Presentation)
+						{
+							Presentation presentation = (Presentation) p;
+							Boolean is_pref = presentation.getIsPreferred();
+							if (is_pref == null)
+							{
+								match = false;
+							}
+							else if (is_pref != null && !is_pref.equals(isPreferred))
+							{
+								System.out.println("isPreferred: " + "match = false");
+								match = false;
+							}
+						}
+
+						// match representational_form
+						if (match)
+						{
+							if (representational_form != null && p instanceof Presentation)
+							{
+								Presentation presentation = (Presentation) p;
+								if (presentation.getRepresentationalForm().compareTo(representational_form) != 0)
+								{
+									System.out.println("representational_form != null: " + representational_form);
+									System.out.println("getRepresentationalForm: " + "match = false");
+
+									match = false;
+								}
+							}
+						}
+						// match qualifier
+						if (match)
+						{
+							if (qualifier_name != null) // match property qualifier, if needed
+							{
+								boolean match_found = false;
+								PropertyQualifier[] qualifiers = p.getPropertyQualifier();
+								for (int j=0; j<qualifiers.length; j++)
+								{
+									PropertyQualifier q = qualifiers[j];
+									String name = q.getPropertyQualifierId();
+									String value = q.getContent();
+									if (qualifier_name.compareTo(name) == 0 && qualifier_value.compareTo(value) == 0)
+									{
+										match_found = true;
+										break;
+									}
+								}
+								if(!match_found)
+								{
+									System.out.println("qualifier_name != null: " + qualifier_name);
+									System.out.println("getPropertyQualifier: " + "match = false");
+
+									match = false;
+								}
+							}
+						}
+						// match source
+						if (match)
+						{
+							if (source != null) //match source
+							{
+								boolean match_found = false;
+								Source[] sources = p.getSource();
+								for (int j=0; j<sources.length; j++)
+								{
+									Source src = sources[j];
+									if (src.getContent().compareTo(source) == 0)
+									{
+										match_found = true;
+										break;
+									}
+								}
+								if(!match_found)
+								{
+									System.out.println("source != null: " + source);
+									System.out.println("getSource: " + "match = false");
+									match = false;
+								}
+							}
+						}
+					}
+				}
+				if (match)
+				{
+					num_matches++;
+					if (num_matches == 1)
+					{
+						return_str = p.getText().getContent();
+					}
+					else
+					{
+						return_str = return_str + delimiter + p.getText().getContent();
+					}
+				}
+			}
+
+		}
+
+		return return_str;
+	}
+
+	private boolean isNull(String s) {
+		s = s.trim();
+		if (s == null) return true;
+		if (s.length() == 0) return true;
+		if (s.compareTo("") == 0) return true;
+		if (s.compareToIgnoreCase("null") == 0) return true;
+		return false;
+	}
+
 
 }
 
