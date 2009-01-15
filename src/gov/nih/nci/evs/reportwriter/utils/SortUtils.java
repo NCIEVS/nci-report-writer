@@ -11,7 +11,7 @@ import java.util.Comparator;
 
 /**
   * <!-- LICENSE_TEXT_START -->
-* Copyright 2008 NGIT. This software was developed in conjunction with the National Cancer Institute,
+* Copyright 2008,2009 NGIT. This software was developed in conjunction with the National Cancer Institute,
 * and so to the extent government employees are co-authors, any rights in such works shall be subject to Title 17 of the United States Code, section 105.
 * Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:
 * 1. Redistributions of source code must retain the above copyright notice, this list of conditions and the disclaimer of Article 3, below. Redistributions
@@ -35,8 +35,11 @@ import java.util.Comparator;
 /**
   * @author EVS Team
   * @version 1.0
+  *
+  * Modification history
+  *     Initial implementation kim.ong@ngc.com
+  *
  */
-
 
 
 public class SortUtils {

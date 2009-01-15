@@ -69,12 +69,13 @@
 									<table summary="Enter summary of data here" cellpadding="3" cellspacing="0" border="0" class="dataTable" width="100%">
 										<tr>
 											<th class="dataTableHeader" scope="col" align="center">Report Label</th>
+											<th class="dataTableHeader" scope="col" align="center">File Name</th>
 											<th class="dataTableHeader" scope="col" align="center">Format</th>
 											<th class="dataTableHeader" scope="col" align="center">Coding Scheme</th>
 											<th class="dataTableHeader" scope="col" align="center">Version</th>
+											<th class="dataTableHeader" scope="col" align="center">Created By</th>
 											<th class="dataTableHeader" scope="col" align="center">Last Modified</th>
 										</tr>
-										
 
 <%
         try{
@@ -96,6 +97,13 @@
 				  String codingScheme = standardReportTemplate.getCodingSchemeName();
 				  String version = standardReportTemplate.getCodingSchemeVersion();
 				  Date lastModified = standardReport.getLastModified();
+				  
+				  String pathname = standardReport.getPathName();
+				  String filename = DataUtils.getFileName(pathname);
+				  
+				  gov.nih.nci.evs.reportwriter.bean.User user = standardReport.getCreatedBy();
+				  String loginName = user.getLoginName();
+				  
 				  String date_str = null;
 				  if (lastModified != null)
 				  {
@@ -125,9 +133,11 @@
 %>
 <td class="dataCellText"><a href="<%=request.getContextPath() %>/fileServlet?template=<%=templateId%>&format=<%=formatId%>" ><%=label%></a></td>
 										
+											<td class="dataCellText"><%=filename%></td>
 											<td class="dataCellText"><%=format%></td>
 											<td class="dataCellText"><%=codingScheme%></td>
 											<td class="dataCellText"><%=version%></td>
+											<td class="dataCellText"><%=loginName%></td>
 											<td class="dataCellText"><%=date_str%></td>
 										</tr>
 										
@@ -144,103 +154,7 @@
 %>
 
 
-<!--
-
-										<tr class="dataRowLight">
-											<td class="dataCellText">Structured Product Labeling (SPL) Report</td>
-											<td class="dataCellText">Text (tab delimited)</td>
-											<td class="dataCellText">NCI Thesaurus</td>
-											<td class="dataCellText">08.06d</td>
-											<td class="dataCellText">01/13/2009</td>
-										</tr>
-										<tr class="dataRowDark">
-											<td class="dataCellText">Structured Product Labeling (SPL) Report</td>
-											<td class="dataCellText">Microsoft Office Excel</td>
-											<td class="dataCellText">NCI Thesaurus</td>
-											<td class="dataCellText">08.06d</td>
-											<td class="dataCellText">01/13/2009</td>
-										</tr>
-										
-										
-										
-										
-										
-										
-										<tr class="dataRowLight">
-											<td class="dataCellText">Structured Product Labeling (SPL) Report</td>
-											<td class="dataCellText">Text (tab delimited)</td>
-											<td class="dataCellText">NCI Thesaurus</td>
-											<td class="dataCellText">08.06d</td>
-											<td class="dataCellText">01/13/2009</td>
-										</tr>
-										<tr class="dataRowDark">
-											<td class="dataCellText">Structured Product Labeling (SPL) Report</td>
-											<td class="dataCellText">Microsoft Office Excel</td>
-											<td class="dataCellText">NCI Thesaurus</td>
-											<td class="dataCellText">08.06d</td>
-											<td class="dataCellText">01/13/2009</td>
-										</tr>
-										
-										
-										
-										
-										<tr class="dataRowLight">
-											<td class="dataCellText">FDA-UNII Subset Report</td>
-											<td class="dataCellText">Text (tab delimited)</td>
-											<td class="dataCellText">NCI Thesaurus</td>
-											<td class="dataCellText">08.06d</td>
-											<td class="dataCellText">01/13/2009</td>
-										</tr>
-										<tr class="dataRowDark">
-											<td class="dataCellText">FDA-UNII Subset Report</td>
-											<td class="dataCellText">Microsoft Office Excel</td>
-											<td class="dataCellText">NCI Thesaurus</td>
-											<td class="dataCellText">08.06d</td>
-											<td class="dataCellText">01/13/2009</td>
-										</tr>
-										<tr class="dataRowLight">
-											<td class="dataCellText">Individual Case Safety (ICS) Subset Report</td>
-											<td class="dataCellText">Text (tab delimited)</td>
-											<td class="dataCellText">NCI Thesaurus</td>
-											<td class="dataCellText">08.06d</td>
-											<td class="dataCellText">01/13/2009</td>
-										</tr>
-										<tr class="dataRowDark">
-											<td class="dataCellText">Individual Case Safety (ICS) Subset Report</td>
-											<td class="dataCellText">Microsoft Office Excel</td>
-											<td class="dataCellText">NCI Thesaurus</td>
-											<td class="dataCellText">08.06d</td>
-											<td class="dataCellText">01/13/2009</td>
-										</tr>
-										<tr class="dataRowLight">
-											<td class="dataCellText">Center for Devices and Radiological Health (CDRH) Subset Report</td>
-											<td class="dataCellText">Text (tab delimited)</td>
-											<td class="dataCellText">NCI Thesaurus</td>
-											<td class="dataCellText">08.06d</td>
-											<td class="dataCellText">01/13/2009</td>
-										</tr>
-										<tr class="dataRowDark">
-											<td class="dataCellText">Center for Devices and Radiological Health (CDRH) Subset Report</td>
-											<td class="dataCellText">Microsoft Office Excel</td>
-											<td class="dataCellText">NCI Thesaurus</td>
-											<td class="dataCellText">08.06d</td>
-											<td class="dataCellText">01/13/2009</td>
-										</tr>
-										<tr class="dataRowLight">
-											<td class="dataCellText">FDA-SPL Country Code Report</td>
-											<td class="dataCellText">Text (tab delimited)</td>
-											<td class="dataCellText">NCI Thesaurus</td>
-											<td class="dataCellText">08.06d</td>
-											<td class="dataCellText">01/13/2009</td>
-										</tr>
-										<tr class="dataRowDark">
-											<td class="dataCellText">FDA-SPL Country Code Report</td>
-											<td class="dataCellText">Microsoft Office Excel</td>
-											<td class="dataCellText">NCI Thesaurus</td>
-											<td class="dataCellText">08.06d</td>
-											<td class="dataCellText">01/13/2009</td>
-										</tr>
--->										
+						
 										
 										
 									</table>
@@ -251,7 +165,7 @@
 									<!-- bottom action buttons begins -->
 									<table cellpadding="4" cellspacing="0" border="0">
 										<tr>
-											<td><h:commandButton id="back" action="back" value="Back" /></td>
+											<td><h:commandButton id="back" action="back" value="Back"  /></td>
 										</tr>
 									</table>
 									<!-- bottom action buttons end -->

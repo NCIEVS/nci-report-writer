@@ -12,6 +12,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Vector;
 import java.util.HashSet;
+import java.util.Date;
 
 import javax.faces.context.FacesContext;
 import javax.faces.event.ValueChangeEvent;
@@ -23,11 +24,12 @@ import org.apache.log4j.Logger;
 
 import java.util.Collection;
 
+import org.LexGrid.concepts.Concept;
 
 
 /**
   * <!-- LICENSE_TEXT_START -->
-* Copyright 2008 NGIT. This software was developed in conjunction with the National Cancer Institute,
+* Copyright 2008,2009 NGIT. This software was developed in conjunction with the National Cancer Institute,
 * and so to the extent government employees are co-authors, any rights in such works shall be subject to Title 17 of the United States Code, section 105.
 * Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:
 * 1. Redistributions of source code must retain the above copyright notice, this list of conditions and the disclaimer of Article 3, below. Redistributions
@@ -51,6 +53,10 @@ import java.util.Collection;
 /**
   * @author EVS Team
   * @version 1.0
+  *
+  * Modification history
+  *     Initial implementation kim.ong@ngc.com
+  *
  */
 
 public class UserSessionBean extends Object
@@ -553,6 +559,128 @@ System.out.println("deleting column with ID = " + id + " (yet to be implemented)
 
 
 
+	  public String saveModifiedTemplateAction() {
+		  HttpServletRequest request = (HttpServletRequest)FacesContext.getCurrentInstance().getExternalContext().getRequest();
+		  String label = (String) request.getSession().getAttribute("selectedStandardReportTemplate");
+
+          String codingscheme = (String) request.getParameter("codingscheme");
+          String version = (String) request.getParameter("version");
+
+System.out.println("saveModifiedTemplateAction: codingscheme " + codingscheme);
+System.out.println("saveModifiedTemplateAction: version " + version);
+
+
+
+          Boolean csnv_valid = DataUtils.validateCodingScheme(codingscheme, version);
+          if (csnv_valid == null || csnv_valid.equals(Boolean.FALSE))
+          {
+			  String message = "Invalid coding scheme name " + codingscheme + " or version " + version + " -- The report template may be out of date. Please modify it and resubmit.";
+			  request.getSession().setAttribute("message", message);
+			  return "message";
+		  }
+
+          String rootConceptCode = (String) request.getParameter("rootConceptCode");
+          String ltag = null;
+	      Concept rootConcept = DataUtils.getConceptByCode(codingscheme, version, ltag, rootConceptCode);
+	      if (rootConcept == null)
+	      {
+			  String message = "Invalid root concept code " + rootConceptCode + " -- Please modify the report template and resubmit.";
+			  request.getSession().setAttribute("message", message);
+			  return "message";
+		  }
+
+          String associationName = (String) request.getParameter("associationName");
+          String key = codingscheme + " (version: " + version + ")";
+          Vector<String> associationname_vec = DataUtils.getSupportedAssociationNames(key);
+          if (!associationname_vec.contains(associationName)) {
+			  String message = "Invalid association name " + associationName + " -- Please modify the report template and resubmit.";
+			  request.getSession().setAttribute("message", message);
+			  return "message";
+		  }
+
+          String direction_str = (String) request.getParameter("direction");
+          Boolean direction = null;
+          if (direction_str.compareTo("source") == 0)
+             direction = Boolean.FALSE;
+          else
+             direction = Boolean.TRUE;
+
+          String level_str = (String) request.getParameter("level");
+
+ 		  // return to error page
+ 		  if (label == null || label.compareTo("") == 0)
+ 		  {
+ 			  KLO_log.warn("Incomplete data entry -- form not saved.");
+ 			  return "modify_standard_report_template";
+ 		  }
+ 		  if (rootConceptCode == null || rootConceptCode.compareTo("") == 0)
+ 		  {
+ 			  KLO_log.warn("Incomplete data entry -- form not saved.");
+ 			  return "modify_standard_report_template";
+ 		  }
+ 		  if (level_str == null || level_str.compareTo("") == 0)
+ 		  {
+ 			  KLO_log.warn("Incomplete data entry -- form not saved.");
+ 			  return "modify_standard_report_template";
+		  }
+
+          Integer level;
+          if(level_str.equalsIgnoreCase("all"))
+          {
+			  level = -1;
+		  }
+		  else
+		  {
+			  level = Integer.valueOf(level_str);
+		  }
+
+	      if (level < -1)
+	      {
+			  String message = "Invalid level " + level + " -- Please modify the report template and resubmit.";
+			  request.getSession().setAttribute("message", message);
+			  return "message";
+		  }
+
+		  //char delimiter = '$';
+
+          try{
+        	  SDKClientUtil sdkclientutil = new SDKClientUtil();
+
+			  StandardReportTemplate standardReportTemplate = null;
+			  String FQName = "gov.nih.nci.evs.reportwriter.bean.StandardReportTemplate";
+			  String methodName = "setLabel";
+			  key = label;
+
+			  Object standardReportTemplate_obj = sdkclientutil.search(FQName, methodName, key);
+			  if (standardReportTemplate_obj == null) {
+				  String message = "Unable to update template -- the report template with the specified label, " + label + " is not found. ";
+				  request.getSession().setAttribute("message", message);
+				  return "message";
+			  }
+
+			  standardReportTemplate = (StandardReportTemplate) standardReportTemplate_obj;
+			  standardReportTemplate.setLabel(label);
+			  standardReportTemplate.setCodingSchemeName(codingscheme);
+			  standardReportTemplate.setCodingSchemeVersion(version);
+			  standardReportTemplate.setRootConceptCode(rootConceptCode);
+			  standardReportTemplate.setAssociationName(associationName);
+			  standardReportTemplate.setDirection(direction);
+			  standardReportTemplate.setLevel(level);
+ 			  sdkclientutil.updateStandardReportTemplate(standardReportTemplate);
+
+ 			  key = codingscheme + " (version: " + version + ")";
+ 			  request.getSession().setAttribute("selectedOntology", key);
+
+          } catch(Exception e) {
+        	  e.printStackTrace();
+          }
+
+          return "standard_report_template";
+	  }
+
+
+
+
 	  public String deleteReportTemplateAction() {
 		  HttpServletRequest request = getHttpRequest();
 		  String template_label = (String) request.getSession().getAttribute("selectedStandardReportTemplate");
@@ -658,21 +786,9 @@ System.out.println("deleting column with ID = " + id + " (yet to be implemented)
 				  delimiter = delim.charAt(0);
 			  }
 		  }
-/*
-		  KLO_log.warn("fieldlabel: " + fieldlabel);
-          KLO_log.warn("fieldType: " + fieldType);
-          KLO_log.warn("propertyType: " + propertyType);
-          KLO_log.warn("propertyName: " + propertyName);
-          KLO_log.warn("isPreferred: " + isPreferred);
-          KLO_log.warn("representationalForm: " + representationalForm);
-          KLO_log.warn("source: " + source);
-          KLO_log.warn("qualifierName: " + propertyQualifier);
-          KLO_log.warn("qualifierValue: " + qualifierValue);
 
-          //KLO_log.warn("direction: " + direction);
-          KLO_log.warn("delimiter: " + delimiter);
-          KLO_log.warn("ccid: " + ccid);
-*/
+          KLO_log.warn("source: " + source);
+
           // Save results using SDK writable API.
           try{
         	  SDKClientUtil sdkclientutil = new SDKClientUtil();
@@ -779,10 +895,6 @@ System.out.println("deleting column with ID = " + id + " (yet to be implemented)
 		String reportTemplate = (String) request.getSession().getAttribute("selectedStandardReportTemplate_draft");
 		String statusValue = (String) request.getSession().getAttribute("selectedReportStatus");
 
-System.out.println("assignStatusAction 	reportTemplate " + reportTemplate);
-System.out.println("assignStatusAction 	statusValue " + statusValue);
-
-
         try{
             SDKClientUtil sdkclientutil = new SDKClientUtil();
 		    StandardReportTemplate standardReportTemplate = null;
@@ -805,9 +917,8 @@ System.out.println("assignStatusAction 	statusValue " + statusValue);
 							if (status_obj != null)
 							{
 							    standardReport.setStatus((ReportStatus) status_obj);
-
-System.out.println("updateStandardReport to " + statusValue);
-
+								java.util.Date lastModified = new Date(); // system date
+                                standardReport.setLastModified(lastModified);
 							    sdkclientutil.updateStandardReport(standardReport);
 							}
 						}
@@ -823,8 +934,77 @@ System.out.println("updateStandardReport to " + statusValue);
 		return "assign_report_status";
 	}
 
+/*
+
+        	  SDKClientUtil sdkclientutil = new SDKClientUtil();
+        	  String FQName = "gov.nih.nci.evs.reportwriter.bean.StandardReport";
+        	  String methodName = "setLabel";
+        	  String key = label;
+        	  Object[] objs = sdkclientutil.search(FQName);
+
+
+System.out.println("createStandardReport Step 2  -- delete old report objects from database. ");
+
+        	  if (objs != null)
+        	  {
+				  // report already exists, delete it
+				  for (int i=0; i<objs.length; i++)
+				  {
+                  	  StandardReport report = (StandardReport) objs[i];
+                  	  String reportlabel = report.getLabel();
+                  	  if (label.compareTo(reportlabel) == 0)
+                  	  {
+						  sdkclientutil.deleteStandardReport(report);
+					  }
+				  }
+ 			  }
+
+System.out.println("createStandardReport Step 3  -- create StandardReport object. ");
+
+              java.util.Date lastModified = new Date(); // system date
+        	  StandardReport report = sdkclientutil.createStandardReport(label, lastModified, pathName);
+*/
 
 	  public String modifyReportTemplateAction() {
+		  HttpServletRequest request = getHttpRequest();
+		  String templateLabel = (String) request.getSession().getAttribute("selectedStandardReportTemplate");
+
+		  // find thesaurus name through template
+          try{
+        	  SDKClientUtil sdkclientutil = new SDKClientUtil();
+
+
+System.out.println(	"modifyReportTemplateAction" + " " + templateLabel );
+
+
+				StandardReportTemplate standardReportTemplate = null;
+				String FQName = "gov.nih.nci.evs.reportwriter.bean.StandardReportTemplate";
+				String methodName = "setLabel";
+				String key = templateLabel;
+				Object standardReportTemplate_obj = sdkclientutil.search(FQName, methodName, key);
+				if (standardReportTemplate_obj != null) {
+					standardReportTemplate = (StandardReportTemplate) standardReportTemplate_obj;
+
+System.out.println(	"modifyReportTemplateAction" + " " + standardReportTemplate.getCodingSchemeName() );
+
+					versionList = getVersionList(standardReportTemplate.getCodingSchemeName());
+
+					  //StandardReportTemplate standardReportTemplate = getStandardReportTemplate(selectedStandardReportTemplate);
+					  String ontologyNameAndVersion = standardReportTemplate.getCodingSchemeName() + " (version: " + standardReportTemplate.getCodingSchemeVersion() + ")";
+					  request.getSession().setAttribute("selectedOntology", ontologyNameAndVersion);
+				}
+		  } catch (Exception ex) {
+			  String message = "Unable to construct available coding scheme version list.";
+			  request.getSession().setAttribute("message", message);
+			  return "message";
+		  }
+
+
+
+		  return "modify_standard_report_template";
+	  }
+
+	  public String editReportContentAction() {
 		  HttpServletRequest request = getHttpRequest();
 		  request.getSession().setAttribute("selectedStandardReportTemplate", selectedStandardReportTemplate);
 
@@ -838,7 +1018,53 @@ System.out.println("updateStandardReport to " + statusValue);
 
 	  public String generateStandardReportAction() {
 		  HttpServletRequest request = getHttpRequest();
-          StandardReportTemplate standardReportTemplate = getStandardReportTemplate(selectedStandardReportTemplate);
+          String templateId = (String) request.getSession().getAttribute("selectedStandardReportTemplate");
+
+          try{
+        	    SDKClientUtil sdkclientutil = new SDKClientUtil();
+				StandardReportTemplate standardReportTemplate = null;
+				String FQName = "gov.nih.nci.evs.reportwriter.bean.StandardReportTemplate";
+				String methodName = "setLabel";
+				String key = templateId;
+				Object standardReportTemplate_obj = sdkclientutil.search(FQName, methodName, key);
+				if (standardReportTemplate_obj != null) {
+					standardReportTemplate = (StandardReportTemplate) standardReportTemplate_obj;
+
+					  String codingscheme = standardReportTemplate.getCodingSchemeName();
+					  String version = standardReportTemplate.getCodingSchemeVersion();
+
+					  Boolean csnv_valid = DataUtils.validateCodingScheme(codingscheme, version);
+					  if (csnv_valid == null || csnv_valid.equals(Boolean.FALSE))
+					  {
+						  String message = "Invalid coding scheme name " + codingscheme + " or version " + version + " -- The report template may be out of date. Please modify it and resubmit.";
+						  request.getSession().setAttribute("message", message);
+						  return "message";
+					  }
+
+					  String rootConceptCode = standardReportTemplate.getRootConceptCode();
+					  String ltag = null;
+					  Concept rootConcept = DataUtils.getConceptByCode(codingscheme, version, ltag, rootConceptCode);
+					  if (rootConcept == null)
+					  {
+						  String message = "Invalid root concept code " + rootConceptCode + " -- Please modify the report template and resubmit.";
+						  request.getSession().setAttribute("message", message);
+						  return "message";
+					  }
+
+					  String associationName = standardReportTemplate.getAssociationName();
+					  key = codingscheme + " (version: " + version + ")";
+					  Vector<String> associationname_vec = DataUtils.getSupportedAssociationNames(key);
+					  if (!associationname_vec.contains(associationName)) {
+						  String message = "Invalid association name " + associationName + " -- Please modify the report template and resubmit.";
+						  request.getSession().setAttribute("message", message);
+						  return "message";
+					  }
+			   }
+		   } catch (Exception ex) {
+			   String message = "Exception encountered when generating " + templateId + ".";
+			   request.getSession().setAttribute("message", message);
+			   return "message";
+		   }
 
 		  String uid = (String) request.getSession().getAttribute("uid");
 		  if (uid == null)
@@ -880,7 +1106,7 @@ System.out.println("updateStandardReport to " + statusValue);
 
           // create messsage
 
-          message = "You request has been received. The report, " + standardReportTemplate.getLabel()
+          message = "You request has been received. The report, " + templateId
           + ", in tab-delimited and Microsft Excel formats will be generated and placed in the designated output directory."
           + " Please review and assign an APPROVED status before making it available to the users.";
           request.getSession().setAttribute("message", message);
@@ -969,6 +1195,46 @@ System.out.println("download_dir " + download_dir);
 
 		  return "message"; // replaced by a messsage page (back button)
 	  }
+
+
+
+	private String selectedVersion = null;
+	private List versionList = null;
+	private Vector<String> versionListData = null;
+
+
+	public List getVersionList(String codingschemename) {
+		versionListData = DataUtils.getVersionListData(codingschemename);
+		versionList = new ArrayList();
+		for (int i=0; i<versionListData.size(); i++) {
+			String t = (String) versionListData.elementAt(i);
+
+System.out.println("version: " + t);
+
+			versionList.add(new SelectItem(t));
+		}
+		if (versionList != null && versionList.size() > 0) {
+			selectedVersion = ((SelectItem) versionList.get(0)).getLabel();
+		}
+		return versionList;
+	}
+
+	public void setSelectedVersion(String selectedVersion) {
+		this.selectedVersion = selectedVersion;
+		HttpServletRequest request = (HttpServletRequest)FacesContext.getCurrentInstance().getExternalContext().getRequest();
+		request.getSession().setAttribute("selectedVersion", selectedVersion);
+	}
+
+
+	public String getSelectedVersion() {
+		return this.selectedVersion;
+	}
+
+	public void versionSelectionChanged(ValueChangeEvent event) {
+		if (event.getNewValue() == null) return;
+		//int id = Integer.parseInt((String) event.getNewValue());
+		setSelectedVersion(selectedVersion);
+	}
 
 
   }
