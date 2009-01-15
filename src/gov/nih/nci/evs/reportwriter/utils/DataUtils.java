@@ -378,7 +378,10 @@ System.out.println("DataUtils 	Boolean.TRUE ");
 
 					CodingScheme scheme = null;
 					try {
-						scheme = lbSvc.resolveCodingScheme(formalname, vt);
+						try {
+							scheme = lbSvc.resolveCodingScheme(formalname, vt);
+						} catch (Exception ex) {
+						}
 						if (scheme != null)
 						{
 							codingSchemeMap.put((Object) formalname, (Object) scheme);
@@ -438,6 +441,11 @@ System.out.println("DataUtils 	Boolean.TRUE ");
 
     public static Vector<String> getSupportedAssociationNames(String key)
     {
+		if (csnv2codingSchemeNameMap == null)
+		{
+			setCodingSchemeMap();
+			return getSupportedAssociationNames(key);
+		}
 		String codingSchemeName = (String) csnv2codingSchemeNameMap.get(key);
 		if(codingSchemeName == null) return null;
 		String version = (String) csnv2VersionMap.get(key);
@@ -613,6 +621,11 @@ System.out.println("DataUtils 	Boolean.TRUE ");
 
     public static Vector<String> getSourceListData(String key)
     {
+		if (csnv2codingSchemeNameMap == null)
+		{
+			setCodingSchemeMap();
+			return getSourceListData(key);
+		}
 		String codingSchemeName = (String) csnv2codingSchemeNameMap.get(key);
 		if(codingSchemeName == null) return null;
 		String version = (String) csnv2VersionMap.get(key);
@@ -1002,7 +1015,6 @@ System.out.println("DataUtils 	Boolean.TRUE ");
 	}
 
 	public Vector getSubconceptCodes(String scheme, String version, String code) { //throws LBException{
-		long ms = System.currentTimeMillis();
 		Vector v = new Vector();
 		try {
 			EVSApplicationService lbSvc = new RemoteServerUtil().createLexBIGService();
@@ -1049,11 +1061,6 @@ System.out.println("DataUtils 	Boolean.TRUE ");
 		} catch (Exception ex) {
 			 //ex.printStackTrace();
 		}
-		/*
-		finally {
-			System.out.println("Run time (ms): " + (System.currentTimeMillis() - ms));
-		}
-		*/
 		return v;
 	}
 

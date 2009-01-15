@@ -134,8 +134,10 @@ public class ReportGenerationThread implements Runnable
 	{
 		try {
 			System.out.print("Generating report -- please wait...");
+			long ms = System.currentTimeMillis();
 			Boolean retval = generateStandardReport(outputDir, standardReportLabel, uid);
 			System.out.print("Report " + " generated.\n");
+			System.out.println("Run time (ms): " + (System.currentTimeMillis() - ms));
 		}
 		catch (Exception e)
 		{
@@ -525,7 +527,6 @@ public class ReportGenerationThread implements Runnable
 
 						if (isPreferred != null && p instanceof Presentation)
 						{
-System.out.println("\t\t** isPreferred: " + isPreferred);
 							Presentation presentation = (Presentation) p;
 							Boolean is_pref = presentation.getIsPreferred();
 	                        if (is_pref == null)
@@ -534,7 +535,6 @@ System.out.println("\t\t** isPreferred: " + isPreferred);
 							}
 							else if (!is_pref.equals(isPreferred))
 							{
-System.out.println("!is_pref.equals(isPreferred): " + "match = false");
 								match = false;
 							}
 						}
@@ -545,13 +545,8 @@ System.out.println("!is_pref.equals(isPreferred): " + "match = false");
 							if (representational_form != null && p instanceof Presentation)
 							{
 								Presentation presentation = (Presentation) p;
-	System.out.println("\t\t** RepresentationalForm: " + presentation.getRepresentationalForm());
 								if (presentation.getRepresentationalForm().compareTo(representational_form) != 0)
 								{
-
-	System.out.println("representational_form != null: " + representational_form);
-	System.out.println("getRepresentationalForm: " + "match = false");
-
 									match = false;
 								}
 							}
@@ -562,9 +557,6 @@ System.out.println("!is_pref.equals(isPreferred): " + "match = false");
 						{
 							if (qualifier_name != null) // match property qualifier, if needed
 							{
-
-System.out.println("\t\t** qualifier_name: " + qualifier_name);
-
 								boolean match_found = false;
 								PropertyQualifier[] qualifiers = p.getPropertyQualifier();
 								if (qualifiers != null)
@@ -584,10 +576,6 @@ System.out.println("\t\t** qualifier_name: " + qualifier_name);
 							    }
 								if (!match_found)
 								{
-
-System.out.println("qualifier_name: " + "match = false");
-
-
 									match = false;
 								}
 							}
@@ -597,7 +585,6 @@ System.out.println("qualifier_name: " + "match = false");
 						{
 							if (source != null) //match source
 							{
-System.out.println("\t\t** source: " + source);
 								boolean match_found = false;
 								Source[] sources = p.getSource();
 								for (int j=0; j<sources.length; j++)
@@ -611,7 +598,6 @@ System.out.println("\t\t** source: " + source);
 								}
 								if (!match_found)
 								{
-	System.out.println("source: " + "match = false");
 									match = false;
 								}
 							}
@@ -640,8 +626,6 @@ System.out.println("\t\t** source: " + source);
 			{
 				boolean match = false;
 				Property p = properties[i];
-
-
 				if (p.getPropertyName().compareTo(property_name) == 0) // focus on matching property
 				{
 					match = true;
@@ -659,7 +643,6 @@ System.out.println("\t\t** source: " + source);
 							}
 							else if (is_pref != null && !is_pref.equals(isPreferred))
 							{
-								System.out.println("isPreferred: " + "match = false");
 								match = false;
 							}
 						}
@@ -672,9 +655,6 @@ System.out.println("\t\t** source: " + source);
 								Presentation presentation = (Presentation) p;
 								if (presentation.getRepresentationalForm().compareTo(representational_form) != 0)
 								{
-									System.out.println("representational_form != null: " + representational_form);
-									System.out.println("getRepresentationalForm: " + "match = false");
-
 									match = false;
 								}
 							}
@@ -699,9 +679,6 @@ System.out.println("\t\t** source: " + source);
 								}
 								if(!match_found)
 								{
-									System.out.println("qualifier_name != null: " + qualifier_name);
-									System.out.println("getPropertyQualifier: " + "match = false");
-
 									match = false;
 								}
 							}
@@ -724,8 +701,6 @@ System.out.println("\t\t** source: " + source);
 								}
 								if(!match_found)
 								{
-									System.out.println("source != null: " + source);
-									System.out.println("getSource: " + "match = false");
 									match = false;
 								}
 							}

@@ -312,7 +312,6 @@ public class OntologyBean //extends BaseBean
 
 	public void levelSelectionChanged(ValueChangeEvent event) {
 		if (event.getNewValue() == null) return;
-		//int id = Integer.parseInt((String) event.getNewValue());
 		String level = (String) event.getNewValue(); // change to integer before saving to database
 		setSelectedLevel(level);
 	}
@@ -359,9 +358,6 @@ public class OntologyBean //extends BaseBean
 			if (propertyNameListData != null) {
 				for (int i=0; i<propertyNameListData.size(); i++) {
 					String t = (String) propertyNameListData.elementAt(i);
-
-				//System.out.println("=========================== getPropertyNameList() t  " + t);
-
 					propertyNameList.add(new SelectItem(t));
 				}
 				if (propertyNameList != null && propertyNameList.size() > 0) {
@@ -372,7 +368,6 @@ public class OntologyBean //extends BaseBean
 
 	    } catch (Exception ex) {
 				System.out.println("=========================== getPropertyNameList() Exception  " + selectedOntology);
-			//ex.printStackTrace();
 		}
 		return propertyNameList;
 	}
@@ -586,7 +581,6 @@ public class OntologyBean //extends BaseBean
 	public List getSourceList() {
 
 
-System.out.println("*** getSourceList ");
         HttpServletRequest request = (HttpServletRequest)FacesContext.getCurrentInstance().getExternalContext().getRequest();
 		if (selectedOntology == null)
 		{
@@ -609,15 +603,7 @@ System.out.println("*** getSourceList ");
 			}
         }
 
-
- System.out.println("*** selectedOntology " + selectedOntology);
-
-
-
-
-
 		sourceListData = DataUtils.getSourceListData(selectedOntology);
-
 
 		sourceList = new ArrayList();
 		sourceList.add(new SelectItem(" "));
