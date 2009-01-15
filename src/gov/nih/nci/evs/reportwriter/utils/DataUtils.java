@@ -166,6 +166,7 @@ import org.LexGrid.LexBIG.DataModel.Collections.CodingSchemeTagList;
 
 public class DataUtils {
 
+    int maxReturn = 5000;
 	Connection con;
 	Statement stmt;
 	ResultSet rs;
@@ -863,7 +864,21 @@ System.out.println("DataUtils 	Boolean.TRUE ");
 		 return null;
 	}
 
-
+ 	protected NameAndValueList createNameAndValueList(String[] names, String[] values)
+ 	{
+ 		NameAndValueList nvList = new NameAndValueList();
+ 		for (int i=0; i<names.length; i++)
+ 		{
+ 			NameAndValue nv = new NameAndValue();
+ 			nv.setName(names[i]);
+ 			if (values != null)
+ 			{
+ 				nv.setContent(values[i]);
+ 			}
+ 			nvList.addNameAndValue(nv);
+ 		}
+ 		return nvList;
+ 	}
 
 	public Vector getAssociationTargets(String scheme, String version, String code, String assocName)
 	{
@@ -879,9 +894,16 @@ System.out.println("DataUtils 	Boolean.TRUE ");
 				return null;
 			}
 			CodedNodeGraph cng = lbSvc.getNodeGraph(scheme, csvt, null);
+			NameAndValueList nameAndValueList =
+				createNameAndValueList(
+					new String[] {assocName}, null);
+
+			NameAndValueList nameAndValueList_qualifier = null;
+			cng = cng.restrictToAssociations(nameAndValueList, nameAndValueList_qualifier);
+
 			matches = cng.resolveAsList(
 					ConvenienceMethods.createConceptReference(code, scheme),
-					true, false, 1, 1, new LocalNameList(), null, null, 1024);
+					true, false, 1, 1, new LocalNameList(), null, null, maxReturn);
 
 			if (matches.getResolvedConceptReferenceCount() > 0) {
 				Enumeration<ResolvedConceptReference> refEnum =
@@ -896,15 +918,11 @@ System.out.println("DataUtils 	Boolean.TRUE ");
 						Association assoc = associations[i];
 						//KLO
 						assoc = processForAnonomousNodes(assoc);
-						String associationName = assoc.getAssociationName();
-						if (associationName.compareTo(associationName) == 0)
-						{
-							AssociatedConcept[] acl = assoc.getAssociatedConcepts().getAssociatedConcept();
-							for (int j = 0; j < acl.length; j++) {
-								AssociatedConcept ac = acl[j];
-								v.add(ac.getReferencedEntry());
-							}
-					    }
+						AssociatedConcept[] acl = assoc.getAssociatedConcepts().getAssociatedConcept();
+						for (int j = 0; j < acl.length; j++) {
+							AssociatedConcept ac = acl[j];
+							v.add(ac.getReferencedEntry());
+						}
 					}
 				}
 			}
@@ -926,9 +944,17 @@ System.out.println("DataUtils 	Boolean.TRUE ");
 		try {
 			EVSApplicationService lbSvc = new RemoteServerUtil().createLexBIGService();
 			CodedNodeGraph cng = lbSvc.getNodeGraph(scheme, csvt, null);
+
+			NameAndValueList nameAndValueList =
+				createNameAndValueList(
+					new String[] {assocName}, null);
+
+			NameAndValueList nameAndValueList_qualifier = null;
+			cng = cng.restrictToAssociations(nameAndValueList, nameAndValueList_qualifier);
+
 			matches = cng.resolveAsList(
 					ConvenienceMethods.createConceptReference(code, scheme),
-					false, true, 1, 1, new LocalNameList(), null, null, 1024);
+					false, true, 1, 1, new LocalNameList(), null, null, maxReturn);
 
 			if (matches.getResolvedConceptReferenceCount() > 0) {
 				Enumeration<ResolvedConceptReference> refEnum =
@@ -943,15 +969,11 @@ System.out.println("DataUtils 	Boolean.TRUE ");
 						Association assoc = associations[i];
 						//KLO
 						assoc = processForAnonomousNodes(assoc);
-						String associationName = assoc.getAssociationName();
-						if (associationName.compareTo(associationName) == 0)
-						{
-							AssociatedConcept[] acl = assoc.getAssociatedConcepts().getAssociatedConcept();
-							for (int j = 0; j < acl.length; j++) {
-								AssociatedConcept ac = acl[j];
-								v.add(ac.getReferencedEntry());
-							}
-					    }
+						AssociatedConcept[] acl = assoc.getAssociatedConcepts().getAssociatedConcept();
+						for (int j = 0; j < acl.length; j++) {
+							AssociatedConcept ac = acl[j];
+							v.add(ac.getReferencedEntry());
+						}
 					}
 				}
 			}
@@ -1010,7 +1032,7 @@ System.out.println("DataUtils 	Boolean.TRUE ");
 				try {
 					associations = lbscm.getHierarchyLevelNext(scheme, csvt, hierarchyID, code, false, null);
 				} catch (Exception e) {
-					System.out.println("getSubconceptCodes Step 5a - Exception lbscm.getHierarchyLevelNext  ");
+					System.out.println("getSubconceptCodes - Exception lbscm.getHierarchyLevelNext  ");
 					return v;
 				}
 
