@@ -767,16 +767,6 @@ System.out.println("saveModifiedTemplateAction: version " + version);
 				  isPreferred = Boolean.FALSE;
   		  }
 
-/*
-		  String selectedDirection = (String) request.getSession().getAttribute("selectedDirection");
-		  Boolean direction = null;
-		  if(selectedDirection != null) {
-			  if(selectedDirection.equals(Boolean.TRUE))
-				  direction = Boolean.TRUE;
-			  else
-				  direction = Boolean.FALSE;
-		  }
-*/
 		  String delim = (String) request.getSession().getAttribute("selectedDelimiter");
 		  char delimiter = ' ';
 		  if(delim != null)
@@ -787,7 +777,19 @@ System.out.println("saveModifiedTemplateAction: version " + version);
 			  }
 		  }
 
-          KLO_log.warn("source: " + source);
+
+System.out.println("columnNumber: " + columnNumber);
+System.out.println("fieldlabel: " + fieldlabel);
+System.out.println("fieldType: " + fieldType);
+System.out.println("propertyType: " + propertyType);
+System.out.println("propertyName: " + propertyName);
+System.out.println("isPreferred: " + isPreferred);
+System.out.println("representationalForm: " + representationalForm);
+System.out.println("source: " + source);
+System.out.println("propertyQualifier: " + propertyQualifier);
+System.out.println("qualifierValue: " + qualifierValue);
+System.out.println("delim: " + delim);
+
 
           // Save results using SDK writable API.
           try{
@@ -795,13 +797,27 @@ System.out.println("saveModifiedTemplateAction: version " + version);
         	  String FQName = "gov.nih.nci.evs.reportwriter.bean.StandardReportTemplate";
         	  String methodName = "setLabel";
         	  String key = this.selectedStandardReportTemplate;
-        	  //Object search(String FQName, String methodName, String key)
-        	  Object obj = sdkclientutil.search(FQName, methodName, key);
 
+System.out.println("key: " + key);
+
+        	  Object obj = sdkclientutil.search(FQName, methodName, key);
+        	  if (obj == null)
+        	  {
+				  String message = "ERROR saving ReportColumn -- Unable to identify report template " + key;
+				  request.getSession().setAttribute("message", message);
+				  return "message";
+			  }
+
+        	  StandardReportTemplate standardReportTemplate = (StandardReportTemplate) obj;
         	  ReportColumn col = sdkclientutil.createReportColumn(fieldlabel, columnNumber, fieldType, propertyType, propertyName, isPreferred, representationalForm, source, propertyQualifier, qualifierValue, delimiter, ccid);
-			  StandardReportTemplate standardReportTemplate = (StandardReportTemplate) obj;
 			  col.setReportTemplate(standardReportTemplate);
+
+System.out.println("insertReportColumn: ");
+
               sdkclientutil.insertReportColumn(col);
+
+ System.out.println("completed insertReportColumn: ");
+
               //setSelectedStandardReportTemplate(standardReportTemplate.getLabel());
         	  //sdkclientutil.insertReportColumn(fieldlabel, fieldType, propertyType, propertyName, isPreferred, representationalForm, source, propertyQualifier, qualifierValue, delimiter, ccid);
         	  //sdkclientutil.testGetTemplateCollection();
