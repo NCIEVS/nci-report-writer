@@ -579,12 +579,10 @@ public class OntologyBean //extends BaseBean
 
 
 	public List getSourceList() {
-
-
         HttpServletRequest request = (HttpServletRequest)FacesContext.getCurrentInstance().getExternalContext().getRequest();
+        String selectedOntology = (String) request.getSession().getAttribute("selectedOntology"); // ontology name and version
 		if (selectedOntology == null)
 		{
-	   		selectedOntology = (String) request.getSession().getAttribute("selectedOntology"); // ontology name and version
 		    String templateLabel = (String) request.getSession().getAttribute("selectedStandardReportTemplate");
             try{
         	    SDKClientUtil sdkclientutil = new SDKClientUtil();
