@@ -227,36 +227,32 @@ public class UserSessionBean extends Object
 			  StandardReportTemplate standardReportTemplate = null;
 			  String FQName = "gov.nih.nci.evs.reportwriter.bean.StandardReport";
 			  Object[] objs = sdkclientutil.search(FQName);
+
+
 			  if (objs != null && objs.length > 0) {
 				  for (int i=0; i<objs.length; i++)
 				  {
 					  StandardReport standardReport = (StandardReport) objs[i];
 					  ReportStatus rs = standardReport.getStatus();
 					  String status = rs.getLabel();
-					  if (status.compareTo("DRAFT") == 0) {
-                          if (!hset.contains(standardReportTemplate.getLabel())) {
-							  hset.add(standardReportTemplate.getLabel());
-                          	  list.add(new SelectItem(standardReportTemplate.getLabel()));
-						  }
-					  }
-					  // only shows DRAFT reports
-					  /*
 					  standardReportTemplate = standardReport.getTemplate();
 					  if (standardReportTemplate != null)
 					  {
-					  	  list.add(new SelectItem(standardReportTemplate.getLabel()));
-					  }
-					  */
+						  if (status.compareToIgnoreCase("DRAFT") == 0) {
+							  if (!hset.contains(standardReportTemplate.getLabel())) {
+								  hset.add(standardReportTemplate.getLabel());
+								  list.add(new SelectItem(standardReportTemplate.getLabel()));
+							  }
+						  }
+				      }
 				  }
 
-				  if (list == null)
+				  if (list != null && list.size() > 0)
 				  {
-					  if (list != null && list.size() > 0)
-					  {
-						  SelectItem item = (SelectItem) list.get(0);
-						  setSelectedStandardReportTemplate_draft(item.getLabel());
-					  }
+					  SelectItem item = (SelectItem) list.get(0);
+					  setSelectedStandardReportTemplate_draft(item.getLabel());
 				  }
+
 		      }
 		  } catch (Exception ex) {
 			  ex.printStackTrace();

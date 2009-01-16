@@ -938,6 +938,7 @@ System.out.println("DataUtils 	Boolean.TRUE ");
 						}
 					}
 				}
+				SortUtils.quickSort(v);
 			}
 
 		} catch (Exception ex) {
@@ -945,6 +946,49 @@ System.out.println("DataUtils 	Boolean.TRUE ");
 		}
 		return v;
     }
+
+
+
+	public ResolvedConceptReferenceList getNext(ResolvedConceptReferencesIterator iterator)
+	{
+		return iterator.getNext();
+	}
+
+	/**
+	* Dump_matches to output, for debug purposes
+	*
+	* @param iterator the iterator
+	* @param maxToReturn the max to return
+	*/
+	public Vector resolveIterator(ResolvedConceptReferencesIterator iterator, int maxToReturn)
+	{
+		Vector v = new Vector();
+		if (iterator == null)
+		{
+			System.out.println("No match.");
+			return v;
+		}
+		try {
+			int iteration = 0;
+			while (iterator.hasNext())
+			{
+				iteration++;
+				iterator = iterator.scroll(maxToReturn);
+				ResolvedConceptReferenceList rcrl = iterator.getNext();
+				ResolvedConceptReference[] rcra = rcrl.getResolvedConceptReference();
+				for (int i=0; i<rcra.length; i++)
+				{
+					ResolvedConceptReference rcr = rcra[i];
+					org.LexGrid.concepts.Concept ce = rcr.getReferencedEntry();
+					//System.out.println("Iteration " + iteration + " " + ce.getId() + " " + ce.getEntityDescription().getContent());
+					v.add(ce);
+				}
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return v;
+	}
 
 
 
@@ -989,6 +1033,7 @@ System.out.println("DataUtils 	Boolean.TRUE ");
 						}
 					}
 				}
+				SortUtils.quickSort(v);
 			}
 
 		} catch (Exception ex) {
