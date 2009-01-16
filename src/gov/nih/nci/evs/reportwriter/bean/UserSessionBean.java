@@ -143,15 +143,16 @@ public class UserSessionBean extends Object
 
 		  Boolean isAdmin = null;
 		  if (session != null) {
-			 isAdmin = (Boolean) request.getSession(true).getAttribute("isAdmin");
+			  isAdmin = (Boolean) request.getSession(true).getAttribute("isAdmin");
 		  }
 
 		  List list = DataUtils.getTaskList(isAdmin);
-		  if (selectedTask == null) {
-		     SelectItem item = (SelectItem) list.get(0);
-		    selectedTask = item.getLabel();
+		  if (list != null) {
+		      SelectItem item = (SelectItem) list.get(0);
+		      selectedTask = item.getLabel();
 		  }
-		  return DataUtils.getTaskList(isAdmin);
+		  //return DataUtils.getTaskList(isAdmin);
+		  return list;
 	  }
 
 
@@ -739,10 +740,18 @@ System.out.println("saveModifiedTemplateAction: version " + version);
       //public String addReportColumnAction() {
 	  public String saveReportColumnAction() {
 		  HttpServletRequest request = (HttpServletRequest)FacesContext.getCurrentInstance().getExternalContext().getRequest();
+          StandardReportTemplate standardReportTemplate = null;
+          standardReportTemplate = getStandardReportTemplate(this.selectedStandardReportTemplate);
+          if (standardReportTemplate == null)
+          {
+			  String message = "ERROR saving ReportColumn -- Unable to identify report template " + this.selectedStandardReportTemplate;
+			  request.getSession().setAttribute("message", message);
+			  return "message";
+		  }
 
 		  String fieldlabel = (String) request.getParameter("fieldlabel");
 		  String columnNumber_str = (String) request.getParameter("columnNumber");
-		  int columnNumber = Integer.parseInt(columnNumber_str);
+
   		  String fieldType = (String) request.getSession().getAttribute("selectedDataCategory");
   		  String propertyType = (String) request.getSession().getAttribute("selectedPropertyType");
   		  String propertyName = (String) request.getSession().getAttribute("selectedPropertyName");
@@ -750,13 +759,29 @@ System.out.println("saveModifiedTemplateAction: version " + version);
 		  String source = (String) request.getSession().getAttribute("selectedSource");
   		  String propertyQualifier = (String) request.getSession().getAttribute("selectedPropertyQualifier");
   		  String qualifierValue = (String) request.getParameter("qualifiervalue");
-
   		  String conditionalColumnId = (String) request.getParameter("dependentfield");
-  		  int ccid = -1;
 
-  		  if(conditionalColumnId != null)
-  			if(conditionalColumnId != "")
-  				ccid = Integer.parseInt(conditionalColumnId);
+		  if (columnNumber_str == null || fieldlabel == null)
+		  {
+			  String message = "Unable to save ReportColumn -- please complete data entry.";
+			  request.getSession().setAttribute("message", message);
+			  return "message";
+		  }
+		  columnNumber_str = columnNumber_str.trim();
+		  fieldlabel = fieldlabel.trim();
+		  if (columnNumber_str.length() == 0 || fieldlabel.length() == 0)
+		  {
+			  String message = "Unable to save ReportColumn -- please complete data entry.";
+			  request.getSession().setAttribute("message", message);
+			  return "message";
+		  }
+
+		  int columnNumber = Integer.parseInt(columnNumber_str);
+  		  int ccid = -1;
+  		  if(conditionalColumnId != null && conditionalColumnId != "")
+  		  {
+  			  ccid = Integer.parseInt(conditionalColumnId);
+		  }
 
 		  String preferred = (String) request.getParameter("preferred");
   		  Boolean isPreferred = null;
@@ -792,40 +817,42 @@ System.out.println("delim: " + delim);
 
 
           // Save results using SDK writable API.
-          try{
+          try {
         	  SDKClientUtil sdkclientutil = new SDKClientUtil();
-        	  String FQName = "gov.nih.nci.evs.reportwriter.bean.StandardReportTemplate";
-        	  String methodName = "setLabel";
-        	  String key = this.selectedStandardReportTemplate;
+              // check duplicate column number and column label
+			  java.util.Collection cc = standardReportTemplate.getColumnCollection();
+			  if (cc != null) {
+				  Object[] objs = cc.toArray();
+				  if (objs.length > 0) {
+			         for(int i=0; i<objs.length; i++) {
+						 gov.nih.nci.evs.reportwriter.bean.ReportColumn c = (gov.nih.nci.evs.reportwriter.bean.ReportColumn) objs[i];
+						 String col_label = c.getLabel();
+						 if (col_label.compareToIgnoreCase(fieldlabel) == 0)
+						 {
+							  String message = "Unable to save ReportColumn -- the column label already exists.";
+							  request.getSession().setAttribute("message", message);
+							  return "message";
+						 }
+						 Integer col_num = c.getColumnNumber();
+						 if (col_num.intValue() == columnNumber)
+						 {
+							  String message = "Unable to save ReportColumn -- the column number already exists.";
+							  request.getSession().setAttribute("message", message);
+							  return "message";
+						 }
+					 }
+			      }
+		      }
 
-System.out.println("key: " + key);
-
-        	  Object obj = sdkclientutil.search(FQName, methodName, key);
-        	  if (obj == null)
-        	  {
-				  String message = "ERROR saving ReportColumn -- Unable to identify report template " + key;
-				  request.getSession().setAttribute("message", message);
-				  return "message";
-			  }
-
-        	  StandardReportTemplate standardReportTemplate = (StandardReportTemplate) obj;
         	  ReportColumn col = sdkclientutil.createReportColumn(fieldlabel, columnNumber, fieldType, propertyType, propertyName, isPreferred, representationalForm, source, propertyQualifier, qualifierValue, delimiter, ccid);
 			  col.setReportTemplate(standardReportTemplate);
-
-System.out.println("insertReportColumn: ");
-
               sdkclientutil.insertReportColumn(col);
-
- System.out.println("completed insertReportColumn: ");
-
-              //setSelectedStandardReportTemplate(standardReportTemplate.getLabel());
-        	  //sdkclientutil.insertReportColumn(fieldlabel, fieldType, propertyType, propertyName, isPreferred, representationalForm, source, propertyQualifier, qualifierValue, delimiter, ccid);
-        	  //sdkclientutil.testGetTemplateCollection();
+			  System.out.println("completed insertReportColumn: ");
 
               request.getSession().setAttribute("selectedStandardReportTemplate", selectedStandardReportTemplate);
 
 
-          } catch(Exception e) {
+          } catch (Exception e) {
         	  e.printStackTrace();
           }
           return "standard_report_column";
