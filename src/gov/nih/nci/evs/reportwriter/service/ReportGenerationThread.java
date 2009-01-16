@@ -481,7 +481,7 @@ public class ReportGenerationThread implements Runnable
 			return "parent attributes";
 		}
 
-		Property[] properties = null;
+		org.LexGrid.commonTypes.Property[] properties = null;
 
 		if (property_type.compareToIgnoreCase("GENERIC")== 0)
 		{
@@ -514,7 +514,7 @@ public class ReportGenerationThread implements Runnable
 			for (int i=0; i<properties.length; i++)
 			{
 				qualifier_value = null;
-				Property p = properties[i];
+				org.LexGrid.commonTypes.Property p = properties[i];
 				if (p.getPropertyName().compareTo(property_name) == 0) // focus on matching property
 				{
 					match = true;
@@ -625,7 +625,7 @@ public class ReportGenerationThread implements Runnable
 			for (int i=0; i<properties.length; i++)
 			{
 				boolean match = false;
-				Property p = properties[i];
+				org.LexGrid.commonTypes.Property p = properties[i];
 				if (p.getPropertyName().compareTo(property_name) == 0) // focus on matching property
 				{
 					match = true;
@@ -727,8 +727,8 @@ public class ReportGenerationThread implements Runnable
 	}
 
 	private boolean isNull(String s) {
-		s = s.trim();
 		if (s == null) return true;
+		s = s.trim();
 		if (s.length() == 0) return true;
 		if (s.compareTo("") == 0) return true;
 		if (s.compareToIgnoreCase("null") == 0) return true;
