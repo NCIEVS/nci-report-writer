@@ -185,6 +185,7 @@ public class StandardReportService {
         Thread reportgeneration_thread = new Thread(new ReportGenerationThread(outputDir, standardReportLabel, uid));
         reportgeneration_thread.start();
 
+        // to be modified
         return Boolean.TRUE;
 	}
 

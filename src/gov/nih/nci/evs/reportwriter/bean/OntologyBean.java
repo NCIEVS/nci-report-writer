@@ -90,6 +90,7 @@ import java.text.NumberFormat;
 import javax.faces.model.SelectItem;
 import gov.nih.nci.evs.reportwriter.utils.*;
 
+import gov.nih.nci.evs.reportwriter.properties.ReportWriterProperties;
 
 
 /**
@@ -284,7 +285,20 @@ public class OntologyBean //extends BaseBean
 
 
 	public List getLevelList() {
-		int max_level = 20;
+		int max_level = 20; // default
+		String max_level_str = null;
+		try {
+			max_level_str = ReportWriterProperties.getInstance().getProperty(ReportWriterProperties.MAXIMUM_LEVEL);
+			max_level = 20;
+			if (max_level_str != null)
+			{
+				max_level = Integer.parseInt(max_level_str);
+			}
+		} catch (Exception ex) {
+
+		}
+
+
 		levelList = new ArrayList();
 		for (int i=0; i<=max_level; i++) {
 			String t = Integer.toString(i);

@@ -1059,6 +1059,8 @@ System.out.println(	"modifyReportTemplateAction" + " " + standardReportTemplate.
 		  HttpServletRequest request = getHttpRequest();
           String templateId = (String) request.getSession().getAttribute("selectedStandardReportTemplate");
 
+System.out.println("generateStandardReportAction: " +  templateId);
+
           try{
         	    SDKClientUtil sdkclientutil = new SDKClientUtil();
 				StandardReportTemplate standardReportTemplate = null;
@@ -1071,6 +1073,10 @@ System.out.println(	"modifyReportTemplateAction" + " " + standardReportTemplate.
 
 					  String codingscheme = standardReportTemplate.getCodingSchemeName();
 					  String version = standardReportTemplate.getCodingSchemeVersion();
+
+System.out.println("generateStandardReportAction: codingscheme " +  codingscheme);
+System.out.println("generateStandardReportAction: version " +  version);
+
 
 					  Boolean csnv_valid = DataUtils.validateCodingScheme(codingscheme, version);
 					  if (csnv_valid == null || csnv_valid.equals(Boolean.FALSE))
