@@ -131,6 +131,7 @@ import gov.nih.nci.evs.reportwriter.bean.*;
 import org.LexGrid.LexBIG.DataModel.InterfaceElements.RenderingDetail;
 import org.LexGrid.LexBIG.DataModel.Collections.CodingSchemeTagList;
 
+import gov.nih.nci.evs.reportwriter.properties.ReportWriterProperties;
 
 /**
   * <!-- LICENSE_TEXT_START -->
@@ -195,6 +196,7 @@ public class DataUtils {
 
 
     //==================================================================================
+    // For customized query use
 
 	public static int ALL = 0;
 	public static int PREFERRED_ONLY = 1;
@@ -236,10 +238,22 @@ public class DataUtils {
 
         csnv2codingSchemeNameMap = new HashMap();
         csnv2VersionMap = new HashMap();
+
+        setCodingSchemeMap();
+
+		String max_return_str = null;
+		try {
+			max_return_str = ReportWriterProperties.getInstance().getProperty(ReportWriterProperties.MAXIMUM_RETURN);
+			if (max_return_str != null)
+			{
+				maxReturn = Integer.parseInt(max_return_str);
+			}
+		} catch (Exception ex) {
+
+		}
 	}
 
 	public static List getPropertyTypeList() {
-//COMMENT, DEFINITION, INSTRUCTION, PRESENTATION, GENERIC
 		if (propertyTypeList == null)
 		{
 			propertyTypeList = new ArrayList();
@@ -324,16 +338,25 @@ public class DataUtils {
     }
 
     public static Boolean validateCodingScheme(String formalname, String version) {
+
+System.out.println("DataUtils 	validateCodingScheme " );
+
 		if (csnv2codingSchemeNameMap == null || csnv2VersionMap == null)
 		{
+
+System.out.println("DataUtils 	validateCodingScheme calling setCodingSchemeMap" );
+
+
 			setCodingSchemeMap();
-			return validateCodingScheme(formalname, version);
+			//return validateCodingScheme(formalname, version);
 		}
 
 		String key = formalname + " (version: " + version + ")";
 System.out.println("DataUtils 	validateCodingScheme key: " + key);
         if (csnv2codingSchemeNameMap.get(key) == null || csnv2VersionMap.get(key) == null )
         {
+
+System.out.println("DataUtils 	validateCodingScheme csnv2codingSchemeNameMap.get(key) == null || csnv2VersionMap.get(key) == null :??? " );
 System.out.println("DataUtils 	Boolean.FALSE ");
 
 			return Boolean.FALSE;

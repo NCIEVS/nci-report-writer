@@ -19,6 +19,8 @@ public class ReportWriterProperties {
        //KLO
 		public static final String EVS_SERVICE_URL = "EVS_SERVICE_URL";
 		public static final String REPORT_DOWNLOAD_DIRECTORY = "REPORT_DOWNLOAD_DIRECTORY";
+		public static final String MAXIMUM_LEVEL = "MAXIMUM_LEVEL";
+		public static final String MAXIMUM_RETURN = "MAXIMUM_RETURN";
 
 	    private static Logger log = Logger.getLogger(ReportWriterProperties.class);
 
@@ -75,15 +77,4 @@ public class ReportWriterProperties {
 	            log.debug("KEY: "+ key +"\t - "+value);
 			}
 		}
-
-	    /*
-	    // KLO
-	    public String getServiceUrl() throws Exception{
-	    	return properties.getProperty("EVS_SERVICE_URL");
-	    }
-
-	    public String getDownloadDir() throws Exception{
-	    	return properties.getProperty("REPORT_DOWNLOAD_DIRECTORY");
-	    }
-	    */
 	}

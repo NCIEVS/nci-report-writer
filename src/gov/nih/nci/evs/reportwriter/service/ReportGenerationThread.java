@@ -56,6 +56,10 @@ import org.LexGrid.concepts.Presentation;
 import org.LexGrid.relations.Relations;
 import org.apache.log4j.Logger;
 
+import gov.nih.nci.evs.reportwriter.properties.ReportWriterProperties;
+import gov.nih.nci.evs.reportwriter.utils.SortUtils;
+
+
 
 /**
   * <!-- LICENSE_TEXT_START -->
@@ -291,9 +295,19 @@ public class ReportGenerationThread implements Runnable
 
         int curr_level = 0;
         int max_level = standardReportTemplate.getLevel();
+		if (max_level == -1) {
+			String max_level_str = null;
+			try {
+				max_level_str = ReportWriterProperties.getInstance().getProperty(ReportWriterProperties.MAXIMUM_LEVEL);
+				max_level = 20;
+				if (max_level_str != null)
+				{
+					max_level = Integer.parseInt(max_level_str);
+				}
+		    } catch (Exception ex) {
 
-// *********************** To be modified: (add an entry in property file)
-        if (max_level == -1) max_level = 100;
+			}
+	    }
 
         printReportHeading(pw, cols);
 
@@ -314,7 +328,7 @@ public class ReportGenerationThread implements Runnable
 
         System.out.println("Output file " + pathname + " generated.");
 
-        // convert tab-delimited file to Excel (to be implemented)
+        // convert tab-delimited file to Excel
 
         String reportFormat_value = "Text (tab delimited)";
         String reportStatus_value = "DRAFT";
@@ -327,11 +341,10 @@ public class ReportGenerationThread implements Runnable
             reportStatus_value = "DRAFT",
             uid);
 
-/*
         // convert to Excel
+        bool_obj = FileUtil.convertToExcel(pathname, delimeter_str);
 
         // create xls report record
-
 	    bool_obj = new StandardReportService().createStandardReport(
 			standardReportLabel + ".xls",
 			pathname,
@@ -339,7 +352,7 @@ public class ReportGenerationThread implements Runnable
             reportFormat_value = "Microsoft Office Excel",
             reportStatus_value = "DRAFT",
             uid);
-*/
+
 		return bool_obj;
 	}
 
@@ -432,10 +445,30 @@ public class ReportGenerationThread implements Runnable
  			String subconcep_code = concept.getId();
             traverse(pw, scheme, version, tag, subconcep_code, hierarchyAssociationName, associationName, direction, level, maxLevel, cols);
 		}
+	}
+
+    public String getReportColumnValue(String scheme, String version, Concept root, Concept node, ReportColumn rc) {
+		return getReportColumnValue(scheme, version, root, node, null, rc);
+	}
+
+
+    public Vector getParentCodes(String scheme, String version, String code) {
+		DataUtils util = new DataUtils();
+        Vector hierarchicalAssoName_vec = util.getHierarchyAssociationId(scheme, version);
+        if (hierarchicalAssoName_vec == null || hierarchicalAssoName_vec.size() == 0)
+        {
+			return null;
+		}
+        String hierarchicalAssoName = (String) hierarchicalAssoName_vec.elementAt(0);
+        Vector<Concept> superconcept_vec = util.getAssociationSources(scheme, version, code, hierarchicalAssoName);
+        if (superconcept_vec == null) return null;
+        SortUtils.quickSort(superconcept_vec, SortUtils.SORT_BY_CODE);
+        return superconcept_vec;
 
 	}
 
-    public String getReportColumnValue(String scheme, String version, Concept root, Concept node, ReportColumn rc)
+
+    public String getReportColumnValue(String scheme, String version, Concept root, Concept node, Concept parent, ReportColumn rc)
     {
 		String field_Id = rc.getFieldId();
 		String property_name = rc.getPropertyName();
@@ -462,23 +495,25 @@ public class ReportGenerationThread implements Runnable
 
 		if (field_Id.equals("Code")) return node.getId();
         if (field_Id.equals("Associated Concept Code")) return root.getId();
-        if (field_Id.equals("Parent Code"))
-        {
-        //   find parent concepts
-             return "parent code";
-		}
+        if (field_Id.equals("Parent Code")) return parent.getId();
+
 
         Concept concept = node;
         if (field_Id.indexOf("Associated") != -1)
         {
 			concept = root;
 		}
-
-        // to be implemented
         else if (field_Id.indexOf("Parent") != -1)
         {
-			// to be implemented
-			return "parent attributes";
+			Vector superconcept_vec = getParentCodes(scheme, version, node.getId());
+			if (superconcept_vec != null && superconcept_vec.size() > 0)
+			{
+				concept = (Concept) superconcept_vec.elementAt(superconcept_vec.size()-1);
+		    }
+		    else
+		    {
+				return "NA";
+			}
 		}
 
 		org.LexGrid.commonTypes.Property[] properties = null;
