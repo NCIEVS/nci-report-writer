@@ -2,7 +2,6 @@
 <%@ taglib uri="http://java.sun.com/jsf/html" prefix="h" %>
 <%@ taglib uri="http://java.sun.com/jsf/core" prefix="f" %> 
 
-<f:loadBundle basename="gov.nih.nci.evs.reportwriter.bean.Resources" var="reportwriterBundle"/>
 
 <%@ page contentType="text/html;charset=windows-1252"%>
 
@@ -10,11 +9,15 @@
 <head>
 <title>Home</title>
 <link rel="stylesheet" type="text/css" href="<%= request.getContextPath() %>/css/styleSheet.css" />
+<meta http-equiv="Pragma" content="no-cache">
+<meta http-equiv="Cache-Control" content="no-cache">
+<meta http-equiv="expires" content="0">
 <script src="script.js" type="text/javascript"></script>
 </head>
 <body>
 
 <f:view>
+<f:loadBundle basename="gov.nih.nci.evs.reportwriter.bean.Resources" var="reportwriterBundle"/>
 
 <table summary="" cellpadding="0" cellspacing="0" border="0" width="100%" height="100%">
 	
@@ -99,7 +102,7 @@
     <td class="sidebarLogin" align="right"><label for="loginID">LOGIN ID</label></td>                                        
     <td>
 	    <h:inputText id="userid" size="15" required="true" value="#{loginBean.userid}" >  
-	       <f:validateLength minimum="4" maximum="10" />
+	       <f:validateLength minimum="4" maximum="50" />
 	    </h:inputText>  
     </td> 
 	    
@@ -107,7 +110,8 @@
                                             <tr>
                                             
     <td class="sidebarLogin" align="right"><label for="password">PASSWORD</label></td>                                        
-    <td><h:inputSecret id="password" size="15" required="true" value="#{loginBean.password}" ><f:validateLength minimum="4" maximum="50" /></h:inputSecret> </td>
+    <td><h:inputSecret id="password" size="15" required="true" value="#{loginBean.password}" >
+    <f:validateLength minimum="4" maximum="50" /></h:inputSecret> </td>
                                             
                                             </tr>
                                             <tr>
