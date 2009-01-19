@@ -5,8 +5,8 @@
 <%
 String path = request.getContextPath();
 String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.getServerPort()+path+"/";
-HttpSession httpSession=request.getSession(false);
-httpSession.invalidate();
+
+session.invalidate();
 %>
 
 <%@ page contentType="text/html;charset=windows-1252"%>
@@ -14,7 +14,6 @@ httpSession.invalidate();
 <html>
 <head>
 
-<base href="<%=basePath%>"/>
 
 <meta http-equiv="pragma" content="no-cache"/>
 <meta http-equiv="cache-control" content="no-cache"/>
@@ -29,6 +28,8 @@ httpSession.invalidate();
 <body>
 
 <f:view>
+<base href="<%=basePath%>"/>
+<f:loadBundle basename="gov.nih.nci.evs.reportwriter.bean.Resources" var="reportwriterBundle"/>
 
 <table summary="" cellpadding="0" cellspacing="0" border="0" width="100%" height="100%">
 	
@@ -109,6 +110,36 @@ httpSession.invalidate();
                                         <td class="txtHighlight">You have successfully logged out.</td>
                                       </tr>                                      
                                       
+                                      
+                                      <tr>
+                                        <td class="sidebarContent">
+                                          <table cellpadding="2" cellspacing="0" border="0">
+                                            <tr>
+                                            
+    <td class="sidebarLogin" align="right"><label for="loginID">LOGIN ID</label></td>                                        
+    <td>
+	    <h:inputText id="userid" size="15" required="true" value="#{loginBean.userid}" >  
+	       <f:validateLength minimum="4" maximum="50" />
+	    </h:inputText>  
+    </td> 
+	    
+                                            </tr>
+                                            <tr>
+                                            
+    <td class="sidebarLogin" align="right"><label for="password">PASSWORD</label></td>                                        
+    <td><h:inputSecret id="password" size="15" required="true" value="#{loginBean.password}" ><f:validateLength minimum="4" maximum="50" /></h:inputSecret> </td>
+                                            
+                                            </tr>
+                                            <tr>
+                                              <td>&nbsp;</td>
+     <td>                                         
+     <h:commandButton id="submit" action="#{loginBean.loginAction}" value="#{reportwriterBundle.loginSubmitLabel}"></h:commandButton>
+     </td>                                         
+                                            </tr>
+                                          </table>
+                                        </td>
+                                      </tr>
+                                    
  
                                     </table>
                                     
