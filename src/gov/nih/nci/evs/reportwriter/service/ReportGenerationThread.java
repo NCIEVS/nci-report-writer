@@ -228,6 +228,8 @@ public class ReportGenerationThread implements Runnable
 		codingSchemeName = standardReportTemplate.getCodingSchemeName();
 		codingSchemeVersion = standardReportTemplate.getCodingSchemeVersion();
 		rootConceptCode = standardReportTemplate.getRootConceptCode();
+
+
 		associationName = standardReportTemplate.getAssociationName();
 		boolean direction = standardReportTemplate.getDirection();
 		level = standardReportTemplate.getLevel();
@@ -288,6 +290,10 @@ public class ReportGenerationThread implements Runnable
         String scheme = standardReportTemplate.getCodingSchemeName();
         version = standardReportTemplate.getCodingSchemeVersion();
         String code = standardReportTemplate.getRootConceptCode();
+
+        Concept defining_root_concept = DataUtils.getConceptByCode(codingSchemeName, codingSchemeVersion, null, rootConceptCode);
+
+
         associationName = standardReportTemplate.getAssociationName();
         level = standardReportTemplate.getLevel();
 
@@ -318,7 +324,7 @@ public class ReportGenerationThread implements Runnable
 		}
 
         String hierarchicalAssoName = (String) hierarchicalAssoName_vec.elementAt(0);
-        traverse(pw, scheme, version, tag, code, hierarchicalAssoName, associationName, direction, curr_level, max_level, cols);
+        traverse(pw, scheme, version, tag, defining_root_concept, code, hierarchicalAssoName, associationName, direction, curr_level, max_level, cols);
         closePrintWriter(pw);
         // convert to Excel:
 
@@ -378,13 +384,13 @@ public class ReportGenerationThread implements Runnable
 		pw.println(columnHeadings);
 	}
 
-    private void writeColumnData(PrintWriter pw, String scheme, String version, Concept root, Concept c, String delim, ReportColumn[] cols) {
+    private void writeColumnData(PrintWriter pw, String scheme, String version, Concept defining_root_concept, Concept associated_concept, Concept c, String delim, ReportColumn[] cols) {
 		//pw.println(root.getId() + delim + root.getEntityDescription().getContent() + delim + c.getId() + delim + c.getEntityDescription().getContent());
     	String output_line = "";
 		for (int i=0; i<cols.length; i++)
 		{
 			ReportColumn rc = (ReportColumn) cols[i];
-			String s = getReportColumnValue(scheme, version, root, c, rc);
+			String s = getReportColumnValue(scheme, version, defining_root_concept, associated_concept, c, rc);
             if (i == 0)
             {
 				output_line = s;
@@ -397,7 +403,7 @@ public class ReportGenerationThread implements Runnable
         pw.println(output_line);
 	}
 
-    private void traverse(PrintWriter pw, String scheme, String version, String tag, String code, String hierarchyAssociationName,
+    private void traverse(PrintWriter pw, String scheme, String version, String tag, Concept defining_root_concept, String code, String hierarchyAssociationName,
                           String associationName, boolean direction, int level, int maxLevel, ReportColumn[] cols)
     {
 		//System.out.println("Level: " + level + "\tmaxLevel: " + maxLevel);
@@ -433,7 +439,7 @@ public class ReportGenerationThread implements Runnable
         {
 			// subset member element
 			Concept c = (Concept) v.elementAt(i);
-			writeColumnData(pw, scheme, version, root, c, delim, cols);
+			writeColumnData(pw, scheme, version, defining_root_concept, root, c, delim, cols);
 		}
 
         Vector<Concept> subconcept_vec = util.getAssociationTargets(scheme, version, root.getId(), hierarchyAssociationName);
@@ -443,12 +449,12 @@ public class ReportGenerationThread implements Runnable
         {
  			Concept concept = (Concept) subconcept_vec.elementAt(k);
  			String subconcep_code = concept.getId();
-            traverse(pw, scheme, version, tag, subconcep_code, hierarchyAssociationName, associationName, direction, level, maxLevel, cols);
+            traverse(pw, scheme, version, tag, defining_root_concept, subconcep_code, hierarchyAssociationName, associationName, direction, level, maxLevel, cols);
 		}
 	}
 
-    public String getReportColumnValue(String scheme, String version, Concept root, Concept node, ReportColumn rc) {
-		return getReportColumnValue(scheme, version, root, node, null, rc);
+    public String getReportColumnValue(String scheme, String version, Concept defining_root_concept, Concept associated_concept, Concept node, ReportColumn rc) {
+		return getReportColumnValue(scheme, version, defining_root_concept, associated_concept, node, null, rc);
 	}
 
 
@@ -468,7 +474,7 @@ public class ReportGenerationThread implements Runnable
 	}
 
 
-    public String getReportColumnValue(String scheme, String version, Concept root, Concept node, Concept parent, ReportColumn rc)
+    public String getReportColumnValue(String scheme, String version, Concept defining_root_concept, Concept associated_concept, Concept node, Concept parent, ReportColumn rc)
     {
 		String field_Id = rc.getFieldId();
 		String property_name = rc.getPropertyName();
@@ -494,14 +500,17 @@ public class ReportGenerationThread implements Runnable
 		if (isNull(delimiter)) delimiter = null;
 
 		if (field_Id.equals("Code")) return node.getId();
-        if (field_Id.equals("Associated Concept Code")) return root.getId();
+        if (field_Id.equals("Associated Concept Code")) return associated_concept.getId();
         if (field_Id.equals("Parent Code")) return parent.getId();
 
 
         Concept concept = node;
-        if (field_Id.indexOf("Associated") != -1)
+        if (property_name.compareTo("Contributing_Source") == 0) {
+			concept = defining_root_concept;
+		}
+        else if (field_Id.indexOf("Associated") != -1)
         {
-			concept = root;
+			concept = associated_concept;
 		}
         else if (field_Id.indexOf("Parent") != -1)
         {
