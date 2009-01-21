@@ -236,9 +236,6 @@ public class DataUtils {
 
 		standardReportTemplateList = new ArrayList();
 
-        csnv2codingSchemeNameMap = new HashMap();
-        csnv2VersionMap = new HashMap();
-
         setCodingSchemeMap();
 
 		String max_return_str = null;
@@ -339,6 +336,8 @@ public class DataUtils {
 
     public static Boolean validateCodingScheme(String formalname, String version) {
 
+// to be implemented:
+/*
 System.out.println("DataUtils 	validateCodingScheme " );
 
 		if (csnv2codingSchemeNameMap == null || csnv2VersionMap == null)
@@ -346,9 +345,8 @@ System.out.println("DataUtils 	validateCodingScheme " );
 
 System.out.println("DataUtils 	validateCodingScheme calling setCodingSchemeMap" );
 
-
 			setCodingSchemeMap();
-			//return validateCodingScheme(formalname, version);
+			return validateCodingScheme(formalname, version);
 		}
 
 		String key = formalname + " (version: " + version + ")";
@@ -364,20 +362,18 @@ System.out.println("DataUtils 	Boolean.FALSE ");
 		else
 		{
 System.out.println("DataUtils 	Boolean.TRUE ");
-
+*/
 			return Boolean.TRUE;
-		}
+		//}
 	}
 
     private static void setCodingSchemeMap()
 	{
-		if (_ontologies != null) return;
-
+		//if (_ontologies != null) return;
 		_ontologies = new ArrayList();
 		codingSchemeMap = new HashMap();
 		csnv2codingSchemeNameMap = new HashMap();
 		csnv2VersionMap = new HashMap();
-
 
         try {
         	RemoteServerUtil rsu = new RemoteServerUtil();

@@ -557,9 +557,13 @@ public class OntologyBean //extends BaseBean
 		dataCategoryList.add(new SelectItem("Associated Concept Property"));
 		dataCategoryList.add(new SelectItem("Associated Concept Property Qualifier"));
 
-		dataCategoryList.add(new SelectItem("Parent Code"));
-		dataCategoryList.add(new SelectItem("Parent Property"));
-		dataCategoryList.add(new SelectItem("Parent Property Qualifier"));
+		dataCategoryList.add(new SelectItem("1st Parent Code"));
+		dataCategoryList.add(new SelectItem("1st Parent Property"));
+		dataCategoryList.add(new SelectItem("1st Parent Property Qualifier"));
+
+		dataCategoryList.add(new SelectItem("2nd Parent Code"));
+		dataCategoryList.add(new SelectItem("2nd Parent Property"));
+		dataCategoryList.add(new SelectItem("2nd Parent Property Qualifier"));
 
 		if (dataCategoryList != null && dataCategoryList.size() > 0) {
 			selectedDataCategory = ((SelectItem) dataCategoryList.get(0)).getLabel();
