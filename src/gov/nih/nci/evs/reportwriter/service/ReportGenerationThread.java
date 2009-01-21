@@ -501,7 +501,7 @@ public class ReportGenerationThread implements Runnable
 
 		if (field_Id.equals("Code")) return node.getId();
         if (field_Id.equals("Associated Concept Code")) return associated_concept.getId();
-        if (field_Id.equals("Parent Code")) return parent.getId();
+        //if (field_Id.equals("Parent Code")) return parent.getId();
 
 
         Concept concept = node;
@@ -515,9 +515,15 @@ public class ReportGenerationThread implements Runnable
         else if (field_Id.indexOf("Parent") != -1)
         {
 			Vector superconcept_vec = getParentCodes(scheme, version, node.getId());
-			if (superconcept_vec != null && superconcept_vec.size() > 0)
+			if (superconcept_vec != null && superconcept_vec.size() > 0 && field_Id.indexOf("1st Parent") != -1)
 			{
 				concept = (Concept) superconcept_vec.elementAt(superconcept_vec.size()-1);
+				if (field_Id.equals("1st Parent Code")) return concept.getId();
+		    }
+			else if (superconcept_vec != null && superconcept_vec.size() > 1 && field_Id.indexOf("2nd Parent") != -1)
+			{
+				concept = (Concept) superconcept_vec.elementAt(superconcept_vec.size()-2);
+				if (field_Id.equals("2nd Parent Code")) return concept.getId();
 		    }
 		    else
 		    {
@@ -664,7 +670,7 @@ public class ReportGenerationThread implements Runnable
 		}
 
 		else if (field_Id.compareToIgnoreCase("Property") == 0 || field_Id.compareToIgnoreCase("Associated concept property") == 0
-		                                                       || field_Id.compareToIgnoreCase("Parent property") == 0)
+		                                                       || field_Id.indexOf("Parent property") != -1)
 		{
 			for (int i=0; i<properties.length; i++)
 			{
