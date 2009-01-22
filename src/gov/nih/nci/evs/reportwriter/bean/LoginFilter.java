@@ -41,9 +41,10 @@ public class LoginFilter implements Filter {
 		    	Boolean svalid = null;
 		    	if(session != null) 
 		    		svalid = (Boolean) session.getAttribute("isSessionValid");
-		    	if(svalid != null)
+		    	/*if(svalid != null)
 		    		System.out.println("is session valid? " + svalid.toString());
-		    			    	
+		    	*/
+		    	
 		        if(svalid == null || svalid.equals(Boolean.FALSE)) {
 		    		  String queryString = hsr.getQueryString();
 		              String page=contxt;
