@@ -1,7 +1,7 @@
 <?xml version="1.0"?> 
 <!DOCTYPE web-app PUBLIC 
   "-//Sun Microsystems, Inc.//DTD Web Application 2.3//EN" 
-  "http://java.sun.com/dtd/web-app_2_3.dtd"> 
+  "http://java.sun.com/dtd/web-app_2_3.dtd">
 <web-app> 
 
     <context-param>
@@ -38,11 +38,9 @@
    
    <filter-mapping>
       <filter-name>LoginFilter</filter-name>
-      <url-pattern>/*</url-pattern>
+      <url-pattern>*.jsf</url-pattern>
    </filter-mapping>  
-	
 	  
-  
  
     <!-- Faces Servlet -->
     <servlet>
