@@ -150,7 +150,9 @@ public final class FileServlet extends HttpServlet {
         ReportFormat rf = standardReport.getFormat();
         String format = rf.getDescription();
 		response.setContentType("text/html");
-		String line_br = "\n";
+		//String line_br = "\n";
+
+		String line_br = "\r\n";
 
         response.setHeader("Cache-Control", "no-cache");
 		if (format.indexOf("Excel") != -1) {
