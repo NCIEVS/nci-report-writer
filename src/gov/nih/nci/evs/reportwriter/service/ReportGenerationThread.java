@@ -351,6 +351,10 @@ public class ReportGenerationThread implements Runnable
         bool_obj = FileUtil.convertToExcel(pathname, delimeter_str);
 
         // create xls report record
+        pathname = outputDir + File.separator + standardReportLabel + "__" + version + ".xls";
+		pathname = pathname.replaceAll(" ", "_");
+		System.out.println("Full path name: " + pathname);
+
 	    bool_obj = new StandardReportService().createStandardReport(
 			standardReportLabel + ".xls",
 			pathname,
