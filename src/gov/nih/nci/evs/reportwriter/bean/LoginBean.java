@@ -160,7 +160,7 @@ public class LoginBean extends Object
 		  gov.nih.nci.evs.reportwriter.bean.User user = (gov.nih.nci.evs.reportwriter.bean.User) obj;
 		  return user;
 	  } catch(Exception e) {
-		  e.printStackTrace();
+		  //e.printStackTrace();
 	  }
 	  return null;
   }
@@ -182,7 +182,7 @@ public class LoginBean extends Object
 			    HttpSession session = request.getSession(); // true
 			    if (session != null) {
 					 session.setAttribute("uid", userid);
-					 session.setAttribute("password", password);
+					 //session.setAttribute("password", password);
 				}
 				isAdmin = hasAdminPrivilege();
 				session.setAttribute("isAdmin", isAdmin);
