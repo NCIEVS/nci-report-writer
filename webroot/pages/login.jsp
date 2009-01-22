@@ -3,6 +3,8 @@
 <%@ taglib uri="http://java.sun.com/jsf/core" prefix="f" %> 
 
 
+<f:loadBundle basename="gov.nih.nci.evs.reportwriter.bean.Resources" var="reportwriterBundle"/>
+
 <%@ page contentType="text/html;charset=windows-1252"%>
 
 <html>
@@ -17,7 +19,6 @@
 <body>
 
 <f:view>
-<f:loadBundle basename="gov.nih.nci.evs.reportwriter.bean.Resources" var="reportwriterBundle"/>
 
 <table summary="" cellpadding="0" cellspacing="0" border="0" width="100%" height="100%">
 	
