@@ -187,6 +187,7 @@ public class FileUtil {
 					 }
 
 				     String s = (String) v.elementAt(i);
+				     s = s.trim();
 				   	 wc.setCellValue(s);
 				  }
 				  rownum++;
