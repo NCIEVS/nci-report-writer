@@ -390,11 +390,13 @@ public class ReportGenerationThread implements Runnable
 
     private void writeColumnData(PrintWriter pw, String scheme, String version, Concept defining_root_concept, Concept associated_concept, Concept c, String delim, ReportColumn[] cols) {
 		//pw.println(root.getId() + delim + root.getEntityDescription().getContent() + delim + c.getId() + delim + c.getEntityDescription().getContent());
+System.out.println("writeColumnData ...");
     	String output_line = "";
 		for (int i=0; i<cols.length; i++)
 		{
 			ReportColumn rc = (ReportColumn) cols[i];
 			String s = getReportColumnValue(scheme, version, defining_root_concept, associated_concept, c, rc);
+System.out.println("writeColumnData ...s " + s);
             if (i == 0)
             {
 				output_line = s;
@@ -505,11 +507,9 @@ public class ReportGenerationThread implements Runnable
 
 		if (field_Id.equals("Code")) return node.getId();
         if (field_Id.equals("Associated Concept Code")) return associated_concept.getId();
-        //if (field_Id.equals("Parent Code")) return parent.getId();
-
 
         Concept concept = node;
-        if (property_name.compareTo("Contributing_Source") == 0) {
+        if (property_name != null && property_name.compareTo("Contributing_Source") == 0) {
 			concept = defining_root_concept;
 		}
         else if (field_Id.indexOf("Associated") != -1)
@@ -557,10 +557,8 @@ public class ReportGenerationThread implements Runnable
 		{
 			properties = concept.getDefinition();
 		}
-
         String return_str = " "; // to resolve Excel cell problem
         int num_matches = 0;
-
         if (field_Id.indexOf("Property Qualifier") != -1)
 		{
 			//getRepresentationalForm
@@ -776,7 +774,6 @@ public class ReportGenerationThread implements Runnable
 			}
 
 		}
-
 		return return_str;
 	}
 
