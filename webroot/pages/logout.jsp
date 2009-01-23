@@ -71,7 +71,7 @@ session.invalidate();
                     
 					        <!-- banner begins -->
 					        <tr>
-					              <td class="bannerHome"><img src="<%= request.getContextPath() %>/images/bannerHome.gif" height="140"></td>
+					              <td class="bannerHome"><img src="<%= request.getContextPath() %>/images/bannerHome.gif" height="140" width="620"></td>
 					        </tr>
 					        <!-- banner begins -->
 
