@@ -21,7 +21,7 @@ public class LoginFilter implements Filter {
 	}
 
 	public void doFilter(ServletRequest request, ServletResponse
-			  response, FilterChain chain) throws IOException, ServletException {
+			  response, FilterChain chain) throws IOException, ServletException, IllegalStateException {
 
 		try {
 			HttpServletRequest hsr = (HttpServletRequest) request;
@@ -32,31 +32,46 @@ public class LoginFilter implements Filter {
 		    int index = uri.lastIndexOf("/");
 		    String path = uri.substring(index);
 		
-		    if (path.equals("/login.jsf") || path.equals("/") || path.equals("/download_nologin.jsf")) {
+		    if (path.equals("/login.jsf") || path.equals("/") || path.equals("/download_nologin.jsf") || path.equals("/download.jsf")) {
 		        chain.doFilter(request, response);
 		    }
 		    else {
-		    	HttpSession session = hsr.getSession();
 		    	
-		    	Boolean svalid = null;
-		    	if(session != null) 
-		    		svalid = (Boolean) session.getAttribute("isSessionValid");
-		    	/*if(svalid != null)
-		    		System.out.println("is session valid? " + svalid.toString());
-		    	*/
-		    	
-		        if(svalid == null || svalid.equals(Boolean.FALSE)) {
-		    		  String queryString = hsr.getQueryString();
-		              String page=contxt;
-		              hsr2.sendRedirect(page + (queryString == null ? "" :
-		  "?" + queryString));
-		         }
-		         else {
-		       	  	 chain.doFilter(request, response);
-		         }
+		    	try {
+		    		HttpSession session = hsr.getSession();
+			    	
+			    	Boolean svalid = null;
+			    	if(session != null) {
+			    		try {
+			    			svalid = (Boolean) session.getAttribute("isSessionValid");
+			    		} catch (Exception e) {
+			    			//e.printStackTrace();
+			    		}
+			    	}
+			    	
+			        if(svalid == null || svalid.equals(Boolean.FALSE)) {
+			        	try {
+			        		 String queryString = hsr.getQueryString();
+				              String page=contxt;
+				              hsr2.sendRedirect(page + (queryString == null ? "" :
+				  "?" + queryString));
+			    		} catch (Exception e) {
+			    			//e.printStackTrace();
+			    		}
+			         }
+			         else {
+			        	 try {
+			       	  	 	chain.doFilter(request, response);
+			        	 } catch (Exception e) {
+			        		 //e.printStackTrace();
+			        	 }
+			         }
+		    	} catch (Exception e) {
+		    		//e.printStackTrace();
+		    	}
 		    }
 		} catch(Exception e) {
-			e.printStackTrace();
+			//e.printStackTrace();
 		}
 	}
 
