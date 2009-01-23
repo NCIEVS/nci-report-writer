@@ -53,8 +53,8 @@ session.invalidate();
                               <tr>
                                     <td height="20" width="100%" class="mainMenu">
                 
-<%@ include file="/pages/templates/menuBar1.xhtml" %>
-                  
+<%@ include file="/pages/templates/menuBar_skip.xhtml" %>
+
                                     </td>
                               </tr>
                               
@@ -71,7 +71,7 @@ session.invalidate();
                     
 					        <!-- banner begins -->
 					        <tr>
-					              <td class="bannerHome"><img src="<%= request.getContextPath() %>/images/bannerHome.jpg" height="140"></td>
+					              <td class="bannerHome"><img src="<%= request.getContextPath() %>/images/bannerHome.jpg" height="140" width="620"></td>
 					        </tr>
 					        <!-- banner begins -->
 
