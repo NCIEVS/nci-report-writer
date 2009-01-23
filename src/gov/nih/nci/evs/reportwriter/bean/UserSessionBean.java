@@ -973,36 +973,6 @@ System.out.println("delim: " + delim);
 		return "assign_report_status";
 	}
 
-/*
-
-        	  SDKClientUtil sdkclientutil = new SDKClientUtil();
-        	  String FQName = "gov.nih.nci.evs.reportwriter.bean.StandardReport";
-        	  String methodName = "setLabel";
-        	  String key = label;
-        	  Object[] objs = sdkclientutil.search(FQName);
-
-
-System.out.println("createStandardReport Step 2  -- delete old report objects from database. ");
-
-        	  if (objs != null)
-        	  {
-				  // report already exists, delete it
-				  for (int i=0; i<objs.length; i++)
-				  {
-                  	  StandardReport report = (StandardReport) objs[i];
-                  	  String reportlabel = report.getLabel();
-                  	  if (label.compareTo(reportlabel) == 0)
-                  	  {
-						  sdkclientutil.deleteStandardReport(report);
-					  }
-				  }
- 			  }
-
-System.out.println("createStandardReport Step 3  -- create StandardReport object. ");
-
-              java.util.Date lastModified = new Date(); // system date
-        	  StandardReport report = sdkclientutil.createStandardReport(label, lastModified, pathName);
-*/
 
 	  public String modifyReportTemplateAction() {
 		  HttpServletRequest request = getHttpRequest();
@@ -1011,7 +981,6 @@ System.out.println("createStandardReport Step 3  -- create StandardReport object
 		  // find thesaurus name through template
           try{
         	  SDKClientUtil sdkclientutil = new SDKClientUtil();
-
 
 System.out.println(	"modifyReportTemplateAction" + " " + templateLabel );
 
