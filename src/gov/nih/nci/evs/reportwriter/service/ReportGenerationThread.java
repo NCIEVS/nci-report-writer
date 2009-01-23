@@ -390,13 +390,11 @@ public class ReportGenerationThread implements Runnable
 
     private void writeColumnData(PrintWriter pw, String scheme, String version, Concept defining_root_concept, Concept associated_concept, Concept c, String delim, ReportColumn[] cols) {
 		//pw.println(root.getId() + delim + root.getEntityDescription().getContent() + delim + c.getId() + delim + c.getEntityDescription().getContent());
-System.out.println("writeColumnData ...");
     	String output_line = "";
 		for (int i=0; i<cols.length; i++)
 		{
 			ReportColumn rc = (ReportColumn) cols[i];
 			String s = getReportColumnValue(scheme, version, defining_root_concept, associated_concept, c, rc);
-System.out.println("writeColumnData ...s " + s);
             if (i == 0)
             {
 				output_line = s;

@@ -1187,7 +1187,6 @@ System.out.println("DataUtils 	Boolean.TRUE ");
 
             for (int i=0; i<ids.length; i++)
             {
-				System.out.println("association id: " + ids[i]);
 				if (!association_vec.contains(ids[i])) {
 					association_vec.add(ids[i]);
 			    }
