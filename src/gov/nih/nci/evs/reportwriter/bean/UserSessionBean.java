@@ -1111,6 +1111,12 @@ System.out.println("generateStandardReportAction: version " +  version);
 		  }
 
 		  System.out.println("download_dir " + download_dir);
+		  if (download_dir == null)
+		  {
+			  message = "The download directory has not been set up properly -- ask your administrator to check JBoss setting in properties-service.xml.";
+			  request.getSession().setAttribute("message", message);
+			  return "message";
+		  }
           Boolean retval = new StandardReportService().generateStandardReport(download_dir, selectedStandardReportTemplate, uid);
 
           // Instantiate Report Generation Service
@@ -1140,7 +1146,7 @@ System.out.println("downloading report " + selectedStandardReportTemplate);
           String download_dir = null;
           try {
         	  download_dir = ReportWriterProperties.getInstance().getProperty(ReportWriterProperties.REPORT_DOWNLOAD_DIRECTORY);
-System.out.println("download_dir " + download_dir);
+//System.out.println("download_dir " + download_dir);
 
 		  } catch (Exception ex) {
 
