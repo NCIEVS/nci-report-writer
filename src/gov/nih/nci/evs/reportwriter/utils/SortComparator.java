@@ -78,6 +78,13 @@ public class SortComparator implements Comparator<Object>{
 			if (sort_option == SORT_BY_CODE) return ac.getConceptCode();
 			return ac.getEntityDescription().getContent();
 		}
+
+	    else if (c instanceof String)
+	    {
+			String s = (String) c;
+			return s;
+		}
+
 	    return c.toString();
     }
 

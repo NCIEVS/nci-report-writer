@@ -103,11 +103,15 @@ public class ReportGenerationThread implements Runnable
 	String standardReportLabel = null;
 	String uid = null;
 
+	int count = 0;
+
 	public ReportGenerationThread(String outputDir, String standardReportLabel, String uid)
 	{
 		this.outputDir = outputDir;
 		this.standardReportLabel = standardReportLabel;
 		this.uid = uid;
+
+		count = 0;
 	}
 
 
@@ -326,6 +330,9 @@ public class ReportGenerationThread implements Runnable
         String hierarchicalAssoName = (String) hierarchicalAssoName_vec.elementAt(0);
         traverse(pw, scheme, version, tag, defining_root_concept, code, hierarchicalAssoName, associationName, direction, curr_level, max_level, cols);
         closePrintWriter(pw);
+
+        System.out.println("Total number of concepts processed: " + count);
+
         // convert to Excel:
 
         // createStandardReport -- need user's loginName
@@ -405,6 +412,12 @@ public class ReportGenerationThread implements Runnable
 			}
 		}
         pw.println(output_line);
+
+		count++;
+		if ((count/100) * 100 == count)
+		{
+			System.out.println("Number of concepts processed: " + count);
+		}
 	}
 
     private void traverse(PrintWriter pw, String scheme, String version, String tag, Concept defining_root_concept, String code, String hierarchyAssociationName,
@@ -470,7 +483,9 @@ public class ReportGenerationThread implements Runnable
 			return null;
 		}
         String hierarchicalAssoName = (String) hierarchicalAssoName_vec.elementAt(0);
-        Vector<Concept> superconcept_vec = util.getAssociationSources(scheme, version, code, hierarchicalAssoName);
+        //KLO, 01/23/2009
+        //Vector<Concept> superconcept_vec = util.getAssociationSources(scheme, version, code, hierarchicalAssoName);
+        Vector<Concept> superconcept_vec = util.getAssociationSourceCodes(scheme, version, code, hierarchicalAssoName);
         if (superconcept_vec == null) return null;
         SortUtils.quickSort(superconcept_vec, SortUtils.SORT_BY_CODE);
         return superconcept_vec;
@@ -480,6 +495,8 @@ public class ReportGenerationThread implements Runnable
 
     public String getReportColumnValue(String scheme, String version, Concept defining_root_concept, Concept associated_concept, Concept node, Concept parent, ReportColumn rc)
     {
+
+
 		String field_Id = rc.getFieldId();
 		String property_name = rc.getPropertyName();
 		String qualifier_name = rc.getQualifierName();
@@ -519,13 +536,19 @@ public class ReportGenerationThread implements Runnable
 			Vector superconcept_vec = getParentCodes(scheme, version, node.getId());
 			if (superconcept_vec != null && superconcept_vec.size() > 0 && field_Id.indexOf("1st Parent") != -1)
 			{
-				concept = (Concept) superconcept_vec.elementAt(superconcept_vec.size()-1);
-				if (field_Id.equals("1st Parent Code")) return concept.getId();
+				String superconceptCode = (String) superconcept_vec.elementAt(superconcept_vec.size()-1);
+				if (field_Id.equals("1st Parent Code")) return superconceptCode;
+				concept = DataUtils.getConceptByCode(scheme, version, null, superconceptCode);
+				//concept = (Concept) superconcept_vec.elementAt(superconcept_vec.size()-1);
+				//if (field_Id.equals("1st Parent Code")) return concept.getId();
 		    }
 			else if (superconcept_vec != null && superconcept_vec.size() > 1 && field_Id.indexOf("2nd Parent") != -1)
 			{
-				concept = (Concept) superconcept_vec.elementAt(superconcept_vec.size()-2);
-				if (field_Id.equals("2nd Parent Code")) return concept.getId();
+				String superconceptCode = (String) superconcept_vec.elementAt(superconcept_vec.size()-2);
+				if (field_Id.equals("2nd Parent Code")) return superconceptCode;
+				concept = DataUtils.getConceptByCode(scheme, version, null, superconceptCode);
+				//if (field_Id.equals("2nd Parent Code")) return concept.getId();
+				//concept = (Concept) superconcept_vec.elementAt(superconcept_vec.size()-2);
 		    }
 		    else
 		    {
