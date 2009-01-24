@@ -1061,6 +1061,58 @@ System.out.println("DataUtils 	Boolean.TRUE ");
 		return v;
     }
 
+
+	public Vector getAssociationSourceCodes(String scheme, String version, String code, String assocName)
+	{
+		CodingSchemeVersionOrTag csvt = new CodingSchemeVersionOrTag();
+		if (version != null) csvt.setVersion(version);
+		ResolvedConceptReferenceList matches = null;
+		Vector v = new Vector();
+		try {
+			EVSApplicationService lbSvc = new RemoteServerUtil().createLexBIGService();
+			CodedNodeGraph cng = lbSvc.getNodeGraph(scheme, csvt, null);
+
+			NameAndValueList nameAndValueList =
+				createNameAndValueList(
+					new String[] {assocName}, null);
+
+			NameAndValueList nameAndValueList_qualifier = null;
+			cng = cng.restrictToAssociations(nameAndValueList, nameAndValueList_qualifier);
+
+			matches = cng.resolveAsList(
+					ConvenienceMethods.createConceptReference(code, scheme),
+					false, true, 1, 1, new LocalNameList(), null, null, maxReturn);
+
+			if (matches.getResolvedConceptReferenceCount() > 0) {
+				Enumeration<ResolvedConceptReference> refEnum =
+					matches .enumerateResolvedConceptReference();
+
+				while (refEnum.hasMoreElements()) {
+					ResolvedConceptReference ref = refEnum.nextElement();
+					AssociationList targetof = ref.getTargetOf();
+					Association[] associations = targetof.getAssociation();
+
+					for (int i = 0; i < associations.length; i++) {
+						Association assoc = associations[i];
+						//KLO
+						assoc = processForAnonomousNodes(assoc);
+						AssociatedConcept[] acl = assoc.getAssociatedConcepts().getAssociatedConcept();
+						for (int j = 0; j < acl.length; j++) {
+							AssociatedConcept ac = acl[j];
+							v.add(ac.getReferencedEntry().getId());
+						}
+					}
+				}
+				SortUtils.quickSort(v);
+			}
+
+		} catch (Exception ex) {
+			ex.printStackTrace();
+		}
+		return v;
+    }
+
+
 	public static ConceptReferenceList createConceptReferenceList(String[] codes, String codingSchemeName)
 	{
 		if (codes == null)
