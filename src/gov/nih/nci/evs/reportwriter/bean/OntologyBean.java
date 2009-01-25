@@ -256,13 +256,13 @@ public class OntologyBean //extends BaseBean
 			  Vector associationNames = DataUtils.getSupportedAssociationNames(selectedOntology);
 			  if (associationNames != null)
 			  {
+				  associationList.add(new SelectItem(""));
 				  for (int i=0; i<associationNames.size(); i++)
 				  {
 					  String name = (String) associationNames.elementAt(i);
 					  associationList.add(new SelectItem(name));
 				  }
-				  //KLO 012309
-				  associationList.add(new SelectItem(""));
+
 				  if (associationList != null && associationList.size() > 0)
 				  {
 					  for (int j=0; j<associationList.size(); j++)
