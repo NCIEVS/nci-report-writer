@@ -1030,6 +1030,8 @@ System.out.println(	"modifyReportTemplateAction" + " " + standardReportTemplate.
 
 System.out.println("generateStandardReportAction: " +  templateId);
 
+          boolean set_defined_by_code = true;
+          String defining_set_desc = null;
           try{
         	    SDKClientUtil sdkclientutil = new SDKClientUtil();
 				StandardReportTemplate standardReportTemplate = null;
@@ -1055,30 +1057,38 @@ System.out.println("generateStandardReportAction: version " +  version);
 						  return "message";
 					  }
 
-					  String rootConceptCode = standardReportTemplate.getRootConceptCode();
-					  String ltag = null;
-					  Concept rootConcept = DataUtils.getConceptByCode(codingscheme, version, ltag, rootConceptCode);
-					  if (rootConcept == null)
+                      defining_set_desc = standardReportTemplate.getRootConceptCode();
+                      String rootConceptCode = null;
+                      if (defining_set_desc.indexOf("|") == -1)
+                      {
+						  rootConceptCode = standardReportTemplate.getRootConceptCode();
+						  String ltag = null;
+						  Concept rootConcept = DataUtils.getConceptByCode(codingscheme, version, ltag, rootConceptCode);
+						  if (rootConcept == null)
+						  {
+							  String message = "Invalid root concept code " + rootConceptCode + " -- Please modify the report template and resubmit.";
+							  request.getSession().setAttribute("message", message);
+							  return "message";
+						  }
+						  String associationName = standardReportTemplate.getAssociationName();
+						  key = codingscheme + " (version: " + version + ")";
+						  Vector<String> associationname_vec = DataUtils.getSupportedAssociationNames(key);
+						  if (!associationname_vec.contains(associationName)) {
+							  String message = "Invalid association name " + associationName + " -- Please modify the report template and resubmit.";
+							  request.getSession().setAttribute("message", message);
+							  return "message";
+						  }
+					  }
+					  else
 					  {
-						  String message = "Invalid root concept code " + rootConceptCode + " -- Please modify the report template and resubmit.";
-						  request.getSession().setAttribute("message", message);
-						  return "message";
+						  set_defined_by_code = false;
 					  }
-
-					  String associationName = standardReportTemplate.getAssociationName();
-					  key = codingscheme + " (version: " + version + ")";
-					  Vector<String> associationname_vec = DataUtils.getSupportedAssociationNames(key);
-					  if (!associationname_vec.contains(associationName)) {
-						  String message = "Invalid association name " + associationName + " -- Please modify the report template and resubmit.";
-						  request.getSession().setAttribute("message", message);
-						  return "message";
-					  }
-			   }
-		   } catch (Exception ex) {
+			    }
+		  } catch (Exception ex) {
 			   String message = "Exception encountered when generating " + templateId + ".";
 			   request.getSession().setAttribute("message", message);
 			   return "message";
-		   }
+		  }
 
 		  String uid = (String) request.getSession().getAttribute("uid");
 		  if (uid == null)
@@ -1117,14 +1127,8 @@ System.out.println("generateStandardReportAction: version " +  version);
 			  request.getSession().setAttribute("message", message);
 			  return "message";
 		  }
+
           Boolean retval = new StandardReportService().generateStandardReport(download_dir, selectedStandardReportTemplate, uid);
-
-          // Instantiate Report Generation Service
-          // Generate report
-
-          // Create a StandardReport Record
-
-          // create messsage
 
           message = "You request has been received. The report, " + templateId
           + ", in tab-delimited and Microsft Excel formats will be generated and placed in the designated output directory."

@@ -132,6 +132,7 @@ import org.LexGrid.LexBIG.DataModel.InterfaceElements.RenderingDetail;
 import org.LexGrid.LexBIG.DataModel.Collections.CodingSchemeTagList;
 
 import gov.nih.nci.evs.reportwriter.properties.ReportWriterProperties;
+import org.LexGrid.LexBIG.Exceptions.LBParameterException;
 
 /**
   * <!-- LICENSE_TEXT_START -->
@@ -296,29 +297,27 @@ public class DataUtils {
 		//if (isAdmin == null || isAdmin == Boolean.FALSE) return null;
 
         standardReportTemplateList = new ArrayList();
-
-        // To be modified: retrieve the list from database using SDK writeable API
-
         try{
             SDKClientUtil util = new SDKClientUtil();
             String FQName = "gov.nih.nci.evs.reportwriter.bean.StandardReportTemplate";
             Object[] objs = util.search(FQName);
+            if (objs.length == 0) return standardReportTemplateList;
+            Vector v = new Vector();
             for (int i=0; i<objs.length; i++)
             {
 				StandardReportTemplate standardReportTemplate = (StandardReportTemplate) objs[i];
-				standardReportTemplateList.add(new SelectItem(standardReportTemplate.getLabel()));
+				//standardReportTemplateList.add(new SelectItem(standardReportTemplate.getLabel()));
+				v.add(standardReportTemplate.getLabel());
 			}
-        } catch(Exception e) {
+			SortUtils.quickSort(v);
+            for (int i=0; i<v.size(); i++)
+            {
+				String name = (String) v.elementAt(i);
+				standardReportTemplateList.add(new SelectItem(name));
+			}
+		} catch(Exception e) {
         	e.printStackTrace();
         }
-/*
-        standardReportTemplateList.add(new SelectItem("Structured Product Labeling (SPL) Report"));
-        standardReportTemplateList.add(new SelectItem("FDA-UNII Subset Report"));
-        standardReportTemplateList.add(new SelectItem("Individual Case Safety (ICS) Subset Report"));
-        standardReportTemplateList.add(new SelectItem("Center for Devices and Radiological Health (CDRH) Subset Report"));
-        standardReportTemplateList.add(new SelectItem("FDA-SPL Country Code Report"));
-*/
-
 	    return standardReportTemplateList;
 	}
 
@@ -1322,7 +1321,7 @@ System.out.println("DataUtils 	Boolean.TRUE ");
    }
 
 
-    protected Association processForAnonomousNodes(Association assoc){
+    protected static Association processForAnonomousNodes(Association assoc){
 		//clone Association except associatedConcepts
 		Association temp = new Association();
 		temp.setAssociatedData(assoc.getAssociatedData());
@@ -1353,5 +1352,253 @@ System.out.println("DataUtils 	Boolean.TRUE ");
 		}
 		return temp;
 	}
+
+
+
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+	public static LocalNameList vector2LocalNameList(Vector<String> v)
+	{
+	    if (v == null) return null;
+	    LocalNameList list = new LocalNameList();
+		for (int i=0; i<v.size(); i++)
+		{
+		    String vEntry = (String) v.elementAt(i);
+	        list.addEntry(vEntry);
+		}
+        return list;
+	}
+
+ 	protected static NameAndValueList createNameAndValueList(Vector names, Vector values)
+ 	{
+		if (names == null) return null;
+ 		NameAndValueList nvList = new NameAndValueList();
+ 		for (int i=0; i<names.size(); i++)
+ 		{
+			String name = (String) names.elementAt(i);
+			String value = (String) values.elementAt(i);
+			NameAndValue nv = new NameAndValue();
+ 			nv.setName(name);
+ 			if (value != null)
+ 			{
+ 				nv.setContent(value);
+ 			}
+ 			nvList.addNameAndValue(nv);
+ 		}
+ 		return nvList;
+ 	}
+
+
+
+
+    public static Vector<org.LexGrid.concepts.Concept> restrictToMatchingProperty(
+											 String codingSchemeName,
+											 String version,
+		                                     Vector property_vec,
+                                             Vector source_vec,
+                                             Vector qualifier_name_vec,
+                                             Vector qualifier_value_vec,
+											 java.lang.String matchText,
+											 java.lang.String matchAlgorithm,
+											 java.lang.String language,
+											 int maxToReturn)
+    {
+
+		LocalNameList propertyList = vector2LocalNameList(property_vec);
+		CodedNodeSet.PropertyType[] propertyTypes = null;
+		LocalNameList sourceList = vector2LocalNameList(source_vec);
+
+		NameAndValueList qualifierList = createNameAndValueList(qualifier_name_vec, qualifier_value_vec);
+
+	    return restrictToMatchingProperty(codingSchemeName,
+	                                   version,
+	                                   propertyList,
+	                                   propertyTypes,
+	                                   sourceList,
+	                                   qualifierList,
+									   matchText,
+									   matchAlgorithm,
+									   language,
+	                                   maxToReturn);
+
+
+    }
+
+
+    public static Vector<org.LexGrid.concepts.Concept> restrictToProperty(
+											 String codingSchemeName,
+											 String version,
+		                                     Vector property_vec,
+                                             Vector source_vec,
+                                             Vector qualifier_name_vec,
+                                             Vector qualifier_value_vec,
+                                             int maxToReturn) {
+
+		LocalNameList propertyList = vector2LocalNameList(property_vec);
+		CodedNodeSet.PropertyType[] propertyTypes = null;
+		LocalNameList sourceList = vector2LocalNameList(source_vec);
+		NameAndValueList qualifierList = createNameAndValueList(qualifier_name_vec, qualifier_value_vec);
+	    return restrictToProperty(codingSchemeName,
+	                                   version,
+	                                   propertyList,
+	                                   propertyTypes,
+	                                   sourceList,
+	                                   qualifierList,
+	                                   maxToReturn);
+    }
+
+
+	public static Vector<org.LexGrid.concepts.Concept> restrictToProperty(
+		                                        String codingSchemeName,
+	                                            String version,
+
+	                                            LocalNameList propertyList,
+                                                CodedNodeSet.PropertyType[] propertyTypes,
+                                                LocalNameList sourceList,
+                                                NameAndValueList qualifierList,
+ 	                                            int maxToReturn)
+
+	                                            //throws LBParameterException
+	{
+	    CodedNodeSet cns = null;
+        Vector<org.LexGrid.concepts.Concept> v = new Vector<org.LexGrid.concepts.Concept>();
+        try {
+			CodingSchemeVersionOrTag versionOrTag = new CodingSchemeVersionOrTag();
+			versionOrTag.setVersion(version);
+
+			RemoteServerUtil rsu = new RemoteServerUtil();
+			EVSApplicationService lbSvc = rsu.createLexBIGService();
+
+			cns = lbSvc.getCodingSchemeConcepts(codingSchemeName, versionOrTag);
+			if (cns == null) return v;
+
+			LocalNameList contextList = null;
+            cns = cns.restrictToProperties(propertyList,
+                                           propertyTypes,
+                                           sourceList,
+                                           contextList,
+                                           qualifierList);
+
+			LocalNameList restrictToProperties = new LocalNameList();
+		    SortOptionList sortCriteria =
+			    Constructors.createSortOptionList(new String[]{"matchToQuery", "code"});
+
+			ResolvedConceptReferenceList list = null;
+			try {
+			   list = cns.resolveToList(sortCriteria,
+									  restrictToProperties,
+									  null,
+									  maxToReturn);
+			} catch (Exception ex) {
+				throw new LBParameterException(ex.getMessage());
+			}
+
+			if (list == null) return v;
+			ResolvedConceptReference[] rcrArray = list.getResolvedConceptReference();
+			if (rcrArray == null)
+			{
+				System.out.println("WARNING: DLBWrapper getResolvedConceptReference returns null");
+			}
+
+			for (int i=0; i<rcrArray.length; i++)
+			{
+				ResolvedConceptReference rcr = (ResolvedConceptReference) rcrArray[i];
+				v.add(rcr.getReferencedEntry());
+			}
+
+	    } catch (Exception e) {
+			e.printStackTrace();
+			return v;
+	    }
+		return v;
+	}
+
+
+	public static Vector<org.LexGrid.concepts.Concept> restrictToMatchingProperty(
+		                                        String codingSchemeName,
+	                                            String version,
+
+	                                            LocalNameList propertyList,
+                                                CodedNodeSet.PropertyType[] propertyTypes,
+                                                LocalNameList sourceList,
+                                                NameAndValueList qualifierList,
+
+ 											    java.lang.String matchText,
+											    java.lang.String matchAlgorithm,
+											    java.lang.String language,
+
+ 	                                            int maxToReturn)
+
+	                                            //throws LBParameterException
+	{
+	    CodedNodeSet cns = null;
+        Vector<org.LexGrid.concepts.Concept> v = new Vector<org.LexGrid.concepts.Concept>();
+        try {
+			RemoteServerUtil rsu = new RemoteServerUtil();
+			EVSApplicationService lbSvc = rsu.createLexBIGService();
+
+			CodingSchemeVersionOrTag versionOrTag = new CodingSchemeVersionOrTag();
+			versionOrTag.setVersion(version);
+
+			if (lbSvc == null)
+			{
+				System.out.println("lbSvc == null???");
+				return null;
+			}
+
+			cns = lbSvc.getCodingSchemeConcepts(codingSchemeName, versionOrTag);
+			if (cns == null) return v;
+
+			LocalNameList contextList = null;
+            cns = cns.restrictToMatchingProperties(propertyList,
+                                           propertyTypes,
+                                           sourceList,
+                                           contextList,
+                                           qualifierList,
+                                           matchText,
+                                           matchAlgorithm,
+                                           language
+                                           );
+
+			LocalNameList restrictToProperties = new LocalNameList();
+		    SortOptionList sortCriteria =
+			    //Constructors.createSortOptionList(new String[]{"matchToQuery", "code"});
+			    Constructors.createSortOptionList(new String[]{"matchToQuery"});
+
+			ResolvedConceptReferenceList list = null;
+			try {
+			   list = cns.resolveToList(sortCriteria,
+									  restrictToProperties,
+									  null,
+									  maxToReturn);
+			} catch (Exception ex) {
+				throw new LBParameterException(ex.getMessage());
+			}
+
+			if (list == null) return v;
+			ResolvedConceptReference[] rcrArray = list.getResolvedConceptReference();
+			if (rcrArray == null)
+			{
+				System.out.println("WARNING: getResolvedConceptReference returns null");
+			}
+
+			for (int i=0; i<rcrArray.length; i++)
+			{
+				ResolvedConceptReference rcr = (ResolvedConceptReference) rcrArray[i];
+				v.add(rcr.getReferencedEntry());
+			}
+
+
+	    } catch (Exception e) {
+			e.printStackTrace();
+			return v;
+	    }
+		return SortUtils.quickSort(v);
+	}
+
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 }
