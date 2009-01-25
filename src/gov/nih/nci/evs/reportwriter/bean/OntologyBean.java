@@ -261,6 +261,8 @@ public class OntologyBean //extends BaseBean
 					  String name = (String) associationNames.elementAt(i);
 					  associationList.add(new SelectItem(name));
 				  }
+				  //KLO 012309
+				  associationList.add(new SelectItem(""));
 				  if (associationList != null && associationList.size() > 0)
 				  {
 					  for (int j=0; j<associationList.size(); j++)

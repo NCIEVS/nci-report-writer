@@ -50,7 +50,7 @@ import org.apache.poi.hssf.usermodel.HSSFCellStyle;
 
 public class FileUtil {
 
-	static final int MAX_WIDTH = 15;
+	static final int MAX_WIDTH = 30;
 
     public FileUtil() {};
 

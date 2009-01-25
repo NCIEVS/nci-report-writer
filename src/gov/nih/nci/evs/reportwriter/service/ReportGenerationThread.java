@@ -1,5 +1,8 @@
 package gov.nih.nci.evs.reportwriter.service;
 
+import java.io.*;
+import java.util.*;
+
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
@@ -177,6 +180,12 @@ public class ReportGenerationThread implements Runnable
 			return Boolean.FALSE;
 		}
 
+		String defining_set_desc = standardReportTemplate.getRootConceptCode();
+		if (defining_set_desc.indexOf("|") != -1)
+		{
+			return generateSpecialReport(outputDir, standardReportLabel, uid);
+		}
+
 		System.out.println("Output directory: " + outputDir);
 		System.out.println("standardReportLabel: " + standardReportLabel);
 		System.out.println("uid: " + uid);
@@ -231,6 +240,7 @@ public class ReportGenerationThread implements Runnable
 		label = standardReportTemplate.getLabel();
 		codingSchemeName = standardReportTemplate.getCodingSchemeName();
 		codingSchemeVersion = standardReportTemplate.getCodingSchemeVersion();
+
 		rootConceptCode = standardReportTemplate.getRootConceptCode();
 
 
@@ -291,12 +301,14 @@ public class ReportGenerationThread implements Runnable
 
 		System.out.println("********** Start generating report..." + pathname);
 
+		printReportHeading(pw, cols);
+
         String scheme = standardReportTemplate.getCodingSchemeName();
         version = standardReportTemplate.getCodingSchemeVersion();
+
+
         String code = standardReportTemplate.getRootConceptCode();
-
         Concept defining_root_concept = DataUtils.getConceptByCode(codingSchemeName, codingSchemeVersion, null, rootConceptCode);
-
 
         associationName = standardReportTemplate.getAssociationName();
         level = standardReportTemplate.getLevel();
@@ -319,7 +331,7 @@ public class ReportGenerationThread implements Runnable
 			}
 	    }
 
-        printReportHeading(pw, cols);
+        //printReportHeading(pw, cols);
 
         Vector hierarchicalAssoName_vec = new DataUtils().getHierarchyAssociationId(scheme, version);
         if (hierarchicalAssoName_vec == null || hierarchicalAssoName_vec.size() == 0)
@@ -395,6 +407,41 @@ public class ReportGenerationThread implements Runnable
 		pw.println(columnHeadings);
 	}
 
+
+    private void writeColumnData(PrintWriter pw, String scheme, String version, Concept defining_root_concept, Concept associated_concept, Concept c, String delim, ReportColumn[] cols,
+        boolean firstColRequired) {
+
+	    if (firstColRequired) {
+			String firstValue = getReportColumnValue(scheme, version, defining_root_concept, associated_concept, c, cols[0]);
+			if (firstValue == null) return;
+			firstValue = firstValue.trim();
+			if (firstValue.length() == 0) return;
+	    }
+
+    	String output_line = "";
+		for (int i=0; i<cols.length; i++)
+		{
+			ReportColumn rc = (ReportColumn) cols[i];
+			String s = getReportColumnValue(scheme, version, defining_root_concept, associated_concept, c, rc);
+            if (i == 0)
+            {
+				output_line = s;
+			}
+			else
+			{
+				//output_line = output_line + "\t" + s;
+				output_line = output_line + delim + s;
+			}
+		}
+        pw.println(output_line);
+
+		count++;
+		if ((count/100) * 100 == count)
+		{
+			System.out.println("Number of concepts processed: " + count);
+		}
+	}
+
     private void writeColumnData(PrintWriter pw, String scheme, String version, Concept defining_root_concept, Concept associated_concept, Concept c, String delim, ReportColumn[] cols) {
 		//pw.println(root.getId() + delim + root.getEntityDescription().getContent() + delim + c.getId() + delim + c.getEntityDescription().getContent());
     	String output_line = "";
@@ -408,7 +455,8 @@ public class ReportGenerationThread implements Runnable
 			}
 			else
 			{
-				output_line = output_line + "\t" + s;
+				//output_line = output_line + "\t" + s;
+				output_line = output_line + delim + s;
 			}
 		}
         pw.println(output_line);
@@ -495,8 +543,6 @@ public class ReportGenerationThread implements Runnable
 
     public String getReportColumnValue(String scheme, String version, Concept defining_root_concept, Concept associated_concept, Concept node, Concept parent, ReportColumn rc)
     {
-
-
 		String field_Id = rc.getFieldId();
 		String property_name = rc.getPropertyName();
 		String qualifier_name = rc.getQualifierName();
@@ -808,6 +854,283 @@ public class ReportGenerationThread implements Runnable
 	}
 
 
+    ////////////////////////////////////////////////////////////////////////////////////////////
+    // Code for supporting country code like report generation:
+    ////////////////////////////////////////////////////////////////////////////////////////////
+
+    private Vector<String> parseData(String line, String delimiter)
+    {
+		Vector data_vec = new Vector();
+	    StringTokenizer st = new StringTokenizer(line, delimiter);
+		while (st.hasMoreTokens()) {
+			String value = st.nextToken();
+			data_vec.add(value);
+		}
+		return data_vec;
+	}
+
+    public Boolean generateSpecialReport(String outputDir, String standardReportLabel, String uid)
+    {
+        StandardReportTemplate standardReportTemplate = null;
+        try{
+        	SDKClientUtil sdkclientutil = new SDKClientUtil();
+        	String FQName = "gov.nih.nci.evs.reportwriter.bean.StandardReportTemplate";
+        	String methodName = "setLabel";
+        	Object obj = sdkclientutil.search(FQName, methodName, standardReportLabel);
+			standardReportTemplate = (StandardReportTemplate) obj;
+			System.out.println("standardReportTemplate ID: " + standardReportTemplate.getId());
+			System.out.println("standardReportTemplate label: " + standardReportTemplate.getLabel());
+
+	    } catch(Exception e) {
+			System.out.println("Unable to identify report label " + standardReportLabel + " -- report not generated." );
+		    return Boolean.FALSE;
+	    }
+
+        if (standardReportTemplate == null)
+        {
+			System.out.println("Unable to identify report label " + standardReportLabel + " -- report not generated." );
+			return Boolean.FALSE;
+		}
+
+		String queryString = standardReportTemplate.getRootConceptCode();
+		String delimiter = "|";
+		Vector<String> v = parseData(queryString, delimiter);
+/*
+        String reportLabel = (String) v.elementAt(0);
+		String codingSchemeName = (String) v.elementAt(1);
+		String version = (String) v.elementAt(2);
+*/
+		String property = (String) v.elementAt(0);
+		String source = (String) v.elementAt(1);
+		String qualifier_name = (String) v.elementAt(2);
+		String qualifier_value = (String) v.elementAt(3);
+		String matchText = (String) v.elementAt(4);
+		String matchAlgorithm = (String) v.elementAt(5);
+
+/*
+        System.out.println("reportLabel: " + reportLabel);
+		System.out.println("codingSchemeName: " + codingSchemeName);
+		System.out.println("version: " + version);
+		System.out.println("property: " + property);
+		System.out.println("source: " + source);
+		System.out.println("qualifier_name: " + qualifier_name);
+		System.out.println("qualifier_value: " + qualifier_value);
+		System.out.println("matchText: " + matchText);
+		System.out.println("matchAlgorithm: " + matchAlgorithm);
+
+		System.out.println("Output directory: " + outputDir);
+		System.out.println("reportLabel: " + reportLabel);
+		System.out.println("uid: " + uid);
+*/
+
+		System.out.println("Output directory: " + outputDir);
+		System.out.println("standardReportLabel: " + standardReportLabel);
+		System.out.println("uid: " + uid);
+
+		File dir = new File(outputDir);
+		if (!dir.exists())
+		{
+			System.out.println("Output directory " + outputDir + " does not exist -- try to create the directory.");
+			boolean retval = dir.mkdir();
+			if (!retval)
+			{
+				System.out.println("Unable to create output directory " + outputDir + " - please check privilege setting.");
+				return Boolean.FALSE;
+			}
+			else
+			{
+				System.out.println("Output directory: " + outputDir + " created.");
+			}
+		}
+		else
+		{
+			System.out.println("Output directory: " + outputDir + " exists.");
+		}
+
+        String version = standardReportTemplate.getCodingSchemeVersion();
+        // append verision to the report file name:
+		String pathname = outputDir + File.separator + standardReportLabel + "__" + version + ".txt";
+		pathname = pathname.replaceAll(" ", "_");
+		System.out.println("Full path name: " + pathname);
+
+		PrintWriter pw = openPrintWriter(pathname);
+		if (pw == null)
+		{
+			System.out.println("Unable to create output file " + pathname + " - please check privilege setting.");
+			return Boolean.FALSE;
+		}
+		else
+		{
+			System.out.println("opened PrintWriter " + pathname );
+		}
+
+		int id = -1;
+		String label = null;
+		String codingSchemeName = null;
+		String codingSchemeVersion = null;
+		String rootConceptCode = null;
+		String associationName = null;
+		int level = -1;
+
+		//char delim = '$';
+
+		id = standardReportTemplate.getId();
+		label = standardReportTemplate.getLabel();
+		codingSchemeName = standardReportTemplate.getCodingSchemeName();
+		codingSchemeVersion = standardReportTemplate.getCodingSchemeVersion();
+
+		rootConceptCode = standardReportTemplate.getRootConceptCode();
+
+		associationName = standardReportTemplate.getAssociationName();
+		boolean direction = standardReportTemplate.getDirection();
+		level = standardReportTemplate.getLevel();
+
+		//Character delimiter = standardReportTemplate.getDelimiter();
+
+		System.out.println("ID: " + id);
+		System.out.println("Label: " + label);
+		System.out.println("CodingSchemeName: " + codingSchemeName);
+		System.out.println("CodingSchemeVersion: " + codingSchemeVersion);
+		System.out.println("Root: " + rootConceptCode);
+		System.out.println("AssociationName: " + associationName);
+		System.out.println("Direction: " + direction);
+		System.out.println("Level: " + level);
+		//System.out.println("Delimiter: " + delimiter);
+
+		String columnHeadings = "";
+		String delimeter_str = "\t";
+
+        Object[] objs = null;
+	    java.util.Collection cc = standardReportTemplate.getColumnCollection();
+	    if (cc == null)
+	    {
+			System.out.println("standardReportTemplate.getColumnCollection returns NULL?????????????");
+		}
+		else
+		{
+			objs = cc.toArray();
+		}
+
+	    ReportColumn[] cols = null;
+	    if (cc != null) {
+	        cols = new ReportColumn[objs.length];
+	        if (objs.length > 0) {
+                for(int i=0; i<objs.length; i++) {
+	                gov.nih.nci.evs.reportwriter.bean.ReportColumn col = (gov.nih.nci.evs.reportwriter.bean.ReportColumn) objs[i];
+
+					System.out.println("\nReport Column:");
+					System.out.println("ID: " + col.getId());
+					System.out.println("Label: " + col.getLabel());
+					System.out.println("Column Number: " + col.getColumnNumber());
+					System.out.println("PropertyType: " + col.getPropertyType());
+					System.out.println("PropertyName: " + col.getPropertyName());
+					System.out.println("IsPreferred: " + col.getIsPreferred());
+					System.out.println("RepresentationalForm: " + col.getRepresentationalForm());
+					System.out.println("Source: " + col.getSource());
+					System.out.println("QualifierName: " + col.getQualifierName());
+					System.out.println("QualifierValue: " + col.getQualifierValue());
+					System.out.println("Delimiter: " + col.getDelimiter());
+					System.out.println("ConditionalColumnIdD: " + col.getConditionalColumnId());
+
+					cols[i] = col;
+				}
+			}
+		}
+
+		System.out.println("********** Start generating report..." + pathname);
+
+		printReportHeading(pw, cols);
+
+        String scheme = standardReportTemplate.getCodingSchemeName();
+        version = standardReportTemplate.getCodingSchemeVersion();
+
+        Vector property_vec = null;
+        if (property != null && property.compareTo("null") != 0)
+        {
+			property_vec = new Vector();
+			property_vec.add(property);
+		}
+
+        Vector source_vec = null;
+        if (source != null && source.compareTo("null") != 0)
+        {
+			source_vec = new Vector();
+			source_vec.add(source);
+		}
+
+        Vector qualifier_name_vec = null;
+        if (qualifier_name != null && qualifier_name.compareTo("null") != 0)
+        {
+			qualifier_name_vec = new Vector();
+			qualifier_name_vec.add(qualifier_name);
+		}
+
+        Vector qualifier_value_vec = null;
+        if (qualifier_value != null && qualifier_value.compareTo("null") != 0)
+        {
+			qualifier_value_vec = new Vector();
+			qualifier_value_vec.add(qualifier_value);
+		}
+
+		int maxToReturn = 10000;
+		String language = null;
+
+//System.out.println("Calling DataUtils.restrictToMatchingProperty -------------");
+        Vector concept_vec = DataUtils.restrictToMatchingProperty(
+											 codingSchemeName,
+											 version,
+		                                     property_vec,
+                                             source_vec,
+                                             qualifier_name_vec,
+                                             qualifier_value_vec,
+                                             matchText,
+                                             matchAlgorithm,
+                                             language,
+                                             maxToReturn);
+
+//System.out.println("Exit DataUtils.restrictToMatchingProperty -------------");
+
+        String delim = "\t";
+        for (int i=0; i<concept_vec.size(); i++)
+        {
+			Concept c = (Concept) concept_vec.elementAt(i);
+//    private void writeColumnData(PrintWriter pw, String scheme, String version, Concept defining_root_concept, Concept associated_concept, Concept c, String delim, ReportColumn[] cols) {
+            writeColumnData(pw, codingSchemeName, version, null, null, c, delim, cols, true);
+		}
+
+        closePrintWriter(pw);
+        System.out.println("Output file " + pathname + " generated.");
+
+        String reportFormat_value = "Text (tab delimited)";
+        String reportStatus_value = "DRAFT";
+
+	    Boolean bool_obj = new StandardReportService().createStandardReport(
+			standardReportLabel + ".txt",
+			pathname,
+            standardReportTemplate.getLabel(),
+            reportFormat_value = "Text (tab delimited)",
+            reportStatus_value = "DRAFT",
+            uid);
+
+        // convert to Excel
+        bool_obj = FileUtil.convertToExcel(pathname, delimeter_str);
+
+        // create xls report record
+        pathname = outputDir + File.separator + standardReportLabel + "__" + version + ".xls";
+		pathname = pathname.replaceAll(" ", "_");
+		System.out.println("Full path name: " + pathname);
+
+	    bool_obj = new StandardReportService().createStandardReport(
+			standardReportLabel + ".xls",
+			pathname,
+            standardReportTemplate.getLabel(),
+            reportFormat_value = "Microsoft Office Excel",
+            reportStatus_value = "DRAFT",
+            uid);
+
+		return bool_obj;
+
+	}
 }
 
 
