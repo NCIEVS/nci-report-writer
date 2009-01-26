@@ -895,7 +895,7 @@ System.out.println("DataUtils 	Boolean.TRUE ");
 		 return null;
 	}
 
- 	protected NameAndValueList createNameAndValueList(String[] names, String[] values)
+ 	public static NameAndValueList createNameAndValueList(String[] names, String[] values)
  	{
  		NameAndValueList nvList = new NameAndValueList();
  		for (int i=0; i<names.length; i++)
@@ -1059,6 +1059,23 @@ System.out.println("DataUtils 	Boolean.TRUE ");
 		}
 		return v;
     }
+
+    public Vector getParentCodes(String scheme, String version, String code) {
+        Vector hierarchicalAssoName_vec = getHierarchyAssociationId(scheme, version);
+        if (hierarchicalAssoName_vec == null || hierarchicalAssoName_vec.size() == 0)
+        {
+			return null;
+		}
+        String hierarchicalAssoName = (String) hierarchicalAssoName_vec.elementAt(0);
+        //KLO, 01/23/2009
+        //Vector<Concept> superconcept_vec = util.getAssociationSources(scheme, version, code, hierarchicalAssoName);
+        Vector superconcept_vec = getAssociationSourceCodes(scheme, version, code, hierarchicalAssoName);
+        if (superconcept_vec == null) return null;
+        //SortUtils.quickSort(superconcept_vec, SortUtils.SORT_BY_CODE);
+        return superconcept_vec;
+
+	}
+
 
 
 	public Vector getAssociationSourceCodes(String scheme, String version, String code, String assocName)
