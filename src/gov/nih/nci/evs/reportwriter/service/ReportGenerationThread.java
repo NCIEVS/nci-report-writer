@@ -715,8 +715,9 @@ public class ReportGenerationThread implements Runnable
 			return return_str;
 		}
 
-		else if (field_Id.compareToIgnoreCase("Property") == 0 || field_Id.compareToIgnoreCase("Associated concept property") == 0
-		                                                       || field_Id.indexOf("Parent property") != -1)
+		else if (field_Id.compareToIgnoreCase("Property") == 0 || field_Id.compareToIgnoreCase("Associated Concept Property") == 0
+		                                                       || field_Id.indexOf("Parent Property") != -1)
+
 		{
 			for (int i=0; i<properties.length; i++)
 			{
