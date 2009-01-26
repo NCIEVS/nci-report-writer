@@ -518,11 +518,6 @@ public class ReportGenerationThread implements Runnable
 		}
 	}
 
-    public String getReportColumnValue(String scheme, String version, Concept defining_root_concept, Concept associated_concept, Concept node, ReportColumn rc) {
-		return getReportColumnValue(scheme, version, defining_root_concept, associated_concept, node, null, rc);
-	}
-
-
     public Vector getParentCodes(String scheme, String version, String code) {
 		DataUtils util = new DataUtils();
         Vector hierarchicalAssoName_vec = util.getHierarchyAssociationId(scheme, version);
@@ -541,7 +536,7 @@ public class ReportGenerationThread implements Runnable
 	}
 
 
-    public String getReportColumnValue(String scheme, String version, Concept defining_root_concept, Concept associated_concept, Concept node, Concept parent, ReportColumn rc)
+    public String getReportColumnValue(String scheme, String version, Concept defining_root_concept, Concept associated_concept, Concept node, ReportColumn rc)
     {
 		String field_Id = rc.getFieldId();
 		String property_name = rc.getPropertyName();
@@ -598,7 +593,7 @@ public class ReportGenerationThread implements Runnable
 		    }
 		    else
 		    {
-				return "NA";
+				return " ";
 			}
 		}
 
