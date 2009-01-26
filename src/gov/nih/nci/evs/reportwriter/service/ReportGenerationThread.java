@@ -518,24 +518,6 @@ public class ReportGenerationThread implements Runnable
 		}
 	}
 
-    public Vector getParentCodes(String scheme, String version, String code) {
-		DataUtils util = new DataUtils();
-        Vector hierarchicalAssoName_vec = util.getHierarchyAssociationId(scheme, version);
-        if (hierarchicalAssoName_vec == null || hierarchicalAssoName_vec.size() == 0)
-        {
-			return null;
-		}
-        String hierarchicalAssoName = (String) hierarchicalAssoName_vec.elementAt(0);
-        //KLO, 01/23/2009
-        //Vector<Concept> superconcept_vec = util.getAssociationSources(scheme, version, code, hierarchicalAssoName);
-        Vector<Concept> superconcept_vec = util.getAssociationSourceCodes(scheme, version, code, hierarchicalAssoName);
-        if (superconcept_vec == null) return null;
-        SortUtils.quickSort(superconcept_vec, SortUtils.SORT_BY_CODE);
-        return superconcept_vec;
-
-	}
-
-
     public String getReportColumnValue(String scheme, String version, Concept defining_root_concept, Concept associated_concept, Concept node, ReportColumn rc)
     {
 		String field_Id = rc.getFieldId();
@@ -574,7 +556,7 @@ public class ReportGenerationThread implements Runnable
 		}
         else if (field_Id.indexOf("Parent") != -1)
         {
-			Vector superconcept_vec = getParentCodes(scheme, version, node.getId());
+			Vector superconcept_vec = new DataUtils().getParentCodes(scheme, version, node.getId());
 			if (superconcept_vec != null && superconcept_vec.size() > 0 && field_Id.indexOf("1st Parent") != -1)
 			{
 				String superconceptCode = (String) superconcept_vec.elementAt(superconcept_vec.size()-1);
