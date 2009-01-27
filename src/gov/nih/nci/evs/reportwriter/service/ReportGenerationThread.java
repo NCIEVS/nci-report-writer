@@ -107,6 +107,7 @@ public class ReportGenerationThread implements Runnable
 	String uid = null;
 
 	int count = 0;
+	String hierarchicalAssoName = null;
 
 	public ReportGenerationThread(String outputDir, String standardReportLabel, String uid)
 	{
@@ -181,6 +182,7 @@ public class ReportGenerationThread implements Runnable
 		}
 
 		String defining_set_desc = standardReportTemplate.getRootConceptCode();
+
 		if (defining_set_desc.indexOf("|") != -1)
 		{
 			return generateSpecialReport(outputDir, standardReportLabel, uid);
@@ -242,7 +244,6 @@ public class ReportGenerationThread implements Runnable
 		codingSchemeVersion = standardReportTemplate.getCodingSchemeVersion();
 
 		rootConceptCode = standardReportTemplate.getRootConceptCode();
-
 
 		associationName = standardReportTemplate.getAssociationName();
 		boolean direction = standardReportTemplate.getDirection();
@@ -333,13 +334,14 @@ public class ReportGenerationThread implements Runnable
 
         //printReportHeading(pw, cols);
 
-        Vector hierarchicalAssoName_vec = new DataUtils().getHierarchyAssociationId(scheme, version);
-        if (hierarchicalAssoName_vec == null || hierarchicalAssoName_vec.size() == 0)
-        {
-			return Boolean.FALSE;
-		}
-
-        String hierarchicalAssoName = (String) hierarchicalAssoName_vec.elementAt(0);
+        if (hierarchicalAssoName == null) {
+			Vector hierarchicalAssoName_vec = new DataUtils().getHierarchyAssociationId(scheme, version);
+			if (hierarchicalAssoName_vec == null || hierarchicalAssoName_vec.size() == 0)
+			{
+				return Boolean.FALSE;
+			}
+            hierarchicalAssoName = (String) hierarchicalAssoName_vec.elementAt(0);
+	    }
         traverse(pw, scheme, version, tag, defining_root_concept, code, hierarchicalAssoName, associationName, direction, curr_level, max_level, cols);
         closePrintWriter(pw);
 
@@ -443,7 +445,6 @@ public class ReportGenerationThread implements Runnable
 	}
 
     private void writeColumnData(PrintWriter pw, String scheme, String version, Concept defining_root_concept, Concept associated_concept, Concept c, String delim, ReportColumn[] cols) {
-		//pw.println(root.getId() + delim + root.getEntityDescription().getContent() + delim + c.getId() + delim + c.getEntityDescription().getContent());
     	String output_line = "";
 		for (int i=0; i<cols.length; i++)
 		{
@@ -499,7 +500,6 @@ public class ReportGenerationThread implements Runnable
 		// associated concepts (i.e., concepts in subset)
         if (v == null) return;
 		System.out.println("Subset size: " + v.size());
-
         for (int i=0; i<v.size(); i++)
         {
 			// subset member element
@@ -556,22 +556,28 @@ public class ReportGenerationThread implements Runnable
 		}
         else if (field_Id.indexOf("Parent") != -1)
         {
-			Vector superconcept_vec = new DataUtils().getParentCodes(scheme, version, node.getId());
+			if (hierarchicalAssoName == null)
+			{
+				Vector hierarchicalAssoName_vec = new DataUtils().getHierarchyAssociationId(scheme, version);
+				if (hierarchicalAssoName_vec == null || hierarchicalAssoName_vec.size() == 0)
+				{
+					return null;
+				}
+				hierarchicalAssoName = (String) hierarchicalAssoName_vec.elementAt(0);
+		    }
+			//Vector superconcept_vec = new DataUtils().getParentCodes(scheme, version, node.getId());
+			Vector superconcept_vec = new DataUtils().getAssociationSourceCodes(scheme, version, node.getId(), hierarchicalAssoName);
 			if (superconcept_vec != null && superconcept_vec.size() > 0 && field_Id.indexOf("1st Parent") != -1)
 			{
 				String superconceptCode = (String) superconcept_vec.elementAt(superconcept_vec.size()-1);
 				if (field_Id.equals("1st Parent Code")) return superconceptCode;
 				concept = DataUtils.getConceptByCode(scheme, version, null, superconceptCode);
-				//concept = (Concept) superconcept_vec.elementAt(superconcept_vec.size()-1);
-				//if (field_Id.equals("1st Parent Code")) return concept.getId();
 		    }
 			else if (superconcept_vec != null && superconcept_vec.size() > 1 && field_Id.indexOf("2nd Parent") != -1)
 			{
 				String superconceptCode = (String) superconcept_vec.elementAt(superconcept_vec.size()-2);
 				if (field_Id.equals("2nd Parent Code")) return superconceptCode;
 				concept = DataUtils.getConceptByCode(scheme, version, null, superconceptCode);
-				//if (field_Id.equals("2nd Parent Code")) return concept.getId();
-				//concept = (Concept) superconcept_vec.elementAt(superconcept_vec.size()-2);
 		    }
 		    else
 		    {
@@ -873,33 +879,13 @@ public class ReportGenerationThread implements Runnable
 		String queryString = standardReportTemplate.getRootConceptCode();
 		String delimiter = "|";
 		Vector<String> v = parseData(queryString, delimiter);
-/*
-        String reportLabel = (String) v.elementAt(0);
-		String codingSchemeName = (String) v.elementAt(1);
-		String version = (String) v.elementAt(2);
-*/
+
 		String property = (String) v.elementAt(0);
 		String source = (String) v.elementAt(1);
 		String qualifier_name = (String) v.elementAt(2);
 		String qualifier_value = (String) v.elementAt(3);
 		String matchText = (String) v.elementAt(4);
 		String matchAlgorithm = (String) v.elementAt(5);
-
-/*
-        System.out.println("reportLabel: " + reportLabel);
-		System.out.println("codingSchemeName: " + codingSchemeName);
-		System.out.println("version: " + version);
-		System.out.println("property: " + property);
-		System.out.println("source: " + source);
-		System.out.println("qualifier_name: " + qualifier_name);
-		System.out.println("qualifier_value: " + qualifier_value);
-		System.out.println("matchText: " + matchText);
-		System.out.println("matchAlgorithm: " + matchAlgorithm);
-
-		System.out.println("Output directory: " + outputDir);
-		System.out.println("reportLabel: " + reportLabel);
-		System.out.println("uid: " + uid);
-*/
 
 		System.out.println("Output directory: " + outputDir);
 		System.out.println("standardReportLabel: " + standardReportLabel);
@@ -978,6 +964,8 @@ public class ReportGenerationThread implements Runnable
 		String columnHeadings = "";
 		String delimeter_str = "\t";
 
+
+
         Object[] objs = null;
 	    java.util.Collection cc = standardReportTemplate.getColumnCollection();
 	    if (cc == null)
@@ -1053,7 +1041,6 @@ public class ReportGenerationThread implements Runnable
 		int maxToReturn = 10000;
 		String language = null;
 
-//System.out.println("Calling DataUtils.restrictToMatchingProperty -------------");
         Vector concept_vec = DataUtils.restrictToMatchingProperty(
 											 codingSchemeName,
 											 version,
@@ -1066,13 +1053,10 @@ public class ReportGenerationThread implements Runnable
                                              language,
                                              maxToReturn);
 
-//System.out.println("Exit DataUtils.restrictToMatchingProperty -------------");
-
         String delim = "\t";
         for (int i=0; i<concept_vec.size(); i++)
         {
 			Concept c = (Concept) concept_vec.elementAt(i);
-//    private void writeColumnData(PrintWriter pw, String scheme, String version, Concept defining_root_concept, Concept associated_concept, Concept c, String delim, ReportColumn[] cols) {
             writeColumnData(pw, codingSchemeName, version, null, null, c, delim, cols, true);
 		}
 
