@@ -61,8 +61,10 @@
 				<tr>
 					<td>
 						<table summary="" cellpadding="0" cellspacing="0" border="0">
+						        <tr><td height="40" valign="bottom" class="standardText">Reports with a DRAFT status are under review by subject experts; others with an APPROVED status are ready for download. Click on the report label to download the selected report.</td></tr>
+
 							<tr>
-								<td class="dataTablePrimaryLabel" height="20">STANDARD REPORTS</td>
+								<td class="dataTablePrimaryLabel" height="20">REPORTS</td>
 							</tr>
 							<tr>
 								<td>
@@ -134,7 +136,22 @@
 
 
 %>
+
+<%
+if (status.compareToIgnoreCase("APPROVED") == 0)
+{
+%>
 <td class="dataCellText"><a href="<%=request.getContextPath() %>/fileServlet?template=<%=templateId%>&format=<%=formatId%>" ><%=label%></a></td>
+<%
+}
+else
+{
+%>
+<td class="dataCellText"><%=label%></td>
+<%
+}
+%>
+
 										
 											<td class="dataCellText"><%=filename%></td>
 											<td class="dataCellText"><%=format%></td>
