@@ -61,7 +61,7 @@
 					<td>
 						<table summary="" cellpadding="0" cellspacing="0" border="0">
 							<tr>
-								<td class="dataTablePrimaryLabel" height="20">CREATE STANDARD REPORT TEMPLATE</td>
+								<td class="dataTablePrimaryLabel" height="20">CREATE REPORT TEMPLATE</td>
 							</tr>
 							<tr>
 								<td>
