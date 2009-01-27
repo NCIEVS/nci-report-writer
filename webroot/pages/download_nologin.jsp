@@ -75,6 +75,7 @@
 											<th class="dataTableHeader" scope="col" align="center">Version</th>
 											<th class="dataTableHeader" scope="col" align="center">Created By</th>
 											<th class="dataTableHeader" scope="col" align="center">Last Modified</th>
+											<th class="dataTableHeader" scope="col" align="center">Status</th>
 										</tr>
 
 <%
@@ -89,14 +90,16 @@
 		    {
 			    StandardReport standardReport = (StandardReport) objs[i];
 			    ReportFormat reportFormat = standardReport.getFormat();
+			    ReportStatus reportStatus = standardReport.getStatus();
 			    standardReportTemplate = standardReport.getTemplate();
-			    if (reportFormat != null && standardReportTemplate != null)
+			    if (reportFormat != null && standardReportTemplate != null && reportStatus != null)
 			    {
 			          String label = standardReportTemplate.getLabel();
 				  String format = reportFormat.getDescription();
 				  String codingScheme = standardReportTemplate.getCodingSchemeName();
 				  String version = standardReportTemplate.getCodingSchemeVersion();
 				  Date lastModified = standardReport.getLastModified();
+				  String status = reportStatus.getLabel();
 				  
 				  String pathname = standardReport.getPathName();
 				  String filename = DataUtils.getFileName(pathname);
@@ -139,6 +142,7 @@
 											<td class="dataCellText"><%=version%></td>
 											<td class="dataCellText"><%=loginName%></td>
 											<td class="dataCellText"><%=date_str%></td>
+											<td class="dataCellText"><%=status%></td>
 										</tr>
 										
 										

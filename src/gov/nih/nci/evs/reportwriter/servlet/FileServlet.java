@@ -161,7 +161,6 @@ public final class FileServlet extends HttpServlet {
 			line_br = "";
 		}
 
-System.out.println("fullPathName: " + fullPathName);
 
 		File file = new File(fullPathName);
 		String filename = file.getName();
@@ -216,15 +215,8 @@ System.out.println("fullPathName: " + fullPathName);
 		// Get ReportFormat from database
 		String formatId = request.getParameter("format");
 		String templateId = request.getParameter("template");
-
-		System.out.println("templateId: " + templateId);
-		System.out.println("formatId: " + formatId);
-
 		ReportFormat reportFormat = null;
 		StandardReportTemplate standardReportTemplate = null;
-
-System.out.println("FileServlet: Format ID " + formatId);
-
 		String message = "Format ID " + formatId + " not found.";
 		try {
 			reportFormat = null;
@@ -234,18 +226,14 @@ System.out.println("FileServlet: Format ID " + formatId);
 			SDKClientUtil sdkclientutil = new SDKClientUtil();
 			Object reportFormat_obj = sdkclientutil.search(FQName, methodName, format_id);
 			if (reportFormat_obj == null) {
-				System.out.println("Format ID " + format_id + " not found -- check with system administrator.");
 				sendErrorResponse(request, response, message);
 				return;
 			}
 			else
 			{
 				reportFormat = (ReportFormat) reportFormat_obj;
-				System.out.println("Requested format: " + reportFormat.getDescription());
 			}
-
 			// Get StandardReportTemplate from database
-
 			message = "Template ID " + templateId + " not found.";
 			try {
 				// Get all gov.nih.nci.evs.reportwriter.bean.StandardReportTemplate
@@ -258,14 +246,10 @@ System.out.println("FileServlet: Format ID " + formatId);
 				int template_id = Integer.parseInt(templateId);
 				Object standardReportTemplate_obj = sdkclientutil.search(FQName, methodName, template_id);
 				if (standardReportTemplate_obj == null) {
-					System.out.println("Template ID " + templateId + " not found.");
 					sendErrorResponse(request, response, message);
 				}
 
 				standardReportTemplate = (StandardReportTemplate) standardReportTemplate_obj;
-
-				System.out.println("Selected StandardReportTemplate label: " + standardReportTemplate.getLabel());
-				System.out.println("Selected StandardReportTemplate id: " + standardReportTemplate.getId());
 
 				// Search for the matched StandardReport in the database (by template and format)
 				FQName = "gov.nih.nci.evs.reportwriter.bean.StandardReport";
@@ -274,89 +258,52 @@ System.out.println("FileServlet: Format ID " + formatId);
 
 				if (objs == null || objs.length == 0)
 				{
-					System.out.println("sendErrorResponse: 1 " );
-
 					sendErrorResponse(request, response, message);
 				}
 				else
 				{
-					System.out.println("Enter for loop " + objs.length);
 					for (int i=0; i<objs.length; i++)
 					{
 						StandardReport standardReport = (StandardReport) objs[i];
 						StandardReportTemplate srt = standardReport.getTemplate();
-
-						System.out.println("KLO srt.getId() " + srt.getId());
-						System.out.println("KLO standardReportTemplate.getId() " + standardReportTemplate.getId());
-
                         int i1 = srt.getId().intValue();
                         int i2 = standardReportTemplate.getId().intValue();
 
-
-						//if (srt.getId().equals(standardReportTemplate.getId()))
 						if (i1 == i2)
 						{
-							System.out.println("******** two ID matched ...");
-
 							ReportFormat rf = standardReport.getFormat();
-
-						    System.out.println("standardReport.getFormat() " + standardReport.getFormat());
-
 							if (rf != null && rf.getId() == format_id)
 							{
-
-								System.out.println("Format matched ...");
-								System.out.println("The specified report is found ...");
-
 								HttpSession session = request.getSession(false);
 								Boolean isAdmin = (Boolean) session.getAttribute("isAdmin");
 								if (isAdmin != null && isAdmin.equals(Boolean.TRUE))
 								{
-									System.out.println("Sending response ...");
 									sendResponse(response, standardReport);
 								}
 								else
 								{
 									//Check if the report has been approved:
-									System.out.println("************* Check if the report has been approved ...");
 									ReportStatus rs = standardReport.getStatus();
 									if (rs != null) {
 										String approved = "APPROVED";
 										if (approved.equals(rs.getLabel()))
 										{
-											System.out.println("The selected report has been approved for download.");
 											sendResponse(response, standardReport);
 										}
 										else
 										{
-											System.out.println("sendErrorResponse: 2 " );
 											sendErrorResponse(request, response, "The selected report has not yet been approved.");
 										}
 									} else {
-										System.out.println("sendErrorResponse: 3 " );
 										sendErrorResponse(request, response, "The selected report has not yet been approved.");
 									}
 								}
 							}
-							else
-							{
-								System.out.println("rf.getId() != format_id");
-								System.out.println("rf.getId() " + rf.getId() );
-								System.out.println("format_id " + format_id );
-
-
-							}
-						}
-						else
-						{
-							System.out.println("ID not the same (Integer vs int???");
 						}
 					}
 			    }
 
 			} catch (Exception ex) {
-
-				System.out.println("sendErrorResponse: 3 " );
 				sendErrorResponse(request, response, message);
 				ex.printStackTrace();
 			}
