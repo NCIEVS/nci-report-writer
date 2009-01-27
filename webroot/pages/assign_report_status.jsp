@@ -65,7 +65,7 @@
 									<table summary="Enter summary of data here" cellpadding="3" cellspacing="0" border="0" class="dataTable" width="100%">
 										<tr class="dataRowLight">
 <td class="dataCellText">
-	<h:outputText value="Standard Report" />
+	<h:outputText value="Report" />
 </td>
 						
 

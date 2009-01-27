@@ -55,7 +55,7 @@
 					<td>
 						<table summary="" cellpadding="0" cellspacing="0" border="0">
 							<tr>
-								<td class="dataTablePrimaryLabel" height="20">ADD STANDARD REPORT FIELD</td>
+								<td class="dataTablePrimaryLabel" height="20">ADD REPORT FIELD</td>
 							</tr>
 							<tr>
 								<td>
