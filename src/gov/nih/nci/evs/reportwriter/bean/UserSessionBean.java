@@ -577,23 +577,44 @@ System.out.println("saveModifiedTemplateAction: version " + version);
 		  }
 
           String rootConceptCode = (String) request.getParameter("rootConceptCode");
-          String ltag = null;
-	      Concept rootConcept = DataUtils.getConceptByCode(codingscheme, version, ltag, rootConceptCode);
-	      if (rootConcept == null)
-	      {
-			  String message = "Invalid root concept code " + rootConceptCode + " -- Please modify the report template and resubmit.";
+          if (rootConceptCode == null)
+          {
+			  String message = "Invalid root concept code " + rootConceptCode + " -- Please complete data entry.";
+			  request.getSession().setAttribute("message", message);
+			  return "message";
+		  }
+          rootConceptCode = rootConceptCode.trim();
+          if (rootConceptCode.length() == 0)
+          {
+			  String message = "Invalid root concept code " + rootConceptCode + " -- Please complete data entry.";
 			  request.getSession().setAttribute("message", message);
 			  return "message";
 		  }
 
-          String associationName = (String) request.getParameter("associationName");
-          String key = codingscheme + " (version: " + version + ")";
-          Vector<String> associationname_vec = DataUtils.getSupportedAssociationNames(key);
-          if (!associationname_vec.contains(associationName)) {
-			  String message = "Invalid association name " + associationName + " -- Please modify the report template and resubmit.";
-			  request.getSession().setAttribute("message", message);
-			  return "message";
+
+          if (rootConceptCode.indexOf("|") == -1) {
+			  String ltag = null;
+			  Concept rootConcept = DataUtils.getConceptByCode(codingscheme, version, ltag, rootConceptCode);
+			  if (rootConcept == null)
+			  {
+				  String message = "Invalid root concept code " + rootConceptCode + " -- Please modify the report template and resubmit.";
+				  request.getSession().setAttribute("message", message);
+				  return "message";
+			  }
 		  }
+
+
+		  String associationName = (String) request.getParameter("associationName");
+          associationName = associationName.trim();
+          if (associationName.length() > 0) {
+			  String key = codingscheme + " (version: " + version + ")";
+			  Vector<String> associationname_vec = DataUtils.getSupportedAssociationNames(key);
+			  if (!associationname_vec.contains(associationName)) {
+				  String message = "Invalid association name " + associationName + " -- Please modify the report template and resubmit.";
+				  request.getSession().setAttribute("message", message);
+				  return "message";
+			  }
+	      }
 
           String direction_str = (String) request.getParameter("direction");
           Boolean direction = null;
@@ -646,7 +667,7 @@ System.out.println("saveModifiedTemplateAction: version " + version);
 			  StandardReportTemplate standardReportTemplate = null;
 			  String FQName = "gov.nih.nci.evs.reportwriter.bean.StandardReportTemplate";
 			  String methodName = "setLabel";
-			  key = label;
+			  String key = label;
 
 			  Object standardReportTemplate_obj = sdkclientutil.search(FQName, methodName, key);
 			  if (standardReportTemplate_obj == null) {
