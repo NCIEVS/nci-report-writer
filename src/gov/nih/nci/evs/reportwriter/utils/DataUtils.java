@@ -3,6 +3,9 @@ package gov.nih.nci.evs.reportwriter.utils;
 import java.io.*;
 import java.util.*;
 
+import gov.nih.nci.system.applicationservice.EVSApplicationService;
+import gov.nih.nci.system.client.ApplicationServiceProvider;
+
 import gov.nih.nci.evs.reportwriter.bean.StandardReportTemplate;
 import gov.nih.nci.system.applicationservice.EVSApplicationService;
 
@@ -849,6 +852,7 @@ System.out.println("DataUtils 	Boolean.TRUE ");
 	public static Concept getConceptByCode(String codingSchemeName, String vers, String ltag, String code)
 	{
         try {
+			String serviceUrl = ReportWriterProperties.getInstance().getProperty(ReportWriterProperties.EVS_SERVICE_URL);
 			EVSApplicationService lbSvc = new RemoteServerUtil().createLexBIGService();
 			if (lbSvc == null)
 			{
@@ -865,10 +869,16 @@ System.out.println("DataUtils 	Boolean.TRUE ");
 
 			CodedNodeSet cns = null;
 
+
 			try {
+
+				System.out.println("DataUtils calling getCodingSchemeConcepts: " + code);
+
 				cns = lbSvc.getCodingSchemeConcepts(codingSchemeName, versionOrTag);
 		    } catch (Exception e1) {
-				e1.printStackTrace();
+				System.out.println("DataUtils lbSvc.getCodingSchemeConcepts threw exception??? " + code);
+				//e1.printStackTrace();
+				return null;
 			}
 
 			cns = cns.restrictToCodes(crefs);
@@ -1533,6 +1543,7 @@ System.out.println("DataUtils 	Boolean.TRUE ");
 	}
 
 
+
 	public static Vector<org.LexGrid.concepts.Concept> restrictToMatchingProperty(
 		                                        String codingSchemeName,
 	                                            String version,
@@ -1553,39 +1564,24 @@ System.out.println("DataUtils 	Boolean.TRUE ");
 	    CodedNodeSet cns = null;
         Vector<org.LexGrid.concepts.Concept> v = new Vector<org.LexGrid.concepts.Concept>();
         try {
-			RemoteServerUtil rsu = new RemoteServerUtil();
-			EVSApplicationService lbSvc = rsu.createLexBIGService();
-
 			CodingSchemeVersionOrTag versionOrTag = new CodingSchemeVersionOrTag();
 			versionOrTag.setVersion(version);
 
+			RemoteServerUtil rsu = new RemoteServerUtil();
+			EVSApplicationService lbSvc = rsu.createLexBIGService();
+
 			if (lbSvc == null)
 			{
+				System.out.println("ERROR: lbSvc == null???");
 				return null;
 			}
-            try {
-				cns = lbSvc.getCodingSchemeConcepts(codingSchemeName, versionOrTag);
-				if (cns == null)
-				{
-					System.out.println("ERROR: cns == null???: " + version);
-					return v;
-				}
-				else
-				{
-					System.out.println("cns != null");
-				}
-			} catch (Exception ex) {
-				System.out.println("codingSchemeName " + codingSchemeName);
-				System.out.println("version " + version);
-				System.out.println("ERROR: cns = lbSvc.getCodingSchemeConcepts throws exception??? ");
-                return v;
-			}
 
+
+			cns = lbSvc.getCodingSchemeConcepts(codingSchemeName, versionOrTag);
+			if (cns == null) return v;
 
 			LocalNameList contextList = null;
-            cns = null;
-            try {
-				cns.restrictToMatchingProperties(propertyList,
+            cns = cns.restrictToMatchingProperties(propertyList,
                                            propertyTypes,
                                            sourceList,
                                            contextList,
@@ -1594,11 +1590,6 @@ System.out.println("DataUtils 	Boolean.TRUE ");
                                            matchAlgorithm,
                                            language
                                            );
-			} catch (Exception ex) {
-
-				System.out.println("ERROR: cns.restrictToMatchingProperties...");
-
-			}
 
 			LocalNameList restrictToProperties = new LocalNameList();
 		    SortOptionList sortCriteria =
@@ -1611,13 +1602,11 @@ System.out.println("DataUtils 	Boolean.TRUE ");
 									  restrictToProperties,
 									  null,
 									  maxToReturn);
-
 			} catch (Exception ex) {
 				throw new LBParameterException(ex.getMessage());
 			}
 
 			if (list == null) return v;
-
 			ResolvedConceptReference[] rcrArray = list.getResolvedConceptReference();
 			if (rcrArray == null)
 			{
@@ -1637,6 +1626,8 @@ System.out.println("DataUtils 	Boolean.TRUE ");
 	    }
 		return SortUtils.quickSort(v);
 	}
+
+
 
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

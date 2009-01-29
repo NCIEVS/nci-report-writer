@@ -26,6 +26,10 @@ import java.util.Collection;
 
 import org.LexGrid.concepts.Concept;
 
+import gov.nih.nci.evs.reportwriter.utils.*;
+
+import gov.nih.nci.system.applicationservice.EVSApplicationService;
+import gov.nih.nci.system.client.ApplicationServiceProvider;
 
 /**
   * <!-- LICENSE_TEXT_START -->
@@ -591,30 +595,37 @@ System.out.println("saveModifiedTemplateAction: version " + version);
 			  return "message";
 		  }
 
-
+/*
+          String associationName = null;
           if (rootConceptCode.indexOf("|") == -1) {
 			  String ltag = null;
-			  Concept rootConcept = DataUtils.getConceptByCode(codingscheme, version, ltag, rootConceptCode);
+			  //Concept rootConcept = DataUtils.getConceptByCode(codingscheme, version, ltag, rootConceptCode);
+
+			//String serviceUrl = ReportWriterProperties.getInstance().getProperty(ReportWriterProperties.EVS_SERVICE_URL);
+			  EVSApplicationService lbSvc = new RemoteServerUtil().createLexBIGService();
+			  Concept rootConcept = DataUtils.getConceptByCode(lbSvc, codingscheme, version, ltag, rootConceptCode);
 			  if (rootConcept == null)
 			  {
 				  String message = "Invalid root concept code " + rootConceptCode + " -- Please modify the report template and resubmit.";
 				  request.getSession().setAttribute("message", message);
 				  return "message";
 			  }
-		  }
 
 
-		  String associationName = (String) request.getParameter("associationName");
-          associationName = associationName.trim();
-          if (associationName.length() > 0) {
-			  String key = codingscheme + " (version: " + version + ")";
-			  Vector<String> associationname_vec = DataUtils.getSupportedAssociationNames(key);
-			  if (!associationname_vec.contains(associationName)) {
-				  String message = "Invalid association name " + associationName + " -- Please modify the report template and resubmit.";
-				  request.getSession().setAttribute("message", message);
-				  return "message";
+			  associationName = (String) request.getParameter("associationName");
+			  associationName = associationName.trim();
+			  if (associationName.length() > 0) {
+				  String key = codingscheme + " (version: " + version + ")";
+				  Vector<String> associationname_vec = DataUtils.getSupportedAssociationNames(key);
+				  if (!associationname_vec.contains(associationName)) {
+					  String message = "Invalid association name " + associationName + " -- Please modify the report template and resubmit.";
+					  request.getSession().setAttribute("message", message);
+					  return "message";
+				  }
 			  }
 	      }
+*/
+	      String associationName = (String) request.getParameter("associationName");
 
           String direction_str = (String) request.getParameter("direction");
           Boolean direction = null;

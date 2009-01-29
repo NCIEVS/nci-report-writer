@@ -57,6 +57,7 @@ public class RemoteServerUtil {
 
 		try {
 			String serviceUrl = ReportWriterProperties.getProperty(ReportWriterProperties.EVS_SERVICE_URL);
+			//String serviceUrl = ReportWriterProperties.getInstance().getProperty(ReportWriterProperties.EVS_SERVICE_URL);
 			lbSvc = (EVSApplicationService) ApplicationServiceProvider.getApplicationServiceFromUrl(serviceUrl, _serviceInfo);
 			return lbSvc;
 
