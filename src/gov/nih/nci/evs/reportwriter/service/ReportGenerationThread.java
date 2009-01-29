@@ -964,8 +964,6 @@ public class ReportGenerationThread implements Runnable
 		String columnHeadings = "";
 		String delimeter_str = "\t";
 
-
-
         Object[] objs = null;
 	    java.util.Collection cc = standardReportTemplate.getColumnCollection();
 	    if (cc == null)

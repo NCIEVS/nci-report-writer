@@ -1561,15 +1561,31 @@ System.out.println("DataUtils 	Boolean.TRUE ");
 
 			if (lbSvc == null)
 			{
-				System.out.println("lbSvc == null???");
 				return null;
 			}
+            try {
+				cns = lbSvc.getCodingSchemeConcepts(codingSchemeName, versionOrTag);
+				if (cns == null)
+				{
+					System.out.println("ERROR: cns == null???: " + version);
+					return v;
+				}
+				else
+				{
+					System.out.println("cns != null");
+				}
+			} catch (Exception ex) {
+				System.out.println("codingSchemeName " + codingSchemeName);
+				System.out.println("version " + version);
+				System.out.println("ERROR: cns = lbSvc.getCodingSchemeConcepts throws exception??? ");
+                return v;
+			}
 
-			cns = lbSvc.getCodingSchemeConcepts(codingSchemeName, versionOrTag);
-			if (cns == null) return v;
 
 			LocalNameList contextList = null;
-            cns = cns.restrictToMatchingProperties(propertyList,
+            cns = null;
+            try {
+				cns.restrictToMatchingProperties(propertyList,
                                            propertyTypes,
                                            sourceList,
                                            contextList,
@@ -1578,6 +1594,11 @@ System.out.println("DataUtils 	Boolean.TRUE ");
                                            matchAlgorithm,
                                            language
                                            );
+			} catch (Exception ex) {
+
+				System.out.println("ERROR: cns.restrictToMatchingProperties...");
+
+			}
 
 			LocalNameList restrictToProperties = new LocalNameList();
 		    SortOptionList sortCriteria =
@@ -1590,11 +1611,13 @@ System.out.println("DataUtils 	Boolean.TRUE ");
 									  restrictToProperties,
 									  null,
 									  maxToReturn);
+
 			} catch (Exception ex) {
 				throw new LBParameterException(ex.getMessage());
 			}
 
 			if (list == null) return v;
+
 			ResolvedConceptReference[] rcrArray = list.getResolvedConceptReference();
 			if (rcrArray == null)
 			{
