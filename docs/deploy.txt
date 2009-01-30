@@ -1,0 +1,86 @@
+***********************************************
+*** Report Writer build / deployment notes ****
+***********************************************
+
+--------------------------------------
+Setup MySQl
+--------------------------------------
+
+Run the following scripts:
+
+1) csmupt-init.sql
+2) ncireportwriter-init-db.sql
+
+--------------------------------------
+Setup JBoss
+--------------------------------------
+
+Note: Paths may vary due to NCI environment differences
+
+Application server
+------------------
+1. Unzip Install JBoss 4.0.5 GA package in to an appropreate directory
+
+2. JBoss 4.0.5 comes bundled Apache MyFaces implementation which will need
+   to be removed.
+   a) delete .../jboss-4.0.5.GA/server/default/deploy/jbossweb-tomcat55.sar/jsf-libs/myfaces-impl.jar
+
+3. Copy file "mysql-ds.xml" to .../jboss-4.0.5.GA/server/default/deploy
+
+4. Add the following lines at the end of login-config.xml file at
+   .../jboss-4.0.5.GA/server/default/conf directory
+
+    <application-policy name="ncireportwriter">
+     <authentication>
+        <login-module code="gov.nih.nci.security.authentication.loginmodules.RDBMSLoginModule" flag="required">
+        <module-option name="driver">com.mysql.jdbc.Driver</module-option>
+        <module-option name="url">jdbc:mysql://localhost:3306/csmupt</module-option>
+        <module-option name="user">root</module-option>
+        <module-option name="passwd">password</module-option>
+        <module-option name="query">SELECT * FROM csm_user WHERE login_name=? AND password=?</module-option>
+        <module-option name="encryption-enabled">YES</module-option>
+        </login-module>
+     </authentication>
+    </application-policy>
+
+    <application-policy name="csmupt">
+     <authentication>
+        <login-module code="gov.nih.nci.security.authentication.loginmodules.RDBMSLoginModule" flag="required">
+        <module-option name="driver">com.mysql.jdbc.Driver</module-option>
+        <module-option name="url">jdbc:mysql://localhost:3306/csmupt</module-option>
+        <module-option name="user">root</module-option>
+        <module-option name="passwd">password</module-option>
+        <module-option name="query">SELECT * FROM csm_user WHERE login_name=? AND password=?</module-option>
+        <module-option name="encryption-enabled">YES</module-option>
+        </login-module>
+     </authentication>
+    </application-policy>
+
+5. The properties-service.xml file in the same directory (deploy) needs to have two entries for evs.properties and ncireportwriter.properties.
+    <attribute name="Properties">
+        gov.nih.nci.cacore.evsProperties=C:/jboss-4.0.5.GA/server/default/data/evs.properties
+    </attribute>
+
+    <attribute name="Properties">
+        gov.nih.nci.cacore.ncireportwriterProperties=C:/jboss-4.0.5.GA/server/default/data/ncireportwriter.properties
+    </attribute>
+
+--------------------------------------
+Logins
+--------------------------------------
+Report Writer
+-------------
+URL:        http://localhost:8080/ncireportwriter/
+
+UPT
+---
+URL:        http://localhost:8080/upt/
+APPLICATION NAME:   csmupt
+
+--------------------------------------
+Trouble shooting
+--------------------------------------
+
+Clear JBoss cache
+-----------------
+delete C:\Apps\jboss-4.0.5.GA\server\default\work\jboss.web\localhost
