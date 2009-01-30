@@ -1,168 +1,396 @@
-<project name="ncireportwriter" basedir="." default="build">
+<?xml version="1.0"?>
+<project name="ncireportwriter" basedir="." default="usage">
 
-	<!-- Project settings -->
-	<property name="project.distname" value="ncireportwriter"/>
+    <description>
 
-	<!-- Local system paths -->
-	<property file="${basedir}/build.properties"/>
-	<property name="webroot.dir" value="${basedir}/webroot"/>
-	<property name="webinf.dir" value="${webroot.dir}/WEB-INF"/>
-	<property name="build.dir" value="build"/>
+  + ============================ +
+  +                              +
+  +     evs ncireport writer     +
+  +                              +
+  + ============================ +
 
-	<!-- classpath -->
-	<path id="compile.classpath">
-		
-		<pathelement path ="${webinf.dir}/lib/acegi-security-1.0.4.jar"/>
-		<pathelement path ="${webinf.dir}/lib/antlr-2.7.6.jar"/>
-		<pathelement path ="${webinf.dir}/lib/asm-1.5.3.jar"/>
-		<pathelement path ="${webinf.dir}/lib/asm-attrs-1.5.3.jar"/>
-		<pathelement path ="${webinf.dir}/lib/axis.jar"/>
-		<pathelement path ="${webinf.dir}/lib/c3p0-0.9.0.jar"/>
-	    		
-		<pathelement path ="${webinf.dir}/lib/caGrid-data-common-1.2.jar"/>
-		<pathelement path ="${webinf.dir}/lib/caGrid-data-utils-1.2.jar"/>
-		<pathelement path ="${webinf.dir}/lib/caGrid-metadata-data-1.2.jar"/>
-		<pathelement path ="${webinf.dir}/lib/caGrid-sdkQuery4-beans-1.2.jar"/>
-		<pathelement path ="${webinf.dir}/lib/caGrid-sdkQuery4-processor-1.2.jar"/>
-		
-		<pathelement path ="${webinf.dir}/lib/cglib-2.1.3.jar"/>
-		<pathelement path ="${webinf.dir}/lib/clm-4.1.jar"/>
-		
-		<pathelement path ="${webinf.dir}/lib/cog-axis.jar"/>
-		<pathelement path ="${webinf.dir}/lib/cog-jglobus.jar"/>
-		<pathelement path ="${webinf.dir}/lib/commons-logging-1.0.4.jar"/>
-		<pathelement path ="${webinf.dir}/lib/commons-logging-1.1.jar"/>
-		<pathelement path ="${webinf.dir}/lib/commons-lang-1.0.1.jar"/>
-		<pathelement path ="${webinf.dir}/lib/commons-digester.jar"/>
-		<pathelement path ="${webinf.dir}/lib/commons-discovery-0.2.jar"/>
-		<pathelement path ="${webinf.dir}/lib/commons-dbcp-1.2.1.jar"/>
-		<pathelement path ="${webinf.dir}/lib/commons-collections-2.1.1.jar"/>
-		<pathelement path ="${webinf.dir}/lib/commons-collections-3.2.jar"/>
-		<pathelement path ="${webinf.dir}/lib/commons-beanutils.jar"/>
-		<pathelement path ="${webinf.dir}/lib/commons-codec-1.3.jar"/>
-		<pathelement path ="${webinf.dir}/lib/csmapi-4.1.jar"/>
-		
-		<pathelement path ="${webinf.dir}/lib/dlbadapter.jar"/>
-		<pathelement path ="${webinf.dir}/lib/dom4j-1.6.1.jar"/>
-		<pathelement path ="${webinf.dir}/lib/ehcache-1.2.4.jar"/>
-		<pathelement path ="${webinf.dir}/lib/ejb3-persistence-1.0.1.jar"/>
-		
-		<pathelement path ="${webinf.dir}/lib/hibernate3.jar"/>
-		<pathelement path ="${webinf.dir}/lib/hibernate-commons-annotations.jar"/>
-		<pathelement path ="${webinf.dir}/lib/hibernate-annotations-1.0.jar"/>
-		<pathelement path ="${webinf.dir}/lib/hibernate-3.2.0.ga.jar"/>
-		<pathelement path ="${webinf.dir}/lib/hibernate-validator.jar"/>
-				
-		<pathelement path ="${webinf.dir}/lib/jaxrpc.jar"/>
-		<pathelement path ="${webinf.dir}/lib/junit-3.8.1.jar"/>
-		<pathelement path ="${webinf.dir}/lib/jta.jar"/>
-		<pathelement path ="${webinf.dir}/lib/jta-1.0.1B.jar"/>
-		<pathelement path ="${webinf.dir}/lib/jstl.jar"/>
-		<pathelement path ="${webinf.dir}/lib/jsf-impl.jar"/>
-		<pathelement path ="${webinf.dir}/lib/jsf-api.jar"/>
-		<pathelement path ="${webinf.dir}/lib/jdom-1.1.jar"/>
+    </description>
 
-		<pathelement path ="${webinf.dir}/lib/lbRuntime.jar"/>
-		<pathelement path ="${webinf.dir}/lib/lexevsapi42-beans.jar"/>
-	    <pathelement path ="${webinf.dir}/lib/lexevsapi42-framework.jar"/>
-		<pathelement path ="${webinf.dir}/lib/lexbig.jar"/>
-		<pathelement path ="${webinf.dir}/lib/log4j-1.2.14.jar"/>
-		<pathelement path ="${webinf.dir}/lib/lucene-core-2.3.2.jar"/>
-		<pathelement path ="${webinf.dir}/lib/lucene-regex-2.3.2.jar"/>
-		<pathelement path ="${webinf.dir}/lib/lucene-snowball-2.3.2.jar"/>
-								
-		<pathelement path ="${webinf.dir}/lib/mysql-connector-java-3.0.14-production-bin.jar"/>
-		<pathelement path ="${webinf.dir}/lib/ojdbc14.jar"/>
-				
-		<pathelement path ="${webinf.dir}/lib/poi-contrib-3.2-FINAL-20081019.jar"/>
-		<pathelement path ="${webinf.dir}/lib/poi-3.2-FINAL-20081019.jar"/>
-		<pathelement path ="${webinf.dir}/lib/poi-scratchpad-3.2-FINAL-20081019.jar"/>
+    <!--========================================-->
+    <!-- init: initializization stuff here      -->
+    <!--========================================-->
 
-	    <pathelement path ="${webinf.dir}/lib/rwdbserver-beans.jar"/>
-		<pathelement path ="${webinf.dir}/lib/rwdbserver-orm.jar"/>
+    <!-- Set properties file -->
+    <property environment="enviro"/>
+    <property name="project.distname" value="ncireportwriter"/>
+    <property name="extlib.dir" value="extlib"/>
+    <property name="models.dir" value="models"/>
+    <property name="upt.dir" value="upt"/>
+    <property name="conf.dir" value="conf"/>
+    <property name="webroot.dir" value="webroot"/>
+    <property name="webinf.dir" value="${webroot.dir}/WEB-INF"/>
+    <property name="build.dir" value="build"/>
 
-	     <pathelement path ="${webinf.dir}/lib/sdk-client-framework.jar"/>
-		 <pathelement path ="${webinf.dir}/lib/sdk-core.jar"/>
-		<pathelement path ="${webinf.dir}/lib/sdk-security.jar"/>
-		<pathelement path ="${webinf.dir}/lib/sdk-writable-client-framework.jar"/>
-		 <pathelement path ="${webinf.dir}/lib/sdk-writable-core.jar"/>
-		
-		<pathelement path ="${webinf.dir}/lib/servlet-api.jar"/>
-		<pathelement path ="${webinf.dir}/lib/standard.jar"/>
-		<pathelement path ="${webinf.dir}/lib/spring-1.2.8.jar"/>
-		
-	    <pathelement path ="${webinf.dir}/classes"/>
-	    <pathelement path ="${classpath.external}"/>
-	    <pathelement path ="${classpath}"/>
-	</path>
+    <!-- Check timestamp on files -->
+    <tstamp/>
 
-	<!-- define your folder for deployment -->
-	<property name="deploy.dir" value="deploy"/>
+    <!-- Build no -->
+    <tstamp>
+        <format property="BUILDNO" pattern="MMddyyhh" locale="en,US"/>
+    </tstamp>
 
-	<!-- Check timestamp on files -->
-	<target name="prepare">
-		<tstamp/>
-	</target>
+    <!-- Set property file -->
+    <property file="${target.dir}/${deploy.prop.file}"/>
+    <condition property="properties.file" value="${pfile}">
+        <isset property="pfile"/>
+    </condition>
+    <condition property="properties.file" value="${build.properties.file}">
+        <and>
+            <not><isset property="properties.file"/></not>
+            <isset property="build.properties.file"/>
+        </and>
+    </condition>
+    <condition property="properties.file" value="local.build.properties">
+        <not><isset property="properties.file"/></not>
+    </condition>
+    <property file="${properties.file}"/>
+    <filter filtersfile="${properties.file}"/>
 
-	<!-- Copy any resource or configuration files -->
-	<target name="resources">
-		<copy todir="${webinf.dir}/classes" includeEmptyDirs="no">
-			<fileset dir="src">
-				<patternset>
-					<include name="**/*.conf"/>
-					<include name="**/*.properties"/>
-					<include name="**/*.xml"/>
-					<include name="**/*.config"/>
-				</patternset>
-			</fileset>
-			<fileset dir="conf">
-			<patternset>
-				<include name="**/*.conf"/>
-				<include name="**/*.properties"/>
-				<include name="**/*.xml"/>
-				<include name="**/*.config"/>
-			</patternset>
-		</fileset>
-		</copy>
-	</target>
+    <!-- Build class path -->
+    <path id="compile.classpath">
+        <fileset dir="${webinf.dir}/lib">
+            <include name="*.jar" />
+        </fileset>
+        <pathelement path ="${webinf.dir}/classes"/>
+        <pathelement path ="${classpath.external}"/>
+        <pathelement path ="${classpath}"/>
+    </path>
 
-	<!-- Normal build of application -->
-	<target name="compile" depends="prepare,resources">
-		<javac srcdir="src" destdir="${webinf.dir}/classes">
-			<classpath refid="compile.classpath"/>
-		</javac>
-	</target>
+    <!--============================-->
+    <!-- usage: show build targets  -->
+    <!--============================-->
 
-	<!-- Remove classes directory for clean build -->
-	<target name="clean"
-		description="Prepare for clean build">
-		<delete dir="${webinf.dir}/classes"/>
-		<delete dir="${basedir}/build"/>
-	</target>
+    <target name="usage" depends="-init">
+        <echo message="" />
+        <echo message="Build Script: ${ant.project.name}" />
+        <echo message="-----------------------------------" />
+        <echo message="" />
+        <echo message="Available targets are:" />
+        <echo message="" />
+        <echo message="dbsetup         --&gt; Setup MySQL database" />
+        <echo message="deploy          --&gt; Deploy war files to application server" />
+        <echo message="setup           --&gt; Setup application server" />
+        <echo message="" />
+        <echo message="clean           --&gt; Remove classes directory for clean build" />
+        <echo message="compile, build  --&gt; Normal build of application" />
+        <echo message="rebuild         --&gt; Rebuild entire project" />
+        <echo message="war             --&gt; Create binary distribution" />
+        <echo message="cleanapp        --&gt; Clear JBoss temp file for this app" />
+        <echo message="" />
+        <echo message="" />
+        <echo message="${ant.version}" />
+        <echo message="" />
+        <echo message="        JBoss home = [${enviro.JBOSS_HOME}]" />
+        <echo message="ANT base directory = [${basedir}]" />
+        <echo message="   Properties file = [${properties.file}]" />
+        <echo message="                OS = [${os.name}]" />
+        <echo message="" />
+        <echo message="Available parameters:" />
+        <echo message="" />
+        <echo message="pfile          --&gt; Alternate properties file" />
+        <echo message="                      E.G; ant -Dpfile=dev.build.properties" />
+        <echo message="" />
+    </target>
 
-	<!-- Build entire project -->
-	<target name="build" depends="prepare,compile"/>
+    <!--============================-->
+    <!-- init: Initialize the build -->
+    <!--============================-->
 
-	<target name="rebuild" depends="clean,prepare,compile"/>
+    <target name="-init">
 
-	<!-- Create binary distribution -->
-	<target name="war" depends="build">
-		<mkdir dir="${build.dir}"/>
-		<war
-			basedir="${webroot.dir}"
-			warfile="${build.dir}/${project.distname}.war"
-			webxml="${webinf.dir}/web.xml">
-			<exclude name="WEB-INF/${build.dir}/**"/>
-			<exclude name="WEB-INF/src/**"/>
-			<exclude name="WEB-INF/web.xml"/>
-		</war>
-	</target>
+        <!-- Place holder init stuff -->
 
-	<!-- Deploy project -->
-	<target name="deploy" depends="war">
-		<delete file="${deploy.dir}/${project.distname}.war"/>
-		<delete dir="${deploy.dir}/${project.distname}"/>
-		<copy file="${build.dir}/${project.distname}.war" todir="${deploy.dir}"/>
-	</target>
+    </target>
+
+    <!--===============================-->
+    <!-- dbsetup: setup MySQL database -->
+    <!--===============================-->
+
+    <target name="dbsetup" description="setup MySQL database." depends="-init">
+
+        <!-- Report Writer database -->
+
+        <echo message="" />
+        <input
+            message="Ready to initialize Report Writer database on server [${db_host}].${line.separator}Continue?"
+            validargs="y,n"
+            addproperty="do.db.init.rw"
+        />
+        <condition property="do.abort">
+            <equals arg1="n" arg2="${do.db.init.rw}"/>
+        </condition>
+        <fail if="do.abort">Copy aborted by user.</fail>
+
+        <sql driver="com.mysql.jdbc.Driver"
+            url="jdbc:mysql://${db_host}:${db_port}/?useUnicode=true&amp;characterEncoding=UTF-8"
+            userid="${db_user}" password="${db_password}" >
+            <classpath>
+                <pathelement path="${webinf.dir}/lib/mysql-connector-java-3.1.13-bin.jar"/>
+            </classpath>
+            <transaction  src="${models.dir}/dbscripts/ncireportwriter-init-db.sql"/>
+        </sql>
+
+        <!-- UPT database setup -->
+
+        <echo message="" />
+        <input
+            message="Ready to initialize UPT database on server [${db_host}].${line.separator}Continue?"
+            validargs="y,n"
+            addproperty="do.db.init.upt"
+        />
+        <condition property="do.abort">
+            <equals arg1="n" arg2="${do.db.init.upt}"/>
+        </condition>
+        <fail if="do.abort">Copy aborted by user.</fail>
+
+        <sql driver="com.mysql.jdbc.Driver"
+            url="jdbc:mysql://${db_host}:${db_port}/?useUnicode=true&amp;characterEncoding=UTF-8"
+            userid="${db_user}" password="${db_password}" >
+            <classpath>
+                <pathelement path="${webinf.dir}/lib/mysql-connector-java-3.1.13-bin.jar"/>
+            </classpath>
+            <transaction  src="${models.dir}/dbscripts/csmupt-init.sql"/>
+        </sql>
+
+    </target>
+
+    <!--==========================-->
+    <!-- deploy: Deploy war files -->
+    <!--==========================-->
+
+    <target name="deploy">
+
+        <!-- Copy new report writer app -->
+
+        <delete file="${jboss_root}/server/default/deploy/${project.distname}.war"/>
+        <copy file="${build.dir}/${project.distname}.war" todir="${jboss_root}/server/default/deploy"/>
+
+        <!-- Copy UPT app. -->
+
+        <delete file="${jboss_root}/server/default/deploy/upt.war"/>
+        <!-- copy file="${upt.dir}/upt.war" todir="${jboss_root}/server/default/deploy"/ -->
+
+
+    </target>
+
+    <!--=======================================-->
+    <!-- setup: setup jboss application server -->
+    <!--=======================================-->
+
+    <target name="setup" description="setup jboss application server." depends="-init">
+
+        <!-- Prompt user to go ahead and deploy -->
+
+        <echo message="" />
+        <input
+            message="Ready to setup application server [${jboss_root}].${line.separator}Continue?"
+            validargs="y,n"
+            addproperty="do.app.init"
+        />
+        <condition property="do.abort">
+            <equals arg1="n" arg2="${do.app.init}"/>
+        </condition>
+        <fail if="do.abort">JBoss server setup for ${project.distname} aborted by user.</fail>
+
+        <!-- Remove Apache MyFaces implementation found in JBoss 4.0.5 GA -->
+
+        <echo message="Removing Apache JSF files..." />
+        <delete quiet="true"
+                dir="${jboss_root}/server/default/deploy/jbossweb-tomcat55.sar/jsf-libs"
+        />
+
+        <!-- Copy mysql-ds.xml -->
+
+        <echo message="Adding new mysql-ds.xml..." />
+        <copy file="${models.dir}/dbscripts/mysql-ds.xml"
+            todir="${jboss_root}/server/default/deploy"
+            filtering="true"
+        />
+
+        <!-- Update login-config.xml -->
+
+        <condition property="login-config.complete">
+            <isfileselected file="${jboss_root}/server/default/conf/login-config.xml">
+                <contains text="ncireportwriter" casesensitive="no"/>
+            </isfileselected>
+        </condition>
+        <antcall target="-fix.login-config"/>
+
+        <!-- Copy mysql connector jar -->
+
+        <echo message="Copying mysql connector jar..." />
+        <copy file="${webinf.dir}/lib/mysql-connector-java-3.1.13-bin.jar"
+            todir="${jboss_root}/server/default/lib"
+        />
+
+        <!-- Update properties-service.xml -->
+
+        <condition property="properties-service.complete">
+            <isfileselected file="${jboss_root}/server/default/deploy/properties-service.xml">
+                <contains text="ncireportwriterProperties" casesensitive="no"/>
+            </isfileselected>
+        </condition>
+        <antcall target="-fix.properties-service"/>
+
+        <echo message="login-config.xml updated." />
+        <echo message="'ant setup' completed." />
+        <echo message="If you need to change these files please edit them by hand." />
+
+        <!-- Copy ncireportwriter.properties -->
+
+        <echo message="Copying ncireportwriter.properties..." />
+        <copy file="${conf.dir}/ncireportwriter.properties"
+            todir="${jboss_root}/server/default/data"
+            filtering="true"
+        />
+
+    </target>
+
+    <target name="-fix.login-config" unless="login-config.complete">
+
+        <!-- Make a copy application-policy.txt with setting for this environment -->
+
+        <mkdir dir="${build.dir}"/>
+        <copy todir="${build.dir}"
+            filtering="true"
+            file="${upt.dir}/application-policy.txt"
+            overwrite="true"
+        />
+        <loadfile property="policy.txt" srcFile="${build.dir}/application-policy.txt"/>
+        <delete file="${build.dir}/application-policy.txt"/>
+
+        <!-- Append new policy for report writer and upt -->
+
+        <replaceregexp byline="true" flags="gm"
+            replace="${policy.txt}"
+            file="${jboss_root}/server/default/conf/login-config.xml">
+            <regexp pattern="\s*&lt;/policy&gt;"/>
+        </replaceregexp>
+
+        <concat destfile="${jboss_root}/server/default/conf/login-config.xml"
+            append="true">&lt;/policy&gt;</concat>
+
+    </target>
+
+    <target name="-fix.properties-service" unless="properties-service.complete">
+
+        <!-- Make a copy sys-Properties.txt with setting for this environment -->
+
+        <mkdir dir="${build.dir}"/>
+        <copy todir="${build.dir}"
+            filtering="true"
+            file="${upt.dir}/sys-Properties.txt"
+            overwrite="true"
+        />
+        <loadfile property="properties.txt" srcFile="${build.dir}/sys-Properties.txt"/>
+        <delete file="${build.dir}/sys-Properties.txt"/>
+
+        <!-- Append new property -->
+
+        <replaceregexp byline="false" flags="gm"
+            file="${jboss_root}/server/default/deploy/properties-service.xml">
+            <regexp pattern="\s*name=SystemProperties&quot;[^&gt;]*&gt;"/>
+            <substitution expression="\0&#13;&#13;${properties.txt}"/>
+        </replaceregexp>
+
+        <echo message="properties-service.xml updated." />
+
+    </target>
+
+    <!--=======================================================-->
+    <!-- cleanapp: Clear JBoss temp files for this application -->
+    <!--=======================================================-->
+
+    <target name="cleanapp" description="clear JBoss temp files for this application." depends="-init">
+
+        <!-- Prompt user to go ahead and deploy -->
+
+        <echo message="" />
+        <input
+            message="Clear JBoss temp files for this app on server [${jboss_root}].${line.separator}Continue?"
+            validargs="y,n"
+            addproperty="do.app.clean"
+        />
+        <condition property="do.abort">
+            <equals arg1="n" arg2="${do.app.clean}"/>
+        </condition>
+        <fail if="do.abort">JBoss app clean aborted by user.</fail>
+
+        <!-- Remove temp war -->
+
+        <echo message="Removing temp war file..." />
+       <delete includeemptydirs="true">
+            <fileset dir="${jboss_root}/server/default/tmp/deploy/*${project.distname}-exp.war" includes="**/*"/>
+       </delete>
+
+    </target>
+
+    <!--=================================================-->
+    <!-- clean: Remove classes directory for clean build -->
+    <!--=================================================-->
+
+    <target name="clean"
+        description="Prepare for clean build">
+        <delete dir="${webinf.dir}/classes"/>
+        <delete dir="${build.dir}"/>
+    </target>
+
+    <!--=====================================================-->
+    <!-- resources: Copy any resource or configuration files -->
+    <!--=====================================================-->
+
+    <target name="-resources">
+        <copy todir="${webinf.dir}/classes" includeEmptyDirs="no" filtering="true">
+            <fileset dir="src">
+                <patternset>
+                    <include name="**/*.conf"/>
+                    <include name="**/*.properties"/>
+                    <include name="**/*.xml"/>
+                    <include name="**/*.config"/>
+                </patternset>
+            </fileset>
+            <fileset dir="conf">
+            <patternset>
+                <include name="**/*.conf"/>
+                <include name="**/*.properties"/>
+                <include name="**/*.xml"/>
+                <include name="**/*.config"/>
+            </patternset>
+        </fileset>
+        </copy>
+    </target>
+
+    <!--======================================-->
+    <!-- compile: Normal build of application -->
+    <!--======================================-->
+
+    <target name="compile" depends="-resources">
+        <javac srcdir="src" destdir="${webinf.dir}/classes">
+            <classpath refid="compile.classpath"/>
+        </javac>
+    </target>
+    <target name="build" depends="compile"/>
+    <target name="rebuild" depends="clean,compile"/>
+
+    <!--=================================-->
+    <!-- war: Create binary distribution -->
+    <!--=================================-->
+
+    <target name="war" depends="build">
+        <mkdir dir="${build.dir}"/>
+        <war
+            basedir="${webroot.dir}"
+            warfile="${build.dir}/${project.distname}.war"
+            webxml="${webinf.dir}/web.xml">
+            <exclude name="WEB-INF/${build.dir}/**"/>
+            <exclude name="WEB-INF/src/**"/>
+            <exclude name="WEB-INF/web.xml"/>
+        </war>
+    </target>
 
 </project>
