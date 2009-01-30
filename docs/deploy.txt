@@ -2,14 +2,28 @@
 *** Report Writer build / deployment notes ****
 ***********************************************
 
+The following are the "manual" steps to build and deploy the report writer application.
+
 --------------------------------------
-Setup MySQl
+A. Setup MySQl
 --------------------------------------
+
+1. Install MySQL as you normally would. You will need to create a MySQL user that has
+   permissions to create databases, this users credentials will need to be entered in
+   to a <env>.build.properties file.
 
 Run the following scripts:
 
 1) csmupt-init.sql
 2) ncireportwriter-init-db.sql
+
+Note: Eventually we will need to modify the build / deployment so that the DBs are create by the DBA with specific users.
+
+--------------------------------------
+B. SVN
+--------------------------------------
+1. Checkout source files from:
+   https://gforge.nci.nih.gov/svnroot/reportwriter/trunk
 
 --------------------------------------
 Setup JBoss
