@@ -1,0 +1,4 @@
+    <!-- Report Writer system properties -->
+    <attribute name="Properties">
+        gov.nih.nci.cacore.ncireportwriterProperties=@ncireportwriter.properties.file@
+    </attribute>
