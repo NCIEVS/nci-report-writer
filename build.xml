@@ -173,7 +173,7 @@
         <!-- Copy UPT app. -->
 
         <delete file="${jboss_root}/server/default/deploy/upt.war"/>
-        <!-- copy file="${upt.dir}/upt.war" todir="${jboss_root}/server/default/deploy"/ -->
+        <copy file="${upt.dir}/upt.war" todir="${jboss_root}/server/default/deploy"/>
 
 
     </target>
