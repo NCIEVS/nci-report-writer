@@ -17,7 +17,8 @@ Run the following scripts:
 1) csmupt-init.sql
 2) ncireportwriter-init-db.sql
 
-Note: Eventually we will need to modify the build / deployment so that the DBs are create by the DBA with specific users.
+Note: Eventually we will need to modify the build / deployment so that the DBs are create by the DBA with
+specific users.
 
 --------------------------------------
 B. SVN
@@ -26,7 +27,14 @@ B. SVN
    https://gforge.nci.nih.gov/svnroot/reportwriter/trunk
 
 --------------------------------------
-Setup JBoss
+C. Build application
+--------------------------------------
+1. Edit local.build.properties to reflect your environment
+2. Compile the application
+   C:\SVN-Projects\reportwriter>ant clean war
+
+--------------------------------------
+D. Setup JBoss
 --------------------------------------
 
 Note: Paths may vary due to NCI environment differences
@@ -39,10 +47,13 @@ Application server
    to be removed.
    a) delete .../jboss-4.0.5.GA/server/default/deploy/jbossweb-tomcat55.sar/jsf-libs/myfaces-impl.jar
 
-3. Copy file "mysql-ds.xml" to .../jboss-4.0.5.GA/server/default/deploy
+3. Copy file "C:/SVN-Projects/reportwriter/models/dbscripts/mysql-ds.xml"
+   to .../jboss-4.0.5.GA/server/default/deploy
+4. Edit mysql-ds.xml to reflect your environment
 
-4. Add the following lines at the end of login-config.xml file at
+5. Add the following lines at the end of login-config.xml file at
    .../jboss-4.0.5.GA/server/default/conf directory
+   (You need to modify this code to reflect your environment)
 
     <application-policy name="ncireportwriter">
      <authentication>
@@ -70,14 +81,26 @@ Application server
      </authentication>
     </application-policy>
 
-5. The properties-service.xml file in the same directory (deploy) needs to have two entries for evs.properties and ncireportwriter.properties.
-    <attribute name="Properties">
-        gov.nih.nci.cacore.evsProperties=C:/jboss-4.0.5.GA/server/default/data/evs.properties
-    </attribute>
+6. Edit C:/Apps/jboss-4.0.5.GA/server/default/deployproperties-service.xml file
+   Add a "SystemProperties" for ncireportwriter.properties.
+    (You need to modify this code to reflect your environment)
 
     <attribute name="Properties">
         gov.nih.nci.cacore.ncireportwriterProperties=C:/jboss-4.0.5.GA/server/default/data/ncireportwriter.properties
     </attribute>
+
+7. Copy C:/SVN-Projects/reportwriter/conf/ncireportwriter.properties
+   to C:/jboss-4.0.5.GA/server/default/data
+   (You need to modify this instruction to reflect your environment)
+
+--------------------------------------
+D. Deploy the app
+--------------------------------------
+1. Copy C:/SVN-Projects/reportwriter/build/ncireportwriter.war
+   to C:/jboss-4.0.5.GA/server/default/deploy
+2. Copy C:/SVN-Projects/reportwriter/upt/upt.war
+   to C:/jboss-4.0.5.GA/server/default/deploy
+3. Start JBoss
 
 --------------------------------------
 Logins
