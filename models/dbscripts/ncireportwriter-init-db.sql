@@ -22,6 +22,47 @@ CREATE DATABASE IF NOT EXISTS reportwriter;
 USE reportwriter;
 
 --
+-- Definition of table `user`
+--
+
+DROP TABLE IF EXISTS `user`;
+CREATE TABLE `user` (
+  `ID` bigint(20) NOT NULL,
+  `LOGIN_NAME` varchar(100) NOT NULL,
+  PRIMARY KEY  (`ID`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- Dumping data for table `user`
+--
+
+/*!40000 ALTER TABLE `user` DISABLE KEYS */;
+INSERT INTO `user` (`ID`,`LOGIN_NAME`) VALUES
+ (101,'kimong');
+
+
+ --
+-- Definition of table `hi_value`
+--
+
+DROP TABLE IF EXISTS `hi_value`;
+CREATE TABLE `hi_value` (
+  `next_value` int(10) unsigned NOT NULL auto_increment,
+  PRIMARY KEY  (`next_value`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- Dumping data for table `hi_value`
+--
+
+/*!40000 ALTER TABLE `hi_value` DISABLE KEYS */;
+INSERT INTO `hi_value` (`next_value`) VALUES
+ (68);
+/*!40000 ALTER TABLE `hi_value` ENABLE KEYS */;
+
+
+
+--
 -- Definition of table `customized_query`
 --
 
@@ -42,51 +83,50 @@ CREATE TABLE `customized_query` (
 -- Dumping data for table `customized_query`
 --
 
-/*!40000 ALTER TABLE `customized_query` DISABLE KEYS */;
-/*!40000 ALTER TABLE `customized_query` ENABLE KEYS */;
-
-
 --
--- Definition of table `customized_report`
+-- Definition of table `report_format`
 --
 
-DROP TABLE IF EXISTS `customized_report`;
-CREATE TABLE `customized_report` (
-  `REPORT_ID` int(11) NOT NULL,
-  `BASED_ON` int(11) default NULL,
-  PRIMARY KEY  (`REPORT_ID`),
-  KEY `BASED_ON` (`BASED_ON`),
-  KEY `REPORT_ID` (`REPORT_ID`),
-  CONSTRAINT `FK_CUSTOMIZED_REPORT_CUSTOMIZED_QUERY` FOREIGN KEY (`BASED_ON`) REFERENCES `customized_query` (`ID`),
-  CONSTRAINT `FK_CUSTOMIZED_REPORT_REPORT` FOREIGN KEY (`REPORT_ID`) REFERENCES `report` (`ID`) ON DELETE CASCADE
+DROP TABLE IF EXISTS `report_format`;
+CREATE TABLE `report_format` (
+  `ID` int(11) NOT NULL,
+  `DESCRIPTION` varchar(255) default NULL,
+  PRIMARY KEY  (`ID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
--- Dumping data for table `customized_report`
+-- Dumping data for table `report_format`
 --
 
-/*!40000 ALTER TABLE `customized_report` DISABLE KEYS */;
-/*!40000 ALTER TABLE `customized_report` ENABLE KEYS */;
+/*!40000 ALTER TABLE `report_format` DISABLE KEYS */;
+INSERT INTO `report_format` (`ID`,`DESCRIPTION`) VALUES
+ (404,'Text (tab delimited)'),
+ (405,'Microsoft Office Excel');
+/*!40000 ALTER TABLE `report_format` ENABLE KEYS */;
 
 
 --
--- Definition of table `hi_value`
+-- Definition of table `report_status`
 --
 
-DROP TABLE IF EXISTS `hi_value`;
-CREATE TABLE `hi_value` (
-  `next_value` int(10) unsigned NOT NULL auto_increment,
-  PRIMARY KEY  (`next_value`)
+DROP TABLE IF EXISTS `report_status`;
+CREATE TABLE `report_status` (
+  `ID` int(11) NOT NULL,
+  `LABEL` varchar(255) default NULL,
+  `DESCRIPTION` varchar(255) default NULL,
+  `ACTIVE` tinyint(1) default NULL,
+  PRIMARY KEY  (`ID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
--- Dumping data for table `hi_value`
+-- Dumping data for table `report_status`
 --
 
-/*!40000 ALTER TABLE `hi_value` DISABLE KEYS */;
-INSERT INTO `hi_value` (`next_value`) VALUES
- (68);
-/*!40000 ALTER TABLE `hi_value` ENABLE KEYS */;
+/*!40000 ALTER TABLE `report_status` DISABLE KEYS */;
+INSERT INTO `report_status` (`ID`,`LABEL`,`DESCRIPTION`,`ACTIVE`) VALUES
+ (505,'DRAFT','Report is a draft, not ready for download.',1),
+ (506,'APPROVED','Report has been approved for download by users',1);
+/*!40000 ALTER TABLE `report_status` ENABLE KEYS */;
 
 
 --
@@ -129,6 +169,68 @@ INSERT INTO `report` (`ID`,`LABEL`,`LAST_MODIFIED`,`PATH_NAME`,`HAS_FORMAT`,`HAS
  (6767,'FDA-SPL Country Code Report.txt','2009-01-25 01:34:01','C:/ncireportwriter_download_dir\\FDA-SPL_Country_Code_Report__08.12d.txt',404,505,NULL,101),
  (6768,'FDA-SPL Country Code Report.xls','2009-01-25 01:34:01','C:/ncireportwriter_download_dir\\FDA-SPL_Country_Code_Report__08.12d.xls',405,505,NULL,101);
 /*!40000 ALTER TABLE `report` ENABLE KEYS */;
+
+
+
+/*!40000 ALTER TABLE `customized_query` DISABLE KEYS */;
+/*!40000 ALTER TABLE `customized_query` ENABLE KEYS */;
+
+
+--
+-- Definition of table `customized_report`
+--
+
+DROP TABLE IF EXISTS `customized_report`;
+CREATE TABLE `customized_report` (
+  `REPORT_ID` int(11) NOT NULL,
+  `BASED_ON` int(11) default NULL,
+  PRIMARY KEY  (`REPORT_ID`),
+  KEY `BASED_ON` (`BASED_ON`),
+  KEY `REPORT_ID` (`REPORT_ID`),
+  CONSTRAINT `FK_CUSTOMIZED_REPORT_CUSTOMIZED_QUERY` FOREIGN KEY (`BASED_ON`) REFERENCES `customized_query` (`ID`),
+  CONSTRAINT `FK_CUSTOMIZED_REPORT_REPORT` FOREIGN KEY (`REPORT_ID`) REFERENCES `report` (`ID`) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- Dumping data for table `customized_report`
+--
+
+/*!40000 ALTER TABLE `customized_report` DISABLE KEYS */;
+/*!40000 ALTER TABLE `customized_report` ENABLE KEYS */;
+
+
+--
+-- Definition of table `standard_report_template`
+--
+
+DROP TABLE IF EXISTS `standard_report_template`;
+CREATE TABLE `standard_report_template` (
+  `ID` int(11) NOT NULL,
+  `LABEL` varchar(255) default NULL,
+  `ROOT_CONCEPT_CODE` varchar(255) default NULL,
+  `ASSOCIATION_NAME` varchar(255) default NULL,
+  `DIRECTION` tinyint(1) default '0',
+  `CODING_SCHEME_NAME` varchar(255) default NULL,
+  `CODING_SCHEME_VERSION` varchar(255) default NULL,
+  `LEVEL` int(11) default '-1',
+  `DELIMITER` char(1) default '$',
+  PRIMARY KEY  (`ID`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- Dumping data for table `standard_report_template`
+--
+
+/*!40000 ALTER TABLE `standard_report_template` DISABLE KEYS */;
+INSERT INTO `standard_report_template` (`ID`,`LABEL`,`ROOT_CONCEPT_CODE`,`ASSOCIATION_NAME`,`DIRECTION`,`CODING_SCHEME_NAME`,`CODING_SCHEME_VERSION`,`LEVEL`,`DELIMITER`) VALUES
+ (202,'FDA-UNII Subset Report','C63923','Concept_In_Subset',0,'NCI Thesaurus','08.12d',1,'$'),
+ (2323,'Individual Case Safety (ICS) Subset Report','C62596','Concept_In_Subset',0,'NCI Thesaurus','08.12d',1,'$'),
+ (3535,'Structured Product Labeling (SPL) Report','C54452','Concept_In_Subset',0,'NCI Thesaurus','08.12d',2,'$'),
+ (4040,'CDISC Subset Report ','C61410','Concept_In_Subset',0,'NCI Thesaurus','08.12d',1,'$'),
+ (4646,'CDRH Subset Report','C62596','Concept_In_Subset',0,'NCI Thesaurus','08.12d',1,'$'),
+ (6060,'FDA-SPL Country Code Report','Semantic_Type|null|null|null|Geographic Area|exactMatch','',0,'NCI Thesaurus','08.12d',0,'$');
+/*!40000 ALTER TABLE `standard_report_template` ENABLE KEYS */;
+
 
 
 --
@@ -208,51 +310,6 @@ INSERT INTO `report_column` (`ID`,`COLUMN_NUMBER`,`LABEL`,`FIELD_ID`,`PROPERTY_T
 /*!40000 ALTER TABLE `report_column` ENABLE KEYS */;
 
 
---
--- Definition of table `report_format`
---
-
-DROP TABLE IF EXISTS `report_format`;
-CREATE TABLE `report_format` (
-  `ID` int(11) NOT NULL,
-  `DESCRIPTION` varchar(255) default NULL,
-  PRIMARY KEY  (`ID`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-
---
--- Dumping data for table `report_format`
---
-
-/*!40000 ALTER TABLE `report_format` DISABLE KEYS */;
-INSERT INTO `report_format` (`ID`,`DESCRIPTION`) VALUES
- (404,'Text (tab delimited)'),
- (405,'Microsoft Office Excel');
-/*!40000 ALTER TABLE `report_format` ENABLE KEYS */;
-
-
---
--- Definition of table `report_status`
---
-
-DROP TABLE IF EXISTS `report_status`;
-CREATE TABLE `report_status` (
-  `ID` int(11) NOT NULL,
-  `LABEL` varchar(255) default NULL,
-  `DESCRIPTION` varchar(255) default NULL,
-  `ACTIVE` tinyint(1) default NULL,
-  PRIMARY KEY  (`ID`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-
---
--- Dumping data for table `report_status`
---
-
-/*!40000 ALTER TABLE `report_status` DISABLE KEYS */;
-INSERT INTO `report_status` (`ID`,`LABEL`,`DESCRIPTION`,`ACTIVE`) VALUES
- (505,'DRAFT','Report is a draft, not ready for download.',1),
- (506,'APPROVED','Report has been approved for download by users',1);
-/*!40000 ALTER TABLE `report_status` ENABLE KEYS */;
-
 
 --
 -- Definition of table `standard_report`
@@ -290,57 +347,9 @@ INSERT INTO `standard_report` (`REPORT_ID`,`BASED_ON_TEMPLATE`) VALUES
 /*!40000 ALTER TABLE `standard_report` ENABLE KEYS */;
 
 
---
--- Definition of table `standard_report_template`
---
-
-DROP TABLE IF EXISTS `standard_report_template`;
-CREATE TABLE `standard_report_template` (
-  `ID` int(11) NOT NULL,
-  `LABEL` varchar(255) default NULL,
-  `ROOT_CONCEPT_CODE` varchar(255) default NULL,
-  `ASSOCIATION_NAME` varchar(255) default NULL,
-  `DIRECTION` tinyint(1) default '0',
-  `CODING_SCHEME_NAME` varchar(255) default NULL,
-  `CODING_SCHEME_VERSION` varchar(255) default NULL,
-  `LEVEL` int(11) default '-1',
-  `DELIMITER` char(1) default '$',
-  PRIMARY KEY  (`ID`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-
---
--- Dumping data for table `standard_report_template`
---
-
-/*!40000 ALTER TABLE `standard_report_template` DISABLE KEYS */;
-INSERT INTO `standard_report_template` (`ID`,`LABEL`,`ROOT_CONCEPT_CODE`,`ASSOCIATION_NAME`,`DIRECTION`,`CODING_SCHEME_NAME`,`CODING_SCHEME_VERSION`,`LEVEL`,`DELIMITER`) VALUES
- (202,'FDA-UNII Subset Report','C63923','Concept_In_Subset',0,'NCI Thesaurus','08.12d',1,'$'),
- (2323,'Individual Case Safety (ICS) Subset Report','C62596','Concept_In_Subset',0,'NCI Thesaurus','08.12d',1,'$'),
- (3535,'Structured Product Labeling (SPL) Report','C54452','Concept_In_Subset',0,'NCI Thesaurus','08.12d',2,'$'),
- (4040,'CDISC Subset Report ','C61410','Concept_In_Subset',0,'NCI Thesaurus','08.12d',1,'$'),
- (4646,'CDRH Subset Report','C62596','Concept_In_Subset',0,'NCI Thesaurus','08.12d',1,'$'),
- (6060,'FDA-SPL Country Code Report','Semantic_Type|null|null|null|Geographic Area|exactMatch','',0,'NCI Thesaurus','08.12d',0,'$');
-/*!40000 ALTER TABLE `standard_report_template` ENABLE KEYS */;
 
 
---
--- Definition of table `user`
---
 
-DROP TABLE IF EXISTS `user`;
-CREATE TABLE `user` (
-  `ID` bigint(20) NOT NULL,
-  `LOGIN_NAME` varchar(100) NOT NULL,
-  PRIMARY KEY  (`ID`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-
---
--- Dumping data for table `user`
---
-
-/*!40000 ALTER TABLE `user` DISABLE KEYS */;
-INSERT INTO `user` (`ID`,`LOGIN_NAME`) VALUES
- (101,'kimong');
 /*!40000 ALTER TABLE `user` ENABLE KEYS */;
 
 
