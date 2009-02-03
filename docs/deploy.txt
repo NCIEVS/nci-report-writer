@@ -181,10 +181,19 @@ Trouble shooting
 
 Clear JBoss cache
 -----------------
+Solution:
 Delete C:\Apps\jboss-4.0.5.GA\server\default\work\jboss.web\localhost
 
 JBoss rmiPort=1098 "Address already in use" error
 -------------------------------------------------
+Solution:
 cd <JBOSS_HOME>\server\default\conf directory, and changed the rmi port in
-the jboss-services.xml from 1098 to 1122 (or a port hasn't been taken).
-Then restarted JBOSS.
+the jboss-services.xml from 1098 to 1122 (or a port that hasn't been taken).
+Restarted JBOSS.
+
+log4j:ERROR "org.jboss.logging.util.OnlyOnceErrorHandler"
+---------------------------------------------------------
+Exceptions occurs if an application deployed on JBoss packages log4j and commons-logging related jars
+in its package. JBoss has its own versions of these jars in its lib folder which results in these conflicts.
+Solution:
+Removing the log4j and commons-logging jars from your application's package will solve this issue.
