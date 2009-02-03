@@ -391,6 +391,14 @@
             <exclude name="WEB-INF/src/**"/>
             <exclude name="WEB-INF/web.xml"/>
         </war>
+
+        <!-- Create a copy of mysql-ds.xml -->
+
+        <copy file="${models.dir}/dbscripts/mysql-ds.xml"
+            todir="${build.dir}"
+            filtering="true"
+        />
+
     </target>
 
 </project>
