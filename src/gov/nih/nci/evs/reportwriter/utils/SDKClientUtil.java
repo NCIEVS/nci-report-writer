@@ -966,7 +966,10 @@ public class SDKClientUtil {
 
 			if (results == null) return null;
 			Object[] a = results.toArray();
-			return a[0];
+			if(a.length > 0)
+				return a[0];
+			else
+				return null;
 		} catch(Exception e) {
 			e.printStackTrace();
 		}

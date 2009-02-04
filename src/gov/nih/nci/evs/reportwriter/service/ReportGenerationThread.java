@@ -175,7 +175,7 @@ public class ReportGenerationThread implements Runnable
 		    return Boolean.FALSE;
 	    }
 
-        if (standardReportTemplate == null)
+        if(standardReportTemplate == null)
         {
 			System.out.println("Unable to identify report label " + standardReportLabel + " -- report not generated." );
 			return Boolean.FALSE;
@@ -183,7 +183,7 @@ public class ReportGenerationThread implements Runnable
 
 		String defining_set_desc = standardReportTemplate.getRootConceptCode();
 
-		if (defining_set_desc.indexOf("|") != -1)
+		if(defining_set_desc.indexOf("|") != -1)
 		{
 			return generateSpecialReport(outputDir, standardReportLabel, uid);
 		}
@@ -193,7 +193,7 @@ public class ReportGenerationThread implements Runnable
 		System.out.println("uid: " + uid);
 
 		File dir = new File(outputDir);
-		if (!dir.exists())
+		if(!dir.exists())
 		{
 			System.out.println("Output directory " + outputDir + " does not exist -- try to create the directory.");
 			boolean retval = dir.mkdir();
@@ -318,23 +318,22 @@ public class ReportGenerationThread implements Runnable
 
         int curr_level = 0;
         int max_level = standardReportTemplate.getLevel();
-		if (max_level == -1) {
+		if(max_level == -1) {
 			String max_level_str = null;
 			try {
 				max_level_str = ReportWriterProperties.getInstance().getProperty(ReportWriterProperties.MAXIMUM_LEVEL);
 				max_level = 20;
-				if (max_level_str != null)
+				if(max_level_str != null)
 				{
 					max_level = Integer.parseInt(max_level_str);
 				}
-		    } catch (Exception ex) {
+		    } catch(Exception ex) {
 
 			}
 	    }
 
         //printReportHeading(pw, cols);
-
-        if (hierarchicalAssoName == null) {
+        if(hierarchicalAssoName == null) {
 			Vector hierarchicalAssoName_vec = new DataUtils().getHierarchyAssociationId(scheme, version);
 			if (hierarchicalAssoName_vec == null || hierarchicalAssoName_vec.size() == 0)
 			{
@@ -500,8 +499,7 @@ public class ReportGenerationThread implements Runnable
 		// associated concepts (i.e., concepts in subset)
         if (v == null) return;
 		System.out.println("Subset size: " + v.size());
-        for (int i=0; i<v.size(); i++)
-        {
+        for (int i=0; i<v.size(); i++) {
 			// subset member element
 			Concept c = (Concept) v.elementAt(i);
 			writeColumnData(pw, scheme, version, defining_root_concept, root, c, delim, cols);
@@ -510,16 +508,16 @@ public class ReportGenerationThread implements Runnable
         Vector<Concept> subconcept_vec = util.getAssociationTargets(scheme, version, root.getId(), hierarchyAssociationName);
         if (subconcept_vec == null | subconcept_vec.size() == 0) return;
         level++;
-        for (int k=0; k<subconcept_vec.size(); k++)
-        {
+        for (int k=0; k<subconcept_vec.size(); k++) {
  			Concept concept = (Concept) subconcept_vec.elementAt(k);
  			String subconcep_code = concept.getId();
             traverse(pw, scheme, version, tag, defining_root_concept, subconcep_code, hierarchyAssociationName, associationName, direction, level, maxLevel, cols);
 		}
 	}
 
-    public String getReportColumnValue(String scheme, String version, Concept defining_root_concept, Concept associated_concept, Concept node, ReportColumn rc)
-    {
+    public String getReportColumnValue(String scheme, String version, Concept defining_root_concept, 
+    		Concept associated_concept, Concept node, ReportColumn rc) {
+    	
 		String field_Id = rc.getFieldId();
 		String property_name = rc.getPropertyName();
 		String qualifier_name = rc.getQualifierName();
@@ -534,32 +532,32 @@ public class ReportGenerationThread implements Runnable
 		char delimiter_ch = rc.getDelimiter();
 		String delimiter = "" + delimiter_ch;
 
-		if (isNull(field_Id)) field_Id= null;
-		if (isNull(property_name)) property_name = null;
-		if (isNull(qualifier_name)) qualifier_name = null;
-		if (isNull(source)) source = null;
-		if (isNull(qualifier_value)) qualifier_value = null;
-		if (isNull(representational_form)) representational_form = null;
-		if (isNull(property_type)) property_type = null;
-		if (isNull(delimiter)) delimiter = null;
+		if(isNull(field_Id)) field_Id= null;
+		if(isNull(property_name)) property_name = null;
+		if(isNull(qualifier_name)) qualifier_name = null;
+		if(isNull(source)) source = null;
+		if(isNull(qualifier_value)) qualifier_value = null;
+		if(isNull(representational_form)) representational_form = null;
+		if(isNull(property_type)) property_type = null;
+		if(isNull(delimiter)) delimiter = null;
 
-		if (field_Id.equals("Code")) return node.getId();
-        if (field_Id.equals("Associated Concept Code")) return associated_concept.getId();
+		if(field_Id.equals("Code")) return node.getId();
+        if(field_Id.equals("Associated Concept Code")) return associated_concept.getId();
 
         Concept concept = node;
-        if (property_name != null && property_name.compareTo("Contributing_Source") == 0) {
+        if(property_name != null && property_name.compareTo("Contributing_Source") == 0) {
 			concept = defining_root_concept;
 		}
-        else if (field_Id.indexOf("Associated") != -1)
+        else if(field_Id.indexOf("Associated") != -1)
         {
 			concept = associated_concept;
 		}
-        else if (field_Id.indexOf("Parent") != -1)
+        else if(field_Id.indexOf("Parent") != -1)
         {
-			if (hierarchicalAssoName == null)
+			if(hierarchicalAssoName == null)
 			{
 				Vector hierarchicalAssoName_vec = new DataUtils().getHierarchyAssociationId(scheme, version);
-				if (hierarchicalAssoName_vec == null || hierarchicalAssoName_vec.size() == 0)
+				if(hierarchicalAssoName_vec == null || hierarchicalAssoName_vec.size() == 0)
 				{
 					return null;
 				}
@@ -567,17 +565,19 @@ public class ReportGenerationThread implements Runnable
 		    }
 			//Vector superconcept_vec = new DataUtils().getParentCodes(scheme, version, node.getId());
 			Vector superconcept_vec = new DataUtils().getAssociationSourceCodes(scheme, version, node.getId(), hierarchicalAssoName);
-			if (superconcept_vec != null && superconcept_vec.size() > 0 && field_Id.indexOf("1st Parent") != -1)
+			if(superconcept_vec != null && superconcept_vec.size() > 0 && field_Id.indexOf("1st Parent") != -1)
 			{
 				String superconceptCode = (String) superconcept_vec.elementAt(superconcept_vec.size()-1);
-				if (field_Id.equals("1st Parent Code")) return superconceptCode;
+				if(field_Id.equals("1st Parent Code")) return superconceptCode;
 				concept = DataUtils.getConceptByCode(scheme, version, null, superconceptCode);
 		    }
-			else if (superconcept_vec != null && superconcept_vec.size() > 1 && field_Id.indexOf("2nd Parent") != -1)
+			else if(superconcept_vec != null && superconcept_vec.size() > 1 && field_Id.indexOf("2nd Parent") != -1)
 			{
 				String superconceptCode = (String) superconcept_vec.elementAt(superconcept_vec.size()-2);
-				if (field_Id.equals("2nd Parent Code")) return superconceptCode;
+				if(field_Id.equals("2nd Parent Code")) return superconceptCode;
 				concept = DataUtils.getConceptByCode(scheme, version, null, superconceptCode);
+				
+				
 		    }
 		    else
 		    {
@@ -587,33 +587,33 @@ public class ReportGenerationThread implements Runnable
 
 		org.LexGrid.commonTypes.Property[] properties = null;
 
-		if (property_type.compareToIgnoreCase("GENERIC")== 0)
+		if(property_type.compareToIgnoreCase("GENERIC")== 0)
 		{
 			properties = concept.getConceptProperty();
 		}
-		else if (property_type.compareToIgnoreCase("PRESENTATION")== 0)
+		else if(property_type.compareToIgnoreCase("PRESENTATION")== 0)
 		{
 			properties = concept.getPresentation();
 		}
-		else if (property_type.compareToIgnoreCase("INSTRUCTION")== 0)
+		else if(property_type.compareToIgnoreCase("INSTRUCTION")== 0)
 		{
 			properties = concept.getInstruction();
 		}
-		else if (property_type.compareToIgnoreCase("COMMENT")== 0)
+		else if(property_type.compareToIgnoreCase("COMMENT")== 0)
 		{
 			properties = concept.getComment();
 		}
-		else if (property_type.compareToIgnoreCase("DEFINITION")== 0)
+		else if(property_type.compareToIgnoreCase("DEFINITION")== 0)
 		{
 			properties = concept.getDefinition();
 		}
         String return_str = " "; // to resolve Excel cell problem
         int num_matches = 0;
-        if (field_Id.indexOf("Property Qualifier") != -1)
+        if(field_Id.indexOf("Property Qualifier") != -1)
 		{
 			//getRepresentationalForm
 			boolean match = false;
-			for (int i=0; i<properties.length; i++)
+			for(int i=0; i<properties.length; i++)
 			{
 				qualifier_value = null;
 				org.LexGrid.commonTypes.Property p = properties[i];
@@ -828,6 +828,7 @@ public class ReportGenerationThread implements Runnable
 		return return_str;
 	}
 
+    
 	private boolean isNull(String s) {
 		if (s == null) return true;
 		s = s.trim();
@@ -852,6 +853,7 @@ public class ReportGenerationThread implements Runnable
 		}
 		return data_vec;
 	}
+
 
     public Boolean generateSpecialReport(String outputDir, String standardReportLabel, String uid)
     {
