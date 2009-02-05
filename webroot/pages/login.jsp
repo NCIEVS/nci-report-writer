@@ -92,9 +92,27 @@
  
 <h:form id="loginForm">                                  
                                     <table summary="" cellpadding="2" cellspacing="0" border="0" width="100%" class="sidebarSection">
+                                      
+<% 
+if(request.getQueryString() != null && request.getQueryString().equals("logout")) { 
+%>
+
+                                      <tr>
+                                        <td class="sidebarTitle" height="20">LOGOUT REPORT WRITER</td>
+                                      </tr>
+                                      
+                                      <tr>
+                                        <td class="txtHighlight">You have successfully logged out.</td>
+                                      </tr>                                      
+                                      
+<%} else { %>
+                                      
                                       <tr>
                                         <td class="sidebarTitle" height="20">LOGIN TO REPORT WRITER</td>
                                       </tr>
+                                      
+<%} %>
+                                      
                                       <tr>
                                         <td class="sidebarContent">
                                           <table cellpadding="2" cellspacing="0" border="0">
