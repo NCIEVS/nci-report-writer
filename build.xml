@@ -132,7 +132,7 @@
             <classpath>
                 <pathelement path="${webinf.dir}/lib/mysql-connector-java-3.1.13-bin.jar"/>
             </classpath>
-            <transaction  src="${models.dir}/dbscripts/ncireportwriter-init-db.sql"/>
+            <transaction  src="${models.dir}/dbscripts/ReportWriterMySQL.sql"/>
         </sql>
 
         <!-- UPT database setup -->
@@ -154,7 +154,7 @@
             <classpath>
                 <pathelement path="${webinf.dir}/lib/mysql-connector-java-3.1.13-bin.jar"/>
             </classpath>
-            <transaction  src="${models.dir}/dbscripts/csmupt-init.sql"/>
+            <transaction  src="${models.dir}/dbscripts/AuthSchemaMySQL.sql"/>
         </sql>
 
     </target>
@@ -174,7 +174,7 @@
 
         <delete file="${jboss_root}/server/default/deploy/upt.war"/>
         <copy file="${upt.dir}/upt.war" todir="${jboss_root}/server/default/deploy"/>
-
+        <copy file="${upt.dir}/clm.jar" todir="${jboss_root}/server/default/lib"/>
 
     </target>
 
