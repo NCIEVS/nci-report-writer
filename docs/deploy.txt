@@ -52,9 +52,9 @@ Run the following scripts. This will initialize the databases csmupt and ncirepo
 2. Login to the MySQL client
    C:>mysql --host=localhost --port=3306 --user=root --password=admin123
 
-3. mysql>\. csmupt-init.sql
+3. mysql>\. AuthSchemaMySQL.sql
 
-4. mysql>\. ncireportwriter-init-db.sql
+4. mysql>\. ReportWriterMySQL.sql
 
 5. exit;
 
@@ -115,9 +115,12 @@ D. Setup JBoss
         gov.nih.nci.cacore.ncireportwriterProperties=C:/jboss-4.0.5.GA/server/default/data/ncireportwriter.properties
     </attribute>
 
-7. Copy C:/SVN-Projects/reportwriter/conf/ncireportwriter.properties
-   to C:/jboss-4.0.5.GA/server/default/data
+7. Copy C:\SVN-Projects\reportwriter\conf\ncireportwriter.properties
+   to C:/jboss-4.0.5.GA\server\default\data
    (You need to modify this instruction to reflect your environment)
+
+8. Copy C:\SVN-Projects\reportwriterlib\mysql-connector-java-3.1.13-bin.jar
+   to C:\jboss-4.0.5.GA\server\default\lib
 
 --------------------------------------
 D. Deploy Report Writer and UPT
@@ -128,7 +131,10 @@ D. Deploy Report Writer and UPT
 2. Copy C:\SVN-Projects\reportwriter\upt\upt.war
    to C:\Apps\jboss-4.0.5.GA\server\default\deploy
 
-3. Start JBoss
+3. Copy C:\SVN-Projects\reportwriter\upt\clm.jar
+   to C:\Apps\jboss-4.0.5.GA\server\default\lib
+
+4. Start JBoss
 
 
 =====================================================
