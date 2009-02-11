@@ -247,6 +247,7 @@
         <copy file="${conf.dir}/ncireportwriter.properties"
             todir="${jboss_root}/server/default/data"
             filtering="true"
+            overwrite="true"
         />
 
     </target>
@@ -370,7 +371,7 @@
     <!--======================================-->
 
     <target name="compile" depends="-resources">
-        <javac srcdir="src" destdir="${webinf.dir}/classes">
+        <javac srcdir="src" destdir="${webinf.dir}/classes" target="1.5">
             <classpath refid="compile.classpath"/>
         </javac>
     </target>
@@ -397,6 +398,7 @@
         <copy file="${models.dir}/dbscripts/mysql-ds.xml"
             todir="${build.dir}"
             filtering="true"
+            overwrite="true"
         />
 
     </target>
