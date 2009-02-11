@@ -5,7 +5,7 @@
         <module-option name="url">jdbc:mysql://@db_host@:@db_port@/csmupt</module-option>
         <module-option name="user">@db_user@</module-option>
         <module-option name="passwd">@db_password@</module-option>
-        <module-option name="query">SELECT * FROM csm_user WHERE login_name=? AND password=?</module-option>
+        <module-option name="query">SELECT * FROM CSM_USER WHERE login_name=? AND password=?</module-option>
         <module-option name="encryption-enabled">YES</module-option>
         </login-module>
      </authentication>
@@ -18,7 +18,7 @@
         <module-option name="url">jdbc:mysql://@db_host@:@db_port@/csmupt</module-option>
         <module-option name="user">@db_user@</module-option>
         <module-option name="passwd">@db_password@</module-option>
-        <module-option name="query">SELECT * FROM csm_user WHERE login_name=? AND password=?</module-option>
+        <module-option name="query">SELECT * FROM CSM_USER WHERE login_name=? AND password=?</module-option>
         <module-option name="encryption-enabled">YES</module-option>
         </login-module>
      </authentication>
