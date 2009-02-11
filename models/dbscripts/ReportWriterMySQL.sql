@@ -2,15 +2,6 @@
 --
 -- ------------------------------------------------------
 
-/*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
-/*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
-/*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
-/*!40101 SET NAMES utf8 */;
-
-/*!40014 SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0 */;
-/*!40014 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0 */;
-/*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
-
 --
 -- Create schema reportwriter
 --
@@ -32,7 +23,6 @@ CREATE TABLE `user` (
 -- Data for table `user`
 --
 
-/*!40000 ALTER TABLE `user` DISABLE KEYS */;
 INSERT INTO `user` (`ID`,`LOGIN_NAME`) VALUES
  (101,'admin');
 
@@ -49,10 +39,8 @@ CREATE TABLE `hi_value` (
 -- Data for table `hi_value`
 --
 
-/*!40000 ALTER TABLE `hi_value` DISABLE KEYS */;
 INSERT INTO `hi_value` (`next_value`) VALUES
  (68);
-/*!40000 ALTER TABLE `hi_value` ENABLE KEYS */;
 
 --
 -- Definition of table `customized_query`
@@ -84,11 +72,9 @@ CREATE TABLE `report_format` (
 -- Data for table `report_format`
 --
 
-/*!40000 ALTER TABLE `report_format` DISABLE KEYS */;
 INSERT INTO `report_format` (`ID`,`DESCRIPTION`) VALUES
  (404,'Text (tab delimited)'),
  (405,'Microsoft Office Excel');
-/*!40000 ALTER TABLE `report_format` ENABLE KEYS */;
 
 --
 -- Definition of table `report_status`
@@ -106,11 +92,9 @@ CREATE TABLE `report_status` (
 -- Data for table `report_status`
 --
 
-/*!40000 ALTER TABLE `report_status` DISABLE KEYS */;
 INSERT INTO `report_status` (`ID`,`LABEL`,`DESCRIPTION`,`ACTIVE`) VALUES
  (505,'DRAFT','Report is a draft, not ready for download.',1),
  (506,'APPROVED','Report has been approved for download by users',1);
-/*!40000 ALTER TABLE `report_status` ENABLE KEYS */;
 
 --
 -- Definition of table `report`
@@ -136,7 +120,6 @@ CREATE TABLE `report` (
 -- Data for table `report`
 --
 
-/*!40000 ALTER TABLE `report` DISABLE KEYS */;
 INSERT INTO `report` (`ID`,`LABEL`,`LAST_MODIFIED`,`PATH_NAME`,`HAS_FORMAT`,`HAS_STATUS`,`MODIFIED_BY`,`CREATED_BY`) VALUES
  (5858,'Individual Case Safety (ICS) Subset Report.txt','2009-01-23 14:34:11','',101,505,NULL,101),
  (5859,'Individual Case Safety (ICS) Subset Report.xls','2009-01-23 14:34:13','',101,505,NULL,101),
@@ -150,11 +133,6 @@ INSERT INTO `report` (`ID`,`LABEL`,`LAST_MODIFIED`,`PATH_NAME`,`HAS_FORMAT`,`HAS
  (6263,'FDA-UNII Subset Report.xls','2009-01-25 00:04:08','',101,505,NULL,101),
  (6767,'FDA-SPL Country Code Report.txt','2009-01-25 01:34:01','',101,505,NULL,101),
  (6768,'FDA-SPL Country Code Report.xls','2009-01-25 01:34:01','',101,505,NULL,101);
-/*!40000 ALTER TABLE `report` ENABLE KEYS */;
-
-/*!40000 ALTER TABLE `customized_query` DISABLE KEYS */;
-/*!40000 ALTER TABLE `customized_query` ENABLE KEYS */;
-
 
 --
 -- Definition of table `customized_report`
@@ -169,13 +147,6 @@ CREATE TABLE `customized_report` (
   CONSTRAINT `FK_CUSTOMIZED_REPORT_CUSTOMIZED_QUERY` FOREIGN KEY (`BASED_ON`) REFERENCES `customized_query` (`ID`),
   CONSTRAINT `FK_CUSTOMIZED_REPORT_REPORT` FOREIGN KEY (`REPORT_ID`) REFERENCES `report` (`ID`) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-
---
--- Dumping data for table `customized_report`
---
-
-/*!40000 ALTER TABLE `customized_report` DISABLE KEYS */;
-/*!40000 ALTER TABLE `customized_report` ENABLE KEYS */;
 
 --
 -- Definition of table `standard_report_template`
@@ -198,15 +169,13 @@ CREATE TABLE `standard_report_template` (
 -- Data for table `standard_report_template`
 --
 
-/*!40000 ALTER TABLE `standard_report_template` DISABLE KEYS */;
 INSERT INTO `standard_report_template` (`ID`,`LABEL`,`ROOT_CONCEPT_CODE`,`ASSOCIATION_NAME`,`DIRECTION`,`CODING_SCHEME_NAME`,`CODING_SCHEME_VERSION`,`LEVEL`,`DELIMITER`) VALUES
  (202,'FDA-UNII Subset Report','C63923','Concept_In_Subset',0,'NCI Thesaurus','08.12d',1,'$'),
- (2323,'Individual Case Safety (ICS) Subset Report','C62596','Concept_In_Subset',0,'NCI Thesaurus','08.12d',1,'$'),
+ (2323,'Individual Case Safety (ICS) Subset Report','C54447','Concept_In_Subset',0,'NCI Thesaurus','08.12d',1,'$'),
  (3535,'Structured Product Labeling (SPL) Report','C54452','Concept_In_Subset',0,'NCI Thesaurus','08.12d',2,'$'),
  (4040,'CDISC Subset Report ','C61410','Concept_In_Subset',0,'NCI Thesaurus','08.12d',1,'$'),
  (4646,'CDRH Subset Report','C62596','Concept_In_Subset',0,'NCI Thesaurus','08.12d',1,'$'),
  (6060,'FDA-SPL Country Code Report','Semantic_Type|null|null|null|Geographic Area|exactMatch','',0,'NCI Thesaurus','08.12d',0,'$');
-/*!40000 ALTER TABLE `standard_report_template` ENABLE KEYS */;
 
 --
 -- Definition of table `report_column`
@@ -236,7 +205,6 @@ CREATE TABLE `report_column` (
 -- Data for table `report_column`
 --
 
-/*!40000 ALTER TABLE `report_column` DISABLE KEYS */;
 INSERT INTO `report_column` (`ID`,`COLUMN_NUMBER`,`LABEL`,`FIELD_ID`,`PROPERTY_TYPE`,`PROPERTY_NAME`,`IS_PREFERRED`,`REPRESENTATIONAL_FORM`,`SOURCE`,`QUALIFIER_NAME`,`QUALIFIER_VALUE`,`DELIMITER`,`CONDITIONAL_COLUMN`,`BELONGS_TO`) VALUES
  (303,1,'FDA UNII Code','Property','Generic','FDA_UNII_Code',NULL,'',' ','','','|',-1,202),
  (304,2,'FDA Preferred Term','Property','Presentation','FULL_SYN',NULL,'PT','FDA','','','|',-1,202),
@@ -281,7 +249,6 @@ INSERT INTO `report_column` (`ID`,`COLUMN_NUMBER`,`LABEL`,`FIELD_ID`,`PROPERTY_T
  (6161,1,'ISO Code','Property','PRESENTATION','FULL_SYN',NULL,'CA3','NCI','','','|',-1,6060),
  (6162,2,'NCI Concept Code','Code','','',NULL,'',' ','','','|',-1,6060),
  (6163,3,'NCI Preferred Term','Property','PRESENTATION','Preferred_Name',NULL,'',' ','','','|',-1,6060);
-/*!40000 ALTER TABLE `report_column` ENABLE KEYS */;
 
 --
 -- Definition of table `standard_report`
@@ -302,7 +269,6 @@ CREATE TABLE `standard_report` (
 -- Data for table `standard_report`
 --
 
-/*!40000 ALTER TABLE `standard_report` DISABLE KEYS */;
 INSERT INTO `standard_report` (`REPORT_ID`,`BASED_ON_TEMPLATE`) VALUES
  (6262,202),
  (6263,202),
@@ -316,14 +282,5 @@ INSERT INTO `standard_report` (`REPORT_ID`,`BASED_ON_TEMPLATE`) VALUES
  (5960,4646),
  (6767,6060),
  (6768,6060);
-/*!40000 ALTER TABLE `standard_report` ENABLE KEYS */;
 
-/*!40000 ALTER TABLE `user` ENABLE KEYS */;
-
-/*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
-/*!40014 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS */;
-/*!40014 SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS */;
-/*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
-/*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
-/*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
-/*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
+COMMIT;
