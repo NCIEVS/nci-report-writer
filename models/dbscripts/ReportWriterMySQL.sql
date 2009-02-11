@@ -20,13 +20,6 @@ CREATE TABLE `user` (
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
--- Data for table `user`
---
-
-INSERT INTO `user` (`ID`,`LOGIN_NAME`) VALUES
- (101,'admin');
-
---
 -- Definition of table `hi_value`
 --
 
@@ -34,13 +27,6 @@ CREATE TABLE `hi_value` (
   `next_value` int(10) unsigned NOT NULL auto_increment,
   PRIMARY KEY  (`next_value`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-
---
--- Data for table `hi_value`
---
-
-INSERT INTO `hi_value` (`next_value`) VALUES
- (68);
 
 --
 -- Definition of table `customized_query`
@@ -69,14 +55,6 @@ CREATE TABLE `report_format` (
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
--- Data for table `report_format`
---
-
-INSERT INTO `report_format` (`ID`,`DESCRIPTION`) VALUES
- (404,'Text (tab delimited)'),
- (405,'Microsoft Office Excel');
-
---
 -- Definition of table `report_status`
 --
 
@@ -87,14 +65,6 @@ CREATE TABLE `report_status` (
   `ACTIVE` tinyint(1) default NULL,
   PRIMARY KEY  (`ID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-
---
--- Data for table `report_status`
---
-
-INSERT INTO `report_status` (`ID`,`LABEL`,`DESCRIPTION`,`ACTIVE`) VALUES
- (505,'DRAFT','Report is a draft, not ready for download.',1),
- (506,'APPROVED','Report has been approved for download by users',1);
 
 --
 -- Definition of table `report`
@@ -115,24 +85,6 @@ CREATE TABLE `report` (
   CONSTRAINT `FK_REPORT_REPORT_FORMAT` FOREIGN KEY (`HAS_FORMAT`) REFERENCES `report_format` (`ID`),
   CONSTRAINT `FK_REPORT_REPORT_STATUS` FOREIGN KEY (`HAS_STATUS`) REFERENCES `report_status` (`ID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-
---
--- Data for table `report`
---
-
-INSERT INTO `report` (`ID`,`LABEL`,`LAST_MODIFIED`,`PATH_NAME`,`HAS_FORMAT`,`HAS_STATUS`,`MODIFIED_BY`,`CREATED_BY`) VALUES
- (5858,'Individual Case Safety (ICS) Subset Report.txt','2009-01-23 14:34:11','',101,505,NULL,101),
- (5859,'Individual Case Safety (ICS) Subset Report.xls','2009-01-23 14:34:13','',101,505,NULL,101),
- (5860,'Structured Product Labeling (SPL) Report.txt','2009-01-23 14:42:43','',101,505,NULL,101),
- (5861,'Structured Product Labeling (SPL) Report.xls','2009-01-23 14:42:43','',101,505,NULL,101),
- (5862,'CDISC Subset Report .txt','2009-01-23 14:47:58','',101,505,NULL,101),
- (5863,'CDISC Subset Report .xls','2009-01-23 14:47:58','',101,505,NULL,101),
- (5959,'CDRH Subset Report.txt','2009-01-24 04:25:02','',101,505,NULL,101),
- (5960,'CDRH Subset Report.xls','2009-01-24 04:25:08','',101,505,NULL,101),
- (6262,'FDA-UNII Subset Report.txt','2009-01-25 00:04:07','',101,505,NULL,101),
- (6263,'FDA-UNII Subset Report.xls','2009-01-25 00:04:08','',101,505,NULL,101),
- (6767,'FDA-SPL Country Code Report.txt','2009-01-25 01:34:01','',101,505,NULL,101),
- (6768,'FDA-SPL Country Code Report.xls','2009-01-25 01:34:01','',101,505,NULL,101);
 
 --
 -- Definition of table `customized_report`
@@ -166,18 +118,6 @@ CREATE TABLE `standard_report_template` (
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
--- Data for table `standard_report_template`
---
-
-INSERT INTO `standard_report_template` (`ID`,`LABEL`,`ROOT_CONCEPT_CODE`,`ASSOCIATION_NAME`,`DIRECTION`,`CODING_SCHEME_NAME`,`CODING_SCHEME_VERSION`,`LEVEL`,`DELIMITER`) VALUES
- (202,'FDA-UNII Subset Report','C63923','Concept_In_Subset',0,'NCI Thesaurus','08.12d',1,'$'),
- (2323,'Individual Case Safety (ICS) Subset Report','C54447','Concept_In_Subset',0,'NCI Thesaurus','08.12d',1,'$'),
- (3535,'Structured Product Labeling (SPL) Report','C54452','Concept_In_Subset',0,'NCI Thesaurus','08.12d',2,'$'),
- (4040,'CDISC Subset Report ','C61410','Concept_In_Subset',0,'NCI Thesaurus','08.12d',1,'$'),
- (4646,'CDRH Subset Report','C62596','Concept_In_Subset',0,'NCI Thesaurus','08.12d',1,'$'),
- (6060,'FDA-SPL Country Code Report','Semantic_Type|null|null|null|Geographic Area|exactMatch','',0,'NCI Thesaurus','08.12d',0,'$');
-
---
 -- Definition of table `report_column`
 --
 
@@ -200,6 +140,62 @@ CREATE TABLE `report_column` (
   KEY `BELONGS_TO` (`BELONGS_TO`),
   CONSTRAINT `FK_REPORT_COLUMN_STANDARD_REPORT_TEMPLATE` FOREIGN KEY (`BELONGS_TO`) REFERENCES `standard_report_template` (`ID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- Definition of table `standard_report`
+--
+
+CREATE TABLE `standard_report` (
+  `REPORT_ID` int(11) NOT NULL,
+  `BASED_ON_TEMPLATE` int(11) default NULL,
+  PRIMARY KEY  (`REPORT_ID`),
+  KEY `REPORT_ID` (`REPORT_ID`),
+  KEY `BASED_ON_TEMPLATE` (`BASED_ON_TEMPLATE`),
+  CONSTRAINT `FK_STANDARD_REPORT_REPORT` FOREIGN KEY (`REPORT_ID`) REFERENCES `report` (`ID`),
+  CONSTRAINT `FK_STANDARD_REPORT_STANDARD_REPORT_TEMPLATE` FOREIGN KEY (`BASED_ON_TEMPLATE`) REFERENCES `standard_report_template` (`ID`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- Data for table `user`
+--
+
+INSERT INTO `user` (`ID`,`LOGIN_NAME`) VALUES
+ (101,'admin');
+
+--
+-- Data for table `hi_value`
+--
+
+INSERT INTO `hi_value` (`next_value`) VALUES
+ (68);
+
+--
+-- Data for table `report_format`
+--
+
+INSERT INTO `report_format` (`ID`,`DESCRIPTION`) VALUES
+ (404,'Text (tab delimited)'),
+ (405,'Microsoft Office Excel');
+
+--
+-- Data for table `report_status`
+--
+
+INSERT INTO `report_status` (`ID`,`LABEL`,`DESCRIPTION`,`ACTIVE`) VALUES
+ (505,'DRAFT','Report is a draft, not ready for download.',1),
+ (506,'APPROVED','Report has been approved for download by users',1);
+
+--
+-- Data for table `standard_report_template`
+--
+
+INSERT INTO `standard_report_template` (`ID`,`LABEL`,`ROOT_CONCEPT_CODE`,`ASSOCIATION_NAME`,`DIRECTION`,`CODING_SCHEME_NAME`,`CODING_SCHEME_VERSION`,`LEVEL`,`DELIMITER`) VALUES
+ (202,'FDA-UNII Subset Report','C63923','Concept_In_Subset',0,'NCI Thesaurus','08.12d',1,'$'),
+ (2323,'Individual Case Safety (ICS) Subset Report','C54447','Concept_In_Subset',0,'NCI Thesaurus','08.12d',1,'$'),
+ (3535,'Structured Product Labeling (SPL) Report','C54452','Concept_In_Subset',0,'NCI Thesaurus','08.12d',2,'$'),
+ (4040,'CDISC Subset Report ','C61410','Concept_In_Subset',0,'NCI Thesaurus','08.12d',1,'$'),
+ (4646,'CDRH Subset Report','C62596','Concept_In_Subset',0,'NCI Thesaurus','08.12d',1,'$'),
+ (6060,'FDA-SPL Country Code Report','Semantic_Type|null|null|null|Geographic Area|exactMatch','',0,'NCI Thesaurus','08.12d',0,'$');
 
 --
 -- Data for table `report_column`
@@ -251,19 +247,22 @@ INSERT INTO `report_column` (`ID`,`COLUMN_NUMBER`,`LABEL`,`FIELD_ID`,`PROPERTY_T
  (6163,3,'NCI Preferred Term','Property','PRESENTATION','Preferred_Name',NULL,'',' ','','','|',-1,6060);
 
 --
--- Definition of table `standard_report`
+-- Data for table `report`
 --
 
-DROP TABLE IF EXISTS `standard_report`;
-CREATE TABLE `standard_report` (
-  `REPORT_ID` int(11) NOT NULL,
-  `BASED_ON_TEMPLATE` int(11) default NULL,
-  PRIMARY KEY  (`REPORT_ID`),
-  KEY `REPORT_ID` (`REPORT_ID`),
-  KEY `BASED_ON_TEMPLATE` (`BASED_ON_TEMPLATE`),
-  CONSTRAINT `FK_STANDARD_REPORT_REPORT` FOREIGN KEY (`REPORT_ID`) REFERENCES `report` (`ID`),
-  CONSTRAINT `FK_STANDARD_REPORT_STANDARD_REPORT_TEMPLATE` FOREIGN KEY (`BASED_ON_TEMPLATE`) REFERENCES `standard_report_template` (`ID`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+INSERT INTO `report` (`ID`,`LABEL`,`LAST_MODIFIED`,`PATH_NAME`,`HAS_FORMAT`,`HAS_STATUS`,`MODIFIED_BY`,`CREATED_BY`) VALUES
+ (5858,'Individual Case Safety (ICS) Subset Report.txt',NULL,'',404,505,NULL,101),
+ (5859,'Individual Case Safety (ICS) Subset Report.xls',NULL,'',405,505,NULL,101),
+ (5860,'Structured Product Labeling (SPL) Report.txt',NULL,'',404,505,NULL,101),
+ (5861,'Structured Product Labeling (SPL) Report.xls',NULL,'',405,505,NULL,101),
+ (5862,'CDISC Subset Report .txt',NULL,'',404,505,NULL,101),
+ (5863,'CDISC Subset Report .xls',NULL,'',405,505,NULL,101),
+ (5959,'CDRH Subset Report.txt',NULL,'',404,505,NULL,101),
+ (5960,'CDRH Subset Report.xls',NULL,'',405,505,NULL,101),
+ (6262,'FDA-UNII Subset Report.txt',NULL,'',404,505,NULL,101),
+ (6263,'FDA-UNII Subset Report.xls',NULL,'',405,505,NULL,101),
+ (6767,'FDA-SPL Country Code Report.txt',NULL,'',404,505,NULL,101),
+ (6768,'FDA-SPL Country Code Report.xls',NULL,'',405,505,NULL,101);
 
 --
 -- Data for table `standard_report`
