@@ -10,29 +10,29 @@ CREATE DATABASE IF NOT EXISTS reportwriter;
 USE reportwriter;
 
 --
--- Definition of table `user`
+-- Definition of table `USER`
 --
 
-CREATE TABLE `user` (
+CREATE TABLE `USER` (
   `ID` bigint(20) NOT NULL,
   `LOGIN_NAME` varchar(100) NOT NULL,
   PRIMARY KEY  (`ID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
--- Definition of table `hi_value`
+-- Definition of table `HI_VALUE`
 --
 
-CREATE TABLE `hi_value` (
+CREATE TABLE `HI_VALUE` (
   `next_value` int(10) unsigned NOT NULL auto_increment,
   PRIMARY KEY  (`next_value`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
--- Definition of table `customized_query`
+-- Definition of table `CUSTOMIZED_QUERY`
 --
 
-CREATE TABLE `customized_query` (
+CREATE TABLE `CUSTOMIZED_QUERY` (
   `ID` int(11) NOT NULL,
   `QUERY_EXPRESSION` varchar(255) default NULL,
   `CODING_SCHEME_NAME` varchar(255) default NULL,
@@ -41,24 +41,24 @@ CREATE TABLE `customized_query` (
   `LAST_MODIFIED` datetime default NULL,
   PRIMARY KEY  (`ID`),
   KEY `CREATED_BY` (`CREATED_BY`),
-  CONSTRAINT `FK_CUSTOMIZED_QUERY_USER` FOREIGN KEY (`CREATED_BY`) REFERENCES `user` (`ID`)
+  CONSTRAINT `FK_CUSTOMIZED_QUERY_USER` FOREIGN KEY (`CREATED_BY`) REFERENCES `USER` (`ID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
--- Definition of table `report_format`
+-- Definition of table `REPORT_FORMAT`
 --
 
-CREATE TABLE `report_format` (
+CREATE TABLE `REPORT_FORMAT` (
   `ID` int(11) NOT NULL,
   `DESCRIPTION` varchar(255) default NULL,
   PRIMARY KEY  (`ID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
--- Definition of table `report_status`
+-- Definition of table `REPORT_STATUS`
 --
 
-CREATE TABLE `report_status` (
+CREATE TABLE `REPORT_STATUS` (
   `ID` int(11) NOT NULL,
   `LABEL` varchar(255) default NULL,
   `DESCRIPTION` varchar(255) default NULL,
@@ -67,10 +67,10 @@ CREATE TABLE `report_status` (
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
--- Definition of table `report`
+-- Definition of table `REPORT`
 --
 
-CREATE TABLE `report` (
+CREATE TABLE `REPORT` (
   `ID` int(11) NOT NULL,
   `LABEL` varchar(255) default NULL,
   `LAST_MODIFIED` datetime default NULL,
@@ -82,29 +82,29 @@ CREATE TABLE `report` (
   PRIMARY KEY  (`ID`),
   KEY `HAS_FORMAT` (`HAS_FORMAT`),
   KEY `HAS_STATUS` (`HAS_STATUS`),
-  CONSTRAINT `FK_REPORT_REPORT_FORMAT` FOREIGN KEY (`HAS_FORMAT`) REFERENCES `report_format` (`ID`),
-  CONSTRAINT `FK_REPORT_REPORT_STATUS` FOREIGN KEY (`HAS_STATUS`) REFERENCES `report_status` (`ID`)
+  CONSTRAINT `FK_REPORT_REPORT_FORMAT` FOREIGN KEY (`HAS_FORMAT`) REFERENCES `REPORT_FORMAT` (`ID`),
+  CONSTRAINT `FK_REPORT_REPORT_STATUS` FOREIGN KEY (`HAS_STATUS`) REFERENCES `REPORT_STATUS` (`ID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
--- Definition of table `customized_report`
+-- Definition of table `CUSTOMIZED_REPORT`
 --
 
-CREATE TABLE `customized_report` (
+CREATE TABLE `CUSTOMIZED_REPORT` (
   `REPORT_ID` int(11) NOT NULL,
   `BASED_ON` int(11) default NULL,
   PRIMARY KEY  (`REPORT_ID`),
   KEY `BASED_ON` (`BASED_ON`),
   KEY `REPORT_ID` (`REPORT_ID`),
-  CONSTRAINT `FK_CUSTOMIZED_REPORT_CUSTOMIZED_QUERY` FOREIGN KEY (`BASED_ON`) REFERENCES `customized_query` (`ID`),
-  CONSTRAINT `FK_CUSTOMIZED_REPORT_REPORT` FOREIGN KEY (`REPORT_ID`) REFERENCES `report` (`ID`) ON DELETE CASCADE
+  CONSTRAINT `FK_CUSTOMIZED_REPORT_CUSTOMIZED_QUERY` FOREIGN KEY (`BASED_ON`) REFERENCES `CUSTOMIZED_QUERY` (`ID`),
+  CONSTRAINT `FK_CUSTOMIZED_REPORT_REPORT` FOREIGN KEY (`REPORT_ID`) REFERENCES `REPORT` (`ID`) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
--- Definition of table `standard_report_template`
+-- Definition of table `STANDARD_REPORT_TEMPLATE`
 --
 
-CREATE TABLE `standard_report_template` (
+CREATE TABLE `STANDARD_REPORT_TEMPLATE` (
   `ID` int(11) NOT NULL,
   `LABEL` varchar(255) default NULL,
   `ROOT_CONCEPT_CODE` varchar(255) default NULL,
@@ -118,10 +118,10 @@ CREATE TABLE `standard_report_template` (
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
--- Definition of table `report_column`
+-- Definition of table `REPORT_COLUMN`
 --
 
-CREATE TABLE `report_column` (
+CREATE TABLE `REPORT_COLUMN` (
   `ID` int(11) NOT NULL,
   `COLUMN_NUMBER` int(11) default NULL,
   `LABEL` varchar(255) default NULL,
@@ -138,70 +138,70 @@ CREATE TABLE `report_column` (
   `BELONGS_TO` int(11) default NULL,
   PRIMARY KEY  (`ID`),
   KEY `BELONGS_TO` (`BELONGS_TO`),
-  CONSTRAINT `FK_REPORT_COLUMN_STANDARD_REPORT_TEMPLATE` FOREIGN KEY (`BELONGS_TO`) REFERENCES `standard_report_template` (`ID`)
+  CONSTRAINT `FK_REPORT_COLUMN_STANDARD_REPORT_TEMPLATE` FOREIGN KEY (`BELONGS_TO`) REFERENCES `STANDARD_REPORT_TEMPLATE` (`ID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
--- Definition of table `standard_report`
+-- Definition of table `STANDARD_REPORT`
 --
 
-CREATE TABLE `standard_report` (
+CREATE TABLE `STANDARD_REPORT` (
   `REPORT_ID` int(11) NOT NULL,
   `BASED_ON_TEMPLATE` int(11) default NULL,
   PRIMARY KEY  (`REPORT_ID`),
   KEY `REPORT_ID` (`REPORT_ID`),
   KEY `BASED_ON_TEMPLATE` (`BASED_ON_TEMPLATE`),
-  CONSTRAINT `FK_STANDARD_REPORT_REPORT` FOREIGN KEY (`REPORT_ID`) REFERENCES `report` (`ID`),
-  CONSTRAINT `FK_STANDARD_REPORT_STANDARD_REPORT_TEMPLATE` FOREIGN KEY (`BASED_ON_TEMPLATE`) REFERENCES `standard_report_template` (`ID`)
+  CONSTRAINT `FK_STANDARD_REPORT_REPORT` FOREIGN KEY (`REPORT_ID`) REFERENCES `REPORT` (`ID`),
+  CONSTRAINT `FK_STANDARD_REPORT_STANDARD_REPORT_TEMPLATE` FOREIGN KEY (`BASED_ON_TEMPLATE`) REFERENCES `STANDARD_REPORT_TEMPLATE` (`ID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
--- Data for table `user`
+-- Data for table `USER`
 --
 
-INSERT INTO `user` (`ID`,`LOGIN_NAME`) VALUES
+INSERT INTO `USER` (`ID`,`LOGIN_NAME`) VALUES
  (101,'admin');
 
 --
--- Data for table `hi_value`
+-- Data for table `HI_VALUE`
 --
 
-INSERT INTO `hi_value` (`next_value`) VALUES
+INSERT INTO `HI_VALUE` (`next_value`) VALUES
  (68);
 
 --
--- Data for table `report_format`
+-- Data for table `REPORT_FORMAT`
 --
 
-INSERT INTO `report_format` (`ID`,`DESCRIPTION`) VALUES
+INSERT INTO `REPORT_FORMAT` (`ID`,`DESCRIPTION`) VALUES
  (404,'Text (tab delimited)'),
  (405,'Microsoft Office Excel');
 
 --
--- Data for table `report_status`
+-- Data for table `REPORT_STATUS`
 --
 
-INSERT INTO `report_status` (`ID`,`LABEL`,`DESCRIPTION`,`ACTIVE`) VALUES
- (505,'DRAFT','Report is a draft, not ready for download.',1),
- (506,'APPROVED','Report has been approved for download by users',1);
+INSERT INTO `REPORT_STATUS` (`ID`,`LABEL`,`DESCRIPTION`,`ACTIVE`) VALUES
+ (505,'DRAFT','REPORT is a draft, not ready for download.',1),
+ (506,'APPROVED','REPORT has been approved for download by USERs',1);
 
 --
--- Data for table `standard_report_template`
+-- Data for table `STANDARD_REPORT_TEMPLATE`
 --
 
-INSERT INTO `standard_report_template` (`ID`,`LABEL`,`ROOT_CONCEPT_CODE`,`ASSOCIATION_NAME`,`DIRECTION`,`CODING_SCHEME_NAME`,`CODING_SCHEME_VERSION`,`LEVEL`,`DELIMITER`) VALUES
- (202,'FDA-UNII Subset Report','C63923','Concept_In_Subset',0,'NCI Thesaurus','08.12d',1,'$'),
- (2323,'Individual Case Safety (ICS) Subset Report','C54447','Concept_In_Subset',0,'NCI Thesaurus','08.12d',1,'$'),
- (3535,'Structured Product Labeling (SPL) Report','C54452','Concept_In_Subset',0,'NCI Thesaurus','08.12d',2,'$'),
- (4040,'CDISC Subset Report ','C61410','Concept_In_Subset',0,'NCI Thesaurus','08.12d',1,'$'),
- (4646,'CDRH Subset Report','C62596','Concept_In_Subset',0,'NCI Thesaurus','08.12d',1,'$'),
- (6060,'FDA-SPL Country Code Report','Semantic_Type|null|null|null|Geographic Area|exactMatch','',0,'NCI Thesaurus','08.12d',0,'$');
+INSERT INTO `STANDARD_REPORT_TEMPLATE` (`ID`,`LABEL`,`ROOT_CONCEPT_CODE`,`ASSOCIATION_NAME`,`DIRECTION`,`CODING_SCHEME_NAME`,`CODING_SCHEME_VERSION`,`LEVEL`,`DELIMITER`) VALUES
+ (202,'FDA-UNII Subset REPORT','C63923','Concept_In_Subset',0,'NCI Thesaurus','08.12d',1,'$'),
+ (2323,'Individual Case Safety (ICS) Subset REPORT','C54447','Concept_In_Subset',0,'NCI Thesaurus','08.12d',1,'$'),
+ (3535,'Structured Product Labeling (SPL) REPORT','C54452','Concept_In_Subset',0,'NCI Thesaurus','08.12d',2,'$'),
+ (4040,'CDISC Subset REPORT ','C61410','Concept_In_Subset',0,'NCI Thesaurus','08.12d',1,'$'),
+ (4646,'CDRH Subset REPORT','C62596','Concept_In_Subset',0,'NCI Thesaurus','08.12d',1,'$'),
+ (6060,'FDA-SPL Country Code REPORT','Semantic_Type|null|null|null|Geographic Area|exactMatch','',0,'NCI Thesaurus','08.12d',0,'$');
 
 --
--- Data for table `report_column`
+-- Data for table `REPORT_COLUMN`
 --
 
-INSERT INTO `report_column` (`ID`,`COLUMN_NUMBER`,`LABEL`,`FIELD_ID`,`PROPERTY_TYPE`,`PROPERTY_NAME`,`IS_PREFERRED`,`REPRESENTATIONAL_FORM`,`SOURCE`,`QUALIFIER_NAME`,`QUALIFIER_VALUE`,`DELIMITER`,`CONDITIONAL_COLUMN`,`BELONGS_TO`) VALUES
+INSERT INTO `REPORT_COLUMN` (`ID`,`COLUMN_NUMBER`,`LABEL`,`FIELD_ID`,`PROPERTY_TYPE`,`PROPERTY_NAME`,`IS_PREFERRED`,`REPRESENTATIONAL_FORM`,`SOURCE`,`QUALIFIER_NAME`,`QUALIFIER_VALUE`,`DELIMITER`,`CONDITIONAL_COLUMN`,`BELONGS_TO`) VALUES
  (303,1,'FDA UNII Code','Property','Generic','FDA_UNII_Code',NULL,'',' ','','','|',-1,202),
  (304,2,'FDA Preferred Term','Property','Presentation','FULL_SYN',NULL,'PT','FDA','','','|',-1,202),
  (1212,3,'NCI Concept Code','Code','','',NULL,'',' ','','','|',-1,202),
@@ -247,28 +247,28 @@ INSERT INTO `report_column` (`ID`,`COLUMN_NUMBER`,`LABEL`,`FIELD_ID`,`PROPERTY_T
  (6163,3,'NCI Preferred Term','Property','PRESENTATION','Preferred_Name',NULL,'',' ','','','|',-1,6060);
 
 --
--- Data for table `report`
+-- Data for table `REPORT`
 --
 
-INSERT INTO `report` (`ID`,`LABEL`,`LAST_MODIFIED`,`PATH_NAME`,`HAS_FORMAT`,`HAS_STATUS`,`MODIFIED_BY`,`CREATED_BY`) VALUES
- (5858,'Individual Case Safety (ICS) Subset Report.txt',NULL,'',404,505,NULL,101),
- (5859,'Individual Case Safety (ICS) Subset Report.xls',NULL,'',405,505,NULL,101),
- (5860,'Structured Product Labeling (SPL) Report.txt',NULL,'',404,505,NULL,101),
- (5861,'Structured Product Labeling (SPL) Report.xls',NULL,'',405,505,NULL,101),
- (5862,'CDISC Subset Report .txt',NULL,'',404,505,NULL,101),
- (5863,'CDISC Subset Report .xls',NULL,'',405,505,NULL,101),
- (5959,'CDRH Subset Report.txt',NULL,'',404,505,NULL,101),
- (5960,'CDRH Subset Report.xls',NULL,'',405,505,NULL,101),
- (6262,'FDA-UNII Subset Report.txt',NULL,'',404,505,NULL,101),
- (6263,'FDA-UNII Subset Report.xls',NULL,'',405,505,NULL,101),
- (6767,'FDA-SPL Country Code Report.txt',NULL,'',404,505,NULL,101),
- (6768,'FDA-SPL Country Code Report.xls',NULL,'',405,505,NULL,101);
+INSERT INTO `REPORT` (`ID`,`LABEL`,`LAST_MODIFIED`,`PATH_NAME`,`HAS_FORMAT`,`HAS_STATUS`,`MODIFIED_BY`,`CREATED_BY`) VALUES
+ (5858,'Individual Case Safety (ICS) Subset REPORT.txt',NULL,'',404,505,NULL,101),
+ (5859,'Individual Case Safety (ICS) Subset REPORT.xls',NULL,'',405,505,NULL,101),
+ (5860,'Structured Product Labeling (SPL) REPORT.txt',NULL,'',404,505,NULL,101),
+ (5861,'Structured Product Labeling (SPL) REPORT.xls',NULL,'',405,505,NULL,101),
+ (5862,'CDISC Subset REPORT .txt',NULL,'',404,505,NULL,101),
+ (5863,'CDISC Subset REPORT .xls',NULL,'',405,505,NULL,101),
+ (5959,'CDRH Subset REPORT.txt',NULL,'',404,505,NULL,101),
+ (5960,'CDRH Subset REPORT.xls',NULL,'',405,505,NULL,101),
+ (6262,'FDA-UNII Subset REPORT.txt',NULL,'',404,505,NULL,101),
+ (6263,'FDA-UNII Subset REPORT.xls',NULL,'',405,505,NULL,101),
+ (6767,'FDA-SPL Country Code REPORT.txt',NULL,'',404,505,NULL,101),
+ (6768,'FDA-SPL Country Code REPORT.xls',NULL,'',405,505,NULL,101);
 
 --
--- Data for table `standard_report`
+-- Data for table `STANDARD_REPORT`
 --
 
-INSERT INTO `standard_report` (`REPORT_ID`,`BASED_ON_TEMPLATE`) VALUES
+INSERT INTO `STANDARD_REPORT` (`REPORT_ID`,`BASED_ON_TEMPLATE`) VALUES
  (6262,202),
  (6263,202),
  (5858,2323),
