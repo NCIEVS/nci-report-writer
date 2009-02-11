@@ -74,7 +74,7 @@
         <echo message="" />
         <echo message="dbsetup         --&gt; Setup MySQL database" />
         <echo message="deploy          --&gt; Deploy war files to application server" />
-        <echo message="setup           --&gt; Setup application server" />
+        <echo message="jbossSetup      --&gt; Setup JBoss application server" />
         <echo message="" />
         <echo message="clean           --&gt; Remove classes directory for clean build" />
         <echo message="compile, build  --&gt; Normal build of application" />
@@ -178,11 +178,11 @@
 
     </target>
 
-    <!--=======================================-->
-    <!-- setup: setup jboss application server -->
-    <!--=======================================-->
+    <!--============================================-->
+    <!-- jbossSetup: setup jboss application server -->
+    <!--============================================-->
 
-    <target name="setup" description="setup jboss application server." depends="-init">
+    <target name="jbossSetup" description="setup jboss application server." depends="-init">
 
         <!-- Prompt user to go ahead and deploy -->
 
