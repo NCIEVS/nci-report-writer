@@ -181,17 +181,6 @@ else
 									</table>
 								</td>
 							</tr>
-							<tr>
-								<td align="right" class="actionSection">
-									<!-- bottom action buttons begins -->
-									<table cellpadding="4" cellspacing="0" border="0">
-										<tr>
-											<td><h:commandButton id="back" action="back" value="Back"  /></td>
-										</tr>
-									</table>
-									<!-- bottom action buttons end -->
-								</td>
-							</tr>
 						</table>
 					</td>
 				</tr>
