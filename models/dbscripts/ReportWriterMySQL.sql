@@ -20,10 +20,12 @@ CREATE TABLE `USER` (
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
--- Definition of table `HI_VALUE`
+-- Definition of table `hi_value`
+-- 090217, table must be lowercase to support
+-- hibernate's primary key generator (HILO)
 --
 
-CREATE TABLE `HI_VALUE` (
+CREATE TABLE `hi_value` (
   `next_value` int(10) unsigned NOT NULL auto_increment,
   PRIMARY KEY  (`next_value`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
@@ -163,10 +165,10 @@ INSERT INTO `USER` (`ID`,`LOGIN_NAME`) VALUES
  (101,'admin');
 
 --
--- Data for table `HI_VALUE`
+-- Data for table `hi_value`
 --
 
-INSERT INTO `HI_VALUE` (`next_value`) VALUES
+INSERT INTO `hi_value` (`next_value`) VALUES
  (68);
 
 --
