@@ -21,7 +21,7 @@ CREATE TABLE `USER` (
 
 --
 -- Definition of table `hi_value`
--- 090217, table must be lowercase to support
+-- 090217, table name must be lowercase to support
 -- hibernate's primary key generator (HILO)
 --
 
