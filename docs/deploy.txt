@@ -58,6 +58,9 @@ Run the following scripts. This will initialize the databases csmupt and ncirepo
 
 5. exit;
 
+*** Note: On Unix platforms; setting lower_case_table_names=1 in my.cnf before recreating the databases is required to avoid
+a table case sensitivity issue with UPT. ***
+
 --------------------------------------
 D. Setup JBoss
 --------------------------------------
