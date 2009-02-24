@@ -72,6 +72,7 @@ import javax.servlet.RequestDispatcher;
   *
   * Modification history
   *     Initial implementation kim.ong@ngc.com
+  *     Last modified by rajasimhah@mail.nih.gov on 02/24/2009
   *
  */
 
@@ -155,6 +156,7 @@ public final class FileServlet extends HttpServlet {
 		String line_br = "\r\n";
 
         response.setHeader("Cache-Control", "no-cache");
+        
 		if (format.indexOf("Excel") != -1) {
 			String contentType = "application/vnd.ms-excel";
 			response.setContentType(contentType);
@@ -164,7 +166,12 @@ public final class FileServlet extends HttpServlet {
 
 		File file = new File(fullPathName);
 		String filename = file.getName();
-		response.addHeader("Content-Disposition","\"attachment;filename=" + filename + "\"");
+		// HKR, GForge# 19467 - wrong placement of '\' in header.
+		response.addHeader("Content-Disposition", "attachment;filename=\"" + filename + "\"");
+		
+		System.out.println("Full path name =" + fullPathName);
+		System.out.println("File name =" + filename);
+				
 		if (format.indexOf("Excel") == -1) {
 			try {
 				FileInputStream fis = null;
@@ -190,12 +197,12 @@ public final class FileServlet extends HttpServlet {
 			} catch (Exception e) {
 			}
 		}
-
 		else if (format.indexOf("Excel") != -1) {
 			try
 			{
 				InputStream myxls = new FileInputStream(fullPathName);
 				HSSFWorkbook wb = new HSSFWorkbook(myxls);
+				
 				try {
 					wb.write(response.getOutputStream());
 				} catch (Exception e) {
@@ -302,12 +309,10 @@ public final class FileServlet extends HttpServlet {
 						}
 					}
 			    }
-
 			} catch (Exception ex) {
 				sendErrorResponse(request, response, message);
 				ex.printStackTrace();
 			}
-
 
 		} catch (Exception ex) {
 			sendErrorResponse(request, response, message);
