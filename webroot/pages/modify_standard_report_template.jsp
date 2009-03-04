@@ -52,7 +52,7 @@
                                     <td>
                          
 <!--_____ main content begins _____-->
-<h:form id="CREATE_STANDARD_REPORT_TEMPLATEForm">
+<h:form id="MODIFY_STANDARD_REPORT_TEMPLATEForm">
 	<tr>
 		<td width="100%" valign="top"><br>
 		<!-- target of anchor to skip menus --><a name="content" />
@@ -61,7 +61,7 @@
 					<td>
 						<table summary="" cellpadding="0" cellspacing="0" border="0">
 							<tr>
-								<td class="dataTablePrimaryLabel" height="20">CREATE REPORT TEMPLATE</td>
+								<td class="dataTablePrimaryLabel" height="20">MODIFY REPORT TEMPLATE</td>
 							</tr>
 							<tr>
 								<td>
