@@ -162,6 +162,7 @@ public class FileUtil {
 		   HSSFWorkbook wb = new HSSFWorkbook();
 		   HSSFSheet ws = wb.createSheet(workSheetLabel);
 
+
 		   HSSFCellStyle cs = wb.createCellStyle();
 		   cs.setWrapText(true);
 		   cs.setAlignment(HSSFCellStyle.ALIGN_JUSTIFY);
@@ -193,7 +194,10 @@ public class FileUtil {
 				  rownum++;
 			  }
 		   }
-
+		   
+		   //RWW GF20673 Freeze top row
+		   ws.createFreezePane( 0, 1, 0, 1 );
+		   
 		   wb.write(fout);
 		   fout.close();
 		   return Boolean.TRUE;
