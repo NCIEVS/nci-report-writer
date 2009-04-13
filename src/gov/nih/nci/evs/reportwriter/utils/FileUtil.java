@@ -14,7 +14,8 @@ import org.apache.poi.poifs.filesystem.DocumentEntry;
 
 import org.apache.poi.hssf.usermodel.*;
 import org.apache.poi.poifs.filesystem.POIFSFileSystem;
-import org.apache.poi.hssf.usermodel.HSSFCellStyle;
+import org.apache.poi.hssf.util.HSSFColor;
+
 
 /**
   * <!-- LICENSE_TEXT_START -->
@@ -162,13 +163,24 @@ public class FileUtil {
 		   HSSFWorkbook wb = new HSSFWorkbook();
 		   HSSFSheet ws = wb.createSheet(workSheetLabel);
 
-
+		   HSSFCellStyle toprow = wb.createCellStyle();
 		   HSSFCellStyle cs = wb.createCellStyle();
+		   
+		   //RWW GF20673 shade top row
+		   HSSFFont font = wb.createFont();
+		   font.setColor(HSSFColor.BLACK.index);
+		   font.setBoldweight(HSSFFont.BOLDWEIGHT_BOLD);
+		   toprow.setFont(font);
+		   toprow.setFillForegroundColor(HSSFColor.GREY_40_PERCENT.index);
+		   toprow.setFillPattern(HSSFCellStyle.SOLID_FOREGROUND);
+		   toprow.setWrapText(true);
+		   
 		   cs.setWrapText(true);
 		   cs.setAlignment(HSSFCellStyle.ALIGN_JUSTIFY);
 
 		   HSSFRow wr=null;
            int rownum = 0;
+           int colnum = 0;
 		   while (dis.available() != 0) {
 			  String line = dis.readLine();
 			  line = line.trim();
@@ -181,7 +193,10 @@ public class FileUtil {
 
 				  for (int i=0; i<v.size();i++) {
 				     HSSFCell wc = wr.createCell(i);
-				     if(a[i].equals(Boolean.TRUE))
+				     if( rownum == 0) {
+				    	 wc.setCellStyle(toprow);
+				     }				     
+				     else if(a[i].equals(Boolean.TRUE))
 				     {
 						 wc.setCellStyle(cs);
 						 wc.setCellType(HSSFCell.CELL_TYPE_STRING);
@@ -195,7 +210,7 @@ public class FileUtil {
 			  }
 		   }
 		   
-		   //RWW GF20673 Freeze top row
+		   //RWW GF20673 freeze top row
 		   ws.createFreezePane( 0, 1, 0, 1 );
 		   
 		   wb.write(fout);
