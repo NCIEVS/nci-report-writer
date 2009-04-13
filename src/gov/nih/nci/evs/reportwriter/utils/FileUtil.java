@@ -180,7 +180,6 @@ public class FileUtil {
 
 		   HSSFRow wr=null;
            int rownum = 0;
-           int colnum = 0;
 		   while (dis.available() != 0) {
 			  String line = dis.readLine();
 			  line = line.trim();
