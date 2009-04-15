@@ -607,7 +607,7 @@ public class ReportGenerationThread implements Runnable
 		{
 			properties = concept.getDefinition();
 		}
-        String return_str = " "; // to resolve Excel cell problem
+        String return_str = ""; //RWW change from space to empty string
         int num_matches = 0;
         if(field_Id.indexOf("Property Qualifier") != -1)
 		{
