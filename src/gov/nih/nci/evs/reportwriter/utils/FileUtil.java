@@ -58,13 +58,25 @@ public class FileUtil {
     private static Vector<String> parseData(String line, String tab)
     {
 		Vector data_vec = new Vector();
-	    StringTokenizer st = new StringTokenizer(line, tab);
+	    StringTokenizer st = new StringTokenizer(line, tab, true);  //RWW GF#20743, delimiters are returned as tokens
+	    boolean lastWasDelim = false; 
 		while (st.hasMoreTokens()) {
 			String value = st.nextToken();
-			data_vec.add(value);
+			if( value.equals(tab) ) {
+				if( lastWasDelim ) {
+					data_vec.add("");
+				}
+				lastWasDelim = true;
+			}
+			else {
+				data_vec.add(value);
+				lastWasDelim = false;
+			}
 		}
 		return data_vec;
 	}
+    
+
 
     public static Boolean[] findWrappedColumns(String textfile, String delimiter, int maxLength) {
 		File file = new File(textfile);
@@ -203,6 +215,9 @@ public class FileUtil {
 
 				     String s = (String) v.elementAt(i);
 				     s = s.trim();
+				     if( s.equals("") ) {
+                         s = null;
+                     }				     
 				   	 wc.setCellValue(s);
 				  }
 				  rownum++;
