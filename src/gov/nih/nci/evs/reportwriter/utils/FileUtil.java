@@ -183,7 +183,7 @@ public class FileUtil {
 		   font.setColor(HSSFColor.BLACK.index);
 		   font.setBoldweight(HSSFFont.BOLDWEIGHT_BOLD);
 		   toprow.setFont(font);
-		   toprow.setFillForegroundColor(HSSFColor.GREY_40_PERCENT.index);
+		   toprow.setFillForegroundColor(HSSFColor.GREY_25_PERCENT.index);
 		   toprow.setFillPattern(HSSFCellStyle.SOLID_FOREGROUND);
 		   toprow.setWrapText(true);
 		   
@@ -191,7 +191,7 @@ public class FileUtil {
 		   cs.setAlignment(HSSFCellStyle.ALIGN_JUSTIFY);
 
 		   HSSFRow wr=null;
-           int rownum = 0;
+                   int rownum = 0;
 		   while (dis.available() != 0) {
 			  String line = dis.readLine();
 			  line = line.trim();
@@ -226,7 +226,6 @@ public class FileUtil {
 		   
 		   //RWW GF20673 freeze top row
 		   ws.createFreezePane( 0, 1, 0, 1 );
-		   
 		   wb.write(fout);
 		   fout.close();
 		   return Boolean.TRUE;
