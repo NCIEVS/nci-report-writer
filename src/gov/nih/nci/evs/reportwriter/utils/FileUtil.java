@@ -59,7 +59,7 @@ public class FileUtil {
     {
 		Vector data_vec = new Vector();
 	    StringTokenizer st = new StringTokenizer(line, tab, true);  //RWW GF#20743, delimiters are returned as tokens
-	    boolean lastWasDelim = false; 
+	    boolean lastWasDelim = true;                                // first value could be a tab
 		while (st.hasMoreTokens()) {
 			String value = st.nextToken();
 			if( value.equals(tab) ) {
@@ -97,7 +97,7 @@ public class FileUtil {
            int rownum = 0;
 		   while (dis.available() != 0) {
 			  String line = dis.readLine();
-			  line = line.trim();
+			  // line = line.trim();  RWW - 090512 first value could be empty (\t)
 			  if (line.length() > 0)
 			  {
 				  Vector<String> v = parseData(line, delimiter);
@@ -194,7 +194,7 @@ public class FileUtil {
                    int rownum = 0;
 		   while (dis.available() != 0) {
 			  String line = dis.readLine();
-			  line = line.trim();
+			  // line = line.trim();  RWW - 090512 first value could be empty (\t)
 			  if (line.length() > 0)
 			  {
 				  Vector<String> v = parseData(line, delimiter);
@@ -217,7 +217,7 @@ public class FileUtil {
 				     s = s.trim();
 				     if( s.equals("") ) {
                          s = null;
-                     }				     
+                     }
 				   	 wc.setCellValue(s);
 				  }
 				  rownum++;
