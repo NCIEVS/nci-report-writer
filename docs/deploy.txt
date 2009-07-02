@@ -182,6 +182,13 @@ URL:        http://localhost:8080/upt/
 APPLICATION NAME:   csmupt
 
 --------------------------------------
+Load balancing
+--------------------------------------
+F5 BIGIP
+========
+Enable persistence checking on the F5 Bigip box so a user is always returned to the same node.
+
+--------------------------------------
 Trouble shooting
 --------------------------------------
 
