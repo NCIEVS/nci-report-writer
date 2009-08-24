@@ -65,7 +65,7 @@ import gov.nih.nci.system.client.ApplicationServiceProvider;
 
 public class UserSessionBean extends Object
 {
-	  private static Logger KLO_log = Logger.getLogger("UserSessionBean KLO");
+	  private static Logger logger = Logger.getLogger(UserSessionBean.class);
 
 	  Boolean isAdmin = null;
 	  String selectedTask = null;
@@ -479,17 +479,17 @@ System.out.println("deleting column with ID = " + id + " (yet to be implemented)
 		  // return to error page
 		  if (label == null || label.compareTo("") == 0)
 		  {
-			  KLO_log.warn("Incomplete data entry -- form not saved.");
+			  logger.warn("Incomplete data entry -- form not saved.");
 			  return "add_standard_report_template";
 		  }
 		  if (rootConceptCode == null || rootConceptCode.compareTo("") == 0)
 		  {
-			  KLO_log.warn("Incomplete data entry -- form not saved.");
+			  logger.warn("Incomplete data entry -- form not saved.");
 			  return "add_standard_report_template";
 		  }
 		  if (selectedLevel == null || selectedLevel.compareTo("") == 0)
 		  {
-			  KLO_log.warn("Incomplete data entry -- form not saved.");
+			  logger.warn("Incomplete data entry -- form not saved.");
 			  return "add_standard_report_template";
 		  }
 
@@ -500,16 +500,16 @@ System.out.println("deleting column with ID = " + id + " (yet to be implemented)
 
 		  char delimiter = '$';
 
-		  KLO_log.warn("label: " + label);
-          KLO_log.warn("codingSchemeName: " + codingSchemeName);
-          KLO_log.warn("codingSchemeVersion: " + codingSchemeVersion);
-          KLO_log.warn("rootConceptCode: " + rootConceptCode);
-          KLO_log.warn("associationname: " + selectedAssociation);
+		  logger.warn("label: " + label);
+          logger.warn("codingSchemeName: " + codingSchemeName);
+          logger.warn("codingSchemeVersion: " + codingSchemeVersion);
+          logger.warn("rootConceptCode: " + rootConceptCode);
+          logger.warn("associationname: " + selectedAssociation);
 
-          KLO_log.warn("direction: " + direction);
+          logger.warn("direction: " + direction);
 
-          KLO_log.warn("level: " + selectedLevel);
-          KLO_log.warn("delimiter: " + delimiter);
+          logger.warn("level: " + selectedLevel);
+          logger.warn("delimiter: " + delimiter);
 
           // Save results using SDK writable API.
 
@@ -593,17 +593,17 @@ System.out.println("saveModifiedTemplateAction: version " + version);
  		  // return to error page
  		  if (label == null || label.compareTo("") == 0)
  		  {
- 			  KLO_log.warn("Incomplete data entry -- form not saved.");
+ 			  logger.warn("Incomplete data entry -- form not saved.");
  			  return "modify_standard_report_template";
  		  }
  		  if (rootConceptCode == null || rootConceptCode.compareTo("") == 0)
  		  {
- 			  KLO_log.warn("Incomplete data entry -- form not saved.");
+ 			  logger.warn("Incomplete data entry -- form not saved.");
  			  return "modify_standard_report_template";
  		  }
  		  if (level_str == null || level_str.compareTo("") == 0)
  		  {
- 			  KLO_log.warn("Incomplete data entry -- form not saved.");
+ 			  logger.warn("Incomplete data entry -- form not saved.");
  			  return "modify_standard_report_template";
 		  }
 
@@ -668,7 +668,7 @@ System.out.println("saveModifiedTemplateAction: version " + version);
 		  HttpServletRequest request = getHttpRequest();
 		  String template_label = (String) request.getSession().getAttribute("selectedStandardReportTemplate");
 
-		  KLO_log.warn("deleteReportTemplateAction: " + template_label);
+		  logger.warn("deleteReportTemplateAction: " + template_label);
 
           try{
 			  StandardReportTemplate template = getStandardReportTemplate(template_label);
