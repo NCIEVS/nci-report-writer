@@ -116,7 +116,7 @@ D. Setup JBoss
     (You need to modify this code to reflect your environment)
 
     <attribute name="Properties">
-        gov.nih.nci.cacore.ncireportwriterProperties=C:/jboss-4.0.5.GA/server/default/data/ncireportwriter.properties
+        gov.nih.nci.cacore.ncireportwriterProperties=C:/Apps/jboss-4.0.5.GA/server/default/data/ncireportwriter.properties
     </attribute>
 
 7. Copy C:\SVN-Projects\reportwriter\webroot\WEB-INF\lib\mysql-connector-java-3.1.13-bin.jar
@@ -155,7 +155,7 @@ The following are the "automated" steps to build and deploy the report writer ap
 4. cd C:\SVN-Projects\reportwriter
 
 5. Setup JBoss
-   C:\SVN-Projects\reportwriter>ant setup
+   C:\SVN-Projects\reportwriter>ant jbossSetup
 
 6. Setup MySQL
    C:\SVN-Projects\reportwriter>ant dbsetup
