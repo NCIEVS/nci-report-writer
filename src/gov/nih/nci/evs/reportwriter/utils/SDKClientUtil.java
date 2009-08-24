@@ -60,7 +60,7 @@ import org.apache.log4j.Logger;
 
 public class SDKClientUtil {
 
-	private static Logger KLO_log = Logger.getLogger("SDKClientUtil KLO");
+	private static Logger logger = Logger.getLogger(SDKClientUtil.class);
 
 	public SDKClientUtil() {
 

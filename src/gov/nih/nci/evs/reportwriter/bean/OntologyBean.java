@@ -128,7 +128,7 @@ import gov.nih.nci.evs.reportwriter.properties.ReportWriterProperties;
 
 public class OntologyBean //extends BaseBean
 {
-    private static Logger KLO_log = Logger.getLogger("OntologyBean KLO");
+    private static Logger logger = Logger.getLogger(OntologyBean.class);
 
 	private static List _ontologies = null;
 

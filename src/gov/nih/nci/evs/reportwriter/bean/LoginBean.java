@@ -56,7 +56,7 @@ import gov.nih.nci.evs.reportwriter.utils.*;
 public class LoginBean extends Object
 {
 
-  private static Logger KLO_log = Logger.getLogger("LoginBean KLO");
+  private static Logger logger = Logger.getLogger(LoginBean.class);
 
   String userid;
   String password;

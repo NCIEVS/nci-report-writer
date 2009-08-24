@@ -79,7 +79,7 @@ import javax.servlet.RequestDispatcher;
 
 public final class FileServlet extends HttpServlet {
 
-    protected final Logger logger = Logger.getLogger(this.getClass());
+    protected final Logger logger = Logger.getLogger(FileServlet.class);
 
     //private SearchSessionBean searchService = null;
 	/**

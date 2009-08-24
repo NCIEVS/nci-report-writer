@@ -22,7 +22,7 @@ public class ReportWriterProperties {
 		public static final String MAXIMUM_LEVEL = "MAXIMUM_LEVEL";
 		public static final String MAXIMUM_RETURN = "MAXIMUM_RETURN";
 
-	    private static Logger log = Logger.getLogger(ReportWriterProperties.class);
+	    private static Logger logger = Logger.getLogger(ReportWriterProperties.class);
 
 		private static ReportWriterProperties reportwriterProperties;
 
@@ -63,7 +63,7 @@ public class ReportWriterProperties {
 	    private static void loadProperties() throws Exception{
 			String propertyFile = System.getProperty("gov.nih.nci.cacore.ncireportwriterProperties");
 
-			log.info("reportwriterProperties FileLocation= "+ propertyFile);
+			logger.info("reportwriterProperties FileLocation= "+ propertyFile);
 
 			if(propertyFile != null && propertyFile.length() > 0){
 				FileInputStream fis = new FileInputStream(new File(propertyFile));
@@ -74,7 +74,7 @@ public class ReportWriterProperties {
 			for(Iterator i = properties.keySet().iterator(); i.hasNext();){
 				String key = (String)i.next();
 				String value  = properties.getProperty(key);
-	            log.debug("KEY: "+ key +"\t - "+value);
+	            logger.debug("KEY: "+ key +"\t - "+value);
 			}
 		}
 	}
