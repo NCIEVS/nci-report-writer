@@ -63,7 +63,7 @@ public class ReportWriterProperties {
 	    private static void loadProperties() throws Exception{
 			String propertyFile = System.getProperty("gov.nih.nci.cacore.ncireportwriterProperties");
 
-			logger.info("reportwriterProperties FileLocation= "+ propertyFile);
+			logger.info("File location= "+ propertyFile);
 
 			if(propertyFile != null && propertyFile.length() > 0){
 				FileInputStream fis = new FileInputStream(new File(propertyFile));
@@ -71,10 +71,11 @@ public class ReportWriterProperties {
 			}
 			else System.out.println("propertyFile is null");
 
+			logger.debug("List of properties:");
 			for(Iterator i = properties.keySet().iterator(); i.hasNext();){
 				String key = (String)i.next();
 				String value  = properties.getProperty(key);
-	            logger.debug("KEY: "+ key +"\t - "+value);
+	            logger.debug("* " + key + ": " + value);
 			}
 		}
 	}
