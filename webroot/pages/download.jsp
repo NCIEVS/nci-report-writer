@@ -112,7 +112,7 @@ if (list != null && list.size() > 0)
 									<!-- bottom action buttons begins -->
 									<table cellpadding="4" cellspacing="0" border="0">
 										<tr>
-											<td><h:commandButton id="back" action="back" value="Back" /></td>
+											<td><input type="button" value="Back" onClick="history.go(-1);return true;"></td>
 										</tr>
 									</table>
 									<!-- bottom action buttons end -->

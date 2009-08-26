@@ -155,8 +155,8 @@
 									<table cellpadding="4" cellspacing="0" border="0">
 										<tr>
 											<td><h:commandButton id="save" action="#{userSessionBean.saveTemplateAction}" value="Save" /></td>
-											<td><h:commandButton id="reset" action="reset" value="Reset" /></td>
-											<td><h:commandButton id="back" action="back" value="Back" /></td>
+											<td><input type="reset" value="Reset" /></td>
+											<td><input type="button" value="Back" onClick="history.go(-1);return true;"></td>
 										</tr>
 									</table>
 									<!-- bottom action buttons end -->
