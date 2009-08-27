@@ -115,16 +115,12 @@
 										
 										<tr class="dataRowLight">
 											<td class="dataCellText">Coding Scheme</td>
-											<td class="dataCellText"><input type="text" name="codingscheme" value="<%=codingScheme%>" width="200"></td>
+											<td class="dataCellText"><%=codingScheme%></td>
 										</tr>
 										
 										<tr class="dataRowDark">
-
-
-<td class="dataCellText">Version</td>
-<td class="dataCellText"><input type="text" name="version" value="<%=version%>" ></td>
-
-
+                                            <td class="dataCellText">Version</td>
+                                            <td class="dataCellText"><%=version%></td>
 										</tr>
 										
 										<tr class="dataRowLight">
