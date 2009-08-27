@@ -1,5 +1,6 @@
 <%@ taglib uri="http://java.sun.com/jsf/html" prefix="h" %>
 <%@ taglib uri="http://java.sun.com/jsf/core" prefix="f" %> 
+<%@ page import="gov.nih.nci.evs.reportwriter.utils.*" %>
 
 <f:loadBundle basename="gov.nih.nci.evs.reportwriter.bean.Resources" var="reportwriterBundle"/>
 
@@ -66,6 +67,7 @@
 											<td class="sidebarContent">
 											<%
 											String message = (String) request.getSession().getAttribute("message");
+											message = StringUtils.toHtml(message);
 											%>
 											
 											<%=message%>
