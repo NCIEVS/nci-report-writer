@@ -2,163 +2,65 @@ package gov.nih.nci.evs.reportwriter.utils;
 
 import java.io.*;
 import java.util.*;
-
-import gov.nih.nci.system.applicationservice.EVSApplicationService;
-import gov.nih.nci.system.client.ApplicationServiceProvider;
-
-import gov.nih.nci.evs.reportwriter.bean.StandardReportTemplate;
-import gov.nih.nci.system.applicationservice.EVSApplicationService;
-
-import java.sql.Connection;
-import java.sql.ResultSet;
-import java.sql.Statement;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Vector;
-import java.util.HashSet;
-import java.util.Arrays;
-
-import javax.faces.model.SelectItem;
-
-import org.LexGrid.LexBIG.DataModel.Collections.ResolvedConceptReferenceList;
-import org.LexGrid.LexBIG.DataModel.Collections.SortOptionList;
-import org.LexGrid.LexBIG.DataModel.Core.CodingSchemeSummary;
-import org.LexGrid.LexBIG.DataModel.Core.CodingSchemeVersionOrTag;
-import org.LexGrid.LexBIG.DataModel.Core.ResolvedConceptReference;
-import org.LexGrid.LexBIG.Exceptions.LBException;
-import org.LexGrid.LexBIG.Impl.LexBIGServiceImpl;
-import org.LexGrid.LexBIG.LexBIGService.CodedNodeSet;
-import org.LexGrid.LexBIG.LexBIGService.LexBIGService;
-import org.LexGrid.LexBIG.LexBIGService.CodedNodeSet.PropertyType;
-import org.LexGrid.LexBIG.LexBIGService.CodedNodeSet.SearchDesignationOption;
-import org.LexGrid.LexBIG.Utility.Constructors;
-import org.LexGrid.LexBIG.Utility.LBConstants.MatchAlgorithms;
-import org.LexGrid.concepts.Concept;
-
-import org.LexGrid.LexBIG.DataModel.Collections.CodingSchemeRenderingList;
-import org.LexGrid.LexBIG.DataModel.InterfaceElements.CodingSchemeRendering;
-
-import org.LexGrid.LexBIG.DataModel.Collections.LocalNameList;
-import org.LexGrid.LexBIG.DataModel.Collections.ModuleDescriptionList;
-import org.LexGrid.LexBIG.DataModel.InterfaceElements.ModuleDescription;
-
-
-import org.LexGrid.LexBIG.Utility.Iterators.ResolvedConceptReferencesIterator;
-import org.LexGrid.LexBIG.DataModel.Collections.ConceptReferenceList;
-
-import org.LexGrid.LexBIG.DataModel.Core.ConceptReference;
-
-import org.LexGrid.LexBIG.LexBIGService.CodedNodeGraph;
-
-import org.LexGrid.LexBIG.DataModel.Collections.NameAndValueList;
-import org.LexGrid.LexBIG.DataModel.Core.NameAndValue;
-
-import org.LexGrid.LexBIG.DataModel.Collections.AssociationList;
-import org.LexGrid.LexBIG.DataModel.Core.AssociatedConcept;
-import org.LexGrid.LexBIG.DataModel.Core.Association;
-import org.LexGrid.LexBIG.DataModel.Collections.AssociatedConceptList;
-
-import org.LexGrid.codingSchemes.CodingScheme;
-import org.LexGrid.concepts.Definition;
-import org.LexGrid.concepts.Comment;
-import org.LexGrid.concepts.Instruction;
-import org.LexGrid.concepts.Presentation;
-
-//import org.LexGrid.relations.Relations;
-
-import org.apache.log4j.Logger;
-
-import org.LexGrid.LexBIG.Exceptions.LBResourceUnavailableException;
-import org.LexGrid.LexBIG.Exceptions.LBInvocationException;
-
-import org.LexGrid.LexBIG.Utility.ConvenienceMethods;
-import org.LexGrid.commonTypes.EntityDescription;
-
-import org.LexGrid.concepts.ConceptProperty;
-import org.LexGrid.commonTypes.Property;
-import org.LexGrid.LexBIG.DataModel.Core.CodingSchemeVersionOrTag;
-
-import org.LexGrid.LexBIG.DataModel.Collections.AssociationList;
-import org.LexGrid.LexBIG.DataModel.Collections.ConceptReferenceList;
-import org.LexGrid.LexBIG.DataModel.Collections.LocalNameList;
-import org.LexGrid.LexBIG.DataModel.Collections.ResolvedConceptReferenceList;
-import org.LexGrid.LexBIG.DataModel.Core.AssociatedConcept;
-import org.LexGrid.LexBIG.DataModel.Core.Association;
-import org.LexGrid.LexBIG.DataModel.Core.CodingSchemeSummary;
-import org.LexGrid.LexBIG.DataModel.Core.CodingSchemeVersionOrTag;
-import org.LexGrid.LexBIG.DataModel.Core.ResolvedConceptReference;
-import org.LexGrid.LexBIG.Exceptions.LBException;
-import org.LexGrid.LexBIG.Impl.LexBIGServiceImpl;
-import org.LexGrid.LexBIG.LexBIGService.LexBIGService;
-import org.LexGrid.LexBIG.LexBIGService.CodedNodeSet.ActiveOption;
-import org.LexGrid.LexBIG.Utility.ConvenienceMethods;
-import org.LexGrid.commonTypes.EntityDescription;
-import org.LexGrid.commonTypes.Property;
-import org.LexGrid.concepts.Concept;
-import org.LexGrid.concepts.ConceptProperty;
-
-import org.LexGrid.relations.Relations;
-
-import org.LexGrid.commonTypes.PropertyQualifier;
-
-import org.LexGrid.commonTypes.Source;
-import org.LexGrid.naming.SupportedSource;
-
-import org.LexGrid.naming.SupportedPropertyQualifier;
-import org.LexGrid.LexBIG.DataModel.Core.types.CodingSchemeVersionStatus;
-
-import org.LexGrid.naming.SupportedAssociation;
-import org.LexGrid.naming.SupportedAssociationQualifier;
-
-import org.LexGrid.naming.SupportedProperty;
-import org.LexGrid.naming.SupportedPropertyQualifier;
-import org.LexGrid.naming.SupportedRepresentationalForm;
-import org.LexGrid.naming.SupportedSource;
-
-import org.LexGrid.LexBIG.DataModel.Collections.AssociatedConceptList;
-import org.LexGrid.LexBIG.DataModel.Collections.AssociationList;
-import org.LexGrid.LexBIG.DataModel.Core.AssociatedConcept;
-import org.LexGrid.LexBIG.DataModel.Core.Association;
-import org.LexGrid.LexBIG.DataModel.Core.CodingSchemeSummary;
-import org.LexGrid.LexBIG.DataModel.Core.CodingSchemeVersionOrTag;
-import org.LexGrid.LexBIG.Exceptions.LBException;
-import org.LexGrid.LexBIG.Extensions.Generic.LexBIGServiceConvenienceMethods;
-import org.LexGrid.LexBIG.Impl.LexBIGServiceImpl;
-import org.LexGrid.LexBIG.LexBIGService.LexBIGService;
-import org.LexGrid.codingSchemes.Mappings;
-import org.LexGrid.naming.SupportedHierarchy;
-
+import gov.nih.nci.system.applicationservice.*;
 import gov.nih.nci.evs.reportwriter.bean.*;
-
-import org.LexGrid.LexBIG.DataModel.InterfaceElements.RenderingDetail;
-import org.LexGrid.LexBIG.DataModel.Collections.CodingSchemeTagList;
-
-import gov.nih.nci.evs.reportwriter.properties.ReportWriterProperties;
-import org.LexGrid.LexBIG.Exceptions.LBParameterException;
+import java.sql.*;
+import javax.faces.model.*;
+import org.LexGrid.LexBIG.DataModel.Collections.*;
+import org.LexGrid.LexBIG.DataModel.Core.*;
+import org.LexGrid.LexBIG.LexBIGService.*;
+import org.LexGrid.LexBIG.Utility.*;
+import org.LexGrid.concepts.*;
+import org.LexGrid.LexBIG.DataModel.InterfaceElements.*;
+import org.LexGrid.LexBIG.Utility.Iterators.*;
+import org.LexGrid.codingSchemes.*;
+import org.LexGrid.naming.*;
+import org.LexGrid.LexBIG.DataModel.Core.types.*;
+import org.LexGrid.LexBIG.Extensions.Generic.*;
+import gov.nih.nci.evs.reportwriter.properties.*;
+import org.LexGrid.LexBIG.Exceptions.*;
 
 /**
-  * <!-- LICENSE_TEXT_START -->
-* Copyright 2008,2009 NGIT. This software was developed in conjunction with the National Cancer Institute,
-* and so to the extent government employees are co-authors, any rights in such works shall be subject to Title 17 of the United States Code, section 105.
-* Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:
-* 1. Redistributions of source code must retain the above copyright notice, this list of conditions and the disclaimer of Article 3, below. Redistributions
-* in binary form must reproduce the above copyright notice, this list of conditions and the following disclaimer in the documentation and/or other
-* materials provided with the distribution.
-* 2. The end-user documentation included with the redistribution, if any, must include the following acknowledgment:
-* "This product includes software developed by NGIT and the National Cancer Institute."
-* If no such end-user documentation is to be included, this acknowledgment shall appear in the software itself,
-* wherever such third-party acknowledgments normally appear.
-* 3. The names "The National Cancer Institute", "NCI" and "NGIT" must not be used to endorse or promote products derived from this software.
-* 4. This license does not authorize the incorporation of this software into any third party proprietary programs. This license does not authorize
-* the recipient to use any trademarks owned by either NCI or NGIT
-* 5. THIS SOFTWARE IS PROVIDED "AS IS," AND ANY EXPRESSED OR IMPLIED WARRANTIES, (INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
-* MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE) ARE DISCLAIMED. IN NO EVENT SHALL THE NATIONAL CANCER INSTITUTE,
-* NGIT, OR THEIR AFFILIATES BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
-* PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY,
-* WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-  * <!-- LICENSE_TEXT_END -->
-  */
+ * <!-- LICENSE_TEXT_START -->
+ * Copyright 2008,2009 NGIT. This software was developed in conjunction 
+ * with the National Cancer Institute, and so to the extent government 
+ * employees are co-authors, any rights in such works shall be subject 
+ * to Title 17 of the United States Code, section 105.
+ * Redistribution and use in source and binary forms, with or without 
+ * modification, are permitted provided that the following conditions 
+ * are met:
+ *   1. Redistributions of source code must retain the above copyright 
+ *      notice, this list of conditions and the disclaimer of Article 3, 
+ *      below. Redistributions in binary form must reproduce the above 
+ *      copyright notice, this list of conditions and the following 
+ *      disclaimer in the documentation and/or other materials provided 
+ *      with the distribution.
+ *   2. The end-user documentation included with the redistribution, 
+ *      if any, must include the following acknowledgment:
+ *      "This product includes software developed by NGIT and the National 
+ *      Cancer Institute."   If no such end-user documentation is to be
+ *      included, this acknowledgment shall appear in the software itself,
+ *      wherever such third-party acknowledgments normally appear.
+ *   3. The names "The National Cancer Institute", "NCI" and "NGIT" must 
+ *      not be used to endorse or promote products derived from this software.
+ *   4. This license does not authorize the incorporation of this software
+ *      into any third party proprietary programs. This license does not 
+ *      authorize the recipient to use any trademarks owned by either NCI 
+ *      or NGIT 
+ *   5. THIS SOFTWARE IS PROVIDED "AS IS," AND ANY EXPRESSED OR IMPLIED 
+ *      WARRANTIES, (INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES 
+ *      OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE) ARE 
+ *      DISCLAIMED. IN NO EVENT SHALL THE NATIONAL CANCER INSTITUTE,
+ *      NGIT, OR THEIR AFFILIATES BE LIABLE FOR ANY DIRECT, INDIRECT, 
+ *      INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, 
+ *      BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; 
+ *      LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER 
+ *      CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT 
+ *      LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN 
+ *      ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE 
+ *      POSSIBILITY OF SUCH DAMAGE.
+ * <!-- LICENSE_TEXT_END -->
+ */
 
 /**
   * @author EVS Team
@@ -176,28 +78,20 @@ public class DataUtils {
 	Statement stmt;
 	ResultSet rs;
 
-	private List supportedStandardReportList = new ArrayList();
-
-	private static List standardReportTemplateList = null;
+	private static List<SelectItem> standardReportTemplateList = null;
 	private static List<SelectItem> adminTaskList = null;
     private static List<SelectItem> userTaskList = null;
 
     private static List<SelectItem> propertyTypeList = null;
 
-	private static List _ontologies = null;
+	private static List<SelectItem> _ontologies = null;
 
-	private static org.LexGrid.LexBIG.LexBIGService.LexBIGService lbSvc = null;
 	public org.LexGrid.LexBIG.Utility.ConvenienceMethods lbConvMethods = null;
     public CodingSchemeRenderingList csrl = null;
-    private Vector supportedCodingSchemes = null;
-    private static HashMap codingSchemeMap = null;
-    private Vector codingSchemes = null;
+    private static HashMap<String, CodingScheme> codingSchemeMap = null;
 
-    private static HashMap csnv2codingSchemeNameMap = null;
-    private static HashMap csnv2VersionMap = null;
-
-    private static List directionList = null;
-
+    private static HashMap<String, String> csnv2codingSchemeNameMap = null;
+    private static HashMap<String, String> csnv2VersionMap = null;
 
     //==================================================================================
     // For customized query use
@@ -226,25 +120,22 @@ public class DataUtils {
 
     public DataUtils()
     {
-		directionList = new ArrayList();
-
-		adminTaskList = new ArrayList();
-
+		adminTaskList = new ArrayList<SelectItem>();
 		adminTaskList.add(new SelectItem("Administer Standard Reports"));
 		adminTaskList.add(new SelectItem("Maintain Report Status"));
 		adminTaskList.add(new SelectItem("Assign Report Status"));
 		adminTaskList.add(new SelectItem("Retrieve Standard Reports"));
 
-		userTaskList = new ArrayList();
+		userTaskList = new ArrayList<SelectItem>();
 		userTaskList.add(new SelectItem("Retrieve Standard Reports"));
 
-		standardReportTemplateList = new ArrayList();
+		standardReportTemplateList = new ArrayList<SelectItem>();
 
         setCodingSchemeMap();
 
 		String max_return_str = null;
 		try {
-			max_return_str = ReportWriterProperties.getInstance().getProperty(ReportWriterProperties.MAXIMUM_RETURN);
+			max_return_str = ReportWriterProperties.getProperty(ReportWriterProperties.MAXIMUM_RETURN);
 			if (max_return_str != null)
 			{
 				maxReturn = Integer.parseInt(max_return_str);
@@ -305,7 +196,7 @@ public class DataUtils {
             String FQName = "gov.nih.nci.evs.reportwriter.bean.StandardReportTemplate";
             Object[] objs = util.search(FQName);
             if (objs.length == 0) return standardReportTemplateList;
-            Vector v = new Vector();
+            Vector<String> v = new Vector<String>();
             for (int i=0; i<objs.length; i++)
             {
 				StandardReportTemplate standardReportTemplate = (StandardReportTemplate) objs[i];
@@ -324,62 +215,47 @@ public class DataUtils {
 	    return standardReportTemplateList;
 	}
 
-
-
-
-	public List getSupportedStandardReports() {
-		return supportedStandardReportList;
-	}
-
-    public static List getOntologyList() {
+    public static List<SelectItem> getOntologyList() {
 	    if(_ontologies == null) setCodingSchemeMap();
 	    return _ontologies;
     }
 
     public static Boolean validateCodingScheme(String formalname, String version) {
-
-// to be implemented:
-/*
-System.out.println("DataUtils 	validateCodingScheme " );
-
-		if (csnv2codingSchemeNameMap == null || csnv2VersionMap == null)
-		{
-
-System.out.println("DataUtils 	validateCodingScheme calling setCodingSchemeMap" );
-
-			setCodingSchemeMap();
-			return validateCodingScheme(formalname, version);
-		}
-
-		String key = formalname + " (version: " + version + ")";
-System.out.println("DataUtils 	validateCodingScheme key: " + key);
-        if (csnv2codingSchemeNameMap.get(key) == null || csnv2VersionMap.get(key) == null )
-        {
-
-System.out.println("DataUtils 	validateCodingScheme csnv2codingSchemeNameMap.get(key) == null || csnv2VersionMap.get(key) == null :??? " );
-System.out.println("DataUtils 	Boolean.FALSE ");
-
-			return Boolean.FALSE;
-		}
-		else
-		{
-System.out.println("DataUtils 	Boolean.TRUE ");
-*/
-			return Boolean.TRUE;
-		//}
+        // to be implemented:
+        /*
+        System.out.println("DataUtils 	validateCodingScheme " );
+   		if (csnv2codingSchemeNameMap == null || csnv2VersionMap == null)
+   		{
+            System.out.println("DataUtils 	validateCodingScheme calling setCodingSchemeMap" );
+            setCodingSchemeMap();
+        	return validateCodingScheme(formalname, version);
+        }
+        
+       	String key = formalname + " (version: " + version + ")";
+        System.out.println("DataUtils 	validateCodingScheme key: " + key);
+        if (csnv2codingSchemeNameMap.get(key) == null || csnv2VersionMap.get(key) == null ) {
+            System.out.println("DataUtils 	validateCodingScheme csnv2codingSchemeNameMap.get(key) == null || csnv2VersionMap.get(key) == null :??? " );
+            System.out.println("DataUtils 	Boolean.FALSE ");
+   			return Boolean.FALSE;
+   		}
+   		else
+   		{
+            System.out.println("DataUtils 	Boolean.TRUE ");
+        }
+        */
+        return Boolean.TRUE;
 	}
 
     private static void setCodingSchemeMap()
 	{
 		//if (_ontologies != null) return;
-		_ontologies = new ArrayList();
-		codingSchemeMap = new HashMap();
-		csnv2codingSchemeNameMap = new HashMap();
-		csnv2VersionMap = new HashMap();
+		_ontologies = new ArrayList<SelectItem>();
+		codingSchemeMap = new HashMap<String, CodingScheme>();
+		csnv2codingSchemeNameMap = new HashMap<String, String>();
+		csnv2VersionMap = new HashMap<String, String>();
 
         try {
-        	RemoteServerUtil rsu = new RemoteServerUtil();
-			EVSApplicationService lbSvc = rsu.createLexBIGService();
+			EVSApplicationService lbSvc = RemoteServerUtil.createLexBIGService();
 			CodingSchemeRenderingList csrl = lbSvc.getSupportedCodingSchemes();
 			if(csrl == null) System.out.println("csrl is NULL");
 
@@ -405,7 +281,7 @@ System.out.println("DataUtils 	Boolean.TRUE ");
 						}
 						if (scheme != null)
 						{
-							codingSchemeMap.put((Object) formalname, (Object) scheme);
+							codingSchemeMap.put(formalname, scheme);
 
 							String value = formalname + " (version: " + representsVersion + ")";
 							_ontologies.add(new SelectItem(value, value));
@@ -421,7 +297,7 @@ System.out.println("DataUtils 	Boolean.TRUE ");
 							scheme = lbSvc.resolveCodingScheme(urn, vt);
 							if (scheme != null)
 							{
-								codingSchemeMap.put((Object) formalname, (Object) scheme);
+								codingSchemeMap.put(formalname, scheme);
 
 								String value = formalname + " (version: " + representsVersion + ")";
 								_ontologies.add(new SelectItem(value, value));
@@ -438,7 +314,7 @@ System.out.println("DataUtils 	Boolean.TRUE ");
 								scheme = lbSvc.resolveCodingScheme(localname, vt);
 								if (scheme != null)
 								{
-									codingSchemeMap.put((Object) formalname, (Object) scheme);
+									codingSchemeMap.put(formalname, scheme);
 
 									String value = formalname + " (version: " + representsVersion + ")";
 									_ontologies.add(new SelectItem(value, value));
@@ -467,9 +343,9 @@ System.out.println("DataUtils 	Boolean.TRUE ");
 			setCodingSchemeMap();
 			return getSupportedAssociationNames(key);
 		}
-		String codingSchemeName = (String) csnv2codingSchemeNameMap.get(key);
+		String codingSchemeName = csnv2codingSchemeNameMap.get(key);
 		if(codingSchemeName == null) return null;
-		String version = (String) csnv2VersionMap.get(key);
+		String version = csnv2VersionMap.get(key);
 		if(version == null) return null;
         return getSupportedAssociationNames(codingSchemeName, version);
 	}
@@ -485,8 +361,7 @@ System.out.println("DataUtils 	Boolean.TRUE ");
 
 		CodingScheme scheme = null;
 		try {
-			RemoteServerUtil rsu = new RemoteServerUtil();
-			EVSApplicationService lbSvc = rsu.createLexBIGService();
+			EVSApplicationService lbSvc = RemoteServerUtil.createLexBIGService();
 			scheme = lbSvc.resolveCodingScheme(codingSchemeName, vt);
 			if (scheme == null) {
 				System.out.println("scheme is NULL");
@@ -515,12 +390,12 @@ System.out.println("DataUtils 	Boolean.TRUE ");
 			setCodingSchemeMap();
 		}
 
-		String codingSchemeName = (String) csnv2codingSchemeNameMap.get(key);
+		String codingSchemeName = csnv2codingSchemeNameMap.get(key);
 		if(codingSchemeName == null)
 		{
 			return null;
 		}
-		String version = (String) csnv2VersionMap.get(key);
+		String version = csnv2VersionMap.get(key);
 		if(version == null)
 		{
 			return null;
@@ -536,8 +411,7 @@ System.out.println("DataUtils 	Boolean.TRUE ");
 		}
 		CodingScheme scheme = null;
 		try {
-			RemoteServerUtil rsu = new RemoteServerUtil();
-			EVSApplicationService lbSvc = rsu.createLexBIGService();
+			EVSApplicationService lbSvc = RemoteServerUtil.createLexBIGService();
 			scheme = lbSvc.resolveCodingScheme(codingSchemeName, vt);
 			if (scheme == null) return null;
 			Vector<String> propertyNameListData = new Vector<String>();
@@ -557,19 +431,19 @@ System.out.println("DataUtils 	Boolean.TRUE ");
 
     public static String getCodingSchemeName(String key)
     {
- 		return (String) csnv2codingSchemeNameMap.get(key);
+ 		return csnv2codingSchemeNameMap.get(key);
 	}
 
     public static String getCodingSchemeVersion(String key)
     {
- 		return (String) csnv2VersionMap.get(key);
+ 		return csnv2VersionMap.get(key);
 	}
 
     public static Vector<String> getRepresentationalFormListData(String key)
     {
-		String codingSchemeName = (String) csnv2codingSchemeNameMap.get(key);
+		String codingSchemeName = csnv2codingSchemeNameMap.get(key);
 		if(codingSchemeName == null) return null;
-		String version = (String) csnv2VersionMap.get(key);
+		String version = csnv2VersionMap.get(key);
 		if(version == null) return null;
         return getRepresentationalFormListData(codingSchemeName, version);
 	}
@@ -582,8 +456,7 @@ System.out.println("DataUtils 	Boolean.TRUE ");
 		}
 		CodingScheme scheme = null;
 		try {
-			RemoteServerUtil rsu = new RemoteServerUtil();
-			EVSApplicationService lbSvc = rsu.createLexBIGService();
+			EVSApplicationService lbSvc = RemoteServerUtil.createLexBIGService();
 			scheme = lbSvc.resolveCodingScheme(codingSchemeName, vt);
 			if (scheme == null) return null;
 			Vector<String> propertyNameListData = new Vector<String>();
@@ -606,9 +479,9 @@ System.out.println("DataUtils 	Boolean.TRUE ");
 
     public static Vector<String> getPropertyQualifierListData(String key)
     {
-		String codingSchemeName = (String) csnv2codingSchemeNameMap.get(key);
+		String codingSchemeName = csnv2codingSchemeNameMap.get(key);
 		if(codingSchemeName == null) return null;
-		String version = (String) csnv2VersionMap.get(key);
+		String version = csnv2VersionMap.get(key);
 		if(version == null) return null;
         return getPropertyQualifierListData(codingSchemeName, version);
 	}
@@ -620,8 +493,7 @@ System.out.println("DataUtils 	Boolean.TRUE ");
 		}
 		CodingScheme scheme = null;
 		try {
-			RemoteServerUtil rsu = new RemoteServerUtil();
-			EVSApplicationService lbSvc = rsu.createLexBIGService();
+			EVSApplicationService lbSvc = RemoteServerUtil.createLexBIGService();
 			scheme = lbSvc.resolveCodingScheme(codingSchemeName, vt);
 			if (scheme == null) return null;
 			Vector<String> propertyQualifierListData = new Vector<String>();
@@ -647,9 +519,9 @@ System.out.println("DataUtils 	Boolean.TRUE ");
 			setCodingSchemeMap();
 			return getSourceListData(key);
 		}
-		String codingSchemeName = (String) csnv2codingSchemeNameMap.get(key);
+		String codingSchemeName = csnv2codingSchemeNameMap.get(key);
 		if(codingSchemeName == null) return null;
-		String version = (String) csnv2VersionMap.get(key);
+		String version = csnv2VersionMap.get(key);
 		if(version == null) return null;
         return getSourceListData(codingSchemeName, version);
 	}
@@ -661,8 +533,7 @@ System.out.println("DataUtils 	Boolean.TRUE ");
 		}
 		CodingScheme scheme = null;
 		try {
-			RemoteServerUtil rsu = new RemoteServerUtil();
-			EVSApplicationService lbSvc = rsu.createLexBIGService();
+			EVSApplicationService lbSvc = RemoteServerUtil.createLexBIGService();
 			scheme = lbSvc.resolveCodingScheme(codingSchemeName, vt);
 			if (scheme == null) return null;
 			Vector<String> sourceListData = new Vector<String>();
@@ -784,8 +655,8 @@ System.out.println("DataUtils 	Boolean.TRUE ");
 	}
 
 
-	public static List getAvailableReportFormat() {
-		List list = new ArrayList();
+	public static List<ReportFormat> getAvailableReportFormat() {
+		List<ReportFormat> list = new ArrayList<ReportFormat>();
         try{
             SDKClientUtil util = new SDKClientUtil();
             String FQName = "gov.nih.nci.evs.reportwriter.bean.ReportFormat";
@@ -852,8 +723,8 @@ System.out.println("DataUtils 	Boolean.TRUE ");
 	public static Concept getConceptByCode(String codingSchemeName, String vers, String ltag, String code)
 	{
         try {
-			String serviceUrl = ReportWriterProperties.getInstance().getProperty(ReportWriterProperties.EVS_SERVICE_URL);
-			EVSApplicationService lbSvc = new RemoteServerUtil().createLexBIGService();
+			ReportWriterProperties.getProperty(ReportWriterProperties.EVS_SERVICE_URL);
+			EVSApplicationService lbSvc = RemoteServerUtil.createLexBIGService();
 			if (lbSvc == null)
 			{
 				System.out.println("lbSvc == null???");
@@ -921,14 +792,14 @@ System.out.println("DataUtils 	Boolean.TRUE ");
  		return nvList;
  	}
 
-	public Vector getAssociationTargets(String scheme, String version, String code, String assocName)
+	public Vector<Concept> getAssociationTargets(String scheme, String version, String code, String assocName)
 	{
 		CodingSchemeVersionOrTag csvt = new CodingSchemeVersionOrTag();
 		if (version != null) csvt.setVersion(version);
 		ResolvedConceptReferenceList matches = null;
-		Vector v = new Vector();
+		Vector<Concept> v = new Vector<Concept>();
 		try {
-			EVSApplicationService lbSvc = new RemoteServerUtil().createLexBIGService();
+			EVSApplicationService lbSvc = RemoteServerUtil.createLexBIGService();
 			if (lbSvc == null)
 			{
 				System.out.println("lbSvc == null???");
@@ -988,9 +859,9 @@ System.out.println("DataUtils 	Boolean.TRUE ");
 	* @param iterator the iterator
 	* @param maxToReturn the max to return
 	*/
-	public Vector resolveIterator(ResolvedConceptReferencesIterator iterator, int maxToReturn)
+	public Vector<Concept> resolveIterator(ResolvedConceptReferencesIterator iterator, int maxToReturn)
 	{
-		Vector v = new Vector();
+		Vector<Concept> v = new Vector<Concept>();
 		if (iterator == null)
 		{
 			System.out.println("No match.");
@@ -1007,7 +878,7 @@ System.out.println("DataUtils 	Boolean.TRUE ");
 				for (int i=0; i<rcra.length; i++)
 				{
 					ResolvedConceptReference rcr = rcra[i];
-					org.LexGrid.concepts.Concept ce = rcr.getReferencedEntry();
+					Concept ce = rcr.getReferencedEntry();
 					//System.out.println("Iteration " + iteration + " " + ce.getId() + " " + ce.getEntityDescription().getContent());
 					v.add(ce);
 				}
@@ -1020,14 +891,14 @@ System.out.println("DataUtils 	Boolean.TRUE ");
 
 
 
-	public Vector getAssociationSources(String scheme, String version, String code, String assocName)
+	public Vector<Concept> getAssociationSources(String scheme, String version, String code, String assocName)
 	{
 		CodingSchemeVersionOrTag csvt = new CodingSchemeVersionOrTag();
 		if (version != null) csvt.setVersion(version);
 		ResolvedConceptReferenceList matches = null;
-		Vector v = new Vector();
+		Vector<Concept> v = new Vector<Concept>();
 		try {
-			EVSApplicationService lbSvc = new RemoteServerUtil().createLexBIGService();
+			EVSApplicationService lbSvc = RemoteServerUtil.createLexBIGService();
 			CodedNodeGraph cng = lbSvc.getNodeGraph(scheme, csvt, null);
 
 			NameAndValueList nameAndValueList =
@@ -1070,8 +941,8 @@ System.out.println("DataUtils 	Boolean.TRUE ");
 		return v;
     }
 
-    public Vector getParentCodes(String scheme, String version, String code) {
-        Vector hierarchicalAssoName_vec = getHierarchyAssociationId(scheme, version);
+    public Vector<String> getParentCodes(String scheme, String version, String code) {
+        Vector<String> hierarchicalAssoName_vec = getHierarchyAssociationId(scheme, version);
         if (hierarchicalAssoName_vec == null || hierarchicalAssoName_vec.size() == 0)
         {
 			return null;
@@ -1079,7 +950,7 @@ System.out.println("DataUtils 	Boolean.TRUE ");
         String hierarchicalAssoName = (String) hierarchicalAssoName_vec.elementAt(0);
         //KLO, 01/23/2009
         //Vector<Concept> superconcept_vec = util.getAssociationSources(scheme, version, code, hierarchicalAssoName);
-        Vector superconcept_vec = getAssociationSourceCodes(scheme, version, code, hierarchicalAssoName);
+        Vector<String> superconcept_vec = getAssociationSourceCodes(scheme, version, code, hierarchicalAssoName);
         if (superconcept_vec == null) return null;
         //SortUtils.quickSort(superconcept_vec, SortUtils.SORT_BY_CODE);
         return superconcept_vec;
@@ -1088,14 +959,14 @@ System.out.println("DataUtils 	Boolean.TRUE ");
 
 
 
-	public Vector getAssociationSourceCodes(String scheme, String version, String code, String assocName)
+	public Vector<String> getAssociationSourceCodes(String scheme, String version, String code, String assocName)
 	{
 		CodingSchemeVersionOrTag csvt = new CodingSchemeVersionOrTag();
 		if (version != null) csvt.setVersion(version);
 		ResolvedConceptReferenceList matches = null;
-		Vector v = new Vector();
+		Vector<String> v = new Vector<String>();
 		try {
-			EVSApplicationService lbSvc = new RemoteServerUtil().createLexBIGService();
+			EVSApplicationService lbSvc = RemoteServerUtil.createLexBIGService();
 			CodedNodeGraph cng = lbSvc.getNodeGraph(scheme, csvt, null);
 
 			NameAndValueList nameAndValueList =
@@ -1156,25 +1027,22 @@ System.out.println("DataUtils 	Boolean.TRUE ");
 		return list;
 	}
 
-	public Vector getSubconceptCodes(String scheme, String version, String code) { //throws LBException{
-		Vector v = new Vector();
+	public Vector<String> getSubconceptCodes(String scheme, String version, String code) { //throws LBException{
+		Vector<String> v = new Vector<String>();
 		try {
-			EVSApplicationService lbSvc = new RemoteServerUtil().createLexBIGService();
+			EVSApplicationService lbSvc = RemoteServerUtil.createLexBIGService();
 			LexBIGServiceConvenienceMethods lbscm = (LexBIGServiceConvenienceMethods) lbSvc.getGenericExtension("LexBIGServiceConvenienceMethods");
 			lbscm.setLexBIGService(lbSvc);
 
 			CodingSchemeVersionOrTag csvt = new CodingSchemeVersionOrTag();
 			csvt.setVersion(version);
-			String desc = null;
 			try {
-				desc = lbscm.createCodeNodeSet(new String[] {code}, scheme, csvt)
+				lbscm.createCodeNodeSet(new String[] {code}, scheme, csvt)
 					.resolveToList(null, null, null, 1)
 					.getResolvedConceptReference(0)
 					.getEntityDescription().getContent();
 
 			} catch (Exception e) {
-				desc = "<not found>";
-
 			}
 
 			// Iterate through all hierarchies and levels ...
@@ -1207,23 +1075,21 @@ System.out.println("DataUtils 	Boolean.TRUE ");
 	}
 
 
-	public Vector getSuperconceptCodes(String scheme, String version, String code) { //throws LBException{
+	public Vector<String> getSuperconceptCodes(String scheme, String version, String code) { //throws LBException{
 		long ms = System.currentTimeMillis();
-		Vector v = new Vector();
+		Vector<String> v = new Vector<String>();
 		try {
-			EVSApplicationService lbSvc = new RemoteServerUtil().createLexBIGService();
+			EVSApplicationService lbSvc = RemoteServerUtil.createLexBIGService();
 			LexBIGServiceConvenienceMethods lbscm = (LexBIGServiceConvenienceMethods) lbSvc.getGenericExtension("LexBIGServiceConvenienceMethods");
 			lbscm.setLexBIGService(lbSvc);
 			CodingSchemeVersionOrTag csvt = new CodingSchemeVersionOrTag();
 			csvt.setVersion(version);
-			String desc = null;
 			try {
-				desc = lbscm.createCodeNodeSet(new String[] {code}, scheme, csvt)
+				lbscm.createCodeNodeSet(new String[] {code}, scheme, csvt)
 					.resolveToList(null, null, null, 1)
 					.getResolvedConceptReference(0)
 					.getEntityDescription().getContent();
 			} catch (Exception e) {
-				desc = "<not found>";
 			}
 
 			// Iterate through all hierarchies and levels ...
@@ -1249,11 +1115,11 @@ System.out.println("DataUtils 	Boolean.TRUE ");
 		return v;
 	}
 
-    public Vector getHierarchyAssociationId(String scheme, String version) {
+    public Vector<String> getHierarchyAssociationId(String scheme, String version) {
 
-		Vector association_vec = new Vector();
+		Vector<String> association_vec = new Vector<String>();
 		try {
-			EVSApplicationService lbSvc = new RemoteServerUtil().createLexBIGService();
+			EVSApplicationService lbSvc = RemoteServerUtil.createLexBIGService();
 
             // Will handle secured ontologies later.
             CodingSchemeVersionOrTag versionOrTag = new CodingSchemeVersionOrTag();
@@ -1261,7 +1127,7 @@ System.out.println("DataUtils 	Boolean.TRUE ");
             CodingScheme cs = lbSvc.resolveCodingScheme(scheme, versionOrTag);
             Mappings mappings = cs.getMappings();
             SupportedHierarchy[] hierarchies = mappings.getSupportedHierarchy();
-            java.lang.String[] ids = hierarchies[0].getAssociationIds();
+            String[] ids = hierarchies[0].getAssociationIds();
 
             for (int i=0; i<ids.length; i++)
             {
@@ -1280,7 +1146,7 @@ System.out.println("DataUtils 	Boolean.TRUE ");
 	{
 		 if (codingSchemeName == null) return null;
 		 try {
-			 EVSApplicationService lbSvc = new RemoteServerUtil().createLexBIGService();
+			 EVSApplicationService lbSvc = RemoteServerUtil.createLexBIGService();
 			 CodingSchemeRenderingList lcsrl = lbSvc.getSupportedCodingSchemes();
 			 CodingSchemeRendering[] csra = lcsrl.getCodingSchemeRendering();
 			 for (int i=0; i<csra.length; i++)
@@ -1312,10 +1178,9 @@ System.out.println("DataUtils 	Boolean.TRUE ");
 
 	public static Vector<String> getVersionListData(String codingSchemeName) {
 
-        Vector<String> v = new Vector();
+        Vector<String> v = new Vector<String>();
 		try {
-        	RemoteServerUtil rsu = new RemoteServerUtil();
-			EVSApplicationService lbSvc = rsu.createLexBIGService();
+			EVSApplicationService lbSvc = RemoteServerUtil.createLexBIGService();
 			CodingSchemeRenderingList csrl = lbSvc.getSupportedCodingSchemes();
 			if(csrl == null) System.out.println("csrl is NULL");
 
@@ -1398,14 +1263,14 @@ System.out.println("DataUtils 	Boolean.TRUE ");
         return list;
 	}
 
- 	protected static NameAndValueList createNameAndValueList(Vector names, Vector values)
+ 	protected static NameAndValueList createNameAndValueList(Vector<String> names, Vector<String> values)
  	{
 		if (names == null) return null;
  		NameAndValueList nvList = new NameAndValueList();
  		for (int i=0; i<names.size(); i++)
  		{
-			String name = (String) names.elementAt(i);
-			String value = (String) values.elementAt(i);
+			String name = names.elementAt(i);
+			String value = values.elementAt(i);
 			NameAndValue nv = new NameAndValue();
  			nv.setName(name);
  			if (value != null)
@@ -1423,10 +1288,10 @@ System.out.println("DataUtils 	Boolean.TRUE ");
     public static Vector<org.LexGrid.concepts.Concept> restrictToMatchingProperty(
 											 String codingSchemeName,
 											 String version,
-		                                     Vector property_vec,
-                                             Vector source_vec,
-                                             Vector qualifier_name_vec,
-                                             Vector qualifier_value_vec,
+		                                     Vector<String> property_vec,
+                                             Vector<String> source_vec,
+                                             Vector<String> qualifier_name_vec,
+                                             Vector<String> qualifier_value_vec,
 											 java.lang.String matchText,
 											 java.lang.String matchAlgorithm,
 											 java.lang.String language,
@@ -1457,10 +1322,10 @@ System.out.println("DataUtils 	Boolean.TRUE ");
     public static Vector<org.LexGrid.concepts.Concept> restrictToProperty(
 											 String codingSchemeName,
 											 String version,
-		                                     Vector property_vec,
-                                             Vector source_vec,
-                                             Vector qualifier_name_vec,
-                                             Vector qualifier_value_vec,
+		                                     Vector<String> property_vec,
+                                             Vector<String> source_vec,
+                                             Vector<String> qualifier_name_vec,
+                                             Vector<String> qualifier_value_vec,
                                              int maxToReturn) {
 
 		LocalNameList propertyList = vector2LocalNameList(property_vec);
@@ -1495,8 +1360,7 @@ System.out.println("DataUtils 	Boolean.TRUE ");
 			CodingSchemeVersionOrTag versionOrTag = new CodingSchemeVersionOrTag();
 			versionOrTag.setVersion(version);
 
-			RemoteServerUtil rsu = new RemoteServerUtil();
-			EVSApplicationService lbSvc = rsu.createLexBIGService();
+			EVSApplicationService lbSvc = RemoteServerUtil.createLexBIGService();
 
 			cns = lbSvc.getCodingSchemeConcepts(codingSchemeName, versionOrTag);
 			if (cns == null) return v;
@@ -1567,8 +1431,7 @@ System.out.println("DataUtils 	Boolean.TRUE ");
 			CodingSchemeVersionOrTag versionOrTag = new CodingSchemeVersionOrTag();
 			versionOrTag.setVersion(version);
 
-			RemoteServerUtil rsu = new RemoteServerUtil();
-			EVSApplicationService lbSvc = rsu.createLexBIGService();
+			EVSApplicationService lbSvc = RemoteServerUtil.createLexBIGService();
 
 			if (lbSvc == null)
 			{
@@ -1626,10 +1489,4 @@ System.out.println("DataUtils 	Boolean.TRUE ");
 	    }
 		return SortUtils.quickSort(v);
 	}
-
-
-
-
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
 }
