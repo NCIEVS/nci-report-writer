@@ -572,9 +572,7 @@ public class UserSessionBean extends Object {
         rootConceptCode = rootConceptCode.trim();
         System.out.println("saveModifiedTemplateAction: rootConceptCode: " + rootConceptCode);
         
-        OntologyBean ontologyBean = (OntologyBean) FacesContext
-            .getCurrentInstance().getExternalContext().getSessionMap().get(
-                "ontologyBean");
+        OntologyBean ontologyBean = BeanUtils.getOntologyBean();
         String associationName = ontologyBean.getSelectedAssociation();
         System.out.println("saveModifiedTemplateAction: associationName: " + associationName);
 
@@ -996,15 +994,7 @@ public class UserSessionBean extends Object {
                 request.getSession().setAttribute("selectedOntology",
                     ontologyNameAndVersion);
 
-                OntologyBean ontologyBean = (OntologyBean) FacesContext
-                .getCurrentInstance().getExternalContext().getSessionMap().get(
-                    "ontologyBean");
-                if (ontologyBean == null) {
-                    ontologyBean = new OntologyBean(); 
-                    FacesContext.getCurrentInstance().getExternalContext().getSessionMap().put(
-                        "ontologyBean", ontologyBean);
-                }
-                
+                OntologyBean ontologyBean = BeanUtils.getOntologyBean();
                 String associationName = standardReportTemplate.getAssociationName();
                 ontologyBean.setSelectedAssociation(associationName);
             }
@@ -1166,7 +1156,7 @@ public class UserSessionBean extends Object {
         request.getSession().setAttribute("selectedStandardReportTemplate",
             selectedStandardReportTemplate);
 
-        StandardReportTemplate standardReportTemplate = getStandardReportTemplate(selectedStandardReportTemplate);
+        getStandardReportTemplate(selectedStandardReportTemplate);
         // String ontologyNameAndVersion =
         // standardReportTemplate.getCodingSchemeName() + " (version: " +
         // standardReportTemplate.getCodingSchemeVersion() + ")";
