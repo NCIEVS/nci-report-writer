@@ -952,6 +952,14 @@ public class UserSessionBean extends Object {
         return "assign_report_status";
     }
 
+    public String addReportTemplateAction() {
+        OntologyBean ontologyBean = BeanUtils.getOntologyBean();
+        ontologyBean.setSelectedAssociation(OntologyBean.DEFAULT_ASSOCIATION);
+        ontologyBean.setSelectedLevel(null);
+
+        return "add_standard_report_template";
+    }
+    
     public String modifyReportTemplateAction() {
         HttpServletRequest request = getHttpRequest();
         String templateLabel = (String) request.getSession().getAttribute(
