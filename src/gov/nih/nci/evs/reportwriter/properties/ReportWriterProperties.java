@@ -46,44 +46,53 @@ public class ReportWriterProperties {
 
     private static Logger logger = Logger
         .getLogger(ReportWriterProperties.class);
-    private static ReportWriterProperties reportwriterProperties;
-    private static Properties properties = new Properties();
+    private static ReportWriterProperties instance;
+    private Properties properties = new Properties();
 
     private ReportWriterProperties() {
+        loadProperties();
     }
 
-    public static ReportWriterProperties getInstance() throws Exception {
-        if (reportwriterProperties == null) {
+    public static ReportWriterProperties getInstance() {
+        if (instance == null) {
             synchronized (ReportWriterProperties.class) {
-                if (reportwriterProperties == null) {
-                    reportwriterProperties = new ReportWriterProperties();
-                    loadProperties();
-                }
+                instance = new ReportWriterProperties();
             }
         }
-        return reportwriterProperties;
+        return instance;
     }
 
-    public static String getProperty(String key) throws Exception {
+    private void loadProperties() {
+        try {
+            String propertyFile = System
+                .getProperty("gov.nih.nci.cacore.ncireportwriterProperties");
+            logger.info("File location= " + propertyFile);
+    
+            if (propertyFile != null && propertyFile.length() > 0) {
+                FileInputStream fis = new FileInputStream(new File(propertyFile));
+                properties.load(fis);
+            } else {
+                throw new Exception("Property file not set." + 
+                    "\n  * Property File: " + propertyFile);
+            }
+    
+            logger.debug("List of properties:");
+            for (Iterator<?> i = properties.keySet().iterator(); i.hasNext();) {
+                String key = (String) i.next();
+                String value = properties.getProperty(key);
+                logger.debug("* " + key + ": " + value);
+            }
+        } catch (Exception e) {
+            logger.error("Exception: ReportWriterProperties.loadProperties" +
+                e.getLocalizedMessage());
+        }
+    }
+    
+    private String fetchProperty(String key) {
         return properties.getProperty(key);
     }
-
-    private static void loadProperties() throws Exception {
-        String propertyFile = System
-            .getProperty("gov.nih.nci.cacore.ncireportwriterProperties");
-        logger.info("File location= " + propertyFile);
-
-        if (propertyFile != null && propertyFile.length() > 0) {
-            FileInputStream fis = new FileInputStream(new File(propertyFile));
-            properties.load(fis);
-        } else
-            System.out.println("propertyFile is null");
-
-        logger.debug("List of properties:");
-        for (Iterator<?> i = properties.keySet().iterator(); i.hasNext();) {
-            String key = (String) i.next();
-            String value = properties.getProperty(key);
-            logger.debug("* " + key + ": " + value);
-        }
+    
+    public static String getProperty(String key) {
+        return getInstance().fetchProperty(key);
     }
 }
