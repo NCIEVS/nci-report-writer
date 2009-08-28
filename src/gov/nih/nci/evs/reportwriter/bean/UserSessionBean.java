@@ -73,7 +73,6 @@ public class UserSessionBean extends Object {
     Boolean isAdmin = null;
     String selectedTask = null;
 
-    private List standardReportTemplateList = new ArrayList();
     // for templates with reports already been generated
     private List<SelectItem> standardReportTemplateList_draft = new ArrayList<SelectItem>();
     // for templates with reports already been generated
@@ -84,7 +83,6 @@ public class UserSessionBean extends Object {
     private String selectedStandardReportTemplate_approved = null;
 
     private String selectedPropertyType = null;
-    private List propertyTypeList = new ArrayList();
 
     private String rootConceptCode = null;
     private String selectedOntology = null;
@@ -146,7 +144,7 @@ public class UserSessionBean extends Object {
         return request;
     }
 
-    public List getTaskList() {
+    public List<SelectItem> getTaskList() {
         HttpServletRequest request = getHttpRequest();
         HttpSession session = request.getSession(false);
 
@@ -156,7 +154,7 @@ public class UserSessionBean extends Object {
                 .getAttribute("isAdmin");
         }
 
-        List list = DataUtils.getTaskList(isAdmin);
+        List<SelectItem> list = DataUtils.getTaskList(isAdmin);
         if (list != null) {
             SelectItem item = (SelectItem) list.get(0);
             selectedTask = item.getLabel();
@@ -165,8 +163,8 @@ public class UserSessionBean extends Object {
         return list;
     }
 
-    public List getPropertyTypeList() {
-        List list = DataUtils.getPropertyTypeList();
+    public List<SelectItem> getPropertyTypeList() {
+        List<SelectItem> list = DataUtils.getPropertyTypeList();
         if (selectedPropertyType == null) {
             SelectItem item = (SelectItem) list.get(0);
             selectedPropertyType = item.getLabel();
@@ -195,9 +193,9 @@ public class UserSessionBean extends Object {
         setSelectedStandardReportTemplate_approved(newValue);
     }
 
-    public List getStandardReportTemplateList() {
+    public List<SelectItem> getStandardReportTemplateList() {
 
-        List list = DataUtils.getStandardReportTemplateList();
+        List<SelectItem> list = DataUtils.getStandardReportTemplateList();
         if (selectedStandardReportTemplate == null) {
             if (list != null && list.size() > 0) {
                 if (getSelectedStandardReportTemplate() == null) {
@@ -317,7 +315,6 @@ public class UserSessionBean extends Object {
 
     public void setSelectedStandardReportTemplate_approved(
         String selectedStandardReportTemplate_draft) {
-        this.selectedStandardReportTemplate_approved = selectedStandardReportTemplate_approved;
         HttpServletRequest request = getHttpRequest();
         request.getSession().setAttribute(
             "selectedStandardReportTemplate_approved",
@@ -334,7 +331,7 @@ public class UserSessionBean extends Object {
 
     public String performTask() {
         if (this.selectedTask.compareTo("Administer Standard Reports") == 0) {
-            List list = getStandardReportTemplateList();
+            List<SelectItem> list = getStandardReportTemplateList();
             if (list == null || list.size() == 0) {
                 return "add_standard_report_template";
             }
@@ -501,7 +498,6 @@ public class UserSessionBean extends Object {
         try {
             SDKClientUtil sdkclientutil = new SDKClientUtil();
 
-            StandardReportTemplate standardReportTemplate = null;
             String FQName = "gov.nih.nci.evs.reportwriter.bean.StandardReportTemplate";
             String methodName = "setLabel";
             String key = label;
@@ -678,7 +674,7 @@ public class UserSessionBean extends Object {
             sdkclientutil.deleteStandardReportTemplate(template);
 
             // setSelectedStandardReportTemplate(label);
-            List list = getStandardReportTemplateList();
+            getStandardReportTemplateList();
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -800,7 +796,7 @@ public class UserSessionBean extends Object {
         try {
             SDKClientUtil sdkclientutil = new SDKClientUtil();
             // check duplicate column number and column label
-            java.util.Collection cc = standardReportTemplate
+            Collection<ReportColumn> cc = standardReportTemplate
                 .getColumnCollection();
             if (cc != null) {
                 Object[] objs = cc.toArray();
@@ -909,12 +905,9 @@ public class UserSessionBean extends Object {
     }
 
     public String addStatusAction() {
-        // to be modified
-        HttpServletRequest request = (HttpServletRequest) FacesContext
-            .getCurrentInstance().getExternalContext().getRequest();
-        String statusValue = (String) request.getParameter("statusValue");
-        // save to database
-
+//        HttpServletRequest request = (HttpServletRequest) FacesContext
+//            .getCurrentInstance().getExternalContext().getRequest();
+//        String statusValue = (String) request.getParameter("statusValue");
         return "report_status";
     }
 
@@ -1049,7 +1042,7 @@ public class UserSessionBean extends Object {
 
         System.out.println("generateStandardReportAction: " + templateId);
 
-        boolean set_defined_by_code = true;
+//        boolean set_defined_by_code = true;
         String defining_set_desc = null;
         try {
             SDKClientUtil sdkclientutil = new SDKClientUtil();
@@ -1113,7 +1106,7 @@ public class UserSessionBean extends Object {
                         return "message";
                     }
                 } else {
-                    set_defined_by_code = false;
+//                    set_defined_by_code = false;
                 }
             }
         } catch (Exception ex) {
@@ -1144,7 +1137,7 @@ public class UserSessionBean extends Object {
 
         String download_dir = null;
         try {
-            download_dir = ReportWriterProperties.getInstance().getProperty(
+            download_dir = ReportWriterProperties.getProperty(
                 ReportWriterProperties.REPORT_DOWNLOAD_DIRECTORY);
         } catch (Exception ex) {
 
@@ -1157,7 +1150,7 @@ public class UserSessionBean extends Object {
             return "message";
         }
 
-        Boolean retval = new StandardReportService().generateStandardReport(
+        new StandardReportService().generateStandardReport(
             download_dir, selectedStandardReportTemplate, uid);
 
         message = "You request has been received. The report, "
@@ -1183,7 +1176,7 @@ public class UserSessionBean extends Object {
 
         String download_dir = null;
         try {
-            download_dir = ReportWriterProperties.getInstance().getProperty(
+            download_dir = ReportWriterProperties.getProperty(
                 ReportWriterProperties.REPORT_DOWNLOAD_DIRECTORY);
             // System.out.println("download_dir " + download_dir);
 

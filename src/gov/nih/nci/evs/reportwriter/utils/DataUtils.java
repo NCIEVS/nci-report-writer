@@ -179,10 +179,10 @@ public class DataUtils {
 	private List supportedStandardReportList = new ArrayList();
 
 	private static List standardReportTemplateList = null;
-	private static List adminTaskList = null;
-    private static List userTaskList = null;
+	private static List<SelectItem> adminTaskList = null;
+    private static List<SelectItem> userTaskList = null;
 
-    private static List propertyTypeList = null;
+    private static List<SelectItem> propertyTypeList = null;
 
 	private static List _ontologies = null;
 
@@ -254,10 +254,10 @@ public class DataUtils {
 		}
 	}
 
-	public static List getPropertyTypeList() {
+	public static List<SelectItem> getPropertyTypeList() {
 		if (propertyTypeList == null)
 		{
-			propertyTypeList = new ArrayList();
+			propertyTypeList = new ArrayList<SelectItem>();
 			propertyTypeList.add(new SelectItem(""));
 			propertyTypeList.add(new SelectItem("COMMENT"));
 			propertyTypeList.add(new SelectItem("DEFINITION"));
@@ -269,14 +269,14 @@ public class DataUtils {
 	}
 
 
-	public static List getTaskList(Boolean isAdmin) {
+	public static List<SelectItem> getTaskList(Boolean isAdmin) {
 
 		if (isAdmin == null) return null;
 		else if (isAdmin.equals(Boolean.TRUE))
 		{
 			if (adminTaskList == null)
 			{
-				adminTaskList = new ArrayList();
+				adminTaskList = new ArrayList<SelectItem>();
 				adminTaskList.add(new SelectItem("Administer Standard Reports"));
 				adminTaskList.add(new SelectItem("Maintain Report Status"));
 				adminTaskList.add(new SelectItem("Assign Report Status"));
@@ -288,7 +288,7 @@ public class DataUtils {
 		{
 			if (userTaskList == null)
 			{
-				userTaskList = new ArrayList();
+				userTaskList = new ArrayList<SelectItem>();
 				userTaskList.add(new SelectItem("Retrieve Standard Reports"));
 			}
 		    return userTaskList;
@@ -296,10 +296,10 @@ public class DataUtils {
 	}
 
 	//public static List getStandardReportTemplateList(Boolean isAdmin) {
-	public static List getStandardReportTemplateList() {
+	public static List<SelectItem> getStandardReportTemplateList() {
 		//if (isAdmin == null || isAdmin == Boolean.FALSE) return null;
 
-        standardReportTemplateList = new ArrayList();
+        standardReportTemplateList = new ArrayList<SelectItem>();
         try{
             SDKClientUtil util = new SDKClientUtil();
             String FQName = "gov.nih.nci.evs.reportwriter.bean.StandardReportTemplate";
