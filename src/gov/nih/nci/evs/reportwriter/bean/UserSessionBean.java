@@ -514,7 +514,7 @@ public class UserSessionBean extends Object {
                 return "message";
             }
 
-            if (selectedLevel.equalsIgnoreCase("all")) {
+            if (selectedLevel.equalsIgnoreCase(OntologyBean.LEVEL_ALL)) {
                 selectedLevel = "-1";
             }
             sdkclientutil.insertStandardReportTemplate(label, codingSchemeName,
@@ -590,7 +590,7 @@ public class UserSessionBean extends Object {
         else
             direction = Boolean.TRUE;
 
-        String level_str = (String) request.getParameter("level");
+        String level_str = ontologyBean.getSelectedLevel();
 
         // return to error page
         if (label == null || label.compareTo("") == 0) {
@@ -606,13 +606,7 @@ public class UserSessionBean extends Object {
             return "modify_standard_report_template";
         }
 
-        Integer level;
-        if (level_str.equalsIgnoreCase("all")) {
-            level = -1;
-        } else {
-            level = Integer.valueOf(level_str);
-        }
-
+        Integer level = OntologyBean.levelToInt(level_str);
         if (level < -1) {
             String message = "Invalid level " + level
                 + " -- Please modify the report template and resubmit.";
@@ -997,6 +991,8 @@ public class UserSessionBean extends Object {
                 OntologyBean ontologyBean = BeanUtils.getOntologyBean();
                 String associationName = standardReportTemplate.getAssociationName();
                 ontologyBean.setSelectedAssociation(associationName);
+                Integer level = standardReportTemplate.getLevel();
+                ontologyBean.setSelectedLevel(level.toString());
             }
         } catch (Exception ex) {
             String message = "Unable to construct available coding scheme version list." 

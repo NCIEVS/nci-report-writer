@@ -171,9 +171,12 @@
 												<h:outputText value="Level" />
 											</td>
 
-											<td class="dataCellText"><input type="text" name="level" value=<%=level%> ></td>
-				
-										</tr>
+											<td class="dataCellText">
+                                                <h:selectOneMenu id="LevelId" value="#{ontologyBean.selectedLevel}" valueChangeListener="#{ontologyBean.levelSelectionChanged}" >
+                                                    <f:selectItems value="#{ontologyBean.levelList}" />
+                                                </h:selectOneMenu>
+   	                                        </td>
+    									</tr>
 									
 									
 <%

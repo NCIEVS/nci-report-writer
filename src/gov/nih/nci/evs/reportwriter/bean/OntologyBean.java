@@ -129,7 +129,8 @@ import gov.nih.nci.evs.reportwriter.properties.ReportWriterProperties;
 public class OntologyBean //extends BaseBean
 {
     private static Logger logger = Logger.getLogger(OntologyBean.class);
-
+    public static final String LEVEL_ALL = "All";
+    
 	private static List _ontologies = null;
 
 	private org.LexGrid.LexBIG.LexBIGService.LexBIGService lbSvc = null;
@@ -307,23 +308,29 @@ public class OntologyBean //extends BaseBean
 			String t = Integer.toString(i);
 			levelList.add(new SelectItem(t));
 		}
-		levelList.add(new SelectItem("All"));
-		if (levelList != null && levelList.size() > 0) {
-			selectedLevel = "All";
+		levelList.add(new SelectItem(LEVEL_ALL));
+		if (selectedLevel == null || selectedLevel.length() <= 0) {
+			selectedLevel = LEVEL_ALL;
 		}
 		return levelList;
 	}
-
+	
+	public static int levelToInt(String value) {
+        if (value.equalsIgnoreCase(LEVEL_ALL))
+            return -1;
+        return Integer.valueOf(value);
+	}
 
 	public void setSelectedLevel(String selectedLevel) {
-		this.selectedLevel = selectedLevel;
+        if (selectedLevel.equals("-1"))
+            this.selectedLevel = LEVEL_ALL;
+        else this.selectedLevel = selectedLevel;
 		HttpServletRequest request = (HttpServletRequest)FacesContext.getCurrentInstance().getExternalContext().getRequest();
 		request.getSession().setAttribute("selectedLevel", selectedLevel);
 	}
 
-
 	public String getSelectedLevel() {
-		return this.selectedLevel;
+		return selectedLevel;
 	}
 
 
