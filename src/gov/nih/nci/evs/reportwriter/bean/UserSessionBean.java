@@ -539,20 +539,27 @@ public class UserSessionBean extends Object {
         String label = (String) request.getSession().getAttribute(
             "selectedStandardReportTemplate");
 
-        String codingscheme = (String) request.getParameter("codingscheme");
+        String codingScheme = (String) request.getParameter("codingScheme");
         String version = (String) request.getParameter("version");
 
-        System.out.println("saveModifiedTemplateAction: codingscheme "
-            + codingscheme);
+        System.out.println("saveModifiedTemplateAction: codingScheme "
+            + codingScheme);
         System.out.println("saveModifiedTemplateAction: version " + version);
 
-        Boolean csnv_valid = DataUtils.validateCodingScheme(codingscheme,
+        if (codingScheme == null || version == null) {
+            String message = "Software Error: codingScheme and version can not be null:"
+                + "\n  * Coding scheme: " + codingScheme
+                + "\n  * version: " + version + 
+                "\nPlease report this issue.";
+            request.getSession().setAttribute("message", message);
+            return "message";
+        }
+
+        Boolean csnv_valid = DataUtils.validateCodingScheme(codingScheme,
             version);
         if (csnv_valid == null || csnv_valid.equals(Boolean.FALSE)) {
             String message = "Invalid coding scheme name "
-                + codingscheme
-                + " or version "
-                + version
+                + codingScheme + " or version " + version 
                 + " -- The report template may be out of date. Please modify it and resubmit.";
             request.getSession().setAttribute("message", message);
             return "message";
@@ -560,22 +567,27 @@ public class UserSessionBean extends Object {
 
         String rootConceptCode = (String) request
             .getParameter("rootConceptCode");
-        if (rootConceptCode == null) {
+        if (rootConceptCode == null || rootConceptCode.trim().length() == 0) {
             String message = "Invalid root concept code " + rootConceptCode
                 + " -- Please complete data entry.";
             request.getSession().setAttribute("message", message);
             return "message";
         }
         rootConceptCode = rootConceptCode.trim();
-        if (rootConceptCode.length() == 0) {
-            String message = "Invalid root concept code " + rootConceptCode
-                + " -- Please complete data entry.";
+        System.out.println("saveModifiedTemplateAction: rootConceptCode: " + rootConceptCode);
+        
+        OntologyBean ontologyBean = (OntologyBean) FacesContext
+            .getCurrentInstance().getExternalContext().getSessionMap().get(
+                "ontologyBean");
+        String associationName = ontologyBean.getSelectedAssociation();
+        System.out.println("saveModifiedTemplateAction: associationName: " + associationName);
+
+        if (associationName == null) {
+            String message = "Software Error: associationName can not be null:"
+                + "\nPlease report this issue.";
             request.getSession().setAttribute("message", message);
             return "message";
         }
-
-        String associationName = (String) request
-            .getParameter("associationName");
 
         String direction_str = (String) request.getParameter("direction");
         Boolean direction = null;
@@ -635,7 +647,7 @@ public class UserSessionBean extends Object {
 
             standardReportTemplate = (StandardReportTemplate) standardReportTemplate_obj;
             standardReportTemplate.setLabel(label);
-            standardReportTemplate.setCodingSchemeName(codingscheme);
+            standardReportTemplate.setCodingSchemeName(codingScheme);
             standardReportTemplate.setCodingSchemeVersion(version);
             standardReportTemplate.setRootConceptCode(rootConceptCode);
             standardReportTemplate.setAssociationName(associationName);
@@ -643,7 +655,7 @@ public class UserSessionBean extends Object {
             standardReportTemplate.setLevel(level);
             sdkclientutil.updateStandardReportTemplate(standardReportTemplate);
 
-            key = codingscheme + " (version: " + version + ")";
+            key = codingScheme + " (version: " + version + ")";
             request.getSession().setAttribute("selectedOntology", key);
 
         } catch (Exception e) {
@@ -990,9 +1002,22 @@ public class UserSessionBean extends Object {
                     + standardReportTemplate.getCodingSchemeVersion() + ")";
                 request.getSession().setAttribute("selectedOntology",
                     ontologyNameAndVersion);
+
+                OntologyBean ontologyBean = (OntologyBean) FacesContext
+                .getCurrentInstance().getExternalContext().getSessionMap().get(
+                    "ontologyBean");
+                if (ontologyBean == null) {
+                    ontologyBean = new OntologyBean(); 
+                    FacesContext.getCurrentInstance().getExternalContext().getSessionMap().put(
+                        "ontologyBean", ontologyBean);
+                }
+                
+                String associationName = standardReportTemplate.getAssociationName();
+                ontologyBean.setSelectedAssociation(associationName);
             }
         } catch (Exception ex) {
-            String message = "Unable to construct available coding scheme version list.";
+            String message = "Unable to construct available coding scheme version list." 
+                + "\n* Exception: " + ex.getLocalizedMessage();
             request.getSession().setAttribute("message", message);
             return "message";
         }

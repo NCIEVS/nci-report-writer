@@ -263,7 +263,8 @@ public class OntologyBean //extends BaseBean
 					  associationList.add(new SelectItem(name));
 				  }
 
-				  if (associationList != null && associationList.size() > 0)
+				  if ((selectedAssociation == null || selectedAssociation.length() <= 0)
+				          && associationList != null && associationList.size() > 0)
 				  {
 					  for (int j=0; j<associationList.size(); j++)
 					  {
