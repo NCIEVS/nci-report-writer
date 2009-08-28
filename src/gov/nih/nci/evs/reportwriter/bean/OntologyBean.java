@@ -129,6 +129,7 @@ import gov.nih.nci.evs.reportwriter.properties.ReportWriterProperties;
 public class OntologyBean //extends BaseBean
 {
     private static Logger logger = Logger.getLogger(OntologyBean.class);
+    public static final String DEFAULT_ASSOCIATION = "Concept_In_Subset";
     public static final String LEVEL_ALL = "All";
     
 	private static List _ontologies = null;
@@ -270,7 +271,7 @@ public class OntologyBean //extends BaseBean
 					  for (int j=0; j<associationList.size(); j++)
 					  {
 						  SelectItem item = (SelectItem) associationList.get(j);
-						  if (item.getLabel().compareTo("Concept_In_Subset") == 0)
+						  if (item.getLabel().compareTo(DEFAULT_ASSOCIATION) == 0)
 						  {
 						  	  setSelectedAssociation(item.getLabel());
 						  	  break;
@@ -322,7 +323,7 @@ public class OntologyBean //extends BaseBean
 	}
 
 	public void setSelectedLevel(String selectedLevel) {
-        if (selectedLevel.equals("-1"))
+        if (selectedLevel == null || selectedLevel.equals("-1"))
             this.selectedLevel = LEVEL_ALL;
         else this.selectedLevel = selectedLevel;
 		HttpServletRequest request = (HttpServletRequest)FacesContext.getCurrentInstance().getExternalContext().getRequest();

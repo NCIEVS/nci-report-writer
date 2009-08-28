@@ -81,7 +81,7 @@
 									<!-- bottom action buttons begins -->
 									<table cellpadding="4" cellspacing="0" border="0">
 										<tr>
-											<td><h:commandButton id="add" action="add" value="Add" /></td>
+											<td><h:commandButton id="add" action="#{userSessionBean.addReportTemplateAction}" value="Add" /></td>
 											<td><h:commandButton id="modify" action="#{userSessionBean.modifyReportTemplateAction}" value="Modify" /></td>
 											<td><h:commandButton id="edit" action="#{userSessionBean.editReportContentAction}" value="Edit Content" /></td>
 											<td><h:commandButton id="generate" action="#{userSessionBean.generateStandardReportAction}" value="Generate" /></td>

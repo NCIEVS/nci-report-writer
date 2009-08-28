@@ -170,6 +170,18 @@
     </navigation-case>
     
     <navigation-case>
+       <from-action>#{userSessionBean.addReportTemplateAction}</from-action>
+       <from-outcome>add_standard_report_template</from-outcome>
+       <to-view-id>/pages/add_standard_report_template.jsp</to-view-id>
+    </navigation-case>
+
+    <navigation-case>
+       <from-action>#{userSessionBean.addReportTemplateAction}</from-action>
+       <from-outcome>message</from-outcome>
+       <to-view-id>/pages/message.jsp</to-view-id>
+    </navigation-case>
+  
+    <navigation-case>
        <from-action>#{userSessionBean.modifyReportTemplateAction}</from-action>
        <from-outcome>modify_standard_report_template</from-outcome>
        <to-view-id>/pages/modify_standard_report_template.jsp</to-view-id>
@@ -180,7 +192,6 @@
        <from-outcome>message</from-outcome>
        <to-view-id>/pages/message.jsp</to-view-id>
     </navigation-case>
-  
   
      <navigation-case>
        <from-action>#{userSessionBean.editReportContentAction}</from-action>
