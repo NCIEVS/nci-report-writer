@@ -75,9 +75,9 @@ public class UserSessionBean extends Object {
 
     private List standardReportTemplateList = new ArrayList();
     // for templates with reports already been generated
-    private List standardReportTemplateList_draft = new ArrayList();
+    private List<SelectItem> standardReportTemplateList_draft = new ArrayList<SelectItem>();
     // for templates with reports already been generated
-    private List standardReportTemplateList_approved = new ArrayList();
+    private List<SelectItem> standardReportTemplateList_approved = new ArrayList<SelectItem>();
 
     private String selectedStandardReportTemplate = null;
     private String selectedStandardReportTemplate_draft = null;
@@ -90,11 +90,11 @@ public class UserSessionBean extends Object {
     private String selectedOntology = null;
 
     private String selectedReportStatus = null;
-    private List reportStatusList = null;
+    private List<SelectItem> reportStatusList = null;
     private Vector<String> reportStatusListData = null;
 
     private String selectedReportFormat = null;
-    private List reportFormatList = null;
+    private List<SelectItem> reportFormatList = null;
     private Vector<String> reportFormatListData = null;
 
     public void setIsAdmin(Boolean bool_obj) {
@@ -221,10 +221,10 @@ public class UserSessionBean extends Object {
             selectedStandardReportTemplate);
     }
 
-    public List getStandardReportTemplateList_draft() {
+    public List<SelectItem> getStandardReportTemplateList_draft() {
         // Find all templates with reports already been generated
-        List list = new ArrayList();
-        HashSet hset = new HashSet();
+        List<SelectItem> list = new ArrayList<SelectItem>();
+        HashSet<String> hset = new HashSet<String>();
         try {
             SDKClientUtil sdkclientutil = new SDKClientUtil();
             StandardReportTemplate standardReportTemplate = null;
@@ -250,7 +250,7 @@ public class UserSessionBean extends Object {
                 }
 
                 if (list != null && list.size() > 0) {
-                    SelectItem item = (SelectItem) list.get(0);
+                    SelectItem item = list.get(0);
                     setSelectedStandardReportTemplate_draft(item.getLabel());
                 }
 
@@ -274,9 +274,9 @@ public class UserSessionBean extends Object {
             selectedStandardReportTemplate_draft);
     }
 
-    public List getStandardReportTemplateList_approved() {
-        List list = new ArrayList();
-        HashSet hset = new HashSet();
+    public List<SelectItem> getStandardReportTemplateList_approved() {
+        List<SelectItem> list = new ArrayList<SelectItem>();
+        HashSet<String> hset = new HashSet<String>();
         try {
             SDKClientUtil sdkclientutil = new SDKClientUtil();
             StandardReportTemplate standardReportTemplate = null;
@@ -299,7 +299,7 @@ public class UserSessionBean extends Object {
 
                 if (list == null) {
                     if (list != null && list.size() > 0) {
-                        SelectItem item = (SelectItem) list.get(0);
+                        SelectItem item = list.get(0);
                         setSelectedStandardReportTemplate_approved(item
                             .getLabel());
                     }
@@ -842,15 +842,15 @@ public class UserSessionBean extends Object {
         return "standard_report_column";
     }
 
-    public List getReportFormatList() {
+    public List<SelectItem> getReportFormatList() {
         reportFormatListData = DataUtils.getReportFormatListData();
-        reportFormatList = new ArrayList();
+        reportFormatList = new ArrayList<SelectItem>();
         for (int i = 0; i < reportFormatListData.size(); i++) {
-            String t = (String) reportFormatListData.elementAt(i);
+            String t = reportFormatListData.elementAt(i);
             reportFormatList.add(new SelectItem(t));
         }
         if (reportFormatList != null && reportFormatList.size() > 0) {
-            selectedReportFormat = ((SelectItem) reportFormatList.get(0))
+            selectedReportFormat = reportFormatList.get(0)
                 .getLabel();
         }
 
@@ -875,15 +875,15 @@ public class UserSessionBean extends Object {
         setSelectedReportFormat(selectedReportFormat);
     }
 
-    public List getReportStatusList() {
+    public List<SelectItem> getReportStatusList() {
         reportStatusListData = DataUtils.getReportStatusListData();
-        reportStatusList = new ArrayList();
+        reportStatusList = new ArrayList<SelectItem>();
         for (int i = 0; i < reportStatusListData.size(); i++) {
-            String t = (String) reportStatusListData.elementAt(i);
+            String t = reportStatusListData.elementAt(i);
             reportStatusList.add(new SelectItem(t));
         }
         if (reportStatusList != null && reportStatusList.size() > 0) {
-            selectedReportStatus = ((SelectItem) reportStatusList.get(0))
+            selectedReportStatus = reportStatusList.get(0)
                 .getLabel();
         }
 
@@ -1257,21 +1257,21 @@ public class UserSessionBean extends Object {
     }
 
     private String selectedVersion = null;
-    private List versionList = null;
+    private List<SelectItem> versionList = null;
     private Vector<String> versionListData = null;
 
-    public List getVersionList(String codingschemename) {
+    public List<SelectItem> getVersionList(String codingschemename) {
         versionListData = DataUtils.getVersionListData(codingschemename);
-        versionList = new ArrayList();
+        versionList = new ArrayList<SelectItem>();
         for (int i = 0; i < versionListData.size(); i++) {
-            String t = (String) versionListData.elementAt(i);
+            String t = versionListData.elementAt(i);
 
             System.out.println("version: " + t);
 
             versionList.add(new SelectItem(t));
         }
         if (versionList != null && versionList.size() > 0) {
-            selectedVersion = ((SelectItem) versionList.get(0)).getLabel();
+            selectedVersion = versionList.get(0).getLabel();
         }
         return versionList;
     }
