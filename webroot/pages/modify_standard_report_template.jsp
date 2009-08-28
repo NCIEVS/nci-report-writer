@@ -117,26 +117,30 @@
 											<td class="dataCellText">Coding Scheme</td>
 											<td class="dataCellText"><%=codingScheme%></td>
 										</tr>
+                                        <input type="hidden" name="codingScheme" value="<%=codingScheme%>">
 										
 										<tr class="dataRowDark">
                                             <td class="dataCellText">Version</td>
                                             <td class="dataCellText"><%=version%></td>
 										</tr>
+                                        <input type="hidden" name="version" value="<%=version%>">
 										
 										<tr class="dataRowLight">
 											<td class="dataCellText">Root Concept Code</td>
 											<td class="dataCellText"><input type="text" name="rootConceptCode" value="<%=rootcode%>" ></td>
 										</tr>
 										
-										<tr class="dataRowDark">
-										
-											<td class="dataCellText">											
-												<h:outputText value="Association Name" />
-											</td>
-											<td class="dataCellText"><input type="text" name="associationName" value="<%=associationname%>" width="200" ></td>
-									
-										</tr>
-										
+                                        <tr class="dataRowDark">
+                                            <td class="dataCellText">                                           
+                                                <h:outputText value="Association Name" />
+                                            </td>
+                                            <td class="dataCellText">
+                                                <h:selectOneMenu id="associationName" value="#{ontologyBean.selectedAssociation}" valueChangeListener="#{ontologyBean.associationSelectionChanged}" >
+                                                     <f:selectItems value="#{ontologyBean.associationList}" />
+                                                </h:selectOneMenu>                                          
+                                            </td>                                           
+                                        </tr>
+
 									
 										<tr class="dataRowLight">
 											<td class="dataCellText">Direction</td>
