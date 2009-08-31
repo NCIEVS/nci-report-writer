@@ -3,14 +3,10 @@
 
 <hibernate-configuration>
     <session-factory>
-        <!--
-        <property name="connection.datasource">java:/SDK</property>
-        -->
-
-        <property name="connection.url">jdbc:mysql://@db_host@:@db_port@/reportwriter</property>
-        <property name="connection.username">@db_user@</property>
-        <property name="connection.password">@db_password@</property>
-        <property name="connection.driver_class">org.gjt.mm.mysql.Driver</property>
+        <property name="connection.url">@database.url@</property>
+        <property name="connection.username">@database.user@</property>
+        <property name="connection.password">@database.password@</property>
+        <property name="connection.driver_class">@database.driver@</property>
 
         <property name="c3p0.max_size">10</property>
         <property name="c3p0.min_size">2</property>
