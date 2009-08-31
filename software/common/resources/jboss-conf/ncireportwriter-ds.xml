@@ -22,4 +22,13 @@
         <driver-class>@database.driver@</driver-class>
     </local-tx-datasource>
 
+    <local-tx-datasource>
+        <jndi-name>csmupt</jndi-name>
+        <use-java-context>true</use-java-context>
+        <connection-url>@database.url@</connection-url>
+        <user-name>@database.user@</user-name>
+        <password>@database.password@</password>
+        <driver-class>@database.driver@</driver-class>
+    </local-tx-datasource>
+
 </datasources>

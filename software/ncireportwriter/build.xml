@@ -19,6 +19,7 @@
     <property name="lib.dir" value="${basedir}/lib" />
     <property name="target.dir" value="${basedir}/target" />
     <property name="webapp.dir" value="${basedir}/web" />
+    <property name="upt.dir" value="${basedir}/upt" />
     <property name="webapp.build.dir" value="${basedir}/build/web" />
     <property name="webapp.classes.dir" value="${webapp.build.dir}/WEB-INF/classes" />
     <property name="webapp.dist.dir" value="${basedir}/dist" />
@@ -39,6 +40,7 @@
 
     <target name="-pre-clean">
 
+        <echo message="Basedir: ${basedir}"/>
         <delete dir="${webapp.build.dir}" quiet="true" />
         <delete dir="${webapp.dist.dir}" quiet="true" />
         <delete dir="${dist.dir}" quiet="true" />
@@ -90,10 +92,10 @@
     <target name="dist" depends="-war" description="Copies WAR file to distribution folder">
 
         <echo message="Config folder: ${conf.dir}" />
+        <mkdir dir="${dist.dir}/deploy" />
 
         <!-- Copy configuration and property files -->
 
-        <mkdir dir="${dist.dir}/deploy" />
         <copy todir="${dist.dir}/deploy" flatten="true" includeEmptyDirs="no" filtering="false">
             <resources>
                 <file file="${conf.dir}/${ncireportwriter-webapp.prop.file}"/>
@@ -113,6 +115,11 @@
                 <file file="${conf.dir}/xml-mapping.xml"/>
             </resources>
         </copy>
+
+        <!-- Copy UPT files distribution folder -->
+
+        <copy file="${upt.dir}/upt.war" todir="${dist.dir}"/>
+        <copy file="${upt.dir}/clm.jar" todir="${dist.dir}/deploy"/>
 
     </target>
 
