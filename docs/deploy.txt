@@ -22,10 +22,7 @@ Pre-installation requirements
 
 Note: Install MySQL as you normally would. You will need to create a MySQL user that has
    permissions to create databases. This users credentials will need to be entered in
-   to a <env>.build.properties file.
-
-Note: Eventually we will need to modify the build / deployment so that the databases are
-create by the DBA with specific users.
+   to a local.properties file.
 
 --------------------------------------
 Build the Report Writer application
@@ -33,36 +30,38 @@ Build the Report Writer application
 1. Checkout source files from SVN at the following URL:
    https://gforge.nci.nih.gov/svnroot/reportwriter/trunk
 
-2. Edit C:\SVN-Projects\reportwriter\local.build.properties to reflect your
+2. Edit C:\SVN-Projects\reportwriter\local.properties to reflect your
    environment with respect to JBoss and MySQL.
 
 3. Compile the application
    a) cd C:\SVN-Projects\reportwriter
-   b) C:\SVN-Projects\reportwriter>ant clean war
+   b) C:\SVN-Projects\reportwriter>build all
 
 --------------------------------------
-Setup MySQL
+Setup MySQL (Manually)
 --------------------------------------
 
 Run the following scripts. This will initialize the databases csmupt and ncireportwriter
    with sample uses and data.
 
-1. cd C:\SVN-Projects\reportwriter\models\dbscripts
+1. cd C:\SVN-Projects\reportwriter\software\ncireportwriter\db\db-install\mysql
 
 2. Login to the MySQL client
    C:>mysql --host=localhost --port=3306 --user=root --password=admin123
 
-3. mysql>\. AuthSchemaMySQL.sql
+3. mysql>\. create-tables-csm.sql
 
-4. mysql>\. ReportWriterMySQL.sql
+4. mysql>\. create-tables-rw.sql
 
-5. exit;
+5. mysql>\. insert-data-rw.sql
+
+6. exit;
 
 *** Note: On Unix platforms; setting lower_case_table_names=1 in my.cnf before recreating the databases is required to avoid
 a table case sensitivity issue with UPT. ***
 
 --------------------------------------
-D. Setup JBoss
+D. Setup JBoss (Manually)
 --------------------------------------
 
 1. Unzip Install JBoss 4.0.5 GA package in to an appropreate directory
@@ -73,8 +72,8 @@ D. Setup JBoss
    Delete file:
    C:\Apps\jboss-4.0.5.GA\server\default\deploy\jbossweb-tomcat55.sar\jsf-libs\myfaces-impl.jar
 
-3. Copy file "C:\SVN-Projects\reportwriter\build\mysql-ds.xml"
-   to C:\Apps\jboss-4.0.5.GA\server\default\deploy
+3. Copy file "C:\SVN-Projects\reportwriter\software\common\resources\jboss-conf\ncireportwriter-ds.xml"
+   to C:\Apps\jboss-4.0.5.GA\server\default\deploy and Perform the necessary credential substitutions.
 
 4. Add the following lines of XML to the end of login-config.xml file but prior to the </policy> tag.
    This file is located in the C:\Apps\jboss-4.0.5.GA\server\default\conf directory.
@@ -107,8 +106,8 @@ D. Setup JBoss
      </authentication>
     </application-policy>
 
-5. Copy C:\SVN-Projects\reportwriter\webroot\WEB-INF\classes\ncireportwriter.properties
-   to C:\Apps\jboss-4.0.5.GA\server\default\data
+5. Copy C:\SVN-Projects\reportwriter\software\target\dist\exploded\ncireportwriter-webapp\deploy\ncireportwriter.properties
+   to C:\Apps\evs\ncireportwriter-webapp\conf
    (You need to modify this instruction to reflect your environment)
 
 6. Edit C:\Apps\jboss-4.0.5.GA\server\default\deploy\properties-service.xml file
@@ -116,26 +115,22 @@ D. Setup JBoss
     (You need to modify this code to reflect your environment)
 
     <attribute name="Properties">
-        gov.nih.nci.cacore.ncireportwriterProperties=C:/Apps/jboss-4.0.5.GA/server/default/data/ncireportwriter.properties
+        gov.nih.nci.cacore.ncireportwriterProperties=C:/Apps/evs/ncireportwriter-webapp/conf/ncireportwriter.properties
     </attribute>
-
-7. Copy C:\SVN-Projects\reportwriter\webroot\WEB-INF\lib\mysql-connector-java-3.1.13-bin.jar
-   to C:\jboss-4.0.5.GA\server\default\lib
 
 --------------------------------------
 D. Deploy Report Writer and UPT
 --------------------------------------
-1. Copy C:\SVN-Projects\reportwriter\build\ncireportwriter.war
+1. Copy C:\SVN-Projects\reportwriter\software\target\dist\exploded\ncireportwriter-webapp\ncireportwriter.war
    to C:\Apps\jboss-4.0.5.GA\server\default\deploy
 
-2. Copy C:\SVN-Projects\reportwriter\upt\upt.war
+2. Copy C:\SVN-Projects\reportwriter\software\target\dist\exploded\ncireportwriter-webapp\upt.war
    to C:\Apps\jboss-4.0.5.GA\server\default\deploy
 
-3. Copy C:\SVN-Projects\reportwriter\upt\clm.jar
+3. Copy C:\SVN-Projects\reportwriter\software\target\dist\exploded\ncireportwriter-webapp\deploy\clm.jar
    to C:\Apps\jboss-4.0.5.GA\server\default\lib
 
 4. Start JBoss
-
 
 =====================================================
 Steps for an automated build / deployment
@@ -144,29 +139,26 @@ Steps for an automated build / deployment
 The following are the "automated" steps to build and deploy the report writer application.
 *** You may use these steps if you are building and deploying on the same server.***
 
-1. Install JBoss in to C:\Apps\jboss-4.0.5.GA
+1. Install MySQL as you normally would
 
-2. Install MySQL as you normally would
-
-3. Check out code from SVN
+2. Check out code from SVN
    https://gforge.nci.nih.gov/svnroot/reportwriter/trunk
    in to C:\SVN-Projects\reportwriter
 
-4. cd C:\SVN-Projects\reportwriter
+4. cd C:\SVN-Projects\reportwriter\software\build
 
-5. Setup JBoss
-   C:\SVN-Projects\reportwriter>ant jbossSetup
+5. Deploy the app.
+   C:\SVN-Projects\reportwriter>build install
 
-6. Setup MySQL
-   C:\SVN-Projects\reportwriter>ant dbsetup
+=====================================================
+If you intend to use the upgrade task
+=====================================================
+(Substitute you MySQL credentials for the examples give below.)
 
-7. Build the app.
-   C:\SVN-Projects\reportwriter>ant clean war
-
-8. Deploy the app.
-   C:\SVN-Projects\reportwriter>ant deploy
-
-9. Start JBoss
+1. cd C:\SVN-Projects\reportwriter\software\misc\dbscripts
+2. Login to MySQL
+   C:>mysql --host=localhost --port=3306 --user=root --password=admin123
+3. mysql>\. create-db.sql
 
 --------------------------------------
 URLs
@@ -174,7 +166,6 @@ URLs
 Report Writer
 -------------
 URL:        http://localhost:8080/ncireportwriter/
-
 
 UPT
 ---
