@@ -6,7 +6,7 @@
                   <map>
                         <entry key="APPLICATION_SERVICE_BEAN" value-ref="EvsApplicationService"/>
                         <entry key="AUTHENTICATION_SERVICE_BEAN" value-ref="EvsAuthenticationProvider"/>
-                        <entry key="APPLICATION_SERVICE_URL" value="@evs_service_url@/http/applicationService"/>
+                        <entry key="APPLICATION_SERVICE_URL" value="@lex.evs.api.url@/http/applicationService"/>
                         <entry key="APPLICATION_SERVICE_CONFIG" value-ref="EvsApplicationServiceConfig"/>
                   </map>
             </constructor-arg>
@@ -32,7 +32,7 @@
       </bean>
 
        <bean id="AppService" class="org.springframework.remoting.httpinvoker.HttpInvokerProxyFactoryBean" singleton="true">
-            <property name="serviceUrl" value="@evs_service_url@/http/applicationService"/>
+            <property name="serviceUrl" value="@lex.evs.api.url@/http/applicationService"/>
             <property name="serviceInterface" value="gov.nih.nci.system.applicationservice.EVSApplicationService"/>
             <property name="httpInvokerRequestExecutor">
                 <bean class="org.acegisecurity.context.httpinvoker.AuthenticationSimpleHttpInvokerRequestExecutor"/>
@@ -42,7 +42,7 @@
       <bean id="EvsAuthenticationProvider" class="org.acegisecurity.providers.rcp.RemoteAuthenticationProvider">
             <property name="remoteAuthenticationManager">
                   <bean class="org.springframework.remoting.httpinvoker.HttpInvokerProxyFactoryBean">
-                      <property name="serviceUrl" value="@evs_service_url@/http/remoteAuthenticationManager"/>
+                      <property name="serviceUrl" value="@lex.evs.api.url@/http/remoteAuthenticationManager"/>
                       <property name="serviceInterface" value="org.acegisecurity.providers.rcp.RemoteAuthenticationManager"/>
                   </bean>
             </property>
