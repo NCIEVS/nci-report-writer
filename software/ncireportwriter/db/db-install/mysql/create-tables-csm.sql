@@ -3,11 +3,11 @@
 -- ------------------------------------------------------
 
 --
--- Create schema csmupt
+-- Create schema csmupt within ncirw
 --
 
-CREATE DATABASE IF NOT EXISTS csmupt;
-USE csmupt;
+CREATE DATABASE IF NOT EXISTS ncirw;
+USE ncirw;
 
 --
 -- Definition of table `CSM_APPLICATION`
