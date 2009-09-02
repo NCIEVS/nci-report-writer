@@ -625,7 +625,9 @@
         depends="
         common:init
         ">
-        <validate-post-common />
+        <validate-post-common
+            propertyfile.backup.location="${application.data.path}/change-logs"
+        />
     </target>
 
     <target name="install:jboss:validation:post-install" description="Run post-install checks from bda-utils"
