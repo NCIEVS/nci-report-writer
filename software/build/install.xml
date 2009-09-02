@@ -305,6 +305,9 @@
         <echo  message="Checking if database properties exist: ${db.prop.list}"/>
         <properties-exist properties.list="${db.prop.list}"/>
         <echoproperties prefix="database"/>
+        <filterset id="embedded.filterset">
+            <filter token="database.name" value="${database.name}"/>
+        </filterset>
         <copy todir="${db.dir.dest}" filtering="true">
             <fileset dir="${db.dir.src}">
                 <include name="**/*"/>
@@ -883,7 +886,7 @@
         install:database:validation:pre-install,
         install:jboss:stop,
         install:database,
-        upgrade:jboss,
+        upgrade-ncm:jboss,
         install:common:validation:post-install
         ">
     </target>
