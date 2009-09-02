@@ -6,7 +6,7 @@
 -- Insert reportwriter data
 --
 
-USE ncirw;
+USE @database.name@;
 
 --
 -- Data for table `USER`
