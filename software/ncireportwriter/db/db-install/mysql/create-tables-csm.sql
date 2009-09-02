@@ -6,8 +6,8 @@
 -- Create schema csmupt within ncirw
 --
 
-CREATE DATABASE IF NOT EXISTS ncirw;
-USE ncirw;
+CREATE DATABASE IF NOT EXISTS @database.name@;
+USE @database.name@;
 
 --
 -- Definition of table `CSM_APPLICATION`
