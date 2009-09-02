@@ -29,7 +29,7 @@ if "%1" == "upgrade" (
     goto DONE
 )
 if "%1" == "upgradewdb" (
-    ant -Dupgrade.target=upgrade-with-dbinstall deploy:local:upgrade
+    ant -Dupgrade.target=upgrade-with-dbinstall -Denable.install.debug=true deploy:local:upgrade
     goto DONE
 )
 if "%1" == "deploy" (
