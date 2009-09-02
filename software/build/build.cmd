@@ -12,7 +12,8 @@ if "%1" == "" (
     echo   all          -- Normal build of application
     echo   install      -- Build and deploy application
     echo   upgrade      -- Build and upgrade application
-    echo   upgradewdb   -- Builds and upgrades JBoss and Database
+    echo   upgradewdb   -- Builds, upgrades JBoss and Database locally
+    echo   dev          -- Builds, upgrades JBoss and Database on DEV
     echo   deploy       -- Redeploy application
     goto DONE
 )
@@ -48,7 +49,7 @@ if "%1" == "clean" (
     goto DONE
 )
 if "%1" == "dev" (
-    ant -Dproperties.file=C:\SVN-Projects\ncireportwriter-properties\properties\dev-upgrade.properties deploy:remote:upgrade
+    ant -Dproperties.file=C:\SVN-Projects\ncireportwriter-properties\properties\dev-upgrade.properties -Dupgrade.target=upgrade-ncm:with-dbinstall deploy:remote:upgrade
     goto DONE
 )
 
