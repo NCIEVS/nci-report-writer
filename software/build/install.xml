@@ -879,7 +879,7 @@
         install:database:validation:pre-install,
         install:jboss:stop,
         upgrade:database,
-        upgrade:jboss,
+        upgrade-ncm:jboss,
         install:common:validation:post-install
         ">
     </target>
