@@ -39,7 +39,7 @@ if "%1" == "upgradewdb" (
     goto DONE
 )
 if "%1" == "dev" (
-    ant -Dproperties.file=C:\SVN-Projects\reportwriter-properties\properties\dev-upgrade.properties -Dupgrade.target=upgrade-ncm:with-dbinstall deploy:remote:upgrade
+    ant -Dproperties.file=C:\SVN-Projects\ncireportwriter-properties\properties\dev-upgrade.properties -Dupgrade.target=upgrade-ncm:with-dbinstall deploy:remote:upgrade
     goto DONE
 )
 if "%1" == "deploy" (
