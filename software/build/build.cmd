@@ -12,8 +12,9 @@ if "%1" == "" (
     echo   all          -- Normal build of application
     echo   install      -- Build and deploy application
     echo   upgrade      -- Build and upgrade application
-    echo   upgradewdb   -- Builds, upgrades JBoss and Database locally
-    echo   dev          -- Builds, upgrades JBoss and Database on DEV
+    echo   install      -- Builds, installs JBoss and database locally
+    echo   upgradewdb   -- Builds, upgrades JBoss and database locally
+    echo   dev          -- Builds, upgrades JBoss and database on DEV
     echo   deploy       -- Redeploy application
     goto DONE
 )
@@ -29,8 +30,16 @@ if "%1" == "upgrade" (
     ant deploy:local:upgrade
     goto DONE
 )
-if "%1" == "upgradewdb" (
+if "%1" == "installwdb" (
     ant -Dupgrade.target=upgrade-with-dbinstall -Denable.install.debug=true deploy:local:upgrade
+    goto DONE
+)
+if "%1" == "upgradewdb" (
+    ant -Dupgrade.target=upgrade-ncm:with-dbinstall -Denable.install.debug=true deploy:local:upgrade
+    goto DONE
+)
+if "%1" == "dev" (
+    ant -Dproperties.file=C:\SVN-Projects\ncireportwriter-properties\properties\dev-upgrade.properties -Dupgrade.target=upgrade-ncm:with-dbinstall deploy:remote:upgrade
     goto DONE
 )
 if "%1" == "deploy" (
@@ -48,10 +57,5 @@ if "%1" == "clean" (
     )
     goto DONE
 )
-if "%1" == "dev" (
-    ant -Dproperties.file=C:\SVN-Projects\ncireportwriter-properties\properties\dev-upgrade.properties -Dupgrade.target=upgrade-ncm:with-dbinstall deploy:remote:upgrade
-    goto DONE
-)
-
 :DONE
 endlocal
