@@ -2,8 +2,9 @@
 --
 -- ------------------------------------------------------
 
-CREATE DATABASE IF NOT EXISTS ncirw;
-CREATE USER ncirwuser@localhost IDENTIFIED BY 'ncirwuser';
-CREATE USER ncirwuser@'%' IDENTIFIED BY 'ncirwuser';
-GRANT ALL PRIVILEGES ON ncirw.* TO ncirwuser@localhost;
-GRANT ALL PRIVILEGES ON ncirw.* TO ncirwuser@'%';
+CREATE DATABASE IF NOT EXISTS reportwriter;
+CREATE USER reportwriteruser@localhost IDENTIFIED BY 't3l1m3m0r';
+CREATE USER reportwriteruser@'%' IDENTIFIED BY 't3l1m3m0r';
+GRANT ALL PRIVILEGES ON reportwriter.* TO reportwriteruser@localhost;
+GRANT ALL PRIVILEGES ON reportwriter.* TO reportwriteruser@'%';
+COMMIT;
