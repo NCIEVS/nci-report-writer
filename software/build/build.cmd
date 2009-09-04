@@ -15,6 +15,7 @@ if "%1" == "" (
     echo   install      -- Builds, installs JBoss and database locally
     echo   upgradewdb   -- Builds, upgrades JBoss and database locally
     echo   dev          -- Builds, upgrades JBoss and database on DEV
+    echo   qa           -- Builds, upgrades JBoss and database on QA
     echo   deploy       -- Redeploy application
     goto DONE
 )
@@ -40,6 +41,10 @@ if "%1" == "upgradewdb" (
 )
 if "%1" == "dev" (
     ant -Dproperties.file=C:\SVN-Projects\ncireportwriter-properties\properties\dev-upgrade.properties -Dupgrade.target=upgrade-ncm:with-dbinstall deploy:remote:upgrade
+    goto DONE
+)
+if "%1" == "qa" (
+    ant -Dproperties.file=C:\SVN-Projects\ncireportwriter-properties\properties\qa-upgrade.properties -Dupgrade.target=upgrade-ncm:with-dbinstall deploy:remote:upgrade
     goto DONE
 )
 if "%1" == "deploy" (
