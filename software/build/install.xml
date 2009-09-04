@@ -439,22 +439,6 @@
         <copy file="${jboss-conf.dir.dest}/${jboss.web.xml.file}" todir="${jboss.home}/server/${jboss.server.name}/deploy" overwrite="true" />
         -->
 
-        <!-- Update login-config.xml -->
-        <antcall target="-fix.login-config"/>
-
-    </target>
-
-    <target name="-fix.login-config" unless="install.running">
-
-        <echo message="Updating login-config.xml..."/>
-        <jboss-login-config
-            authentication.type="${authentication.type}"
-            jboss.home="${jboss.home}"
-            jboss.server.name="${jboss.server.name}"
-            login-config.ldap.file="${login-config.ldap.file}"
-            login-config.db.file="${jboss-conf.dir.dest}/login-config.db-block.xml"
-        />
-
     </target>
 
     <target name="install:jboss:configure:log4j" description="Configure custom entries in system wide log4j" unless="exclude.jboss" depends="common:jboss:init, common:init">
@@ -972,6 +956,32 @@
                 <mkdir dir="${backup.jboss.base.dir}/backup1"/>
                 <zip destfile="${backup.jboss.base.dir}/backup1/${jboss.relative.path}.zip" basedir="${backup.jboss.base.dir}/backup" />
                 <delete dir="${backup.jboss.base.dir}/backup"/>
+            </then>
+        </if>
+
+        <!-- Update login-config.xml if needed -->
+        <antcall target="-fix.login-config"/>
+    </target>
+
+    <target name="-fix.login-config">
+        <condition property="login-config.complete">
+            <isfileselected file="${jboss.home}/server/${jboss.server.name}/conf/login-config.xml">
+                <contains text="${project.name}" casesensitive="no"/>
+            </isfileselected>
+        </condition>
+        <if>
+            <not>
+                <equals arg1="${login-config.complete}" arg2="true"/>
+            </not>
+            <then>
+                <echo message="Updating login-config.xml..."/>
+                <jboss-login-config
+                    authentication.type="${authentication.type}"
+                    jboss.home="${jboss.home}"
+                    jboss.server.name="${jboss.server.name}"
+                    login-config.ldap.file="${login-config.ldap.file}"
+                    login-config.db.file="${jboss-conf.dir.dest}/login-config.db-block.xml"
+                />
             </then>
         </if>
     </target>
