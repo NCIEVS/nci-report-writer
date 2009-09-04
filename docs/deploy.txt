@@ -160,6 +160,23 @@ If you intend to use the upgrade task
    C:>mysql --host=localhost --port=3306 --user=root --password=admin123
 3. mysql>\. create-db.sql
 
+=====================================================
+AHP2 Instructions
+=====================================================
+First time run to deploy the app and create the database
+--------------------------------------------------------
+1. Set database.drop-schema=true in <env>-upgrade.properties
+2. Use "deploy:remote:upgrade" in Ant Target: for AHP2.
+3. Add "-Dupgrade.target=upgrade-ncm:with-dbinstall" to Command Line: in AHP2.
+4. Execute a AHP2 build.
+
+Application upgrades
+--------------------
+1. Set database.drop-schema=false in <env>-upgrade.properties
+2. Use "deploy:remote:upgrade" in Ant Target: for AHP2.
+3. Add "-Dupgrade.target=upgrade-ncm" to Command Line: in AHP2.
+4. Execute a AHP2 build.
+
 --------------------------------------
 URLs
 --------------------------------------
