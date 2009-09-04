@@ -439,6 +439,14 @@
         <copy file="${jboss-conf.dir.dest}/${jboss.web.xml.file}" todir="${jboss.home}/server/${jboss.server.name}/deploy" overwrite="true" />
         -->
 
+        <!-- Update login-config.xml -->
+        <antcall target="-fix.login-config"/>
+
+    </target>
+
+    <target name="-fix.login-config" unless="install.running">
+
+        <echo message="Updating login-config.xml..."/>
         <jboss-login-config
             authentication.type="${authentication.type}"
             jboss.home="${jboss.home}"
