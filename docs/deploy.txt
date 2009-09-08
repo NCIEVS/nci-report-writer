@@ -1,54 +1,57 @@
-***********************************************
-*** Report Writer build / deployment notes ****
-***********************************************
+*******************************************************************************
+** Report Writer build / deployment notes                                    **
+*******************************************************************************
 
-=====================================================
-Steps for a manual build / deployment
-=====================================================
+===============================================================================
+== Steps for a manual build / deployment                                     ==
+===============================================================================
+The following are the "manual" steps to build and deploy the report writer
+application.  Automated steps are listed below this section.
 
-The following are the "manual" steps to build and deploy the report writer application.
+Examples in this document use the following userid and password combination
+(root / admin123) for MySQL and localhost for the server.  You will need
+to change these example entries where necessary for your own environment.
 
-Automated steps are listed below this section.
-
-Examples in this document use root / admin123 for MySQL and localhost for the server. You will need
-to change these example entries where necessary for your environment.
-
---------------------------------------
-Pre-installation requirements
---------------------------------------
+-------------------------------------------------------------------------------
+-- Pre-installation requirements                                             --
+-------------------------------------------------------------------------------
 1. JDK 1.5
 2. Apache ANT 1.7 or newer
 3. MySQL
 
-Note: Install MySQL as you normally would. You will need to create a MySQL user that has
-   permissions to create databases. This users credentials will need to be entered in
-   to a local.properties file.
+Note: Install MySQL as you normally would.  You will need to create a MySQL
+  user that has permissions to create databases.  This user credential
+  information will be entered in to a local.properties file.
 
---------------------------------------
-Build the Report Writer application
---------------------------------------
+-------------------------------------------------------------------------------
+-- Build the Report Writer application                                       --
+-------------------------------------------------------------------------------
 1. Checkout source files from SVN at the following URL:
    https://gforge.nci.nih.gov/svnroot/reportwriter/trunk
 
-2. Create a C:\SVN-Projects\reportwriter\local.properties that reflects your local
-   environment with respect to JBoss and MySQL. Use can use
-   "C:\SVN-Projects\ncireportwriter\docs\example.local.properties" as an example.
+2. Create a C:\SVN-Projects\reportwriter\local.properties that reflects your
+   local environment with respect to JBoss and MySQL. Use can use the
+   following file as an example:
+     * "C:\SVN-Projects\ncireportwriter\docs\example.local.properties"
 
 3. Compile the application
-   a) cd C:\SVN-Projects\reportwriter
-   b) C:\SVN-Projects\reportwriter>build install
+   a) cd C:\SVN-Projects\reportwriter\software\build
+   b) ant deploy:local:install
 
-Note: For local environments the properties "database.system.user" and
-"database.system.password" are required by the "build install" task to create the MySQL database.
-Other environments such as DEV & QA do not require system credential since their database should have already been
-created by the systems tem and the "upgrade" task in used instead of the "install" task.
+Note: For local environments, the following properties are required by
+  the "ant deploy:local:install" command to create the MySQL database:
+    * "database.system.user"
+    * "database.system.password"
+  Other environments such as DEV & QA do not require these systems
+  credentials since their databases should have already been created by
+  the systems team.  In addition, the "ant deploy:local:upgrade" command
+  is used instead of the "ant deploy:local:install" command.
 
---------------------------------------
-Setup MySQL (Manually)
---------------------------------------
-
-Run the following scripts. This will initialize the databases csmupt and ncireportwriter
-   with sample uses and data.
+-------------------------------------------------------------------------------
+-- Setup MySQL (Manually)                                                    --
+-------------------------------------------------------------------------------
+Run the following scripts. This will initialize the databases csmupt and
+ncireportwriter with sample uses and data.
 
 1. cd C:\SVN-Projects\reportwriter\software\ncireportwriter\db\db-install\mysql
 
@@ -63,23 +66,24 @@ Run the following scripts. This will initialize the databases csmupt and ncirepo
 
 6. exit;
 
-*** Note: On Unix platforms; setting lower_case_table_names=1 in my.cnf before recreating the databases is required to avoid
-a table case sensitivity issue with UPT. ***
+Note: On Unix platforms; setting lower_case_table_names=1 in my.cnf before
+  recreating the databases is required to avoid a table case sensitivity
+  issue with UPT.
 
---------------------------------------
-D. Setup JBoss (Manually)
---------------------------------------
-
+-------------------------------------------------------------------------------
+-- D. Setup JBoss (Manually)                                                 --
+-------------------------------------------------------------------------------
 1. Unzip Install JBoss 4.0.5 GA package in to an appropreate directory
    In this example we use C:\Apps\jboss-4.0.5.GA
 
 2. JBoss 4.0.5 comes bundled Apache MyFaces implementation which will need
-   to be removed.
-   Delete file:
-   C:\Apps\jboss-4.0.5.GA\server\default\deploy\jbossweb-tomcat55.sar\jsf-libs\myfaces-impl.jar
+   to be removed.  Delete file:
+     * C:\Apps\jboss-4.0.5.GA\server\default\deploy\jbossweb-tomcat55.sar\jsf-libs\myfaces-impl.jar
 
-3. Copy file "C:\SVN-Projects\reportwriter\software\common\resources\jboss-conf\ncireportwriter-ds.xml"
-   to C:\Apps\jboss-4.0.5.GA\server\default\deploy and Perform the necessary credential substitutions.
+3. Copy file
+     * from "C:\SVN-Projects\reportwriter\software\common\resources\jboss-conf\ncireportwriter-ds.xml"
+     * to C:\Apps\jboss-4.0.5.GA\server\default\deploy
+   and Perform the necessary credential substitutions.
 
 4. Add the following lines of XML to the end of login-config.xml file but prior to the </policy> tag.
    This file is located in the C:\Apps\jboss-4.0.5.GA\server\default\conf directory.
@@ -124,9 +128,9 @@ D. Setup JBoss (Manually)
         gov.nih.nci.cacore.ncireportwriterProperties=C:/Apps/evs/ncireportwriter-webapp/conf/ncireportwriter.properties
     </attribute>
 
---------------------------------------
-D. Deploy Report Writer and UPT
---------------------------------------
+-------------------------------------------------------------------------------
+-- D. Deploy Report Writer and UPT                                           --
+-------------------------------------------------------------------------------
 1. Copy C:\SVN-Projects\reportwriter\software\target\dist\exploded\ncireportwriter-webapp\ncireportwriter.war
    to C:\Apps\jboss-4.0.5.GA\server\default\deploy
 
@@ -138,10 +142,9 @@ D. Deploy Report Writer and UPT
 
 4. Start JBoss
 
-=====================================================
-Steps for an automated build / deployment
-=====================================================
-
+===============================================================================
+== Steps for an automated build / deployment                                 ==
+===============================================================================
 The following are the "automated" steps to build and deploy the report writer application.
 *** You may use these steps if you are building and deploying on the same server.***
 
@@ -156,9 +159,9 @@ The following are the "automated" steps to build and deploy the report writer ap
 5. Deploy the app.
    C:\SVN-Projects\reportwriter>build install
 
-=====================================================
-If you intend to use the upgrade task
-=====================================================
+===============================================================================
+== If you intend to use the upgrade task                                     ==
+===============================================================================
 (Substitute you MySQL credentials for the examples give below.)
 
 1. cd C:\SVN-Projects\reportwriter\software\misc\dbscripts
@@ -166,9 +169,9 @@ If you intend to use the upgrade task
    C:>mysql --host=localhost --port=3306 --user=root --password=admin123
 3. mysql>\. create-db.sql
 
-=====================================================
-AHP2 Instructions
-=====================================================
+===============================================================================
+== AHP2 Instructions                                                         ==
+===============================================================================
 First time run to deploy the app and create the database
 --------------------------------------------------------
 1. Set database.drop-schema=true in <env>-upgrade.properties
