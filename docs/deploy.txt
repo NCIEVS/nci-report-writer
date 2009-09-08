@@ -30,12 +30,18 @@ Build the Report Writer application
 1. Checkout source files from SVN at the following URL:
    https://gforge.nci.nih.gov/svnroot/reportwriter/trunk
 
-2. Edit C:\SVN-Projects\reportwriter\local.properties to reflect your
-   environment with respect to JBoss and MySQL.
+2. Create a C:\SVN-Projects\reportwriter\local.properties that reflects your local
+   environment with respect to JBoss and MySQL. Use can use
+   "C:\SVN-Projects\ncireportwriter\docs\example.local.properties" as an example.
 
 3. Compile the application
    a) cd C:\SVN-Projects\reportwriter
-   b) C:\SVN-Projects\reportwriter>build all
+   b) C:\SVN-Projects\reportwriter>build install
+
+Note: For local environments the properties "database.system.user" and
+"database.system.password" are required by the "build install" task to create the MySQL database.
+Other environments such as DEV & QA do not require system credential since their database should have already been
+created by the systems tem and the "upgrade" task in used instead of the "install" task.
 
 --------------------------------------
 Setup MySQL (Manually)
