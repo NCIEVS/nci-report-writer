@@ -70,8 +70,8 @@ import org.LexGrid.concepts.*;
 public class UserSessionBean extends Object {
     private static Logger logger = Logger.getLogger(UserSessionBean.class);
 
-    Boolean isAdmin = null;
-    String selectedTask = null;
+    private Boolean isAdmin = null;
+    private String selectedTask = null;
 
     // for templates with reports already been generated
     private List<SelectItem> standardReportTemplateList_draft = new ArrayList<SelectItem>();
