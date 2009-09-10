@@ -410,7 +410,7 @@ public class UserSessionBean extends Object {
         String id_str = (String) request.getParameter("selectedcolumn");
         int id = Integer.parseInt(id_str);
 
-        System.out.println("deleting column with ID = " + id
+        logger.debug("deleting column with ID = " + id
             + " (yet to be implemented)");
 
         try {
@@ -538,9 +538,9 @@ public class UserSessionBean extends Object {
         String codingScheme = (String) request.getParameter("codingScheme");
         String version = (String) request.getParameter("version");
 
-        System.out.println("saveModifiedTemplateAction: codingScheme "
+        logger.debug("saveModifiedTemplateAction: codingScheme "
             + codingScheme);
-        System.out.println("saveModifiedTemplateAction: version " + version);
+        logger.debug("saveModifiedTemplateAction: version " + version);
 
         if (codingScheme == null || version == null) {
             String message = "Software Error: codingScheme and version can not be null:"
@@ -573,12 +573,12 @@ public class UserSessionBean extends Object {
             return "message";
         }
         rootConceptCode = rootConceptCode.trim();
-        System.out.println("saveModifiedTemplateAction: rootConceptCode: "
+        logger.debug("saveModifiedTemplateAction: rootConceptCode: "
             + rootConceptCode);
 
         OntologyBean ontologyBean = BeanUtils.getOntologyBean();
         String associationName = ontologyBean.getSelectedAssociation();
-        System.out.println("saveModifiedTemplateAction: associationName: "
+        logger.debug("saveModifiedTemplateAction: associationName: "
             + associationName);
 
         if (associationName == null) {
@@ -777,17 +777,17 @@ public class UserSessionBean extends Object {
             }
         }
 
-        System.out.println("columnNumber: " + columnNumber);
-        System.out.println("fieldlabel: " + fieldlabel);
-        System.out.println("fieldType: " + fieldType);
-        System.out.println("propertyType: " + propertyType);
-        System.out.println("propertyName: " + propertyName);
-        System.out.println("isPreferred: " + isPreferred);
-        System.out.println("representationalForm: " + representationalForm);
-        System.out.println("source: " + source);
-        System.out.println("propertyQualifier: " + propertyQualifier);
-        System.out.println("qualifierValue: " + qualifierValue);
-        System.out.println("delim: " + delim);
+        logger.debug("columnNumber: " + columnNumber);
+        logger.debug("fieldlabel: " + fieldlabel);
+        logger.debug("fieldType: " + fieldType);
+        logger.debug("propertyType: " + propertyType);
+        logger.debug("propertyName: " + propertyName);
+        logger.debug("isPreferred: " + isPreferred);
+        logger.debug("representationalForm: " + representationalForm);
+        logger.debug("source: " + source);
+        logger.debug("propertyQualifier: " + propertyQualifier);
+        logger.debug("qualifierValue: " + qualifierValue);
+        logger.debug("delim: " + delim);
 
         // Save results using SDK writable API.
         try {
@@ -824,7 +824,7 @@ public class UserSessionBean extends Object {
                 qualifierValue, delimiter, ccid);
             col.setReportTemplate(standardReportTemplate);
             sdkclientutil.insertReportColumn(col);
-            System.out.println("completed insertReportColumn: ");
+            logger.debug("completed insertReportColumn: ");
 
             request.getSession().setAttribute("selectedStandardReportTemplate",
                 selectedStandardReportTemplate);
@@ -972,7 +972,7 @@ public class UserSessionBean extends Object {
         try {
             SDKClientUtil sdkclientutil = new SDKClientUtil();
 
-            System.out.println("modifyReportTemplateAction" + " "
+            logger.debug("modifyReportTemplateAction" + " "
                 + templateLabel);
 
             StandardReportTemplate standardReportTemplate = null;
@@ -984,7 +984,7 @@ public class UserSessionBean extends Object {
             if (standardReportTemplate_obj != null) {
                 standardReportTemplate = (StandardReportTemplate) standardReportTemplate_obj;
 
-                System.out.println("modifyReportTemplateAction" + " "
+                logger.debug("modifyReportTemplateAction" + " "
                     + standardReportTemplate.getCodingSchemeName());
 
                 versionList = getVersionList(standardReportTemplate
@@ -1038,7 +1038,7 @@ public class UserSessionBean extends Object {
         String templateId = (String) request.getSession().getAttribute(
             "selectedStandardReportTemplate");
 
-        System.out.println("generateStandardReportAction: " + templateId);
+        logger.debug("generateStandardReportAction: " + templateId);
 
         // boolean set_defined_by_code = true;
         String defining_set_desc = null;
@@ -1058,10 +1058,9 @@ public class UserSessionBean extends Object {
                 String version = standardReportTemplate
                     .getCodingSchemeVersion();
 
-                System.out
-                    .println("generateStandardReportAction: codingscheme "
+                logger.debug("generateStandardReportAction: codingscheme "
                         + codingscheme);
-                System.out.println("generateStandardReportAction: version "
+                logger.debug("generateStandardReportAction: version "
                     + version);
 
                 Boolean csnv_valid = DataUtils.validateCodingScheme(
@@ -1141,7 +1140,7 @@ public class UserSessionBean extends Object {
 
         }
 
-        System.out.println("download_dir " + download_dir);
+        logger.debug("download_dir " + download_dir);
         if (download_dir == null) {
             message = "The download directory has not been set up properly -- ask your administrator to check JBoss setting in properties-service.xml.";
             request.getSession().setAttribute("message", message);
@@ -1169,14 +1168,13 @@ public class UserSessionBean extends Object {
         // standardReportTemplate.getCodingSchemeName() + " (version: " +
         // standardReportTemplate.getCodingSchemeVersion() + ")";
 
-        System.out.println("downloading report "
-            + selectedStandardReportTemplate);
+        logger.debug("downloading report " + selectedStandardReportTemplate);
 
         String download_dir = null;
         try {
             download_dir = ReportWriterProperties
                 .getProperty(ReportWriterProperties.REPORT_DOWNLOAD_DIRECTORY);
-            // System.out.println("download_dir " + download_dir);
+            // logger.debug("download_dir " + download_dir);
 
         } catch (Exception ex) {
 
@@ -1187,8 +1185,7 @@ public class UserSessionBean extends Object {
 
         File dir = new File(download_dir);
         if (!dir.exists()) {
-            System.out
-                .println("Unable to download the specified report -- download directory does not exist. ");
+            logger.debug("Unable to download the specified report -- download directory does not exist. ");
             String message = "Unable to download "
                 + selectedStandardReportTemplate
                 + " -- download directory does not exist. ";
@@ -1202,8 +1199,7 @@ public class UserSessionBean extends Object {
             len--;
             if (!fileList[len].isDirectory()) {
                 String name = fileList[len].getName();
-                System.out.println("File found in the download directory: "
-                    + name);
+                logger.debug("File found in the download directory: " + name);
             }
         }
 
@@ -1257,7 +1253,7 @@ public class UserSessionBean extends Object {
         for (int i = 0; i < versionListData.size(); i++) {
             String t = versionListData.elementAt(i);
 
-            System.out.println("version: " + t);
+            logger.debug("version: " + t);
 
             versionList.add(new SelectItem(t));
         }
