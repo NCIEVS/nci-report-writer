@@ -544,9 +544,10 @@ public class UserSessionBean extends Object {
 
         if (codingScheme == null || version == null) {
             String message = "Software Error: codingScheme and version can not be null:"
-                + "\n  * Coding scheme: " + codingScheme
-                + "\n  * version: " + version + 
-                "\nPlease report this issue.";
+                + "\n  * Coding scheme: "
+                + codingScheme
+                + "\n  * version: "
+                + version + "\nPlease report this issue.";
             request.getSession().setAttribute("message", message);
             return "message";
         }
@@ -555,7 +556,9 @@ public class UserSessionBean extends Object {
             version);
         if (csnv_valid == null || csnv_valid.equals(Boolean.FALSE)) {
             String message = "Invalid coding scheme name "
-                + codingScheme + " or version " + version 
+                + codingScheme
+                + " or version "
+                + version
                 + " -- The report template may be out of date. Please modify it and resubmit.";
             request.getSession().setAttribute("message", message);
             return "message";
@@ -570,11 +573,13 @@ public class UserSessionBean extends Object {
             return "message";
         }
         rootConceptCode = rootConceptCode.trim();
-        System.out.println("saveModifiedTemplateAction: rootConceptCode: " + rootConceptCode);
-        
+        System.out.println("saveModifiedTemplateAction: rootConceptCode: "
+            + rootConceptCode);
+
         OntologyBean ontologyBean = BeanUtils.getOntologyBean();
         String associationName = ontologyBean.getSelectedAssociation();
-        System.out.println("saveModifiedTemplateAction: associationName: " + associationName);
+        System.out.println("saveModifiedTemplateAction: associationName: "
+            + associationName);
 
         if (associationName == null) {
             String message = "Software Error: associationName can not be null:"
@@ -838,8 +843,7 @@ public class UserSessionBean extends Object {
             reportFormatList.add(new SelectItem(t));
         }
         if (reportFormatList != null && reportFormatList.size() > 0) {
-            selectedReportFormat = reportFormatList.get(0)
-                .getLabel();
+            selectedReportFormat = reportFormatList.get(0).getLabel();
         }
 
         return reportFormatList;
@@ -871,8 +875,7 @@ public class UserSessionBean extends Object {
             reportStatusList.add(new SelectItem(t));
         }
         if (reportStatusList != null && reportStatusList.size() > 0) {
-            selectedReportStatus = reportStatusList.get(0)
-                .getLabel();
+            selectedReportStatus = reportStatusList.get(0).getLabel();
         }
 
         return reportStatusList;
@@ -897,9 +900,9 @@ public class UserSessionBean extends Object {
     }
 
     public String addStatusAction() {
-//        HttpServletRequest request = (HttpServletRequest) FacesContext
-//            .getCurrentInstance().getExternalContext().getRequest();
-//        String statusValue = (String) request.getParameter("statusValue");
+        // HttpServletRequest request = (HttpServletRequest) FacesContext
+        // .getCurrentInstance().getExternalContext().getRequest();
+        // String statusValue = (String) request.getParameter("statusValue");
         return "report_status";
     }
 
@@ -959,7 +962,7 @@ public class UserSessionBean extends Object {
 
         return "add_standard_report_template";
     }
-    
+
     public String modifyReportTemplateAction() {
         HttpServletRequest request = getHttpRequest();
         String templateLabel = (String) request.getSession().getAttribute(
@@ -997,13 +1000,14 @@ public class UserSessionBean extends Object {
                     ontologyNameAndVersion);
 
                 OntologyBean ontologyBean = BeanUtils.getOntologyBean();
-                String associationName = standardReportTemplate.getAssociationName();
+                String associationName = standardReportTemplate
+                    .getAssociationName();
                 ontologyBean.setSelectedAssociation(associationName);
                 Integer level = standardReportTemplate.getLevel();
                 ontologyBean.setSelectedLevel(level.toString());
             }
         } catch (Exception ex) {
-            String message = "Unable to construct available coding scheme version list." 
+            String message = "Unable to construct available coding scheme version list."
                 + "\n* Exception: " + ex.getLocalizedMessage();
             request.getSession().setAttribute("message", message);
             return "message";
@@ -1036,7 +1040,7 @@ public class UserSessionBean extends Object {
 
         System.out.println("generateStandardReportAction: " + templateId);
 
-//        boolean set_defined_by_code = true;
+        // boolean set_defined_by_code = true;
         String defining_set_desc = null;
         try {
             SDKClientUtil sdkclientutil = new SDKClientUtil();
@@ -1100,7 +1104,7 @@ public class UserSessionBean extends Object {
                         return "message";
                     }
                 } else {
-//                    set_defined_by_code = false;
+                    // set_defined_by_code = false;
                 }
             }
         } catch (Exception ex) {
@@ -1131,8 +1135,8 @@ public class UserSessionBean extends Object {
 
         String download_dir = null;
         try {
-            download_dir = ReportWriterProperties.getProperty(
-                ReportWriterProperties.REPORT_DOWNLOAD_DIRECTORY);
+            download_dir = ReportWriterProperties
+                .getProperty(ReportWriterProperties.REPORT_DOWNLOAD_DIRECTORY);
         } catch (Exception ex) {
 
         }
@@ -1144,8 +1148,8 @@ public class UserSessionBean extends Object {
             return "message";
         }
 
-        new StandardReportService().generateStandardReport(
-            download_dir, selectedStandardReportTemplate, uid);
+        new StandardReportService().generateStandardReport(download_dir,
+            selectedStandardReportTemplate, uid);
 
         message = "You request has been received. The report, "
             + templateId
@@ -1170,8 +1174,8 @@ public class UserSessionBean extends Object {
 
         String download_dir = null;
         try {
-            download_dir = ReportWriterProperties.getProperty(
-                ReportWriterProperties.REPORT_DOWNLOAD_DIRECTORY);
+            download_dir = ReportWriterProperties
+                .getProperty(ReportWriterProperties.REPORT_DOWNLOAD_DIRECTORY);
             // System.out.println("download_dir " + download_dir);
 
         } catch (Exception ex) {
