@@ -46,18 +46,21 @@ import javax.servlet.http.*;
  */
 
 /**
-  * @author EVS Team
-  * @version 1.0
-  *
-  * Modification history
-  *     Initial implementation kim.ong@ngc.com
-  *
+ * @author EVS Team
+ * @version 1.0
+ * 
+ *          Modification history Initial implementation kim.ong@ngc.com
+ * 
  */
 
 public class SessionUtil {
-   public static HttpSession getSession() {
-      ExternalContext externalContext = FacesContext.getCurrentInstance().getExternalContext();
-      HttpSession session = (HttpSession) externalContext.getSession(true);
-      return session;
-   }
+    public static HttpSession getSession() {
+        return (HttpSession) FacesContext.getCurrentInstance()
+            .getExternalContext().getSession(true);
+    }
+
+    public static HttpServletRequest getRequest() {
+        return (HttpServletRequest) FacesContext.getCurrentInstance()
+            .getExternalContext().getRequest();
+    }
 }
