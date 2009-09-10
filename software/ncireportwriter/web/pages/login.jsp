@@ -2,7 +2,6 @@
 <%@ taglib uri="http://java.sun.com/jsf/html" prefix="h" %>
 <%@ taglib uri="http://java.sun.com/jsf/core" prefix="f" %> 
 
-
 <f:loadBundle basename="gov.nih.nci.evs.reportwriter.bean.Resources" var="reportwriterBundle"/>
 
 <%@ page contentType="text/html;charset=windows-1252"%>
@@ -39,7 +38,6 @@
                     </td>
                     <td valign="top" width="100%">
                          <table summary="" cellpadding="0" cellspacing="0" border="0" width="100%" height="100%">
-                         
                               <tr>
                                     <td height="20" width="100%" class="mainMenu">
 
@@ -110,7 +108,6 @@ if(request.getQueryString() != null && request.getQueryString().equals("logout")
                                       <tr>
                                         <td class="sidebarTitle" height="20">LOGIN TO REPORT WRITER</td>
                                       </tr>
-                                      
 <%} %>
                                       
                                       <tr>
@@ -120,8 +117,8 @@ if(request.getQueryString() != null && request.getQueryString().equals("logout")
                                             
     <td class="sidebarLogin" align="right"><label for="loginID">LOGIN ID</label></td>                                        
     <td>
-	    <h:inputText id="userid" size="15" required="true" value="#{loginBean.userid}" >  
-	       <f:validateLength minimum="4" maximum="50" />
+	    <h:inputText id="userid" size="15" required="false" value="#{loginBean.userid}" >  
+	       <f:validateLength minimum="0" maximum="50" />
 	    </h:inputText>  
     </td> 
 	    
@@ -129,8 +126,8 @@ if(request.getQueryString() != null && request.getQueryString().equals("logout")
                                             <tr>
                                             
     <td class="sidebarLogin" align="right"><label for="password">PASSWORD</label></td>                                        
-    <td><h:inputSecret id="password" size="15" required="true" value="#{loginBean.password}" >
-    <f:validateLength minimum="4" maximum="50" /></h:inputSecret> </td>
+    <td><h:inputSecret id="password" size="15" required="false" value="#{loginBean.password}" >
+    <f:validateLength minimum="0" maximum="50" /></h:inputSecret> </td>
                                             
                                             </tr>
                                             <tr>

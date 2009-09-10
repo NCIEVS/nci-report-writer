@@ -168,12 +168,30 @@ public class LoginBean extends Object
 
   public String loginAction()
   {
+      if (userid.length() <= 0) {
+          SessionUtil.getRequest().setAttribute("loginWarning", 
+              "Please enter your login ID.");
+          return "failure";
+      }
+      if (password.length() <= 0) {
+          SessionUtil.getRequest().setAttribute("loginWarning", 
+              "Please enter your password.");
+          return "failure";
+      }
+      
 		String applicationName = "ncireportwriter";
 		isAdmin = false;
 
 		//Get the user credentials from the database and login
 		try {
-			AuthenticationManager authenticationManager = SecurityServiceProvider.getAuthenticationManager(applicationName);
+            AuthenticationManager authenticationManager = SecurityServiceProvider.getAuthenticationManager(applicationName);
+//		    System.getProperties().setProperty("gov.nih.nci.security.configFile", 
+//		        "C:/apps/evs/jboss-4.0.5.GA/server/default/conf/login-config.xml");
+//            AuthenticationManager authenticationManager = SecurityServiceProvider.
+//                getAuthenticationManager(applicationName, 
+//                    gov.nih.nci.security.constants.Constants.LOCKOUT_TIME, 
+//                    gov.nih.nci.security.constants.Constants.ALLOWED_LOGIN_TIME,
+//                    "10");
 			boolean loginOK = authenticationManager.login(userid, password);
 			if (loginOK)
 			{
@@ -209,15 +227,22 @@ public class LoginBean extends Object
 				*/
                 
                 session.setAttribute("isSessionValid", Boolean.TRUE);
+                SessionUtil.getRequest().removeAttribute("loginWarning");
 				return "success";
 			}
 			else
 			{
+			    SessionUtil.getRequest().setAttribute("loginWarning", 
+			        "Incorrect login credential. Please try again.");
 				return "failure";
 			}
 		}
-		catch (Exception cse) {
+		catch (Exception e) {
 			System.out.println(">>>>>>>>>>>>> ERROR IN LOGIN by <<<<<<<<< " + userid);
+            System.out.println("  * " + e.getClass().getSimpleName() + ": "
+                + e.getMessage());
+            SessionUtil.getRequest().setAttribute("loginWarning", 
+                e.getMessage());
 		}
 
 		return "failure";
