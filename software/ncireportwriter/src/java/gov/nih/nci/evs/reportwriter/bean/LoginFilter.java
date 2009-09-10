@@ -43,7 +43,7 @@ public class LoginFilter implements Filter {
     		String queryString = hsr.getQueryString();
             String page=contxt;
 		
-		    if (path.equals("/login.jsf") || path.equals("/") || path.equals("/download_nologin.jsf") || path.equals("/download.jsf")) {
+		    if (path.equals("/login.jsf") || path.equals("/failure.jsf") || path.equals("/") || path.equals("/download_nologin.jsf") || path.equals("/download.jsf")) {
 		        chain.doFilter(request, response);
 		    }
 		    else {
