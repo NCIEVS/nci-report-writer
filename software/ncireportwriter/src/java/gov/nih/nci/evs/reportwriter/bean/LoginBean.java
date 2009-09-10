@@ -212,11 +212,6 @@ public class LoginBean extends Object {
                         e.printStackTrace();
                     }
                 }
-                /*
-                 * else { KLO_log.warn("User object found -- " + userid);
-                 * System.out.println("User object found -- " + userid); }
-                 */
-
                 session.setAttribute("isSessionValid", Boolean.TRUE);
                 SessionUtil.getRequest().removeAttribute("loginWarning");
                 return "success";
@@ -226,9 +221,9 @@ public class LoginBean extends Object {
                 return "failure";
             }
         } catch (Exception e) {
-            System.out.println(">>>>>>>>>>>>> ERROR IN LOGIN by <<<<<<<<< "
+            logger.debug(">>>>>>>>>>>>> ERROR IN LOGIN by <<<<<<<<< "
                 + userid);
-            System.out.println("  * " + e.getClass().getSimpleName() + ": "
+            logger.debug("  * " + e.getClass().getSimpleName() + ": "
                 + e.getMessage());
             SessionUtil.getRequest().setAttribute("loginWarning",
                 e.getMessage());
