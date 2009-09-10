@@ -9,6 +9,7 @@ import java.util.*;
 
 import javax.faces.context.*;
 import javax.faces.event.*;
+import javax.faces.model.*;
 import javax.naming.*;
 import javax.servlet.http.*;
 
@@ -68,18 +69,18 @@ public class LoginBean extends Object {
 
     private static Logger logger = Logger.getLogger(LoginBean.class);
 
-    String userid;
-    String password;
+    private String userid;
+    private String password;
 
-    long roleGroupId;
-    String selectedTask = null;
-    Boolean isAdmin = null;
+    private long roleGroupId;
+    private String selectedTask = null;
+    private Boolean isAdmin = null;
 
     private InitialContext ctx = null;
 
     public void setSelectedTask(String selectedTask) {
         this.selectedTask = selectedTask;
-        ;
+        logger.debug("selectedTask: " + this.selectedTask);
     }
 
     public String getUserid() {
@@ -107,8 +108,6 @@ public class LoginBean extends Object {
     }
 
     public Boolean hasAdminPrivilege() {
-
-        long rid = -1;
         AuthorizationManager ami = null;
 
         try {
@@ -120,21 +119,14 @@ public class LoginBean extends Object {
             ami = (AuthorizationManager) ami;
 
             User user = ami.getUser(userid);
-            // KLO_log.warn("LoginBean: User ID: " + user.getUserId() +
-            // " User paswd: " + user.getPassword());
-
-            Set<Group> groups = ami.getGroups(user.getUserId().toString());
+            Set<?> groups = ami.getGroups(user.getUserId().toString());
 
             if (null != groups) {
-                // KLO_log.warn("LoginBean findRoleGroupId: Groups set is not null. User is part of : "
-                // + groups.size() + " groups");
-                Iterator iter = groups.iterator();
+                Iterator<?> iter = groups.iterator();
                 while (iter.hasNext()) {
                     Group grp = (Group) iter.next();
                     if (null != grp) {
-                        rid = grp.getGroupId();
                         if (grp.getGroupName().startsWith("admin")) {
-                            // KLO_log.warn("LoginBean: User is associated with an admin group");
                             return Boolean.TRUE;
                         }
                     }
@@ -147,8 +139,7 @@ public class LoginBean extends Object {
         return Boolean.FALSE;
     }
 
-    public List getTaskList() {
-        // KLO_log.warn("LoginBean: isAdmin: " + isAdmin);
+    public List<SelectItem> getTaskList() {
         return DataUtils.getTaskList(isAdmin);
     }
 
@@ -253,7 +244,7 @@ public class LoginBean extends Object {
 
     public void changeTaskSelection(ValueChangeEvent vce) {
         String newValue = (String) vce.getNewValue();
-        this.selectedTask = newValue;
+        setSelectedTask(newValue);
     }
 
     public Object getService(String serviceBeanName)
