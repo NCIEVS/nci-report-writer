@@ -1,95 +1,16 @@
 package gov.nih.nci.evs.reportwriter.bean;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
-import java.util.Collection;
-import java.util.Collections;
-import java.util.Iterator;
-import java.util.Map;
-import java.util.TreeMap;
-
-import javax.faces.application.FacesMessage;
-import javax.faces.context.FacesContext;
-import javax.faces.event.ActionEvent;
-import javax.faces.event.ValueChangeEvent;
-import javax.faces.model.ListDataModel;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
-import javax.servlet.ServletContext;
-
-import org.apache.log4j.Level;
-import org.apache.log4j.Logger;
-
-import org.LexGrid.LexBIG.LexBIGService.LexBIGServiceMetadata;
-import org.LexGrid.LexBIG.DataModel.Collections.CodingSchemeRenderingList;
-import org.LexGrid.LexBIG.DataModel.Collections.LocalNameList;
-import org.LexGrid.LexBIG.DataModel.Collections.ResolvedConceptReferenceList;
-import org.LexGrid.LexBIG.LexBIGService.CodedNodeSet;
-import org.LexGrid.LexBIG.LexBIGService.LexBIGService;
-import org.LexGrid.LexBIG.Impl.LexBIGServiceImpl;
-
-import org.LexGrid.LexBIG.Utility.ObjectToString;
-import org.LexGrid.LexBIG.DataModel.Core.*;
-
-import org.LexGrid.concepts.*;
-import org.LexGrid.codingSchemes.*;
-import org.LexGrid.versions.*;
-
-import org.LexGrid.naming.*;
-import org.LexGrid.LexBIG.Impl.Extensions.GenericExtensions.*;
-import org.LexGrid.LexBIG.LexBIGService.CodedNodeGraph;
-import org.LexGrid.concepts.Instruction;
-import org.LexGrid.LexBIG.DataModel.Collections.*;
-import org.LexGrid.LexBIG.DataModel.InterfaceElements.CodingSchemeRendering;
-import org.LexGrid.relations.Relations;
-import org.LexGrid.LexBIG.DataModel.InterfaceElements.ExtensionDescription;
-import org.LexGrid.LexBIG.DataModel.Collections.ExtensionDescriptionList;
-import org.LexGrid.LexBIG.Impl.CodedNodeSetImpl;
-import org.LexGrid.LexBIG.Utility.ConvenienceMethods;
-import org.LexGrid.LexBIG.Exceptions.LBException;
-import org.LexGrid.LexBIG.Utility.Iterators.ResolvedConceptReferencesIterator;
-import org.LexGrid.LexBIG.Utility.Constructors;
-
-import org.LexGrid.LexBIG.History.HistoryService;
-import org.LexGrid.LexBIG.Impl.History.NCIThesaurusHistoryServiceImpl;
-import org.LexGrid.LexBIG.DataModel.NCIHistory.*;
-import org.LexGrid.LexBIG.DataModel.Collections.NCIChangeEventList;
-import org.LexGrid.LexBIG.DataModel.NCIHistory.types.ChangeType;
-import org.LexGrid.LexBIG.DataModel.Collections.SystemReleaseList;
-import org.LexGrid.LexBIG.DataModel.Core.ConceptReference;
-import org.LexGrid.versions.SystemRelease;
-
-import org.LexGrid.codingSchemes.CodingSchemeVersion;
-import org.LexGrid.LexBIG.DataModel.Collections.CodingSchemeVersionList;
-import org.LexGrid.LexBIG.DataModel.Collections.NCIChangeEventList;
-import org.LexGrid.LexBIG.DataModel.NCIHistory.NCIChangeEvent;
-
-import org.LexGrid.naming.SupportedPropertyQualifier;
-import org.LexGrid.LexBIG.DataModel.InterfaceElements.ModuleDescription;
-import org.LexGrid.codingSchemes.Mappings;
-import org.LexGrid.LexBIG.LexBIGService.CodedNodeSet.PropertyType;
+import javax.faces.context.*;
+import javax.faces.event.*;
+import javax.faces.model.*;
+import javax.servlet.http.*;
 
 import org.apache.log4j.*;
-import org.apache.log4j.xml.*;
 
-import org.LexGrid.commonTypes.PropertyQualifier;
-import org.LexGrid.LexBIG.LexBIGService.CodedNodeSet.SearchDesignationOption;
-import org.LexGrid.LexBIG.Utility.LBConstants.MatchAlgorithms;
-import org.LexGrid.LexBIG.DataModel.Core.types.CodingSchemeVersionStatus;
-
-import java.util.Vector;
-import java.util.HashMap;
-
-import java.util.Set;
-import java.text.NumberFormat;
-
-import javax.faces.model.SelectItem;
 import gov.nih.nci.evs.reportwriter.utils.*;
-
-import gov.nih.nci.evs.reportwriter.properties.ReportWriterProperties;
+import gov.nih.nci.evs.reportwriter.properties.*;
 
 /**
  * <!-- LICENSE_TEXT_START -->
@@ -147,25 +68,12 @@ public class OntologyBean // extends BaseBean
     public static final String DEFAULT_ASSOCIATION = "Concept_In_Subset";
     public static final String LEVEL_ALL = "All";
 
-    private static List _ontologies = null;
-
-    private org.LexGrid.LexBIG.LexBIGService.LexBIGService lbSvc = null;
-    public org.LexGrid.LexBIG.Utility.ConvenienceMethods lbConvMethods = null;
-    public CodingSchemeRenderingList csrl = null;
-    private Vector supportedCodingSchemes = null;
-    private HashMap codingSchemeMap = null;
-    private Vector codingSchemes = null;
-
+    private static List<SelectItem> _ontologies = null;
     private String selectedOntology = null;
-
-    private List associationList = null;
+    private List<SelectItem> associationList = null;
     private String selectedAssociation = null;
-
     private String selectedDirection = null;
-
-    private List directionList = null;
-
-    // Initialization
+    private List<SelectItem> directionList = null;
 
     protected void init() {
         _ontologies = getOntologyList();
@@ -175,17 +83,14 @@ public class OntologyBean // extends BaseBean
         this.selectedOntology = selectedOntology;
         HttpServletRequest request = (HttpServletRequest) FacesContext
             .getCurrentInstance().getExternalContext().getRequest();
-        request.getSession().setAttribute("selectedOntology", selectedOntology); // ontology
-        // name
-        // and
-        // version
+        request.getSession().setAttribute("selectedOntology", selectedOntology);
     }
 
     public String getSelectedOntology() {
         return this.selectedOntology;
     }
 
-    public List getOntologyList() {
+    public List<SelectItem> getOntologyList() {
         _ontologies = DataUtils.getOntologyList();
         if (_ontologies != null && _ontologies.size() > 0) {
             for (int i = 0; i < _ontologies.size(); i++) {
@@ -217,15 +122,15 @@ public class OntologyBean // extends BaseBean
         }
     }
 
-    public String[] getSortedKeys(HashMap map) {
+    public String[] getSortedKeys(HashMap<String, ?> map) {
         if (map == null)
             return null;
-        Set keyset = map.keySet();
+        Set<String> keyset = map.keySet();
         String[] names = new String[keyset.size()];
-        Iterator it = keyset.iterator();
+        Iterator<String> it = keyset.iterator();
         int i = 0;
         while (it.hasNext()) {
-            String s = (String) it.next();
+            String s = it.next();
             names[i] = s;
             i++;
         }
@@ -255,15 +160,15 @@ public class OntologyBean // extends BaseBean
         return this.selectedDirection;
     }
 
-    public List getAssociationList() {
+    public List<SelectItem> getAssociationList() {
 
         if (selectedOntology == null) {
             _ontologies = getOntologyList();
         }
 
         if (associationList == null) {
-            associationList = new ArrayList();
-            Vector associationNames = DataUtils
+            associationList = new ArrayList<SelectItem>();
+            Vector<String> associationNames = DataUtils
                 .getSupportedAssociationNames(selectedOntology);
             if (associationNames != null) {
                 associationList.add(new SelectItem(""));
@@ -290,14 +195,14 @@ public class OntologyBean // extends BaseBean
     }
 
     private String selectedLevel = null;
-    private List levelList = null;
+    private List<SelectItem> levelList = null;
 
-    public List getLevelList() {
+    public List<SelectItem> getLevelList() {
         int max_level = 20; // default
         String max_level_str = null;
         try {
-            max_level_str = ReportWriterProperties.getInstance().getProperty(
-                ReportWriterProperties.MAXIMUM_LEVEL);
+            max_level_str = ReportWriterProperties
+                .getProperty(ReportWriterProperties.MAXIMUM_LEVEL);
             max_level = 20;
             if (max_level_str != null) {
                 max_level = Integer.parseInt(max_level_str);
@@ -306,7 +211,7 @@ public class OntologyBean // extends BaseBean
 
         }
 
-        levelList = new ArrayList();
+        levelList = new ArrayList<SelectItem>();
         for (int i = 0; i <= max_level; i++) {
             String t = Integer.toString(i);
             levelList.add(new SelectItem(t));
@@ -365,15 +270,15 @@ public class OntologyBean // extends BaseBean
         setSelectedAssociation(associationName);
     }
 
-    // ////////////////////////////////////////////////////////////////////////////////////////////
+    // /////////////////////////////////////////////////////////////////////////
     // Report Column Data
-    // ////////////////////////////////////////////////////////////////////////////////////////////
+    // /////////////////////////////////////////////////////////////////////////
 
     private String selectedPropertyName = null;
-    private List propertyNameList = null;
+    private List<SelectItem> propertyNameList = null;
     private Vector<String> propertyNameListData = null;
 
-    public List getPropertyNameList() {
+    public List<SelectItem> getPropertyNameList() {
 
         HttpServletRequest request = (HttpServletRequest) FacesContext
             .getCurrentInstance().getExternalContext().getRequest();
@@ -382,7 +287,7 @@ public class OntologyBean // extends BaseBean
 
         propertyNameListData = DataUtils
             .getPropertyNameListData(selectedOntology);
-        propertyNameList = new Vector<String>();
+        propertyNameList = new Vector<SelectItem>();
         propertyNameList.add(new SelectItem(""));
 
         try {
@@ -399,8 +304,8 @@ public class OntologyBean // extends BaseBean
             }
 
         } catch (Exception ex) {
-            System.out
-                .println("=========================== getPropertyNameList() Exception  "
+            logger
+                .error("=========================== getPropertyNameList() Exception  "
                     + selectedOntology);
         }
         return propertyNameList;
@@ -427,10 +332,10 @@ public class OntologyBean // extends BaseBean
     }
 
     private String selectedRepresentationalForm = null;
-    private List representationalFormList = null;
+    private List<SelectItem> representationalFormList = null;
     private Vector<String> representationalFormListData = null;
 
-    public List getRepresentationalFormList() {
+    public List<SelectItem> getRepresentationalFormList() {
         if (selectedOntology == null) {
             HttpServletRequest request = (HttpServletRequest) FacesContext
                 .getCurrentInstance().getExternalContext().getRequest();
@@ -439,7 +344,7 @@ public class OntologyBean // extends BaseBean
         }
         representationalFormListData = DataUtils
             .getRepresentationalFormListData(selectedOntology);
-        representationalFormList = new ArrayList();
+        representationalFormList = new ArrayList<SelectItem>();
         if (representationalFormListData != null) {
             representationalFormList.add(new SelectItem(""));
             for (int i = 0; i < representationalFormListData.size(); i++) {
@@ -476,10 +381,10 @@ public class OntologyBean // extends BaseBean
     }
 
     private String selectedDelimiter = null;
-    private List delimiterList = null;
+    private List<SelectItem> delimiterList = null;
 
-    public List getDelimiterList() {
-        delimiterList = new ArrayList();
+    public List<SelectItem> getDelimiterList() {
+        delimiterList = new ArrayList<SelectItem>();
         delimiterList.add(new SelectItem(" "));
         delimiterList.add(new SelectItem("|"));
         delimiterList.add(new SelectItem("$"));
@@ -509,10 +414,10 @@ public class OntologyBean // extends BaseBean
     }
 
     private String selectedPropertyQualifier = null;
-    private List propertyQualifierList = null;
+    private List<SelectItem> propertyQualifierList = null;
     private Vector<String> propertyQualifierListData = null;
 
-    public List getPropertyQualifierList() {
+    public List<SelectItem> getPropertyQualifierList() {
         if (selectedOntology == null) {
             HttpServletRequest request = (HttpServletRequest) FacesContext
                 .getCurrentInstance().getExternalContext().getRequest();
@@ -521,7 +426,7 @@ public class OntologyBean // extends BaseBean
         }
         propertyQualifierListData = DataUtils
             .getPropertyQualifierListData(selectedOntology);
-        propertyQualifierList = new ArrayList();
+        propertyQualifierList = new ArrayList<SelectItem>();
         propertyQualifierList.add(new SelectItem(""));
         for (int i = 0; i < propertyQualifierListData.size(); i++) {
             String t = (String) propertyQualifierListData.elementAt(i);
@@ -534,8 +439,8 @@ public class OntologyBean // extends BaseBean
         return propertyQualifierList;
     }
 
-    public List getDirectionList() {
-        directionList = new ArrayList();
+    public List<SelectItem> getDirectionList() {
+        directionList = new ArrayList<SelectItem>();
         directionList.add(new SelectItem("source"));
         directionList.add(new SelectItem("target"));
 
@@ -563,11 +468,10 @@ public class OntologyBean // extends BaseBean
     }
 
     private String selectedDataCategory = null;
-    private List dataCategoryList = null;
-    private Vector<String> dataCategoryListData = null;
+    private List<SelectItem> dataCategoryList = null;
 
-    public List getDataCategoryList() {
-        dataCategoryList = new ArrayList();
+    public List<SelectItem> getDataCategoryList() {
+        dataCategoryList = new ArrayList<SelectItem>();
         dataCategoryList.add(new SelectItem("Code"));
         dataCategoryList.add(new SelectItem("Property"));
         dataCategoryList.add(new SelectItem("Property Qualifier"));
@@ -612,10 +516,10 @@ public class OntologyBean // extends BaseBean
     }
 
     private String selectedSource = null;
-    private List sourceList = null;
+    private List<SelectItem> sourceList = null;
     private Vector<String> sourceListData = null;
 
-    public List getSourceList() {
+    public List<SelectItem> getSourceList() {
         HttpServletRequest request = (HttpServletRequest) FacesContext
             .getCurrentInstance().getExternalContext().getRequest();
         String selectedOntology = (String) request.getSession().getAttribute(
@@ -647,7 +551,7 @@ public class OntologyBean // extends BaseBean
 
         sourceListData = DataUtils.getSourceListData(selectedOntology);
 
-        sourceList = new ArrayList();
+        sourceList = new ArrayList<SelectItem>();
         sourceList.add(new SelectItem(" "));
         for (int i = 0; i < sourceListData.size(); i++) {
             String t = (String) sourceListData.elementAt(i);
@@ -677,5 +581,4 @@ public class OntologyBean // extends BaseBean
         String newValue = (String) event.getNewValue();
         setSelectedSource(newValue);
     }
-
 }
