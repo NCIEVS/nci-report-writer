@@ -7,7 +7,6 @@ import gov.nih.nci.security.authorization.domainobjects.User;
 
 import java.util.*;
 
-import javax.faces.context.*;
 import javax.faces.event.*;
 import javax.faces.model.*;
 import javax.naming.*;
@@ -66,8 +65,8 @@ import org.apache.log4j.*;
  */
 
 public class LoginBean extends Object {
-
     private static Logger logger = Logger.getLogger(LoginBean.class);
+    private static final String APP_NAME = "ncireportwriter";
 
     private String userid;
     private String password;
@@ -108,34 +107,27 @@ public class LoginBean extends Object {
     }
 
     public Boolean hasAdminPrivilege() {
-        AuthorizationManager ami = null;
-
         try {
-            ami = SecurityServiceProvider
-                .getAuthorizationManager("ncireportwriter");
-            if (ami == null) {
-                throw new Exception();
-            }
-            ami = (AuthorizationManager) ami;
+            AuthorizationManager ami = SecurityServiceProvider
+                .getAuthorizationManager(APP_NAME);
+            if (ami == null)
+                return Boolean.FALSE;
 
+            ami = (AuthorizationManager) ami;
             User user = ami.getUser(userid);
             Set<?> groups = ami.getGroups(user.getUserId().toString());
+            if (null == groups)
+                return Boolean.FALSE;
 
-            if (null != groups) {
-                Iterator<?> iter = groups.iterator();
-                while (iter.hasNext()) {
-                    Group grp = (Group) iter.next();
-                    if (null != grp) {
-                        if (grp.getGroupName().startsWith("admin")) {
-                            return Boolean.TRUE;
-                        }
-                    }
-                }
+            Iterator<?> iter = groups.iterator();
+            while (iter.hasNext()) {
+                Group grp = (Group) iter.next();
+                if (null != grp && grp.getGroupName().startsWith("admin"))
+                    return Boolean.TRUE;
             }
         } catch (Exception e) {
             e.printStackTrace();
         }
-
         return Boolean.FALSE;
     }
 
@@ -160,81 +152,47 @@ public class LoginBean extends Object {
     }
 
     public String loginAction() {
-        if (userid.length() <= 0) {
-            SessionUtil.getRequest().setAttribute("loginWarning",
-                "Please enter your login ID.");
-            return "failure";
-        }
-        if (password.length() <= 0) {
-            SessionUtil.getRequest().setAttribute("loginWarning",
-                "Please enter your password.");
-            return "failure";
-        }
-
-        String applicationName = "ncireportwriter";
-        isAdmin = false;
-
-        // Get the user credentials from the database and login
         try {
+            isAdmin = false;
+            if (userid.length() <= 0)
+                throw new Exception("Please enter your login ID.");
+            if (password.length() <= 0)
+                throw new Exception("Please enter your password.");
+
             AuthenticationManager authenticationManager = SecurityServiceProvider
-                .getAuthenticationManager(applicationName);
-            // System.getProperties().setProperty("gov.nih.nci.security.configFile",
-            // "C:/apps/evs/jboss-4.0.5.GA/server/default/conf/login-config.xml");
-            // AuthenticationManager authenticationManager =
-            // SecurityServiceProvider.
-            // getAuthenticationManager(applicationName,
-            // gov.nih.nci.security.constants.Constants.LOCKOUT_TIME,
-            // gov.nih.nci.security.constants.Constants.ALLOWED_LOGIN_TIME,
-            // "10");
-            boolean loginOK = authenticationManager.login(userid, password);
-            if (loginOK) {
-                FacesContext context = FacesContext.getCurrentInstance();
-                HttpServletRequest request = (HttpServletRequest) context
-                    .getExternalContext().getRequest();
-                HttpSession session = request.getSession(); // true
-                if (session != null) {
-                    session.setAttribute("uid", userid);
-                    // session.setAttribute("password", password);
-                }
-                isAdmin = hasAdminPrivilege();
-                session.setAttribute("isAdmin", isAdmin);
+                .getAuthenticationManager(APP_NAME);
+            if (!authenticationManager.login(userid, password))
+                throw new Exception("Incorrect login credential.");
 
-                gov.nih.nci.evs.reportwriter.bean.User user = getUser(userid);
-                if (user == null) {
-                    // Synchronize with CSM User table
-                    try {
-                        SDKClientUtil sdkclientutil = new SDKClientUtil();
-                        gov.nih.nci.evs.reportwriter.bean.User newuser = (gov.nih.nci.evs.reportwriter.bean.User) sdkclientutil
-                            .createUser(userid);
-                        sdkclientutil.insertUser(newuser);
-
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-                }
-                session.setAttribute("isSessionValid", Boolean.TRUE);
-                SessionUtil.getRequest().removeAttribute("loginWarning");
-                return "success";
-            } else {
-                SessionUtil.getRequest().setAttribute("loginWarning",
-                    "Incorrect login credential. Please try again.");
-                return "failure";
+            HttpServletRequest request = SessionUtil.getRequest();
+            HttpSession session = request.getSession(); // true
+            if (session != null) {
+                session.setAttribute("uid", userid);
+                // session.setAttribute("password", password);
             }
+            isAdmin = hasAdminPrivilege();
+            session.setAttribute("isAdmin", isAdmin);
+
+            gov.nih.nci.evs.reportwriter.bean.User user = getUser(userid);
+            if (user == null) {
+                // Synchronize with CSM User table
+                SDKClientUtil sdkclientutil = new SDKClientUtil();
+                gov.nih.nci.evs.reportwriter.bean.User newuser = (gov.nih.nci.evs.reportwriter.bean.User) sdkclientutil
+                    .createUser(userid);
+                sdkclientutil.insertUser(newuser);
+            }
+            session.setAttribute("isSessionValid", Boolean.TRUE);
+            SessionUtil.getRequest().removeAttribute("loginWarning");
+            return "success";
         } catch (Exception e) {
-            logger.debug(">>>>>>>>>>>>> ERROR IN LOGIN by <<<<<<<<< "
-                + userid);
+            logger.debug(StringUtils.SEPARATOR);
+            logger.debug("Error logging in: " + userid);
             logger.debug("  * " + e.getClass().getSimpleName() + ": "
                 + e.getMessage());
             SessionUtil.getRequest().setAttribute("loginWarning",
                 e.getMessage());
+            return "failure";
         }
-
-        return "failure";
-    }
-
-    public String logoutAction() {
-        SessionUtil.getSession().invalidate();
-        return "logout";
     }
 
     public void changeTaskSelection(ValueChangeEvent vce) {
@@ -247,11 +205,14 @@ public class LoginBean extends Object {
         return ctx.lookup(serviceBeanName);
     }
 
-    public String logout() {
-        if (SessionUtil.getSession() != null) {
-            SessionUtil.getSession().invalidate();
-        }
-        return "logout";
+    public String logoutAction() {
+        return logout();
     }
 
+    public String logout() {
+        HttpSession session = SessionUtil.getSession();
+        if (session != null)
+            session.invalidate();
+        return "logout";
+    }
 }
