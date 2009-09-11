@@ -81,8 +81,9 @@ public class OntologyBean // extends BaseBean
 
     public void setSelectedOntology(String selectedOntology) {
         this.selectedOntology = selectedOntology;
-        HttpServletRequest request = (HttpServletRequest) FacesContext
-            .getCurrentInstance().getExternalContext().getRequest();
+        HttpServletRequest request =
+            (HttpServletRequest) FacesContext.getCurrentInstance()
+                .getExternalContext().getRequest();
         request.getSession().setAttribute("selectedOntology", selectedOntology);
     }
 
@@ -138,9 +139,9 @@ public class OntologyBean // extends BaseBean
         return names;
     }
 
-    // ////////////////////////////////////////////////////////////////////////////////////////////
+    // /////////////////////////////////////////////////////////////////////////
     // Report Template Data
-    // ////////////////////////////////////////////////////////////////////////////////////////////
+    // /////////////////////////////////////////////////////////////////////////
 
     public void ontologySelectionChanged(ValueChangeEvent vce) {
         String newValue = (String) vce.getNewValue();
@@ -150,8 +151,9 @@ public class OntologyBean // extends BaseBean
 
     public void setSelectedDirection(String selectedDirection) {
         this.selectedDirection = selectedDirection;
-        HttpServletRequest request = (HttpServletRequest) FacesContext
-            .getCurrentInstance().getExternalContext().getRequest();
+        HttpServletRequest request =
+            (HttpServletRequest) FacesContext.getCurrentInstance()
+                .getExternalContext().getRequest();
         request.getSession().setAttribute("selectedDirection",
             selectedDirection);
     }
@@ -168,8 +170,8 @@ public class OntologyBean // extends BaseBean
 
         if (associationList == null) {
             associationList = new ArrayList<SelectItem>();
-            Vector<String> associationNames = DataUtils
-                .getSupportedAssociationNames(selectedOntology);
+            Vector<String> associationNames =
+                DataUtils.getSupportedAssociationNames(selectedOntology);
             if (associationNames != null) {
                 associationList.add(new SelectItem(""));
                 for (int i = 0; i < associationNames.size(); i++) {
@@ -201,8 +203,9 @@ public class OntologyBean // extends BaseBean
         int max_level = 20; // default
         String max_level_str = null;
         try {
-            max_level_str = ReportWriterProperties
-                .getProperty(ReportWriterProperties.MAXIMUM_LEVEL);
+            max_level_str =
+                ReportWriterProperties
+                    .getProperty(ReportWriterProperties.MAXIMUM_LEVEL);
             max_level = 20;
             if (max_level_str != null) {
                 max_level = Integer.parseInt(max_level_str);
@@ -234,8 +237,9 @@ public class OntologyBean // extends BaseBean
             this.selectedLevel = LEVEL_ALL;
         else
             this.selectedLevel = selectedLevel;
-        HttpServletRequest request = (HttpServletRequest) FacesContext
-            .getCurrentInstance().getExternalContext().getRequest();
+        HttpServletRequest request =
+            (HttpServletRequest) FacesContext.getCurrentInstance()
+                .getExternalContext().getRequest();
         request.getSession().setAttribute("selectedLevel", selectedLevel);
     }
 
@@ -257,8 +261,9 @@ public class OntologyBean // extends BaseBean
 
     public void setSelectedAssociation(String selectedAssociation) {
         this.selectedAssociation = selectedAssociation;
-        HttpServletRequest request = (HttpServletRequest) FacesContext
-            .getCurrentInstance().getExternalContext().getRequest();
+        HttpServletRequest request =
+            (HttpServletRequest) FacesContext.getCurrentInstance()
+                .getExternalContext().getRequest();
         request.getSession().setAttribute("selectedAssociation",
             selectedAssociation);
     }
@@ -280,13 +285,13 @@ public class OntologyBean // extends BaseBean
 
     public List<SelectItem> getPropertyNameList() {
 
-        HttpServletRequest request = (HttpServletRequest) FacesContext
-            .getCurrentInstance().getExternalContext().getRequest();
-        String selectedOntology = (String) request.getSession().getAttribute(
-            "selectedOntology"); // ontology name and version
-
-        propertyNameListData = DataUtils
-            .getPropertyNameListData(selectedOntology);
+        HttpServletRequest request =
+            (HttpServletRequest) FacesContext.getCurrentInstance()
+                .getExternalContext().getRequest();
+        String selectedOntology =
+            (String) request.getSession().getAttribute("selectedOntology");
+        propertyNameListData =
+            DataUtils.getPropertyNameListData(selectedOntology);
         propertyNameList = new Vector<SelectItem>();
         propertyNameList.add(new SelectItem(""));
 
@@ -297,8 +302,8 @@ public class OntologyBean // extends BaseBean
                     propertyNameList.add(new SelectItem(t));
                 }
                 if (propertyNameList != null && propertyNameList.size() > 0) {
-                    selectedPropertyName = ((SelectItem) propertyNameList
-                        .get(0)).getLabel();
+                    selectedPropertyName =
+                        ((SelectItem) propertyNameList.get(0)).getLabel();
                     setSelectedPropertyName(selectedPropertyName);
                 }
             }
@@ -313,8 +318,9 @@ public class OntologyBean // extends BaseBean
 
     public void setSelectedPropertyName(String selectedPropertyName) {
         this.selectedPropertyName = selectedPropertyName;
-        HttpServletRequest request = (HttpServletRequest) FacesContext
-            .getCurrentInstance().getExternalContext().getRequest();
+        HttpServletRequest request =
+            (HttpServletRequest) FacesContext.getCurrentInstance()
+                .getExternalContext().getRequest();
         request.getSession().setAttribute("selectedPropertyName",
             selectedPropertyName);
 
@@ -337,13 +343,14 @@ public class OntologyBean // extends BaseBean
 
     public List<SelectItem> getRepresentationalFormList() {
         if (selectedOntology == null) {
-            HttpServletRequest request = (HttpServletRequest) FacesContext
-                .getCurrentInstance().getExternalContext().getRequest();
-            selectedOntology = (String) request.getSession().getAttribute(
-                "selectedOntology"); // ontology name and version
+            HttpServletRequest request =
+                (HttpServletRequest) FacesContext.getCurrentInstance()
+                    .getExternalContext().getRequest();
+            selectedOntology =
+                (String) request.getSession().getAttribute("selectedOntology");
         }
-        representationalFormListData = DataUtils
-            .getRepresentationalFormListData(selectedOntology);
+        representationalFormListData =
+            DataUtils.getRepresentationalFormListData(selectedOntology);
         representationalFormList = new ArrayList<SelectItem>();
         if (representationalFormListData != null) {
             representationalFormList.add(new SelectItem(""));
@@ -353,8 +360,8 @@ public class OntologyBean // extends BaseBean
             }
             if (representationalFormList != null
                 && representationalFormList.size() > 0) {
-                selectedRepresentationalForm = ((SelectItem) representationalFormList
-                    .get(0)).getLabel();
+                selectedRepresentationalForm =
+                    ((SelectItem) representationalFormList.get(0)).getLabel();
             }
         }
         return representationalFormList;
@@ -363,8 +370,9 @@ public class OntologyBean // extends BaseBean
     public void setSelectedRepresentationalForm(
         String selectedRepresentationalForm) {
         this.selectedRepresentationalForm = selectedRepresentationalForm;
-        HttpServletRequest request = (HttpServletRequest) FacesContext
-            .getCurrentInstance().getExternalContext().getRequest();
+        HttpServletRequest request =
+            (HttpServletRequest) FacesContext.getCurrentInstance()
+                .getExternalContext().getRequest();
         request.getSession().setAttribute("selectedRepresentationalForm",
             selectedRepresentationalForm);
     }
@@ -396,8 +404,9 @@ public class OntologyBean // extends BaseBean
 
     public void setSelectedDelimiter(String selectedDelimiter) {
         this.selectedDelimiter = selectedDelimiter;
-        HttpServletRequest request = (HttpServletRequest) FacesContext
-            .getCurrentInstance().getExternalContext().getRequest();
+        HttpServletRequest request =
+            (HttpServletRequest) FacesContext.getCurrentInstance()
+                .getExternalContext().getRequest();
         request.getSession().setAttribute("selectedDelimiter",
             selectedDelimiter);
     }
@@ -419,13 +428,14 @@ public class OntologyBean // extends BaseBean
 
     public List<SelectItem> getPropertyQualifierList() {
         if (selectedOntology == null) {
-            HttpServletRequest request = (HttpServletRequest) FacesContext
-                .getCurrentInstance().getExternalContext().getRequest();
-            selectedOntology = (String) request.getSession().getAttribute(
-                "selectedOntology"); // ontology name and version
+            HttpServletRequest request =
+                (HttpServletRequest) FacesContext.getCurrentInstance()
+                    .getExternalContext().getRequest();
+            selectedOntology =
+                (String) request.getSession().getAttribute("selectedOntology");
         }
-        propertyQualifierListData = DataUtils
-            .getPropertyQualifierListData(selectedOntology);
+        propertyQualifierListData =
+            DataUtils.getPropertyQualifierListData(selectedOntology);
         propertyQualifierList = new ArrayList<SelectItem>();
         propertyQualifierList.add(new SelectItem(""));
         for (int i = 0; i < propertyQualifierListData.size(); i++) {
@@ -433,8 +443,8 @@ public class OntologyBean // extends BaseBean
             propertyQualifierList.add(new SelectItem(t));
         }
         if (propertyQualifierList != null && propertyQualifierList.size() > 0) {
-            selectedPropertyQualifier = ((SelectItem) propertyQualifierList
-                .get(0)).getLabel();
+            selectedPropertyQualifier =
+                ((SelectItem) propertyQualifierList.get(0)).getLabel();
         }
         return propertyQualifierList;
     }
@@ -450,8 +460,9 @@ public class OntologyBean // extends BaseBean
 
     public void setSelectedPropertyQualifier(String selectedPropertyQualifier) {
         this.selectedPropertyQualifier = selectedPropertyQualifier;
-        HttpServletRequest request = (HttpServletRequest) FacesContext
-            .getCurrentInstance().getExternalContext().getRequest();
+        HttpServletRequest request =
+            (HttpServletRequest) FacesContext.getCurrentInstance()
+                .getExternalContext().getRequest();
         request.getSession().setAttribute("selectedPropertyQualifier",
             selectedPropertyQualifier);
     }
@@ -490,16 +501,17 @@ public class OntologyBean // extends BaseBean
         dataCategoryList.add(new SelectItem("2nd Parent Property Qualifier"));
 
         if (dataCategoryList != null && dataCategoryList.size() > 0) {
-            selectedDataCategory = ((SelectItem) dataCategoryList.get(0))
-                .getLabel();
+            selectedDataCategory =
+                ((SelectItem) dataCategoryList.get(0)).getLabel();
         }
         return dataCategoryList;
     }
 
     public void setSelectedDataCategory(String selectedDataCategory) {
         this.selectedDataCategory = selectedDataCategory;
-        HttpServletRequest request = (HttpServletRequest) FacesContext
-            .getCurrentInstance().getExternalContext().getRequest();
+        HttpServletRequest request =
+            (HttpServletRequest) FacesContext.getCurrentInstance()
+                .getExternalContext().getRequest();
         request.getSession().setAttribute("selectedDataCategory",
             selectedDataCategory);
     }
@@ -520,27 +532,32 @@ public class OntologyBean // extends BaseBean
     private Vector<String> sourceListData = null;
 
     public List<SelectItem> getSourceList() {
-        HttpServletRequest request = (HttpServletRequest) FacesContext
-            .getCurrentInstance().getExternalContext().getRequest();
-        String selectedOntology = (String) request.getSession().getAttribute(
-            "selectedOntology"); // ontology name and version
+        HttpServletRequest request =
+            (HttpServletRequest) FacesContext.getCurrentInstance()
+                .getExternalContext().getRequest();
+        String selectedOntology =
+            (String) request.getSession().getAttribute("selectedOntology");
         if (selectedOntology == null) {
-            String templateLabel = (String) request.getSession().getAttribute(
-                "selectedStandardReportTemplate");
+            String templateLabel =
+                (String) request.getSession().getAttribute(
+                    "selectedStandardReportTemplate");
             try {
                 SDKClientUtil sdkclientutil = new SDKClientUtil();
                 StandardReportTemplate standardReportTemplate = null;
-                String FQName = "gov.nih.nci.evs.reportwriter.bean.StandardReportTemplate";
+                String FQName =
+                    "gov.nih.nci.evs.reportwriter.bean.StandardReportTemplate";
                 String methodName = "setLabel";
                 String key = templateLabel;
-                Object standardReportTemplate_obj = sdkclientutil.search(
-                    FQName, methodName, key);
+                Object standardReportTemplate_obj =
+                    sdkclientutil.search(FQName, methodName, key);
                 if (standardReportTemplate_obj != null) {
-                    standardReportTemplate = (StandardReportTemplate) standardReportTemplate_obj;
-                    String ontologyNameAndVersion = standardReportTemplate
-                        .getCodingSchemeName()
-                        + " (version: "
-                        + standardReportTemplate.getCodingSchemeVersion() + ")";
+                    standardReportTemplate =
+                        (StandardReportTemplate) standardReportTemplate_obj;
+                    String ontologyNameAndVersion =
+                        standardReportTemplate.getCodingSchemeName()
+                            + " (version: "
+                            + standardReportTemplate.getCodingSchemeVersion()
+                            + ")";
                     request.getSession().setAttribute("selectedOntology",
                         ontologyNameAndVersion);
                 }
@@ -566,8 +583,9 @@ public class OntologyBean // extends BaseBean
 
     public void setSelectedSource(String selectedSource) {
         this.selectedSource = selectedSource;
-        HttpServletRequest request = (HttpServletRequest) FacesContext
-            .getCurrentInstance().getExternalContext().getRequest();
+        HttpServletRequest request =
+            (HttpServletRequest) FacesContext.getCurrentInstance()
+                .getExternalContext().getRequest();
         request.getSession().setAttribute("selectedSource", selectedSource);
     }
 

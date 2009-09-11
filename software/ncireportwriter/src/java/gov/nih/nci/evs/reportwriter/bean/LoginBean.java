@@ -108,8 +108,8 @@ public class LoginBean extends Object {
 
     public Boolean hasAdminPrivilege() {
         try {
-            AuthorizationManager ami = SecurityServiceProvider
-                .getAuthorizationManager(APP_NAME);
+            AuthorizationManager ami =
+                SecurityServiceProvider.getAuthorizationManager(APP_NAME);
             if (ami == null)
                 return Boolean.FALSE;
 
@@ -143,7 +143,8 @@ public class LoginBean extends Object {
             Object obj = sdkclientutil.search(FQName, methodName, loginName);
             if (obj == null)
                 return null;
-            gov.nih.nci.evs.reportwriter.bean.User user = (gov.nih.nci.evs.reportwriter.bean.User) obj;
+            gov.nih.nci.evs.reportwriter.bean.User user =
+                (gov.nih.nci.evs.reportwriter.bean.User) obj;
             return user;
         } catch (Exception e) {
             // e.printStackTrace();
@@ -159,8 +160,8 @@ public class LoginBean extends Object {
             if (password.length() <= 0)
                 throw new Exception("Please enter your password.");
 
-            AuthenticationManager authenticationManager = SecurityServiceProvider
-                .getAuthenticationManager(APP_NAME);
+            AuthenticationManager authenticationManager =
+                SecurityServiceProvider.getAuthenticationManager(APP_NAME);
             if (!authenticationManager.login(userid, password))
                 throw new Exception("Incorrect login credential.");
 
@@ -177,8 +178,9 @@ public class LoginBean extends Object {
             if (user == null) {
                 // Synchronize with CSM User table
                 SDKClientUtil sdkclientutil = new SDKClientUtil();
-                gov.nih.nci.evs.reportwriter.bean.User newuser = (gov.nih.nci.evs.reportwriter.bean.User) sdkclientutil
-                    .createUser(userid);
+                gov.nih.nci.evs.reportwriter.bean.User newuser =
+                    (gov.nih.nci.evs.reportwriter.bean.User) sdkclientutil
+                        .createUser(userid);
                 sdkclientutil.insertUser(newuser);
             }
             session.setAttribute("isSessionValid", Boolean.TRUE);
