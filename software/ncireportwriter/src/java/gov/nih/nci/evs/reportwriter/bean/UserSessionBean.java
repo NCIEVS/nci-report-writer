@@ -74,9 +74,11 @@ public class UserSessionBean extends Object {
     private String selectedTask = null;
 
     // for templates with reports already been generated
-    private List<SelectItem> standardReportTemplateList_draft = new ArrayList<SelectItem>();
+    private List<SelectItem> standardReportTemplateList_draft =
+        new ArrayList<SelectItem>();
     // for templates with reports already been generated
-    private List<SelectItem> standardReportTemplateList_approved = new ArrayList<SelectItem>();
+    private List<SelectItem> standardReportTemplateList_approved =
+        new ArrayList<SelectItem>();
 
     private String selectedStandardReportTemplate = null;
     private String selectedStandardReportTemplate_draft = null;
@@ -139,8 +141,8 @@ public class UserSessionBean extends Object {
 
     public HttpServletRequest getHttpRequest() {
         FacesContext context = FacesContext.getCurrentInstance();
-        HttpServletRequest request = (HttpServletRequest) context
-            .getExternalContext().getRequest();
+        HttpServletRequest request =
+            (HttpServletRequest) context.getExternalContext().getRequest();
         return request;
     }
 
@@ -150,8 +152,8 @@ public class UserSessionBean extends Object {
 
         Boolean isAdmin = null;
         if (session != null) {
-            isAdmin = (Boolean) request.getSession(true)
-                .getAttribute("isAdmin");
+            isAdmin =
+                (Boolean) request.getSession(true).getAttribute("isAdmin");
         }
 
         List<SelectItem> list = DataUtils.getTaskList(isAdmin);
@@ -265,7 +267,8 @@ public class UserSessionBean extends Object {
 
     public void setSelectedStandardReportTemplate_draft(
         String selectedStandardReportTemplate_draft) {
-        this.selectedStandardReportTemplate_draft = selectedStandardReportTemplate_draft;
+        this.selectedStandardReportTemplate_draft =
+            selectedStandardReportTemplate_draft;
         HttpServletRequest request = getHttpRequest();
         request.getSession().setAttribute(
             "selectedStandardReportTemplate_draft",
@@ -341,28 +344,32 @@ public class UserSessionBean extends Object {
 
         else if (this.selectedTask.compareTo("Assign Report Status") == 0) {
             // Check if there is any DRAFT report waiting for approval:
-            standardReportTemplateList_draft = getStandardReportTemplateList_draft();
+            standardReportTemplateList_draft =
+                getStandardReportTemplateList_draft();
             if (standardReportTemplateList_draft != null
                 && standardReportTemplateList_draft.size() > 0) {
                 return "assign_report_status";
             } else {
                 String message = "No draft report is found. ";
-                HttpServletRequest request = (HttpServletRequest) FacesContext
-                    .getCurrentInstance().getExternalContext().getRequest();
+                HttpServletRequest request =
+                    (HttpServletRequest) FacesContext.getCurrentInstance()
+                        .getExternalContext().getRequest();
                 request.getSession().setAttribute("message", message);
                 return "message";
             }
 
         } else if (this.selectedTask.compareTo("Retrieve Standard Reports") == 0) {
-            HttpServletRequest request = (HttpServletRequest) FacesContext
-                .getCurrentInstance().getExternalContext().getRequest();
-            Boolean isAdmin = (Boolean) request.getSession().getAttribute(
-                "isAdmin");
+            HttpServletRequest request =
+                (HttpServletRequest) FacesContext.getCurrentInstance()
+                    .getExternalContext().getRequest();
+            Boolean isAdmin =
+                (Boolean) request.getSession().getAttribute("isAdmin");
             if (isAdmin != null && isAdmin.equals(Boolean.TRUE)) {
                 return "retrieve_standard_reports";
             } else {
                 // Check if there is any APPROVED report waiting for approval:
-                standardReportTemplateList_approved = getStandardReportTemplateList_approved();
+                standardReportTemplateList_approved =
+                    getStandardReportTemplateList_approved();
                 if (standardReportTemplateList_approved != null
                     && standardReportTemplateList_approved.size() > 0) {
                     return "retrieve_standard_reports";
@@ -405,8 +412,9 @@ public class UserSessionBean extends Object {
         // track selected column number
 
         // selectedcolumn
-        HttpServletRequest request = (HttpServletRequest) FacesContext
-            .getCurrentInstance().getExternalContext().getRequest();
+        HttpServletRequest request =
+            (HttpServletRequest) FacesContext.getCurrentInstance()
+                .getExternalContext().getRequest();
         String id_str = (String) request.getParameter("selectedcolumn");
         int id = Integer.parseInt(id_str);
 
@@ -438,22 +446,23 @@ public class UserSessionBean extends Object {
 
     // public String addReportAction() {
     public String saveTemplateAction() {
-        HttpServletRequest request = (HttpServletRequest) FacesContext
-            .getCurrentInstance().getExternalContext().getRequest();
-        String codingSchemeNameAndVersion = (String) request.getSession()
-            .getAttribute("selectedOntology");
-        String codingSchemeName = DataUtils
-            .getCodingSchemeName(codingSchemeNameAndVersion);
-        String codingSchemeVersion = DataUtils
-            .getCodingSchemeVersion(codingSchemeNameAndVersion);
+        HttpServletRequest request =
+            (HttpServletRequest) FacesContext.getCurrentInstance()
+                .getExternalContext().getRequest();
+        String codingSchemeNameAndVersion =
+            (String) request.getSession().getAttribute("selectedOntology");
+        String codingSchemeName =
+            DataUtils.getCodingSchemeName(codingSchemeNameAndVersion);
+        String codingSchemeVersion =
+            DataUtils.getCodingSchemeVersion(codingSchemeNameAndVersion);
         String label = (String) request.getParameter("label");
 
-        String rootConceptCode = (String) request
-            .getParameter("rootConceptCode");
-        String selectedAssociation = (String) request.getSession()
-            .getAttribute("selectedAssociation");
-        String selectedLevel = (String) request.getSession().getAttribute(
-            "selectedLevel");
+        String rootConceptCode =
+            (String) request.getParameter("rootConceptCode");
+        String selectedAssociation =
+            (String) request.getSession().getAttribute("selectedAssociation");
+        String selectedLevel =
+            (String) request.getSession().getAttribute("selectedLevel");
         // String selectedDirection = (String)
         // request.getSession().getAttribute("selectedDirection");
 
@@ -498,18 +507,20 @@ public class UserSessionBean extends Object {
         try {
             SDKClientUtil sdkclientutil = new SDKClientUtil();
 
-            String FQName = "gov.nih.nci.evs.reportwriter.bean.StandardReportTemplate";
+            String FQName =
+                "gov.nih.nci.evs.reportwriter.bean.StandardReportTemplate";
             String methodName = "setLabel";
             String key = label;
 
-            Object standardReportTemplate_obj = sdkclientutil.search(FQName,
-                methodName, key);
-            standardReportTemplate_obj = sdkclientutil.search(FQName,
-                methodName, key);
+            Object standardReportTemplate_obj =
+                sdkclientutil.search(FQName, methodName, key);
+            standardReportTemplate_obj =
+                sdkclientutil.search(FQName, methodName, key);
 
             if (standardReportTemplate_obj != null) {
-                String message = "Unable to save -- the report template with the specified label, "
-                    + label + ", already exists. ";
+                String message =
+                    "Unable to save -- the report template with the specified label, "
+                        + label + ", already exists. ";
                 request.getSession().setAttribute("message", message);
                 return "message";
             }
@@ -530,45 +541,49 @@ public class UserSessionBean extends Object {
     }
 
     public String saveModifiedTemplateAction() {
-        HttpServletRequest request = (HttpServletRequest) FacesContext
-            .getCurrentInstance().getExternalContext().getRequest();
-        String label = (String) request.getSession().getAttribute(
-            "selectedStandardReportTemplate");
+        HttpServletRequest request =
+            (HttpServletRequest) FacesContext.getCurrentInstance()
+                .getExternalContext().getRequest();
+        String label =
+            (String) request.getSession().getAttribute(
+                "selectedStandardReportTemplate");
 
         String codingScheme = (String) request.getParameter("codingScheme");
         String version = (String) request.getParameter("version");
 
-        logger.debug("saveModifiedTemplateAction: codingScheme "
-            + codingScheme);
+        logger
+            .debug("saveModifiedTemplateAction: codingScheme " + codingScheme);
         logger.debug("saveModifiedTemplateAction: version " + version);
 
         if (codingScheme == null || version == null) {
-            String message = "Software Error: codingScheme and version can not be null:"
-                + "\n  * Coding scheme: "
-                + codingScheme
-                + "\n  * version: "
-                + version + "\nPlease report this issue.";
+            String message =
+                "Software Error: codingScheme and version can not be null:"
+                    + "\n  * Coding scheme: " + codingScheme
+                    + "\n  * version: " + version
+                    + "\nPlease report this issue.";
             request.getSession().setAttribute("message", message);
             return "message";
         }
 
-        Boolean csnv_valid = DataUtils.validateCodingScheme(codingScheme,
-            version);
+        Boolean csnv_valid =
+            DataUtils.validateCodingScheme(codingScheme, version);
         if (csnv_valid == null || csnv_valid.equals(Boolean.FALSE)) {
-            String message = "Invalid coding scheme name "
-                + codingScheme
-                + " or version "
-                + version
-                + " -- The report template may be out of date. Please modify it and resubmit.";
+            String message =
+                "Invalid coding scheme name "
+                    + codingScheme
+                    + " or version "
+                    + version
+                    + " -- The report template may be out of date. Please modify it and resubmit.";
             request.getSession().setAttribute("message", message);
             return "message";
         }
 
-        String rootConceptCode = (String) request
-            .getParameter("rootConceptCode");
+        String rootConceptCode =
+            (String) request.getParameter("rootConceptCode");
         if (rootConceptCode == null || rootConceptCode.trim().length() == 0) {
-            String message = "Invalid root concept code " + rootConceptCode
-                + " -- Please complete data entry.";
+            String message =
+                "Invalid root concept code " + rootConceptCode
+                    + " -- Please complete data entry.";
             request.getSession().setAttribute("message", message);
             return "message";
         }
@@ -582,8 +597,9 @@ public class UserSessionBean extends Object {
             + associationName);
 
         if (associationName == null) {
-            String message = "Software Error: associationName can not be null:"
-                + "\nPlease report this issue.";
+            String message =
+                "Software Error: associationName can not be null:"
+                    + "\nPlease report this issue.";
             request.getSession().setAttribute("message", message);
             return "message";
         }
@@ -613,8 +629,9 @@ public class UserSessionBean extends Object {
 
         Integer level = OntologyBean.levelToInt(level_str);
         if (level < -1) {
-            String message = "Invalid level " + level
-                + " -- Please modify the report template and resubmit.";
+            String message =
+                "Invalid level " + level
+                    + " -- Please modify the report template and resubmit.";
             request.getSession().setAttribute("message", message);
             return "message";
         }
@@ -625,20 +642,23 @@ public class UserSessionBean extends Object {
             SDKClientUtil sdkclientutil = new SDKClientUtil();
 
             StandardReportTemplate standardReportTemplate = null;
-            String FQName = "gov.nih.nci.evs.reportwriter.bean.StandardReportTemplate";
+            String FQName =
+                "gov.nih.nci.evs.reportwriter.bean.StandardReportTemplate";
             String methodName = "setLabel";
             String key = label;
 
-            Object standardReportTemplate_obj = sdkclientutil.search(FQName,
-                methodName, key);
+            Object standardReportTemplate_obj =
+                sdkclientutil.search(FQName, methodName, key);
             if (standardReportTemplate_obj == null) {
-                String message = "Unable to update template -- the report template with the specified label, "
-                    + label + " is not found. ";
+                String message =
+                    "Unable to update template -- the report template with the specified label, "
+                        + label + " is not found. ";
                 request.getSession().setAttribute("message", message);
                 return "message";
             }
 
-            standardReportTemplate = (StandardReportTemplate) standardReportTemplate_obj;
+            standardReportTemplate =
+                (StandardReportTemplate) standardReportTemplate_obj;
             standardReportTemplate.setLabel(label);
             standardReportTemplate.setCodingSchemeName(codingScheme);
             standardReportTemplate.setCodingSchemeVersion(version);
@@ -660,13 +680,15 @@ public class UserSessionBean extends Object {
 
     public String deleteReportTemplateAction() {
         HttpServletRequest request = getHttpRequest();
-        String template_label = (String) request.getSession().getAttribute(
-            "selectedStandardReportTemplate");
+        String template_label =
+            (String) request.getSession().getAttribute(
+                "selectedStandardReportTemplate");
 
         logger.warn("deleteReportTemplateAction: " + template_label);
 
         try {
-            StandardReportTemplate template = getStandardReportTemplate(template_label);
+            StandardReportTemplate template =
+                getStandardReportTemplate(template_label);
             SDKClientUtil sdkclientutil = new SDKClientUtil();
             sdkclientutil.deleteStandardReportTemplate(template);
 
@@ -683,10 +705,12 @@ public class UserSessionBean extends Object {
     public StandardReportTemplate getStandardReportTemplate(String label) {
         try {
             SDKClientUtil sdkclientutil = new SDKClientUtil();
-            String FQName = "gov.nih.nci.evs.reportwriter.bean.StandardReportTemplate";
+            String FQName =
+                "gov.nih.nci.evs.reportwriter.bean.StandardReportTemplate";
             String methodName = "setLabel";
             Object obj = sdkclientutil.search(FQName, methodName, label);
-            StandardReportTemplate standardReportTemplate = (StandardReportTemplate) obj;
+            StandardReportTemplate standardReportTemplate =
+                (StandardReportTemplate) obj;
             return standardReportTemplate;
         } catch (Exception e) {
             e.printStackTrace();
@@ -710,13 +734,16 @@ public class UserSessionBean extends Object {
 
     // public String addReportColumnAction() {
     public String saveReportColumnAction() {
-        HttpServletRequest request = (HttpServletRequest) FacesContext
-            .getCurrentInstance().getExternalContext().getRequest();
+        HttpServletRequest request =
+            (HttpServletRequest) FacesContext.getCurrentInstance()
+                .getExternalContext().getRequest();
         StandardReportTemplate standardReportTemplate = null;
-        standardReportTemplate = getStandardReportTemplate(this.selectedStandardReportTemplate);
+        standardReportTemplate =
+            getStandardReportTemplate(this.selectedStandardReportTemplate);
         if (standardReportTemplate == null) {
-            String message = "ERROR saving ReportColumn -- Unable to identify report template "
-                + this.selectedStandardReportTemplate;
+            String message =
+                "ERROR saving ReportColumn -- Unable to identify report template "
+                    + this.selectedStandardReportTemplate;
             request.getSession().setAttribute("message", message);
             return "message";
         }
@@ -724,31 +751,35 @@ public class UserSessionBean extends Object {
         String fieldlabel = (String) request.getParameter("fieldlabel");
         String columnNumber_str = (String) request.getParameter("columnNumber");
 
-        String fieldType = (String) request.getSession().getAttribute(
-            "selectedDataCategory");
-        String propertyType = (String) request.getSession().getAttribute(
-            "selectedPropertyType");
-        String propertyName = (String) request.getSession().getAttribute(
-            "selectedPropertyName");
-        String representationalForm = (String) request.getSession()
-            .getAttribute("selectedRepresentationalForm");
-        String source = (String) request.getSession().getAttribute(
-            "selectedSource");
-        String propertyQualifier = (String) request.getSession().getAttribute(
-            "selectedPropertyQualifier");
+        String fieldType =
+            (String) request.getSession().getAttribute("selectedDataCategory");
+        String propertyType =
+            (String) request.getSession().getAttribute("selectedPropertyType");
+        String propertyName =
+            (String) request.getSession().getAttribute("selectedPropertyName");
+        String representationalForm =
+            (String) request.getSession().getAttribute(
+                "selectedRepresentationalForm");
+        String source =
+            (String) request.getSession().getAttribute("selectedSource");
+        String propertyQualifier =
+            (String) request.getSession().getAttribute(
+                "selectedPropertyQualifier");
         String qualifierValue = (String) request.getParameter("qualifiervalue");
-        String conditionalColumnId = (String) request
-            .getParameter("dependentfield");
+        String conditionalColumnId =
+            (String) request.getParameter("dependentfield");
 
         if (columnNumber_str == null || fieldlabel == null) {
-            String message = "Unable to save ReportColumn -- please complete data entry.";
+            String message =
+                "Unable to save ReportColumn -- please complete data entry.";
             request.getSession().setAttribute("message", message);
             return "message";
         }
         columnNumber_str = columnNumber_str.trim();
         fieldlabel = fieldlabel.trim();
         if (columnNumber_str.length() == 0 || fieldlabel.length() == 0) {
-            String message = "Unable to save ReportColumn -- please complete data entry.";
+            String message =
+                "Unable to save ReportColumn -- please complete data entry.";
             request.getSession().setAttribute("message", message);
             return "message";
         }
@@ -768,8 +799,8 @@ public class UserSessionBean extends Object {
                 isPreferred = Boolean.FALSE;
         }
 
-        String delim = (String) request.getSession().getAttribute(
-            "selectedDelimiter");
+        String delim =
+            (String) request.getSession().getAttribute("selectedDelimiter");
         char delimiter = ' ';
         if (delim != null) {
             if (delim.length() > 0) {
@@ -793,23 +824,26 @@ public class UserSessionBean extends Object {
         try {
             SDKClientUtil sdkclientutil = new SDKClientUtil();
             // check duplicate column number and column label
-            Collection<ReportColumn> cc = standardReportTemplate
-                .getColumnCollection();
+            Collection<ReportColumn> cc =
+                standardReportTemplate.getColumnCollection();
             if (cc != null) {
                 Object[] objs = cc.toArray();
                 if (objs.length > 0) {
                     for (int i = 0; i < objs.length; i++) {
-                        gov.nih.nci.evs.reportwriter.bean.ReportColumn c = (gov.nih.nci.evs.reportwriter.bean.ReportColumn) objs[i];
+                        gov.nih.nci.evs.reportwriter.bean.ReportColumn c =
+                            (gov.nih.nci.evs.reportwriter.bean.ReportColumn) objs[i];
                         String col_label = c.getLabel();
                         if (col_label.compareToIgnoreCase(fieldlabel) == 0) {
-                            String message = "Unable to save ReportColumn -- the column label already exists.";
+                            String message =
+                                "Unable to save ReportColumn -- the column label already exists.";
                             request.getSession().setAttribute("message",
                                 message);
                             return "message";
                         }
                         Integer col_num = c.getColumnNumber();
                         if (col_num.intValue() == columnNumber) {
-                            String message = "Unable to save ReportColumn -- the column number already exists.";
+                            String message =
+                                "Unable to save ReportColumn -- the column number already exists.";
                             request.getSession().setAttribute("message",
                                 message);
                             return "message";
@@ -818,10 +852,11 @@ public class UserSessionBean extends Object {
                 }
             }
 
-            ReportColumn col = sdkclientutil.createReportColumn(fieldlabel,
-                columnNumber, fieldType, propertyType, propertyName,
-                isPreferred, representationalForm, source, propertyQualifier,
-                qualifierValue, delimiter, ccid);
+            ReportColumn col =
+                sdkclientutil.createReportColumn(fieldlabel, columnNumber,
+                    fieldType, propertyType, propertyName, isPreferred,
+                    representationalForm, source, propertyQualifier,
+                    qualifierValue, delimiter, ccid);
             col.setReportTemplate(standardReportTemplate);
             sdkclientutil.insertReportColumn(col);
             logger.debug("completed insertReportColumn: ");
@@ -851,8 +886,9 @@ public class UserSessionBean extends Object {
 
     public void setSelectedReportFormat(String selectedReportFormat) {
         this.selectedReportFormat = selectedReportFormat;
-        HttpServletRequest request = (HttpServletRequest) FacesContext
-            .getCurrentInstance().getExternalContext().getRequest();
+        HttpServletRequest request =
+            (HttpServletRequest) FacesContext.getCurrentInstance()
+                .getExternalContext().getRequest();
         request.getSession().setAttribute("selectedReportFormat",
             selectedReportFormat);
     }
@@ -883,8 +919,9 @@ public class UserSessionBean extends Object {
 
     public void setSelectedReportStatus(String selectedReportStatus) {
         this.selectedReportStatus = selectedReportStatus;
-        HttpServletRequest request = (HttpServletRequest) FacesContext
-            .getCurrentInstance().getExternalContext().getRequest();
+        HttpServletRequest request =
+            (HttpServletRequest) FacesContext.getCurrentInstance()
+                .getExternalContext().getRequest();
         request.getSession().setAttribute("selectedReportStatus",
             selectedReportStatus);
     }
@@ -907,13 +944,15 @@ public class UserSessionBean extends Object {
     }
 
     public String assignStatusAction() {
-        HttpServletRequest request = (HttpServletRequest) FacesContext
-            .getCurrentInstance().getExternalContext().getRequest();
+        HttpServletRequest request =
+            (HttpServletRequest) FacesContext.getCurrentInstance()
+                .getExternalContext().getRequest();
         // save to database
-        String reportTemplate = (String) request.getSession().getAttribute(
-            "selectedStandardReportTemplate_draft");
-        String statusValue = (String) request.getSession().getAttribute(
-            "selectedReportStatus");
+        String reportTemplate =
+            (String) request.getSession().getAttribute(
+                "selectedStandardReportTemplate_draft");
+        String statusValue =
+            (String) request.getSession().getAttribute("selectedReportStatus");
 
         try {
             SDKClientUtil sdkclientutil = new SDKClientUtil();
@@ -927,12 +966,13 @@ public class UserSessionBean extends Object {
                     if (standardReportTemplate != null) {
                         if (reportTemplate.compareTo(standardReportTemplate
                             .getLabel()) == 0) {
-                            FQName = "gov.nih.nci.evs.reportwriter.bean.ReportStatus";
+                            FQName =
+                                "gov.nih.nci.evs.reportwriter.bean.ReportStatus";
                             String methodName = "setLabel";
                             String key = statusValue;
 
-                            Object status_obj = sdkclientutil.search(FQName,
-                                methodName, key);
+                            Object status_obj =
+                                sdkclientutil.search(FQName, methodName, key);
                             if (status_obj != null) {
                                 standardReport
                                     .setStatus((ReportStatus) status_obj);
@@ -950,7 +990,8 @@ public class UserSessionBean extends Object {
             e.printStackTrace();
         }
 
-        standardReportTemplateList_draft = getStandardReportTemplateList_draft();
+        standardReportTemplateList_draft =
+            getStandardReportTemplateList_draft();
 
         return "assign_report_status";
     }
@@ -965,50 +1006,53 @@ public class UserSessionBean extends Object {
 
     public String modifyReportTemplateAction() {
         HttpServletRequest request = getHttpRequest();
-        String templateLabel = (String) request.getSession().getAttribute(
-            "selectedStandardReportTemplate");
+        String templateLabel =
+            (String) request.getSession().getAttribute(
+                "selectedStandardReportTemplate");
 
         // find thesaurus name through template
         try {
             SDKClientUtil sdkclientutil = new SDKClientUtil();
 
-            logger.debug("modifyReportTemplateAction" + " "
-                + templateLabel);
+            logger.debug("modifyReportTemplateAction" + " " + templateLabel);
 
             StandardReportTemplate standardReportTemplate = null;
-            String FQName = "gov.nih.nci.evs.reportwriter.bean.StandardReportTemplate";
+            String FQName =
+                "gov.nih.nci.evs.reportwriter.bean.StandardReportTemplate";
             String methodName = "setLabel";
             String key = templateLabel;
-            Object standardReportTemplate_obj = sdkclientutil.search(FQName,
-                methodName, key);
+            Object standardReportTemplate_obj =
+                sdkclientutil.search(FQName, methodName, key);
             if (standardReportTemplate_obj != null) {
-                standardReportTemplate = (StandardReportTemplate) standardReportTemplate_obj;
+                standardReportTemplate =
+                    (StandardReportTemplate) standardReportTemplate_obj;
 
                 logger.debug("modifyReportTemplateAction" + " "
                     + standardReportTemplate.getCodingSchemeName());
 
-                versionList = getVersionList(standardReportTemplate
-                    .getCodingSchemeName());
+                versionList =
+                    getVersionList(standardReportTemplate.getCodingSchemeName());
 
                 // StandardReportTemplate standardReportTemplate =
                 // getStandardReportTemplate(selectedStandardReportTemplate);
-                String ontologyNameAndVersion = standardReportTemplate
-                    .getCodingSchemeName()
-                    + " (version: "
-                    + standardReportTemplate.getCodingSchemeVersion() + ")";
+                String ontologyNameAndVersion =
+                    standardReportTemplate.getCodingSchemeName()
+                        + " (version: "
+                        + standardReportTemplate.getCodingSchemeVersion() + ")";
                 request.getSession().setAttribute("selectedOntology",
                     ontologyNameAndVersion);
 
                 OntologyBean ontologyBean = BeanUtils.getOntologyBean();
-                String associationName = standardReportTemplate
-                    .getAssociationName();
+                String associationName =
+                    standardReportTemplate.getAssociationName();
                 ontologyBean.setSelectedAssociation(associationName);
                 Integer level = standardReportTemplate.getLevel();
                 ontologyBean.setSelectedLevel(level.toString());
             }
         } catch (Exception ex) {
-            String message = "Unable to construct available coding scheme version list."
-                + "\n* Exception: " + ex.getLocalizedMessage();
+            String message =
+                "Unable to construct available coding scheme version list."
+                    + "\n* Exception: " + ex.getLocalizedMessage();
             request.getSession().setAttribute("message", message);
             return "message";
         }
@@ -1021,12 +1065,11 @@ public class UserSessionBean extends Object {
         request.getSession().setAttribute("selectedStandardReportTemplate",
             selectedStandardReportTemplate);
 
-        StandardReportTemplate standardReportTemplate = getStandardReportTemplate(selectedStandardReportTemplate);
-        String ontologyNameAndVersion = standardReportTemplate
-            .getCodingSchemeName()
-            + " (version: "
-            + standardReportTemplate.getCodingSchemeVersion()
-            + ")";
+        StandardReportTemplate standardReportTemplate =
+            getStandardReportTemplate(selectedStandardReportTemplate);
+        String ontologyNameAndVersion =
+            standardReportTemplate.getCodingSchemeName() + " (version: "
+                + standardReportTemplate.getCodingSchemeVersion() + ")";
         request.getSession().setAttribute("selectedOntology",
             ontologyNameAndVersion);
 
@@ -1035,8 +1078,9 @@ public class UserSessionBean extends Object {
 
     public String generateStandardReportAction() {
         HttpServletRequest request = getHttpRequest();
-        String templateId = (String) request.getSession().getAttribute(
-            "selectedStandardReportTemplate");
+        String templateId =
+            (String) request.getSession().getAttribute(
+                "selectedStandardReportTemplate");
 
         logger.debug("generateStandardReportAction: " + templateId);
 
@@ -1045,32 +1089,35 @@ public class UserSessionBean extends Object {
         try {
             SDKClientUtil sdkclientutil = new SDKClientUtil();
             StandardReportTemplate standardReportTemplate = null;
-            String FQName = "gov.nih.nci.evs.reportwriter.bean.StandardReportTemplate";
+            String FQName =
+                "gov.nih.nci.evs.reportwriter.bean.StandardReportTemplate";
             String methodName = "setLabel";
             String key = templateId;
-            Object standardReportTemplate_obj = sdkclientutil.search(FQName,
-                methodName, key);
+            Object standardReportTemplate_obj =
+                sdkclientutil.search(FQName, methodName, key);
             if (standardReportTemplate_obj != null) {
-                standardReportTemplate = (StandardReportTemplate) standardReportTemplate_obj;
+                standardReportTemplate =
+                    (StandardReportTemplate) standardReportTemplate_obj;
 
-                String codingscheme = standardReportTemplate
-                    .getCodingSchemeName();
-                String version = standardReportTemplate
-                    .getCodingSchemeVersion();
+                String codingscheme =
+                    standardReportTemplate.getCodingSchemeName();
+                String version =
+                    standardReportTemplate.getCodingSchemeVersion();
 
                 logger.debug("generateStandardReportAction: codingscheme "
-                        + codingscheme);
-                logger.debug("generateStandardReportAction: version "
-                    + version);
+                    + codingscheme);
+                logger
+                    .debug("generateStandardReportAction: version " + version);
 
-                Boolean csnv_valid = DataUtils.validateCodingScheme(
-                    codingscheme, version);
+                Boolean csnv_valid =
+                    DataUtils.validateCodingScheme(codingscheme, version);
                 if (csnv_valid == null || csnv_valid.equals(Boolean.FALSE)) {
-                    String message = "Invalid coding scheme name "
-                        + codingscheme
-                        + " or version "
-                        + version
-                        + " -- The report template may be out of date. Please modify it and resubmit.";
+                    String message =
+                        "Invalid coding scheme name "
+                            + codingscheme
+                            + " or version "
+                            + version
+                            + " -- The report template may be out of date. Please modify it and resubmit.";
                     request.getSession().setAttribute("message", message);
                     return "message";
                 }
@@ -1078,27 +1125,30 @@ public class UserSessionBean extends Object {
                 defining_set_desc = standardReportTemplate.getRootConceptCode();
                 String rootConceptCode = null;
                 if (defining_set_desc.indexOf("|") == -1) {
-                    rootConceptCode = standardReportTemplate
-                        .getRootConceptCode();
+                    rootConceptCode =
+                        standardReportTemplate.getRootConceptCode();
                     String ltag = null;
-                    Concept rootConcept = DataUtils.getConceptByCode(
-                        codingscheme, version, ltag, rootConceptCode);
+                    Concept rootConcept =
+                        DataUtils.getConceptByCode(codingscheme, version, ltag,
+                            rootConceptCode);
                     if (rootConcept == null) {
-                        String message = "Invalid root concept code "
-                            + rootConceptCode
-                            + " -- Please modify the report template and resubmit.";
+                        String message =
+                            "Invalid root concept code "
+                                + rootConceptCode
+                                + " -- Please modify the report template and resubmit.";
                         request.getSession().setAttribute("message", message);
                         return "message";
                     }
-                    String associationName = standardReportTemplate
-                        .getAssociationName();
+                    String associationName =
+                        standardReportTemplate.getAssociationName();
                     key = codingscheme + " (version: " + version + ")";
-                    Vector<String> associationname_vec = DataUtils
-                        .getSupportedAssociationNames(key);
+                    Vector<String> associationname_vec =
+                        DataUtils.getSupportedAssociationNames(key);
                     if (!associationname_vec.contains(associationName)) {
-                        String message = "Invalid association name "
-                            + associationName
-                            + " -- Please modify the report template and resubmit.";
+                        String message =
+                            "Invalid association name "
+                                + associationName
+                                + " -- Please modify the report template and resubmit.";
                         request.getSession().setAttribute("message", message);
                         return "message";
                     }
@@ -1107,8 +1157,8 @@ public class UserSessionBean extends Object {
                 }
             }
         } catch (Exception ex) {
-            String message = "Exception encountered when generating "
-                + templateId + ".";
+            String message =
+                "Exception encountered when generating " + templateId + ".";
             request.getSession().setAttribute("message", message);
             return "message";
         }
@@ -1123,9 +1173,10 @@ public class UserSessionBean extends Object {
         String reportFormat_value = "Text (tab delimited)";
         String reportStatus_value = "DRAFT";
 
-        String message = new StandardReportService().validReport(
-            selectedStandardReportTemplate, reportFormat_value,
-            reportStatus_value, uid);
+        String message =
+            new StandardReportService().validReport(
+                selectedStandardReportTemplate, reportFormat_value,
+                reportStatus_value, uid);
 
         if (message.compareTo("success") != 0) {
             request.getSession().setAttribute("message", message);
@@ -1134,15 +1185,17 @@ public class UserSessionBean extends Object {
 
         String download_dir = null;
         try {
-            download_dir = ReportWriterProperties
-                .getProperty(ReportWriterProperties.REPORT_DOWNLOAD_DIRECTORY);
+            download_dir =
+                ReportWriterProperties
+                    .getProperty(ReportWriterProperties.REPORT_DOWNLOAD_DIRECTORY);
         } catch (Exception ex) {
 
         }
 
         logger.debug("download_dir " + download_dir);
         if (download_dir == null) {
-            message = "The download directory has not been set up properly -- ask your administrator to check JBoss setting in properties-service.xml.";
+            message =
+                "The download directory has not been set up properly -- ask your administrator to check JBoss setting in properties-service.xml.";
             request.getSession().setAttribute("message", message);
             return "message";
         }
@@ -1150,10 +1203,11 @@ public class UserSessionBean extends Object {
         new StandardReportService().generateStandardReport(download_dir,
             selectedStandardReportTemplate, uid);
 
-        message = "You request has been received. The report, "
-            + templateId
-            + ", in tab-delimited and Microsft Excel formats will be generated and placed in the designated output directory."
-            + " Please review and assign an APPROVED status before making it available to the users.";
+        message =
+            "You request has been received. The report, "
+                + templateId
+                + ", in tab-delimited and Microsft Excel formats will be generated and placed in the designated output directory."
+                + " Please review and assign an APPROVED status before making it available to the users.";
         request.getSession().setAttribute("message", message);
         return "message"; // replaced by a messsage page (back button)
     }
@@ -1172,23 +1226,26 @@ public class UserSessionBean extends Object {
 
         String download_dir = null;
         try {
-            download_dir = ReportWriterProperties
-                .getProperty(ReportWriterProperties.REPORT_DOWNLOAD_DIRECTORY);
+            download_dir =
+                ReportWriterProperties
+                    .getProperty(ReportWriterProperties.REPORT_DOWNLOAD_DIRECTORY);
             // logger.debug("download_dir " + download_dir);
 
         } catch (Exception ex) {
 
-            String message = "Unable to download the specified report -- download directory does not exist -- check with system administrator.";
+            String message =
+                "Unable to download the specified report -- download directory does not exist -- check with system administrator.";
             request.getSession().setAttribute("message", message);
             return "message";
         }
 
         File dir = new File(download_dir);
         if (!dir.exists()) {
-            logger.debug("Unable to download the specified report -- download directory does not exist. ");
-            String message = "Unable to download "
-                + selectedStandardReportTemplate
-                + " -- download directory does not exist. ";
+            logger
+                .debug("Unable to download the specified report -- download directory does not exist. ");
+            String message =
+                "Unable to download " + selectedStandardReportTemplate
+                    + " -- download directory does not exist. ";
             request.getSession().setAttribute("message", message);
             return "message";
         }
@@ -1215,8 +1272,9 @@ public class UserSessionBean extends Object {
         if (approved) {
             return "download";
         } else {
-            String message = "The " + selectedStandardReportTemplate
-                + " has not been approved for download.";
+            String message =
+                "The " + selectedStandardReportTemplate
+                    + " has not been approved for download.";
             request.getSession().setAttribute("message", message);
             return "message";
         }
@@ -1232,11 +1290,12 @@ public class UserSessionBean extends Object {
         request.getSession().setAttribute("selectedStandardReportTemplate",
             selectedStandardReportTemplate);
 
-        StandardReportTemplate standardReportTemplate = getStandardReportTemplate(selectedStandardReportTemplate);
+        StandardReportTemplate standardReportTemplate =
+            getStandardReportTemplate(selectedStandardReportTemplate);
 
-        String message = "The status of the "
-            + standardReportTemplate.getLabel()
-            + " has been updated successfully.";
+        String message =
+            "The status of the " + standardReportTemplate.getLabel()
+                + " has been updated successfully.";
 
         request.getSession().setAttribute("message", message);
 
@@ -1265,8 +1324,9 @@ public class UserSessionBean extends Object {
 
     public void setSelectedVersion(String selectedVersion) {
         this.selectedVersion = selectedVersion;
-        HttpServletRequest request = (HttpServletRequest) FacesContext
-            .getCurrentInstance().getExternalContext().getRequest();
+        HttpServletRequest request =
+            (HttpServletRequest) FacesContext.getCurrentInstance()
+                .getExternalContext().getRequest();
         request.getSession().setAttribute("selectedVersion", selectedVersion);
     }
 

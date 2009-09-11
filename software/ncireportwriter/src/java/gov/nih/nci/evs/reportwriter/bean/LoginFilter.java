@@ -58,8 +58,9 @@ public class LoginFilter implements Filter {
                             }
                         }
                         try {
-                            svalid = (Boolean) session
-                                .getAttribute("isSessionValid");
+                            svalid =
+                                (Boolean) session
+                                    .getAttribute("isSessionValid");
                         } catch (Exception e) {
                             // e.printStackTrace();
                         }

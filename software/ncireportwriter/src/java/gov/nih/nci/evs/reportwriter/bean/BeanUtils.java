@@ -49,8 +49,9 @@ import javax.faces.context.*;
 public class BeanUtils {
     @SuppressWarnings("unchecked")
     public static OntologyBean getOntologyBean() {
-        Map<Object, Object> map = FacesContext.getCurrentInstance()
-            .getExternalContext().getSessionMap();
+        Map<Object, Object> map =
+            FacesContext.getCurrentInstance().getExternalContext()
+                .getSessionMap();
         String key = "ontologyBean";
         OntologyBean bean = (OntologyBean) map.get(key);
         if (bean == null) {
