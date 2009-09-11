@@ -184,14 +184,21 @@ public class LoginBean extends Object {
             SessionUtil.getRequest().removeAttribute("loginWarning");
             return "success";
         } catch (Exception e) {
-            logger.debug(StringUtils.SEPARATOR);
-            logger.debug("Error logging in: " + userid);
-            logger.debug("  * " + e.getClass().getSimpleName() + ": "
-                + e.getMessage());
-            SessionUtil.getRequest().setAttribute("loginWarning",
-                e.getMessage());
+            String msg = reformatError(e.getMessage());
+            logger.error(StringUtils.SEPARATOR);
+            logger.error("Error logging in: " + userid);
+            logger.error("  * " + e.getClass().getSimpleName() + ": " + msg);
+            SessionUtil.getRequest().setAttribute("loginWarning", msg);
             return "failure";
         }
+    }
+
+    private String reformatError(String text) {
+        if (text.equals("Invalid Login Credentials"))
+            return "Invalid login credentials.";
+        if (text.equals("Allowed Attempts Reached ! User Name is locked out !"))
+            return "Allowed attempts reached.  Login ID is currently locked out.";
+        return text;
     }
 
     public void changeTaskSelection(ValueChangeEvent vce) {
