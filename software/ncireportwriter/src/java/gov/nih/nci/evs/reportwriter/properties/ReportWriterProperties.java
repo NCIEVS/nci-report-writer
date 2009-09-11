@@ -39,6 +39,7 @@ import org.apache.log4j.*;
  * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. <!-- LICENSE_TEXT_END -->
  */
 public class ReportWriterProperties {
+    public static final String BUILD_INFO = "BUILD_INFO";
     public static final String EVS_SERVICE_URL = "EVS_SERVICE_URL";
     public static final String REPORT_DOWNLOAD_DIRECTORY = "REPORT_DOWNLOAD_DIRECTORY";
     public static final String MAXIMUM_LEVEL = "MAXIMUM_LEVEL";
