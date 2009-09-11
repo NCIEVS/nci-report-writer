@@ -347,17 +347,13 @@ public class UserSessionBean extends Object {
                 return "assign_report_status";
             } else {
                 String message = "No draft report is found. ";
-                HttpServletRequest request =
-                    (HttpServletRequest) FacesContext.getCurrentInstance()
-                        .getExternalContext().getRequest();
+                HttpServletRequest request = SessionUtil.getRequest();
                 request.getSession().setAttribute("message", message);
                 return "message";
             }
 
         } else if (_selectedTask.compareTo("Retrieve Standard Reports") == 0) {
-            HttpServletRequest request =
-                (HttpServletRequest) FacesContext.getCurrentInstance()
-                    .getExternalContext().getRequest();
+            HttpServletRequest request = SessionUtil.getRequest();
             Boolean isAdmin =
                 (Boolean) request.getSession().getAttribute("isAdmin");
             if (isAdmin != null && isAdmin.equals(Boolean.TRUE)) {
@@ -408,9 +404,7 @@ public class UserSessionBean extends Object {
         // track selected column number
 
         // selectedcolumn
-        HttpServletRequest request =
-            (HttpServletRequest) FacesContext.getCurrentInstance()
-                .getExternalContext().getRequest();
+        HttpServletRequest request = SessionUtil.getRequest();
         String id_str = (String) request.getParameter("selectedcolumn");
         int id = Integer.parseInt(id_str);
 
@@ -442,9 +436,7 @@ public class UserSessionBean extends Object {
 
     // public String addReportAction() {
     public String saveTemplateAction() {
-        HttpServletRequest request =
-            (HttpServletRequest) FacesContext.getCurrentInstance()
-                .getExternalContext().getRequest();
+        HttpServletRequest request = SessionUtil.getRequest();
         String codingSchemeNameAndVersion =
             (String) request.getSession().getAttribute("selectedOntology");
         String codingSchemeName =
@@ -536,9 +528,7 @@ public class UserSessionBean extends Object {
     }
 
     public String saveModifiedTemplateAction() {
-        HttpServletRequest request =
-            (HttpServletRequest) FacesContext.getCurrentInstance()
-                .getExternalContext().getRequest();
+        HttpServletRequest request = SessionUtil.getRequest();
         String label =
             (String) request.getSession().getAttribute(
                 "selectedStandardReportTemplate");
@@ -729,9 +719,7 @@ public class UserSessionBean extends Object {
 
     // public String addReportColumnAction() {
     public String saveReportColumnAction() {
-        HttpServletRequest request =
-            (HttpServletRequest) FacesContext.getCurrentInstance()
-                .getExternalContext().getRequest();
+        HttpServletRequest request = SessionUtil.getRequest();
         StandardReportTemplate standardReportTemplate = null;
         standardReportTemplate =
             getStandardReportTemplate(_selectedStandardReportTemplate);
@@ -882,9 +870,7 @@ public class UserSessionBean extends Object {
 
     public void setSelectedReportFormat(String selectedReportFormat) {
         _selectedReportFormat = selectedReportFormat;
-        HttpServletRequest request =
-            (HttpServletRequest) FacesContext.getCurrentInstance()
-                .getExternalContext().getRequest();
+        HttpServletRequest request = SessionUtil.getRequest();
         request.getSession().setAttribute("selectedReportFormat",
             selectedReportFormat);
     }
@@ -915,9 +901,7 @@ public class UserSessionBean extends Object {
 
     public void setSelectedReportStatus(String selectedReportStatus) {
         _selectedReportStatus = selectedReportStatus;
-        HttpServletRequest request =
-            (HttpServletRequest) FacesContext.getCurrentInstance()
-                .getExternalContext().getRequest();
+        HttpServletRequest request = SessionUtil.getRequest();
         request.getSession().setAttribute("selectedReportStatus",
             selectedReportStatus);
     }
@@ -940,9 +924,7 @@ public class UserSessionBean extends Object {
     }
 
     public String assignStatusAction() {
-        HttpServletRequest request =
-            (HttpServletRequest) FacesContext.getCurrentInstance()
-                .getExternalContext().getRequest();
+        HttpServletRequest request = SessionUtil.getRequest();
         // save to database
         String reportTemplate =
             (String) request.getSession().getAttribute(
@@ -1320,9 +1302,7 @@ public class UserSessionBean extends Object {
 
     public void setSelectedVersion(String selectedVersion) {
         _selectedVersion = selectedVersion;
-        HttpServletRequest request =
-            (HttpServletRequest) FacesContext.getCurrentInstance()
-                .getExternalContext().getRequest();
+        HttpServletRequest request = SessionUtil.getRequest();
         request.getSession().setAttribute("selectedVersion", selectedVersion);
     }
 
