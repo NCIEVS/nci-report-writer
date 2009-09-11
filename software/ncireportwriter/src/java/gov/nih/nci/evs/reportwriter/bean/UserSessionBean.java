@@ -62,9 +62,6 @@ import org.LexGrid.concepts.*;
 /**
  * @author EVS Team
  * @version 1.0
- * 
- *          Modification history Initial implementation kim.ong@ngc.com
- * 
  */
 
 public class UserSessionBean extends Object {

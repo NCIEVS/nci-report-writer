@@ -59,9 +59,6 @@ import org.apache.log4j.*;
 /**
  * @author EVS Team
  * @version 1.0
- * 
- *          Modification history Initial implementation kim.ong@ngc.com
- * 
  */
 
 public class LoginBean extends Object {
