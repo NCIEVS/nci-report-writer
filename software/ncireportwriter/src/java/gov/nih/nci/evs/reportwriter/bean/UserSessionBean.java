@@ -176,7 +176,7 @@ public class UserSessionBean extends Object {
 
     public void changeTaskSelection(ValueChangeEvent vce) {
         String newValue = (String) vce.getNewValue();
-        // KLO_log.warn("============== changeTaskSelection " + newValue);
+        // logger.debug("========== changeTaskSelection " + newValue);
         selectedTask = newValue;
     }
 
@@ -384,7 +384,7 @@ public class UserSessionBean extends Object {
     }
 
     public String addColumnAction() {
-        // KLO_log.warn("******************************************* addColumnAction() ");
+        // logger.debug("========== addColumnAction() ");
         // add_standard_report_column.jsp
         return "add_standard_report_column";
     }
@@ -491,14 +491,13 @@ public class UserSessionBean extends Object {
 
         char delimiter = '$';
 
+        logger.warn("==========");
         logger.warn("label: " + label);
         logger.warn("codingSchemeName: " + codingSchemeName);
         logger.warn("codingSchemeVersion: " + codingSchemeVersion);
         logger.warn("rootConceptCode: " + rootConceptCode);
         logger.warn("associationname: " + selectedAssociation);
-
         logger.warn("direction: " + direction);
-
         logger.warn("level: " + selectedLevel);
         logger.warn("delimiter: " + delimiter);
 
@@ -808,6 +807,7 @@ public class UserSessionBean extends Object {
             }
         }
 
+        logger.debug("==========");
         logger.debug("columnNumber: " + columnNumber);
         logger.debug("fieldlabel: " + fieldlabel);
         logger.debug("fieldType: " + fieldType);
