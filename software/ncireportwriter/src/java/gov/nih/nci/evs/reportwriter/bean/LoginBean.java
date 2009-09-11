@@ -62,45 +62,44 @@ import org.apache.log4j.*;
  */
 
 public class LoginBean extends Object {
-    private static Logger logger = Logger.getLogger(LoginBean.class);
     private static final String APP_NAME = "ncireportwriter";
+    private static Logger _logger = Logger.getLogger(LoginBean.class);
 
-    private String userid;
-    private String password;
+    private String _userid;
+    private String _password;
 
-    private long roleGroupId;
-    private String selectedTask = null;
-    private Boolean isAdmin = null;
-
-    private InitialContext ctx = null;
+    private long _roleGroupId;
+    private String _selectedTask = null;
+    private Boolean _isAdmin = null;
+    private InitialContext _context = null;
 
     public void setSelectedTask(String selectedTask) {
-        this.selectedTask = selectedTask;
-        logger.debug("selectedTask: " + this.selectedTask);
+        _selectedTask = selectedTask;
+        _logger.debug("selectedTask: " + _selectedTask);
     }
 
     public String getUserid() {
-        return userid;
+        return _userid;
     }
 
     public void setUserid(String newUserid) {
-        this.userid = newUserid;
+        _userid = newUserid;
     }
 
     public String getPassword() {
-        return this.password;
+        return _password;
     }
 
     public void setPassword(String newPassword) {
-        this.password = newPassword;
+        _password = newPassword;
     }
 
     public long getRoleGroupId() {
-        return this.roleGroupId;
+        return _roleGroupId;
     }
 
     public void setRoleGroupId(long roleGroupId) {
-        this.roleGroupId = roleGroupId;
+        _roleGroupId = roleGroupId;
     }
 
     public Boolean hasAdminPrivilege() {
@@ -111,7 +110,7 @@ public class LoginBean extends Object {
                 return Boolean.FALSE;
 
             ami = (AuthorizationManager) ami;
-            User user = ami.getUser(userid);
+            User user = ami.getUser(_userid);
             Set<?> groups = ami.getGroups(user.getUserId().toString());
             if (null == groups)
                 return Boolean.FALSE;
@@ -129,7 +128,7 @@ public class LoginBean extends Object {
     }
 
     public List<SelectItem> getTaskList() {
-        return DataUtils.getTaskList(isAdmin);
+        return DataUtils.getTaskList(_isAdmin);
     }
 
     public gov.nih.nci.evs.reportwriter.bean.User getUser(String loginName) {
@@ -151,33 +150,33 @@ public class LoginBean extends Object {
 
     public String loginAction() {
         try {
-            isAdmin = false;
-            if (userid.length() <= 0)
+            _isAdmin = false;
+            if (_userid.length() <= 0)
                 throw new Exception("Please enter your login ID.");
-            if (password.length() <= 0)
+            if (_password.length() <= 0)
                 throw new Exception("Please enter your password.");
 
             AuthenticationManager authenticationManager =
                 SecurityServiceProvider.getAuthenticationManager(APP_NAME);
-            if (!authenticationManager.login(userid, password))
+            if (!authenticationManager.login(_userid, _password))
                 throw new Exception("Incorrect login credential.");
 
             HttpServletRequest request = SessionUtil.getRequest();
             HttpSession session = request.getSession(); // true
             if (session != null) {
-                session.setAttribute("uid", userid);
+                session.setAttribute("uid", _userid);
                 // session.setAttribute("password", password);
             }
-            isAdmin = hasAdminPrivilege();
-            session.setAttribute("isAdmin", isAdmin);
+            _isAdmin = hasAdminPrivilege();
+            session.setAttribute("isAdmin", _isAdmin);
 
-            gov.nih.nci.evs.reportwriter.bean.User user = getUser(userid);
+            gov.nih.nci.evs.reportwriter.bean.User user = getUser(_userid);
             if (user == null) {
                 // Synchronize with CSM User table
                 SDKClientUtil sdkclientutil = new SDKClientUtil();
                 gov.nih.nci.evs.reportwriter.bean.User newuser =
                     (gov.nih.nci.evs.reportwriter.bean.User) sdkclientutil
-                        .createUser(userid);
+                        .createUser(_userid);
                 sdkclientutil.insertUser(newuser);
             }
             session.setAttribute("isSessionValid", Boolean.TRUE);
@@ -185,9 +184,9 @@ public class LoginBean extends Object {
             return "success";
         } catch (Exception e) {
             String msg = reformatError(e.getMessage());
-            logger.error(StringUtils.SEPARATOR);
-            logger.error("Error logging in: " + userid);
-            logger.error("  * " + e.getClass().getSimpleName() + ": " + msg);
+            _logger.error(StringUtils.SEPARATOR);
+            _logger.error("Error logging in: " + _userid);
+            _logger.error("  * " + e.getClass().getSimpleName() + ": " + msg);
             SessionUtil.getRequest().setAttribute("loginWarning", msg);
             return "failure";
         }
@@ -208,7 +207,7 @@ public class LoginBean extends Object {
 
     public Object getService(String serviceBeanName)
             throws javax.naming.NamingException {
-        return ctx.lookup(serviceBeanName);
+        return _context.lookup(serviceBeanName);
     }
 
     public String logoutAction() {

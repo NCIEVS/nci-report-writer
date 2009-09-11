@@ -61,23 +61,23 @@ import gov.nih.nci.evs.reportwriter.properties.*;
 
 public class OntologyBean // extends BaseBean
 {
-    private static Logger logger = Logger.getLogger(OntologyBean.class);
     public static final String DEFAULT_ASSOCIATION = "Concept_In_Subset";
     public static final String LEVEL_ALL = "All";
+    private static Logger _logger = Logger.getLogger(OntologyBean.class);
 
     private static List<SelectItem> _ontologies = null;
-    private String selectedOntology = null;
-    private List<SelectItem> associationList = null;
-    private String selectedAssociation = null;
-    private String selectedDirection = null;
-    private List<SelectItem> directionList = null;
+    private String _selectedOntology = null;
+    private List<SelectItem> _associationList = null;
+    private String _selectedAssociation = null;
+    private String _selectedDirection = null;
+    private List<SelectItem> _directionList = null;
 
     protected void init() {
         _ontologies = getOntologyList();
     }
 
     public void setSelectedOntology(String selectedOntology) {
-        this.selectedOntology = selectedOntology;
+        _selectedOntology = selectedOntology;
         HttpServletRequest request =
             (HttpServletRequest) FacesContext.getCurrentInstance()
                 .getExternalContext().getRequest();
@@ -85,7 +85,7 @@ public class OntologyBean // extends BaseBean
     }
 
     public String getSelectedOntology() {
-        return this.selectedOntology;
+        return _selectedOntology;
     }
 
     public List<SelectItem> getOntologyList() {
@@ -96,11 +96,11 @@ public class OntologyBean // extends BaseBean
                 String key = item.getLabel();
                 if (key.indexOf("NCI Thesaurus") != -1
                     || key.indexOf("NCI_Thesaurus") != -1) {
-                    selectedOntology = key;
+                    _selectedOntology = key;
                     break;
                 }
             }
-            associationList = getAssociationList();
+            _associationList = getAssociationList();
         }
         return _ontologies;
     }
@@ -143,11 +143,11 @@ public class OntologyBean // extends BaseBean
     public void ontologySelectionChanged(ValueChangeEvent vce) {
         String newValue = (String) vce.getNewValue();
         setSelectedOntology(newValue);
-        associationList = getAssociationList();
+        _associationList = getAssociationList();
     }
 
     public void setSelectedDirection(String selectedDirection) {
-        this.selectedDirection = selectedDirection;
+        _selectedDirection = selectedDirection;
         HttpServletRequest request =
             (HttpServletRequest) FacesContext.getCurrentInstance()
                 .getExternalContext().getRequest();
@@ -156,31 +156,31 @@ public class OntologyBean // extends BaseBean
     }
 
     public String getSelectedDirection() {
-        return this.selectedDirection;
+        return _selectedDirection;
     }
 
     public List<SelectItem> getAssociationList() {
 
-        if (selectedOntology == null) {
+        if (_selectedOntology == null) {
             _ontologies = getOntologyList();
         }
 
-        if (associationList == null) {
-            associationList = new ArrayList<SelectItem>();
+        if (_associationList == null) {
+            _associationList = new ArrayList<SelectItem>();
             Vector<String> associationNames =
-                DataUtils.getSupportedAssociationNames(selectedOntology);
+                DataUtils.getSupportedAssociationNames(_selectedOntology);
             if (associationNames != null) {
-                associationList.add(new SelectItem(""));
+                _associationList.add(new SelectItem(""));
                 for (int i = 0; i < associationNames.size(); i++) {
                     String name = (String) associationNames.elementAt(i);
-                    associationList.add(new SelectItem(name));
+                    _associationList.add(new SelectItem(name));
                 }
 
-                if ((selectedAssociation == null || selectedAssociation
+                if ((_selectedAssociation == null || _selectedAssociation
                     .length() <= 0)
-                    && associationList != null && associationList.size() > 0) {
-                    for (int j = 0; j < associationList.size(); j++) {
-                        SelectItem item = (SelectItem) associationList.get(j);
+                    && _associationList != null && _associationList.size() > 0) {
+                    for (int j = 0; j < _associationList.size(); j++) {
+                        SelectItem item = (SelectItem) _associationList.get(j);
                         if (item.getLabel().compareTo(DEFAULT_ASSOCIATION) == 0) {
                             setSelectedAssociation(item.getLabel());
                             break;
@@ -190,11 +190,11 @@ public class OntologyBean // extends BaseBean
                 }
             }
         }
-        return associationList;
+        return _associationList;
     }
 
-    private String selectedLevel = null;
-    private List<SelectItem> levelList = null;
+    private String _selectedLevel = null;
+    private List<SelectItem> _levelList = null;
 
     public List<SelectItem> getLevelList() {
         int max_level = 20; // default
@@ -211,16 +211,16 @@ public class OntologyBean // extends BaseBean
 
         }
 
-        levelList = new ArrayList<SelectItem>();
+        _levelList = new ArrayList<SelectItem>();
         for (int i = 0; i <= max_level; i++) {
             String t = Integer.toString(i);
-            levelList.add(new SelectItem(t));
+            _levelList.add(new SelectItem(t));
         }
-        levelList.add(new SelectItem(LEVEL_ALL));
-        if (selectedLevel == null || selectedLevel.length() <= 0) {
-            selectedLevel = LEVEL_ALL;
+        _levelList.add(new SelectItem(LEVEL_ALL));
+        if (_selectedLevel == null || _selectedLevel.length() <= 0) {
+            _selectedLevel = LEVEL_ALL;
         }
-        return levelList;
+        return _levelList;
     }
 
     public static int levelToInt(String value) {
@@ -231,9 +231,9 @@ public class OntologyBean // extends BaseBean
 
     public void setSelectedLevel(String selectedLevel) {
         if (selectedLevel == null || selectedLevel.equals("-1"))
-            this.selectedLevel = LEVEL_ALL;
+            _selectedLevel = LEVEL_ALL;
         else
-            this.selectedLevel = selectedLevel;
+            _selectedLevel = selectedLevel;
         HttpServletRequest request =
             (HttpServletRequest) FacesContext.getCurrentInstance()
                 .getExternalContext().getRequest();
@@ -241,7 +241,7 @@ public class OntologyBean // extends BaseBean
     }
 
     public String getSelectedLevel() {
-        return selectedLevel;
+        return _selectedLevel;
     }
 
     public void levelSelectionChanged(ValueChangeEvent event) {
@@ -253,11 +253,11 @@ public class OntologyBean // extends BaseBean
     }
 
     public String getSelectedAssociation() {
-        return this.selectedAssociation;
+        return _selectedAssociation;
     }
 
     public void setSelectedAssociation(String selectedAssociation) {
-        this.selectedAssociation = selectedAssociation;
+        _selectedAssociation = selectedAssociation;
         HttpServletRequest request =
             (HttpServletRequest) FacesContext.getCurrentInstance()
                 .getExternalContext().getRequest();
@@ -276,9 +276,9 @@ public class OntologyBean // extends BaseBean
     // Report Column Data
     // /////////////////////////////////////////////////////////////////////////
 
-    private String selectedPropertyName = null;
-    private List<SelectItem> propertyNameList = null;
-    private Vector<String> propertyNameListData = null;
+    private String _selectedPropertyName = null;
+    private List<SelectItem> _propertyNameList = null;
+    private Vector<String> _propertyNameListData = null;
 
     public List<SelectItem> getPropertyNameList() {
 
@@ -287,34 +287,34 @@ public class OntologyBean // extends BaseBean
                 .getExternalContext().getRequest();
         String selectedOntology =
             (String) request.getSession().getAttribute("selectedOntology");
-        propertyNameListData =
+        _propertyNameListData =
             DataUtils.getPropertyNameListData(selectedOntology);
-        propertyNameList = new Vector<SelectItem>();
-        propertyNameList.add(new SelectItem(""));
+        _propertyNameList = new Vector<SelectItem>();
+        _propertyNameList.add(new SelectItem(""));
 
         try {
-            if (propertyNameListData != null) {
-                for (int i = 0; i < propertyNameListData.size(); i++) {
-                    String t = (String) propertyNameListData.elementAt(i);
-                    propertyNameList.add(new SelectItem(t));
+            if (_propertyNameListData != null) {
+                for (int i = 0; i < _propertyNameListData.size(); i++) {
+                    String t = (String) _propertyNameListData.elementAt(i);
+                    _propertyNameList.add(new SelectItem(t));
                 }
-                if (propertyNameList != null && propertyNameList.size() > 0) {
-                    selectedPropertyName =
-                        ((SelectItem) propertyNameList.get(0)).getLabel();
-                    setSelectedPropertyName(selectedPropertyName);
+                if (_propertyNameList != null && _propertyNameList.size() > 0) {
+                    _selectedPropertyName =
+                        ((SelectItem) _propertyNameList.get(0)).getLabel();
+                    setSelectedPropertyName(_selectedPropertyName);
                 }
             }
 
         } catch (Exception ex) {
-            logger
+            _logger
                 .error("=========================== getPropertyNameList() Exception  "
                     + selectedOntology);
         }
-        return propertyNameList;
+        return _propertyNameList;
     }
 
     public void setSelectedPropertyName(String selectedPropertyName) {
-        this.selectedPropertyName = selectedPropertyName;
+        _selectedPropertyName = selectedPropertyName;
         HttpServletRequest request =
             (HttpServletRequest) FacesContext.getCurrentInstance()
                 .getExternalContext().getRequest();
@@ -324,7 +324,7 @@ public class OntologyBean // extends BaseBean
     }
 
     public String getSelectedPropertyName() {
-        return this.selectedPropertyName;
+        return _selectedPropertyName;
     }
 
     public void propertyNameSelectionChanged(ValueChangeEvent event) {
@@ -334,39 +334,39 @@ public class OntologyBean // extends BaseBean
         setSelectedPropertyName(newValue);
     }
 
-    private String selectedRepresentationalForm = null;
-    private List<SelectItem> representationalFormList = null;
-    private Vector<String> representationalFormListData = null;
+    private String _selectedRepresentationalForm = null;
+    private List<SelectItem> _representationalFormList = null;
+    private Vector<String> _representationalFormListData = null;
 
     public List<SelectItem> getRepresentationalFormList() {
-        if (selectedOntology == null) {
+        if (_selectedOntology == null) {
             HttpServletRequest request =
                 (HttpServletRequest) FacesContext.getCurrentInstance()
                     .getExternalContext().getRequest();
-            selectedOntology =
+            _selectedOntology =
                 (String) request.getSession().getAttribute("selectedOntology");
         }
-        representationalFormListData =
-            DataUtils.getRepresentationalFormListData(selectedOntology);
-        representationalFormList = new ArrayList<SelectItem>();
-        if (representationalFormListData != null) {
-            representationalFormList.add(new SelectItem(""));
-            for (int i = 0; i < representationalFormListData.size(); i++) {
-                String t = (String) representationalFormListData.elementAt(i);
-                representationalFormList.add(new SelectItem(t));
+        _representationalFormListData =
+            DataUtils.getRepresentationalFormListData(_selectedOntology);
+        _representationalFormList = new ArrayList<SelectItem>();
+        if (_representationalFormListData != null) {
+            _representationalFormList.add(new SelectItem(""));
+            for (int i = 0; i < _representationalFormListData.size(); i++) {
+                String t = (String) _representationalFormListData.elementAt(i);
+                _representationalFormList.add(new SelectItem(t));
             }
-            if (representationalFormList != null
-                && representationalFormList.size() > 0) {
-                selectedRepresentationalForm =
-                    ((SelectItem) representationalFormList.get(0)).getLabel();
+            if (_representationalFormList != null
+                && _representationalFormList.size() > 0) {
+                _selectedRepresentationalForm =
+                    ((SelectItem) _representationalFormList.get(0)).getLabel();
             }
         }
-        return representationalFormList;
+        return _representationalFormList;
     }
 
     public void setSelectedRepresentationalForm(
         String selectedRepresentationalForm) {
-        this.selectedRepresentationalForm = selectedRepresentationalForm;
+        _selectedRepresentationalForm = selectedRepresentationalForm;
         HttpServletRequest request =
             (HttpServletRequest) FacesContext.getCurrentInstance()
                 .getExternalContext().getRequest();
@@ -375,7 +375,7 @@ public class OntologyBean // extends BaseBean
     }
 
     public String getSelectedRepresentationalForm() {
-        return this.selectedRepresentationalForm;
+        return _selectedRepresentationalForm;
     }
 
     public void representationalFormSelectionChanged(ValueChangeEvent event) {
@@ -385,22 +385,22 @@ public class OntologyBean // extends BaseBean
         setSelectedRepresentationalForm(newValue);
     }
 
-    private String selectedDelimiter = null;
-    private List<SelectItem> delimiterList = null;
+    private String _selectedDelimiter = null;
+    private List<SelectItem> _delimiterList = null;
 
     public List<SelectItem> getDelimiterList() {
-        delimiterList = new ArrayList<SelectItem>();
-        delimiterList.add(new SelectItem(" "));
-        delimiterList.add(new SelectItem("|"));
-        delimiterList.add(new SelectItem("$"));
+        _delimiterList = new ArrayList<SelectItem>();
+        _delimiterList.add(new SelectItem(" "));
+        _delimiterList.add(new SelectItem("|"));
+        _delimiterList.add(new SelectItem("$"));
         // delimiterList.add(new SelectItem("tab")); // used for separating
         // fields/columns
         setSelectedDelimiter("|");
-        return delimiterList;
+        return _delimiterList;
     }
 
     public void setSelectedDelimiter(String selectedDelimiter) {
-        this.selectedDelimiter = selectedDelimiter;
+        _selectedDelimiter = selectedDelimiter;
         HttpServletRequest request =
             (HttpServletRequest) FacesContext.getCurrentInstance()
                 .getExternalContext().getRequest();
@@ -409,7 +409,7 @@ public class OntologyBean // extends BaseBean
     }
 
     public String getSelectedDelimiter() {
-        return this.selectedDelimiter;
+        return _selectedDelimiter;
     }
 
     public void delimiterSelectionChanged(ValueChangeEvent event) {
@@ -419,44 +419,44 @@ public class OntologyBean // extends BaseBean
         setSelectedDelimiter(newValue);
     }
 
-    private String selectedPropertyQualifier = null;
-    private List<SelectItem> propertyQualifierList = null;
-    private Vector<String> propertyQualifierListData = null;
+    private String _selectedPropertyQualifier = null;
+    private List<SelectItem> _propertyQualifierList = null;
+    private Vector<String> _propertyQualifierListData = null;
 
     public List<SelectItem> getPropertyQualifierList() {
-        if (selectedOntology == null) {
+        if (_selectedOntology == null) {
             HttpServletRequest request =
                 (HttpServletRequest) FacesContext.getCurrentInstance()
                     .getExternalContext().getRequest();
-            selectedOntology =
+            _selectedOntology =
                 (String) request.getSession().getAttribute("selectedOntology");
         }
-        propertyQualifierListData =
-            DataUtils.getPropertyQualifierListData(selectedOntology);
-        propertyQualifierList = new ArrayList<SelectItem>();
-        propertyQualifierList.add(new SelectItem(""));
-        for (int i = 0; i < propertyQualifierListData.size(); i++) {
-            String t = (String) propertyQualifierListData.elementAt(i);
-            propertyQualifierList.add(new SelectItem(t));
+        _propertyQualifierListData =
+            DataUtils.getPropertyQualifierListData(_selectedOntology);
+        _propertyQualifierList = new ArrayList<SelectItem>();
+        _propertyQualifierList.add(new SelectItem(""));
+        for (int i = 0; i < _propertyQualifierListData.size(); i++) {
+            String t = (String) _propertyQualifierListData.elementAt(i);
+            _propertyQualifierList.add(new SelectItem(t));
         }
-        if (propertyQualifierList != null && propertyQualifierList.size() > 0) {
-            selectedPropertyQualifier =
-                ((SelectItem) propertyQualifierList.get(0)).getLabel();
+        if (_propertyQualifierList != null && _propertyQualifierList.size() > 0) {
+            _selectedPropertyQualifier =
+                ((SelectItem) _propertyQualifierList.get(0)).getLabel();
         }
-        return propertyQualifierList;
+        return _propertyQualifierList;
     }
 
     public List<SelectItem> getDirectionList() {
-        directionList = new ArrayList<SelectItem>();
-        directionList.add(new SelectItem("source"));
-        directionList.add(new SelectItem("target"));
+        _directionList = new ArrayList<SelectItem>();
+        _directionList.add(new SelectItem("source"));
+        _directionList.add(new SelectItem("target"));
 
         setSelectedDirection("source");
-        return directionList;
+        return _directionList;
     }
 
     public void setSelectedPropertyQualifier(String selectedPropertyQualifier) {
-        this.selectedPropertyQualifier = selectedPropertyQualifier;
+        _selectedPropertyQualifier = selectedPropertyQualifier;
         HttpServletRequest request =
             (HttpServletRequest) FacesContext.getCurrentInstance()
                 .getExternalContext().getRequest();
@@ -465,7 +465,7 @@ public class OntologyBean // extends BaseBean
     }
 
     public String getSelectedPropertyQualifier() {
-        return this.selectedPropertyQualifier;
+        return _selectedPropertyQualifier;
     }
 
     public void propertyQualifierSelectionChanged(ValueChangeEvent event) {
@@ -475,37 +475,37 @@ public class OntologyBean // extends BaseBean
         setSelectedPropertyQualifier(newValue);
     }
 
-    private String selectedDataCategory = null;
-    private List<SelectItem> dataCategoryList = null;
+    private String _selectedDataCategory = null;
+    private List<SelectItem> _dataCategoryList = null;
 
     public List<SelectItem> getDataCategoryList() {
-        dataCategoryList = new ArrayList<SelectItem>();
-        dataCategoryList.add(new SelectItem("Code"));
-        dataCategoryList.add(new SelectItem("Property"));
-        dataCategoryList.add(new SelectItem("Property Qualifier"));
+        _dataCategoryList = new ArrayList<SelectItem>();
+        _dataCategoryList.add(new SelectItem("Code"));
+        _dataCategoryList.add(new SelectItem("Property"));
+        _dataCategoryList.add(new SelectItem("Property Qualifier"));
 
-        dataCategoryList.add(new SelectItem("Associated Concept Code"));
-        dataCategoryList.add(new SelectItem("Associated Concept Property"));
-        dataCategoryList.add(new SelectItem(
+        _dataCategoryList.add(new SelectItem("Associated Concept Code"));
+        _dataCategoryList.add(new SelectItem("Associated Concept Property"));
+        _dataCategoryList.add(new SelectItem(
             "Associated Concept Property Qualifier"));
 
-        dataCategoryList.add(new SelectItem("1st Parent Code"));
-        dataCategoryList.add(new SelectItem("1st Parent Property"));
-        dataCategoryList.add(new SelectItem("1st Parent Property Qualifier"));
+        _dataCategoryList.add(new SelectItem("1st Parent Code"));
+        _dataCategoryList.add(new SelectItem("1st Parent Property"));
+        _dataCategoryList.add(new SelectItem("1st Parent Property Qualifier"));
 
-        dataCategoryList.add(new SelectItem("2nd Parent Code"));
-        dataCategoryList.add(new SelectItem("2nd Parent Property"));
-        dataCategoryList.add(new SelectItem("2nd Parent Property Qualifier"));
+        _dataCategoryList.add(new SelectItem("2nd Parent Code"));
+        _dataCategoryList.add(new SelectItem("2nd Parent Property"));
+        _dataCategoryList.add(new SelectItem("2nd Parent Property Qualifier"));
 
-        if (dataCategoryList != null && dataCategoryList.size() > 0) {
-            selectedDataCategory =
-                ((SelectItem) dataCategoryList.get(0)).getLabel();
+        if (_dataCategoryList != null && _dataCategoryList.size() > 0) {
+            _selectedDataCategory =
+                ((SelectItem) _dataCategoryList.get(0)).getLabel();
         }
-        return dataCategoryList;
+        return _dataCategoryList;
     }
 
     public void setSelectedDataCategory(String selectedDataCategory) {
-        this.selectedDataCategory = selectedDataCategory;
+        _selectedDataCategory = selectedDataCategory;
         HttpServletRequest request =
             (HttpServletRequest) FacesContext.getCurrentInstance()
                 .getExternalContext().getRequest();
@@ -514,7 +514,7 @@ public class OntologyBean // extends BaseBean
     }
 
     public String getSelectedDataCategory() {
-        return this.selectedDataCategory;
+        return _selectedDataCategory;
     }
 
     public void dataCategorySelectionChanged(ValueChangeEvent event) {
@@ -524,9 +524,9 @@ public class OntologyBean // extends BaseBean
         setSelectedDataCategory(newValue);
     }
 
-    private String selectedSource = null;
-    private List<SelectItem> sourceList = null;
-    private Vector<String> sourceListData = null;
+    private String _selectedSource = null;
+    private List<SelectItem> _sourceList = null;
+    private Vector<String> _sourceListData = null;
 
     public List<SelectItem> getSourceList() {
         HttpServletRequest request =
@@ -563,23 +563,23 @@ public class OntologyBean // extends BaseBean
             }
         }
 
-        sourceListData = DataUtils.getSourceListData(selectedOntology);
+        _sourceListData = DataUtils.getSourceListData(selectedOntology);
 
-        sourceList = new ArrayList<SelectItem>();
-        sourceList.add(new SelectItem(" "));
-        for (int i = 0; i < sourceListData.size(); i++) {
-            String t = (String) sourceListData.elementAt(i);
-            sourceList.add(new SelectItem(t));
+        _sourceList = new ArrayList<SelectItem>();
+        _sourceList.add(new SelectItem(" "));
+        for (int i = 0; i < _sourceListData.size(); i++) {
+            String t = (String) _sourceListData.elementAt(i);
+            _sourceList.add(new SelectItem(t));
         }
 
-        if (sourceList != null && sourceList.size() > 0) {
-            selectedSource = ((SelectItem) sourceList.get(0)).getLabel();
+        if (_sourceList != null && _sourceList.size() > 0) {
+            _selectedSource = ((SelectItem) _sourceList.get(0)).getLabel();
         }
-        return sourceList;
+        return _sourceList;
     }
 
     public void setSelectedSource(String selectedSource) {
-        this.selectedSource = selectedSource;
+        _selectedSource = selectedSource;
         HttpServletRequest request =
             (HttpServletRequest) FacesContext.getCurrentInstance()
                 .getExternalContext().getRequest();
@@ -587,7 +587,7 @@ public class OntologyBean // extends BaseBean
     }
 
     public String getSelectedSource() {
-        return this.selectedSource;
+        return _selectedSource;
     }
 
     public void sourceSelectionChanged(ValueChangeEvent event) {

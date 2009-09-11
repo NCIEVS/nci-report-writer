@@ -65,57 +65,56 @@ import org.LexGrid.concepts.*;
  */
 
 public class UserSessionBean extends Object {
-    private static Logger logger = Logger.getLogger(UserSessionBean.class);
+    private static Logger _logger = Logger.getLogger(UserSessionBean.class);
 
-    private Boolean isAdmin = null;
-    private String selectedTask = null;
+    private Boolean _isAdmin = null;
+    private String _selectedTask = null;
 
     // for templates with reports already been generated
-    private List<SelectItem> standardReportTemplateList_draft =
+    private List<SelectItem> _standardReportTemplateList_draft =
         new ArrayList<SelectItem>();
     // for templates with reports already been generated
-    private List<SelectItem> standardReportTemplateList_approved =
+    private List<SelectItem> _standardReportTemplateList_approved =
         new ArrayList<SelectItem>();
 
-    private String selectedStandardReportTemplate = null;
-    private String selectedStandardReportTemplate_draft = null;
-    private String selectedStandardReportTemplate_approved = null;
+    private String _selectedStandardReportTemplate = null;
+    private String _selectedStandardReportTemplate_draft = null;
+    private String _selectedStandardReportTemplate_approved = null;
 
-    private String selectedPropertyType = null;
+    private String _selectedPropertyType = null;
+    private String _rootConceptCode = null;
+    private String _selectedOntology = null;
 
-    private String rootConceptCode = null;
-    private String selectedOntology = null;
+    private String _selectedReportStatus = null;
+    private List<SelectItem> _reportStatusList = null;
+    private Vector<String> _reportStatusListData = null;
 
-    private String selectedReportStatus = null;
-    private List<SelectItem> reportStatusList = null;
-    private Vector<String> reportStatusListData = null;
+    private String _selectedReportFormat = null;
+    private List<SelectItem> _reportFormatList = null;
+    private Vector<String> _reportFormatListData = null;
 
-    private String selectedReportFormat = null;
-    private List<SelectItem> reportFormatList = null;
-    private Vector<String> reportFormatListData = null;
-
-    public void setIsAdmin(Boolean bool_obj) {
-        this.isAdmin = bool_obj;
+    public void setIsAdmin(Boolean isAdmin) {
+        _isAdmin = isAdmin;
     }
 
     public Boolean getIsAdmin() {
-        return this.isAdmin;
+        return _isAdmin;
     }
 
     public String getSelectedTask() {
-        return this.selectedTask;
+        return _selectedTask;
     }
 
     public void setSelectedTask(String selectedTask) {
-        this.selectedTask = selectedTask;
+        _selectedTask = selectedTask;
     }
 
     public String getSelectedPropertyType() {
-        return this.selectedPropertyType;
+        return _selectedPropertyType;
     }
 
     public void setSelectedPropertyType(String selectedPropertyType) {
-        this.selectedPropertyType = selectedPropertyType;
+        _selectedPropertyType = selectedPropertyType;
         HttpServletRequest request = getHttpRequest();
         request.getSession().setAttribute("selectedPropertyType",
             selectedPropertyType);
@@ -129,11 +128,11 @@ public class UserSessionBean extends Object {
     }
 
     public String getSelectedOntology() {
-        return this.selectedOntology;
+        return _selectedOntology;
     }
 
     public void setSelectedOntology(String selectedOntology) {
-        this.selectedOntology = selectedOntology;
+        _selectedOntology = selectedOntology;
     }
 
     public HttpServletRequest getHttpRequest() {
@@ -156,7 +155,7 @@ public class UserSessionBean extends Object {
         List<SelectItem> list = DataUtils.getTaskList(isAdmin);
         if (list != null) {
             SelectItem item = (SelectItem) list.get(0);
-            selectedTask = item.getLabel();
+            _selectedTask = item.getLabel();
         }
         // return DataUtils.getTaskList(isAdmin);
         return list;
@@ -164,9 +163,9 @@ public class UserSessionBean extends Object {
 
     public List<SelectItem> getPropertyTypeList() {
         List<SelectItem> list = DataUtils.getPropertyTypeList();
-        if (selectedPropertyType == null) {
+        if (_selectedPropertyType == null) {
             SelectItem item = (SelectItem) list.get(0);
-            selectedPropertyType = item.getLabel();
+            _selectedPropertyType = item.getLabel();
         }
         return list;
     }
@@ -174,7 +173,7 @@ public class UserSessionBean extends Object {
     public void changeTaskSelection(ValueChangeEvent vce) {
         String newValue = (String) vce.getNewValue();
         // logger.debug("========== changeTaskSelection " + newValue);
-        selectedTask = newValue;
+        _selectedTask = newValue;
     }
 
     public void reportSelectionChanged(ValueChangeEvent vce) {
@@ -195,7 +194,7 @@ public class UserSessionBean extends Object {
     public List<SelectItem> getStandardReportTemplateList() {
 
         List<SelectItem> list = DataUtils.getStandardReportTemplateList();
-        if (selectedStandardReportTemplate == null) {
+        if (_selectedStandardReportTemplate == null) {
             if (list != null && list.size() > 0) {
                 if (getSelectedStandardReportTemplate() == null) {
                     SelectItem item = (SelectItem) list.get(0);
@@ -207,12 +206,12 @@ public class UserSessionBean extends Object {
     }
 
     public String getSelectedStandardReportTemplate() {
-        return this.selectedStandardReportTemplate;
+        return _selectedStandardReportTemplate;
     }
 
     public void setSelectedStandardReportTemplate(
         String selectedStandardReportTemplate) {
-        this.selectedStandardReportTemplate = selectedStandardReportTemplate;
+        _selectedStandardReportTemplate = selectedStandardReportTemplate;
         HttpServletRequest request = getHttpRequest();
         request.getSession().setAttribute("selectedStandardReportTemplate",
             selectedStandardReportTemplate);
@@ -259,12 +258,12 @@ public class UserSessionBean extends Object {
     }
 
     public String getSelectedStandardReportTemplate_draft() {
-        return this.selectedStandardReportTemplate_draft;
+        return _selectedStandardReportTemplate_draft;
     }
 
     public void setSelectedStandardReportTemplate_draft(
         String selectedStandardReportTemplate_draft) {
-        this.selectedStandardReportTemplate_draft =
+        _selectedStandardReportTemplate_draft =
             selectedStandardReportTemplate_draft;
         HttpServletRequest request = getHttpRequest();
         request.getSession().setAttribute(
@@ -310,7 +309,7 @@ public class UserSessionBean extends Object {
     }
 
     public String getSelectedStandardReportTemplate_approved() {
-        return this.selectedStandardReportTemplate_approved;
+        return _selectedStandardReportTemplate_approved;
     }
 
     public void setSelectedStandardReportTemplate_approved(
@@ -318,7 +317,7 @@ public class UserSessionBean extends Object {
         HttpServletRequest request = getHttpRequest();
         request.getSession().setAttribute(
             "selectedStandardReportTemplate_approved",
-            selectedStandardReportTemplate_approved);
+            _selectedStandardReportTemplate_approved);
     }
 
     // taskSelectionChanged
@@ -330,21 +329,21 @@ public class UserSessionBean extends Object {
     }
 
     public String performTask() {
-        if (this.selectedTask.compareTo("Administer Standard Reports") == 0) {
+        if (_selectedTask.compareTo("Administer Standard Reports") == 0) {
             List<SelectItem> list = getStandardReportTemplateList();
             if (list == null || list.size() == 0) {
                 return "add_standard_report_template";
             }
             return "administer_standard_reports";
-        } else if (this.selectedTask.compareTo("Maintain Report Status") == 0)
+        } else if (_selectedTask.compareTo("Maintain Report Status") == 0)
             return "report_status";
 
-        else if (this.selectedTask.compareTo("Assign Report Status") == 0) {
+        else if (_selectedTask.compareTo("Assign Report Status") == 0) {
             // Check if there is any DRAFT report waiting for approval:
-            standardReportTemplateList_draft =
+            _standardReportTemplateList_draft =
                 getStandardReportTemplateList_draft();
-            if (standardReportTemplateList_draft != null
-                && standardReportTemplateList_draft.size() > 0) {
+            if (_standardReportTemplateList_draft != null
+                && _standardReportTemplateList_draft.size() > 0) {
                 return "assign_report_status";
             } else {
                 String message = "No draft report is found. ";
@@ -355,7 +354,7 @@ public class UserSessionBean extends Object {
                 return "message";
             }
 
-        } else if (this.selectedTask.compareTo("Retrieve Standard Reports") == 0) {
+        } else if (_selectedTask.compareTo("Retrieve Standard Reports") == 0) {
             HttpServletRequest request =
                 (HttpServletRequest) FacesContext.getCurrentInstance()
                     .getExternalContext().getRequest();
@@ -365,10 +364,10 @@ public class UserSessionBean extends Object {
                 return "retrieve_standard_reports";
             } else {
                 // Check if there is any APPROVED report waiting for approval:
-                standardReportTemplateList_approved =
+                _standardReportTemplateList_approved =
                     getStandardReportTemplateList_approved();
-                if (standardReportTemplateList_approved != null
-                    && standardReportTemplateList_approved.size() > 0) {
+                if (_standardReportTemplateList_approved != null
+                    && _standardReportTemplateList_approved.size() > 0) {
                     return "retrieve_standard_reports";
                 } else {
                     String message = "No approved report is found. ";
@@ -415,7 +414,7 @@ public class UserSessionBean extends Object {
         String id_str = (String) request.getParameter("selectedcolumn");
         int id = Integer.parseInt(id_str);
 
-        logger.debug("deleting column with ID = " + id
+        _logger.debug("deleting column with ID = " + id
             + " (yet to be implemented)");
 
         try {
@@ -432,13 +431,13 @@ public class UserSessionBean extends Object {
     }
 
     public String getRootConceptCode() {
-        return this.rootConceptCode;
+        return _rootConceptCode;
     }
 
     public void setRootConceptCode(String rootConceptCode) {
         if (rootConceptCode == null)
             return;
-        this.rootConceptCode = rootConceptCode;
+        _rootConceptCode = rootConceptCode;
     }
 
     // public String addReportAction() {
@@ -469,15 +468,15 @@ public class UserSessionBean extends Object {
 
         // return to error page
         if (label == null || label.compareTo("") == 0) {
-            logger.warn("Incomplete data entry -- form not saved.");
+            _logger.warn("Incomplete data entry -- form not saved.");
             return "add_standard_report_template";
         }
         if (rootConceptCode == null || rootConceptCode.compareTo("") == 0) {
-            logger.warn("Incomplete data entry -- form not saved.");
+            _logger.warn("Incomplete data entry -- form not saved.");
             return "add_standard_report_template";
         }
         if (selectedLevel == null || selectedLevel.compareTo("") == 0) {
-            logger.warn("Incomplete data entry -- form not saved.");
+            _logger.warn("Incomplete data entry -- form not saved.");
             return "add_standard_report_template";
         }
 
@@ -488,15 +487,15 @@ public class UserSessionBean extends Object {
 
         char delimiter = '$';
 
-        logger.warn("==========");
-        logger.warn("label: " + label);
-        logger.warn("codingSchemeName: " + codingSchemeName);
-        logger.warn("codingSchemeVersion: " + codingSchemeVersion);
-        logger.warn("rootConceptCode: " + rootConceptCode);
-        logger.warn("associationname: " + selectedAssociation);
-        logger.warn("direction: " + direction);
-        logger.warn("level: " + selectedLevel);
-        logger.warn("delimiter: " + delimiter);
+        _logger.warn("==========");
+        _logger.warn("label: " + label);
+        _logger.warn("codingSchemeName: " + codingSchemeName);
+        _logger.warn("codingSchemeVersion: " + codingSchemeVersion);
+        _logger.warn("rootConceptCode: " + rootConceptCode);
+        _logger.warn("associationname: " + selectedAssociation);
+        _logger.warn("direction: " + direction);
+        _logger.warn("level: " + selectedLevel);
+        _logger.warn("delimiter: " + delimiter);
 
         // Save results using SDK writable API.
 
@@ -547,9 +546,9 @@ public class UserSessionBean extends Object {
         String codingScheme = (String) request.getParameter("codingScheme");
         String version = (String) request.getParameter("version");
 
-        logger
+        _logger
             .debug("saveModifiedTemplateAction: codingScheme " + codingScheme);
-        logger.debug("saveModifiedTemplateAction: version " + version);
+        _logger.debug("saveModifiedTemplateAction: version " + version);
 
         if (codingScheme == null || version == null) {
             String message =
@@ -584,12 +583,12 @@ public class UserSessionBean extends Object {
             return "message";
         }
         rootConceptCode = rootConceptCode.trim();
-        logger.debug("saveModifiedTemplateAction: rootConceptCode: "
+        _logger.debug("saveModifiedTemplateAction: rootConceptCode: "
             + rootConceptCode);
 
         OntologyBean ontologyBean = BeanUtils.getOntologyBean();
         String associationName = ontologyBean.getSelectedAssociation();
-        logger.debug("saveModifiedTemplateAction: associationName: "
+        _logger.debug("saveModifiedTemplateAction: associationName: "
             + associationName);
 
         if (associationName == null) {
@@ -611,15 +610,15 @@ public class UserSessionBean extends Object {
 
         // return to error page
         if (label == null || label.compareTo("") == 0) {
-            logger.warn("Incomplete data entry -- form not saved.");
+            _logger.warn("Incomplete data entry -- form not saved.");
             return "modify_standard_report_template";
         }
         if (rootConceptCode == null || rootConceptCode.compareTo("") == 0) {
-            logger.warn("Incomplete data entry -- form not saved.");
+            _logger.warn("Incomplete data entry -- form not saved.");
             return "modify_standard_report_template";
         }
         if (level_str == null || level_str.compareTo("") == 0) {
-            logger.warn("Incomplete data entry -- form not saved.");
+            _logger.warn("Incomplete data entry -- form not saved.");
             return "modify_standard_report_template";
         }
 
@@ -680,7 +679,7 @@ public class UserSessionBean extends Object {
             (String) request.getSession().getAttribute(
                 "selectedStandardReportTemplate");
 
-        logger.warn("deleteReportTemplateAction: " + template_label);
+        _logger.warn("deleteReportTemplateAction: " + template_label);
 
         try {
             StandardReportTemplate template =
@@ -735,11 +734,11 @@ public class UserSessionBean extends Object {
                 .getExternalContext().getRequest();
         StandardReportTemplate standardReportTemplate = null;
         standardReportTemplate =
-            getStandardReportTemplate(this.selectedStandardReportTemplate);
+            getStandardReportTemplate(_selectedStandardReportTemplate);
         if (standardReportTemplate == null) {
             String message =
                 "ERROR saving ReportColumn -- Unable to identify report template "
-                    + this.selectedStandardReportTemplate;
+                    + _selectedStandardReportTemplate;
             request.getSession().setAttribute("message", message);
             return "message";
         }
@@ -804,18 +803,18 @@ public class UserSessionBean extends Object {
             }
         }
 
-        logger.debug("==========");
-        logger.debug("columnNumber: " + columnNumber);
-        logger.debug("fieldlabel: " + fieldlabel);
-        logger.debug("fieldType: " + fieldType);
-        logger.debug("propertyType: " + propertyType);
-        logger.debug("propertyName: " + propertyName);
-        logger.debug("isPreferred: " + isPreferred);
-        logger.debug("representationalForm: " + representationalForm);
-        logger.debug("source: " + source);
-        logger.debug("propertyQualifier: " + propertyQualifier);
-        logger.debug("qualifierValue: " + qualifierValue);
-        logger.debug("delim: " + delim);
+        _logger.debug("==========");
+        _logger.debug("columnNumber: " + columnNumber);
+        _logger.debug("fieldlabel: " + fieldlabel);
+        _logger.debug("fieldType: " + fieldType);
+        _logger.debug("propertyType: " + propertyType);
+        _logger.debug("propertyName: " + propertyName);
+        _logger.debug("isPreferred: " + isPreferred);
+        _logger.debug("representationalForm: " + representationalForm);
+        _logger.debug("source: " + source);
+        _logger.debug("propertyQualifier: " + propertyQualifier);
+        _logger.debug("qualifierValue: " + qualifierValue);
+        _logger.debug("delim: " + delim);
 
         // Save results using SDK writable API.
         try {
@@ -856,10 +855,10 @@ public class UserSessionBean extends Object {
                     qualifierValue, delimiter, ccid);
             col.setReportTemplate(standardReportTemplate);
             sdkclientutil.insertReportColumn(col);
-            logger.debug("completed insertReportColumn: ");
+            _logger.debug("completed insertReportColumn: ");
 
             request.getSession().setAttribute("selectedStandardReportTemplate",
-                selectedStandardReportTemplate);
+                _selectedStandardReportTemplate);
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -868,21 +867,21 @@ public class UserSessionBean extends Object {
     }
 
     public List<SelectItem> getReportFormatList() {
-        reportFormatListData = DataUtils.getReportFormatListData();
-        reportFormatList = new ArrayList<SelectItem>();
-        for (int i = 0; i < reportFormatListData.size(); i++) {
-            String t = reportFormatListData.elementAt(i);
-            reportFormatList.add(new SelectItem(t));
+        _reportFormatListData = DataUtils.getReportFormatListData();
+        _reportFormatList = new ArrayList<SelectItem>();
+        for (int i = 0; i < _reportFormatListData.size(); i++) {
+            String t = _reportFormatListData.elementAt(i);
+            _reportFormatList.add(new SelectItem(t));
         }
-        if (reportFormatList != null && reportFormatList.size() > 0) {
-            selectedReportFormat = reportFormatList.get(0).getLabel();
+        if (_reportFormatList != null && _reportFormatList.size() > 0) {
+            _selectedReportFormat = _reportFormatList.get(0).getLabel();
         }
 
-        return reportFormatList;
+        return _reportFormatList;
     }
 
     public void setSelectedReportFormat(String selectedReportFormat) {
-        this.selectedReportFormat = selectedReportFormat;
+        _selectedReportFormat = selectedReportFormat;
         HttpServletRequest request =
             (HttpServletRequest) FacesContext.getCurrentInstance()
                 .getExternalContext().getRequest();
@@ -891,31 +890,31 @@ public class UserSessionBean extends Object {
     }
 
     public String getSelectedReportFormat() {
-        return this.selectedReportFormat;
+        return _selectedReportFormat;
     }
 
     public void ReportFormatSelectionChanged(ValueChangeEvent event) {
         if (event.getNewValue() == null)
             return;
-        setSelectedReportFormat(selectedReportFormat);
+        setSelectedReportFormat(_selectedReportFormat);
     }
 
     public List<SelectItem> getReportStatusList() {
-        reportStatusListData = DataUtils.getReportStatusListData();
-        reportStatusList = new ArrayList<SelectItem>();
-        for (int i = 0; i < reportStatusListData.size(); i++) {
-            String t = reportStatusListData.elementAt(i);
-            reportStatusList.add(new SelectItem(t));
+        _reportStatusListData = DataUtils.getReportStatusListData();
+        _reportStatusList = new ArrayList<SelectItem>();
+        for (int i = 0; i < _reportStatusListData.size(); i++) {
+            String t = _reportStatusListData.elementAt(i);
+            _reportStatusList.add(new SelectItem(t));
         }
-        if (reportStatusList != null && reportStatusList.size() > 0) {
-            selectedReportStatus = reportStatusList.get(0).getLabel();
+        if (_reportStatusList != null && _reportStatusList.size() > 0) {
+            _selectedReportStatus = _reportStatusList.get(0).getLabel();
         }
 
-        return reportStatusList;
+        return _reportStatusList;
     }
 
     public void setSelectedReportStatus(String selectedReportStatus) {
-        this.selectedReportStatus = selectedReportStatus;
+        _selectedReportStatus = selectedReportStatus;
         HttpServletRequest request =
             (HttpServletRequest) FacesContext.getCurrentInstance()
                 .getExternalContext().getRequest();
@@ -924,13 +923,13 @@ public class UserSessionBean extends Object {
     }
 
     public String getSelectedReportStatus() {
-        return this.selectedReportStatus;
+        return _selectedReportStatus;
     }
 
     public void reportStatusSelectionChanged(ValueChangeEvent event) {
         if (event.getNewValue() == null)
             return;
-        setSelectedReportStatus(selectedReportStatus);
+        setSelectedReportStatus(_selectedReportStatus);
     }
 
     public String addStatusAction() {
@@ -987,7 +986,7 @@ public class UserSessionBean extends Object {
             e.printStackTrace();
         }
 
-        standardReportTemplateList_draft =
+        _standardReportTemplateList_draft =
             getStandardReportTemplateList_draft();
 
         return "assign_report_status";
@@ -1011,7 +1010,7 @@ public class UserSessionBean extends Object {
         try {
             SDKClientUtil sdkclientutil = new SDKClientUtil();
 
-            logger.debug("modifyReportTemplateAction" + " " + templateLabel);
+            _logger.debug("modifyReportTemplateAction" + " " + templateLabel);
 
             StandardReportTemplate standardReportTemplate = null;
             String FQName =
@@ -1024,10 +1023,10 @@ public class UserSessionBean extends Object {
                 standardReportTemplate =
                     (StandardReportTemplate) standardReportTemplate_obj;
 
-                logger.debug("modifyReportTemplateAction" + " "
+                _logger.debug("modifyReportTemplateAction" + " "
                     + standardReportTemplate.getCodingSchemeName());
 
-                versionList =
+                _versionList =
                     getVersionList(standardReportTemplate.getCodingSchemeName());
 
                 // StandardReportTemplate standardReportTemplate =
@@ -1060,10 +1059,10 @@ public class UserSessionBean extends Object {
     public String editReportContentAction() {
         HttpServletRequest request = getHttpRequest();
         request.getSession().setAttribute("selectedStandardReportTemplate",
-            selectedStandardReportTemplate);
+            _selectedStandardReportTemplate);
 
         StandardReportTemplate standardReportTemplate =
-            getStandardReportTemplate(selectedStandardReportTemplate);
+            getStandardReportTemplate(_selectedStandardReportTemplate);
         String ontologyNameAndVersion =
             standardReportTemplate.getCodingSchemeName() + " (version: "
                 + standardReportTemplate.getCodingSchemeVersion() + ")";
@@ -1079,7 +1078,7 @@ public class UserSessionBean extends Object {
             (String) request.getSession().getAttribute(
                 "selectedStandardReportTemplate");
 
-        logger.debug("generateStandardReportAction: " + templateId);
+        _logger.debug("generateStandardReportAction: " + templateId);
 
         // boolean set_defined_by_code = true;
         String defining_set_desc = null;
@@ -1101,9 +1100,9 @@ public class UserSessionBean extends Object {
                 String version =
                     standardReportTemplate.getCodingSchemeVersion();
 
-                logger.debug("generateStandardReportAction: codingscheme "
+                _logger.debug("generateStandardReportAction: codingscheme "
                     + codingscheme);
-                logger
+                _logger
                     .debug("generateStandardReportAction: version " + version);
 
                 Boolean csnv_valid =
@@ -1172,7 +1171,7 @@ public class UserSessionBean extends Object {
 
         String message =
             new StandardReportService().validReport(
-                selectedStandardReportTemplate, reportFormat_value,
+                _selectedStandardReportTemplate, reportFormat_value,
                 reportStatus_value, uid);
 
         if (message.compareTo("success") != 0) {
@@ -1189,7 +1188,7 @@ public class UserSessionBean extends Object {
 
         }
 
-        logger.debug("download_dir " + download_dir);
+        _logger.debug("download_dir " + download_dir);
         if (download_dir == null) {
             message =
                 "The download directory has not been set up properly -- ask your administrator to check JBoss setting in properties-service.xml.";
@@ -1198,7 +1197,7 @@ public class UserSessionBean extends Object {
         }
 
         new StandardReportService().generateStandardReport(download_dir,
-            selectedStandardReportTemplate, uid);
+            _selectedStandardReportTemplate, uid);
 
         message =
             "You request has been received. The report, "
@@ -1212,14 +1211,14 @@ public class UserSessionBean extends Object {
     public String downloadReportAction() {
         HttpServletRequest request = getHttpRequest();
         request.getSession().setAttribute("selectedStandardReportTemplate",
-            selectedStandardReportTemplate);
+            _selectedStandardReportTemplate);
 
-        getStandardReportTemplate(selectedStandardReportTemplate);
+        getStandardReportTemplate(_selectedStandardReportTemplate);
         // String ontologyNameAndVersion =
         // standardReportTemplate.getCodingSchemeName() + " (version: " +
         // standardReportTemplate.getCodingSchemeVersion() + ")";
 
-        logger.debug("downloading report " + selectedStandardReportTemplate);
+        _logger.debug("downloading report " + _selectedStandardReportTemplate);
 
         String download_dir = null;
         try {
@@ -1238,10 +1237,10 @@ public class UserSessionBean extends Object {
 
         File dir = new File(download_dir);
         if (!dir.exists()) {
-            logger
+            _logger
                 .debug("Unable to download the specified report -- download directory does not exist. ");
             String message =
-                "Unable to download " + selectedStandardReportTemplate
+                "Unable to download " + _selectedStandardReportTemplate
                     + " -- download directory does not exist. ";
             request.getSession().setAttribute("message", message);
             return "message";
@@ -1253,7 +1252,7 @@ public class UserSessionBean extends Object {
             len--;
             if (!fileList[len].isDirectory()) {
                 String name = fileList[len].getName();
-                logger.debug("File found in the download directory: " + name);
+                _logger.debug("File found in the download directory: " + name);
             }
         }
 
@@ -1270,7 +1269,7 @@ public class UserSessionBean extends Object {
             return "download";
         } else {
             String message =
-                "The " + selectedStandardReportTemplate
+                "The " + _selectedStandardReportTemplate
                     + " has not been approved for download.";
             request.getSession().setAttribute("message", message);
             return "message";
@@ -1285,10 +1284,10 @@ public class UserSessionBean extends Object {
     public String saveStatusAction() {
         HttpServletRequest request = getHttpRequest();
         request.getSession().setAttribute("selectedStandardReportTemplate",
-            selectedStandardReportTemplate);
+            _selectedStandardReportTemplate);
 
         StandardReportTemplate standardReportTemplate =
-            getStandardReportTemplate(selectedStandardReportTemplate);
+            getStandardReportTemplate(_selectedStandardReportTemplate);
 
         String message =
             "The status of the " + standardReportTemplate.getLabel()
@@ -1299,28 +1298,28 @@ public class UserSessionBean extends Object {
         return "message"; // replaced by a messsage page (back button)
     }
 
-    private String selectedVersion = null;
-    private List<SelectItem> versionList = null;
-    private Vector<String> versionListData = null;
+    private String _selectedVersion = null;
+    private List<SelectItem> _versionList = null;
+    private Vector<String> _versionListData = null;
 
     public List<SelectItem> getVersionList(String codingschemename) {
-        versionListData = DataUtils.getVersionListData(codingschemename);
-        versionList = new ArrayList<SelectItem>();
-        for (int i = 0; i < versionListData.size(); i++) {
-            String t = versionListData.elementAt(i);
+        _versionListData = DataUtils.getVersionListData(codingschemename);
+        _versionList = new ArrayList<SelectItem>();
+        for (int i = 0; i < _versionListData.size(); i++) {
+            String t = _versionListData.elementAt(i);
 
-            logger.debug("version: " + t);
+            _logger.debug("version: " + t);
 
-            versionList.add(new SelectItem(t));
+            _versionList.add(new SelectItem(t));
         }
-        if (versionList != null && versionList.size() > 0) {
-            selectedVersion = versionList.get(0).getLabel();
+        if (_versionList != null && _versionList.size() > 0) {
+            _selectedVersion = _versionList.get(0).getLabel();
         }
-        return versionList;
+        return _versionList;
     }
 
     public void setSelectedVersion(String selectedVersion) {
-        this.selectedVersion = selectedVersion;
+        _selectedVersion = selectedVersion;
         HttpServletRequest request =
             (HttpServletRequest) FacesContext.getCurrentInstance()
                 .getExternalContext().getRequest();
@@ -1328,13 +1327,13 @@ public class UserSessionBean extends Object {
     }
 
     public String getSelectedVersion() {
-        return this.selectedVersion;
+        return _selectedVersion;
     }
 
     public void versionSelectionChanged(ValueChangeEvent event) {
         if (event.getNewValue() == null)
             return;
         // int id = Integer.parseInt((String) event.getNewValue());
-        setSelectedVersion(selectedVersion);
+        setSelectedVersion(_selectedVersion);
     }
 }

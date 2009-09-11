@@ -13,11 +13,11 @@ import org.apache.log4j.*;
  */
 
 public class LoginFilter implements Filter {
-    private static Logger logger = Logger.getLogger(LoginFilter.class);
-    private FilterConfig filterConfig = null;
+    private static Logger _logger = Logger.getLogger(LoginFilter.class);
+    private FilterConfig _filterConfig = null;
 
     public void destroy() {
-        this.filterConfig = null;
+        _filterConfig = null;
     }
 
     public void doFilter(ServletRequest request, ServletResponse response,
@@ -60,7 +60,7 @@ public class LoginFilter implements Filter {
                 chain.doFilter(request, response);
             }
         } catch (Exception e) {
-            logger.error(e.getClass().getSimpleName() + ": " + e.getMessage());
+            _logger.error(e.getClass().getSimpleName() + ": " + e.getMessage());
         }
     }
     
@@ -69,7 +69,6 @@ public class LoginFilter implements Filter {
     }
 
     public void init(FilterConfig filterConfig) throws ServletException {
-        this.filterConfig = filterConfig;
+        _filterConfig = filterConfig;
     }
-
 }
