@@ -423,7 +423,7 @@
             <filter token="env.LOGNAME" value="${env.LOGNAME}"/>
             <filter token="env.JAVA_HOME" value="${env.JAVA_HOME}"/>
             <filter token="project.name" value="${project.name}"/>
-            <filter token="report_download_directory" value="${application.data.path}/${report_download_directory}"/>
+            <filter token="report.download.directory" value="${application.data.path}/${report.download.directory}"/>
         </filterset>
 
         <mkdir dir="${application.data.path}/${ncireportwriter.conf.path}" />
