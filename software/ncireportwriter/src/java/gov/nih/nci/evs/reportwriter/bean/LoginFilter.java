@@ -14,7 +14,6 @@ import javax.servlet.http.*;
  */
 
 public class LoginFilter implements Filter {
-
     private FilterConfig filterConfig = null;
 
     public void destroy() {
