@@ -1,10 +1,12 @@
-
 <%@ taglib uri="http://java.sun.com/jsf/html" prefix="h" %>
 <%@ taglib uri="http://java.sun.com/jsf/core" prefix="f" %> 
 
 <f:loadBundle basename="gov.nih.nci.evs.reportwriter.bean.Resources" var="reportwriterBundle"/>
 
 <%@ page contentType="text/html;charset=windows-1252"%>
+<%@ page import="gov.nih.nci.evs.reportwriter.properties.*" %>
+
+<!-- Build info: <%=ReportWriterProperties.getProperty(ReportWriterProperties.BUILD_INFO)%> -->
 
 <html>
 <head>
