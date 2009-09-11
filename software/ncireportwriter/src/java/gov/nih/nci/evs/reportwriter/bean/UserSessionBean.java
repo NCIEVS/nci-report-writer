@@ -115,7 +115,7 @@ public class UserSessionBean extends Object {
 
     public void setSelectedPropertyType(String selectedPropertyType) {
         _selectedPropertyType = selectedPropertyType;
-        HttpServletRequest request = getHttpRequest();
+        HttpServletRequest request = SessionUtil.getRequest();
         request.getSession().setAttribute("selectedPropertyType",
             selectedPropertyType);
     }
@@ -135,15 +135,8 @@ public class UserSessionBean extends Object {
         _selectedOntology = selectedOntology;
     }
 
-    public HttpServletRequest getHttpRequest() {
-        FacesContext context = FacesContext.getCurrentInstance();
-        HttpServletRequest request =
-            (HttpServletRequest) context.getExternalContext().getRequest();
-        return request;
-    }
-
     public List<SelectItem> getTaskList() {
-        HttpServletRequest request = getHttpRequest();
+        HttpServletRequest request = SessionUtil.getRequest();
         HttpSession session = request.getSession(false);
 
         Boolean isAdmin = null;
@@ -212,7 +205,7 @@ public class UserSessionBean extends Object {
     public void setSelectedStandardReportTemplate(
         String selectedStandardReportTemplate) {
         _selectedStandardReportTemplate = selectedStandardReportTemplate;
-        HttpServletRequest request = getHttpRequest();
+        HttpServletRequest request = SessionUtil.getRequest();
         request.getSession().setAttribute("selectedStandardReportTemplate",
             selectedStandardReportTemplate);
     }
@@ -265,7 +258,7 @@ public class UserSessionBean extends Object {
         String selectedStandardReportTemplate_draft) {
         _selectedStandardReportTemplate_draft =
             selectedStandardReportTemplate_draft;
-        HttpServletRequest request = getHttpRequest();
+        HttpServletRequest request = SessionUtil.getRequest();
         request.getSession().setAttribute(
             "selectedStandardReportTemplate_draft",
             selectedStandardReportTemplate_draft);
@@ -314,7 +307,7 @@ public class UserSessionBean extends Object {
 
     public void setSelectedStandardReportTemplate_approved(
         String selectedStandardReportTemplate_draft) {
-        HttpServletRequest request = getHttpRequest();
+        HttpServletRequest request = SessionUtil.getRequest();
         request.getSession().setAttribute(
             "selectedStandardReportTemplate_approved",
             _selectedStandardReportTemplate_approved);
@@ -664,7 +657,7 @@ public class UserSessionBean extends Object {
     }
 
     public String deleteReportTemplateAction() {
-        HttpServletRequest request = getHttpRequest();
+        HttpServletRequest request = SessionUtil.getRequest();
         String template_label =
             (String) request.getSession().getAttribute(
                 "selectedStandardReportTemplate");
@@ -983,7 +976,7 @@ public class UserSessionBean extends Object {
     }
 
     public String modifyReportTemplateAction() {
-        HttpServletRequest request = getHttpRequest();
+        HttpServletRequest request = SessionUtil.getRequest();
         String templateLabel =
             (String) request.getSession().getAttribute(
                 "selectedStandardReportTemplate");
@@ -1039,7 +1032,7 @@ public class UserSessionBean extends Object {
     }
 
     public String editReportContentAction() {
-        HttpServletRequest request = getHttpRequest();
+        HttpServletRequest request = SessionUtil.getRequest();
         request.getSession().setAttribute("selectedStandardReportTemplate",
             _selectedStandardReportTemplate);
 
@@ -1055,7 +1048,7 @@ public class UserSessionBean extends Object {
     }
 
     public String generateStandardReportAction() {
-        HttpServletRequest request = getHttpRequest();
+        HttpServletRequest request = SessionUtil.getRequest();
         String templateId =
             (String) request.getSession().getAttribute(
                 "selectedStandardReportTemplate");
@@ -1191,7 +1184,7 @@ public class UserSessionBean extends Object {
     }
 
     public String downloadReportAction() {
-        HttpServletRequest request = getHttpRequest();
+        HttpServletRequest request = SessionUtil.getRequest();
         request.getSession().setAttribute("selectedStandardReportTemplate",
             _selectedStandardReportTemplate);
 
@@ -1264,7 +1257,7 @@ public class UserSessionBean extends Object {
     }
 
     public String saveStatusAction() {
-        HttpServletRequest request = getHttpRequest();
+        HttpServletRequest request = SessionUtil.getRequest();
         request.getSession().setAttribute("selectedStandardReportTemplate",
             _selectedStandardReportTemplate);
 
