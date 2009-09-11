@@ -2,7 +2,6 @@ package gov.nih.nci.evs.reportwriter.bean;
 
 import java.util.*;
 
-import javax.faces.context.*;
 import javax.faces.event.*;
 import javax.faces.model.*;
 import javax.servlet.http.*;

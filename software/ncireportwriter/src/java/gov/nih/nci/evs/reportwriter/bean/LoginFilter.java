@@ -70,5 +70,6 @@ public class LoginFilter implements Filter {
 
     public void init(FilterConfig filterConfig) throws ServletException {
         _filterConfig = filterConfig;
+        _logger.debug("filterConfig name: " + _filterConfig.getFilterName());
     }
 }
