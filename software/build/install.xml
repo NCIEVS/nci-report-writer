@@ -307,6 +307,10 @@
         <echoproperties prefix="database"/>
         <filterset id="embedded.filterset">
             <filter token="database.name" value="${database.name}"/>
+            <filter token="database.server" value="${database.server}"/>
+            <filter token="database.port" value="${database.port}"/>
+            <filter token="database.user" value="${database.user}"/>
+            <filter token="database.password" value="${database.password}"/>
         </filterset>
         <copy todir="${db.dir.dest}" filtering="true">
             <fileset dir="${db.dir.src}">
