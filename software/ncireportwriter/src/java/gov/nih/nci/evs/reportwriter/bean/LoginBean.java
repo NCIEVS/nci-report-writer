@@ -156,9 +156,14 @@ public class LoginBean extends Object {
             if (_password.length() <= 0)
                 throw new Exception("Please enter your password.");
 
-            AuthenticationManager authenticationManager =
-                SecurityServiceProvider.getAuthenticationManager(APP_NAME);
-            if (!authenticationManager.login(_userid, _password))
+            AuthenticationManager authenticationManager = SecurityServiceProvider.
+            getAuthenticationManager(APP_NAME); 
+//            getAuthenticationManager(APP_NAME, 
+//                gov.nih.nci.security.constants.Constants.LOCKOUT_TIME, 
+//                gov.nih.nci.security.constants.Constants.ALLOWED_LOGIN_TIME,
+//                "10");
+            
+            if (! authenticationManager.login(_userid, _password))
                 throw new Exception("Incorrect login credential.");
 
             HttpServletRequest request = SessionUtil.getRequest();
@@ -210,14 +215,16 @@ public class LoginBean extends Object {
         return _context.lookup(serviceBeanName);
     }
 
-    public String logoutAction() {
-        return logout();
-    }
+//FYI: Does not seem to be used.    
+//    public String logoutAction() {
+//        return logout();
+//    }
 
-    public String logout() {
-        HttpSession session = SessionUtil.getSession();
-        if (session != null)
-            session.invalidate();
-        return "logout";
-    }
+//FYI: Does not seem to be used.    
+//    public String logout() {
+//        HttpSession session = SessionUtil.getSession();
+//        if (session != null)
+//            session.invalidate();
+//        return "logout";
+//    }
 }
