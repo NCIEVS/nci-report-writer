@@ -3,8 +3,8 @@
 -- ------------------------------------------------------
 
 CREATE DATABASE IF NOT EXISTS reportwriter;
-CREATE USER reportwriteruser@localhost IDENTIFIED BY 't3l1m3m0r';
-CREATE USER reportwriteruser@'%' IDENTIFIED BY 't3l1m3m0r';
+CREATE USER reportwriteruser@localhost IDENTIFIED BY 'rwexamplepassword';
+CREATE USER reportwriteruser@'%' IDENTIFIED BY 'rwexamplepassword';
 GRANT ALL PRIVILEGES ON reportwriter.* TO reportwriteruser@localhost;
 GRANT ALL PRIVILEGES ON reportwriter.* TO reportwriteruser@'%';
 COMMIT;
