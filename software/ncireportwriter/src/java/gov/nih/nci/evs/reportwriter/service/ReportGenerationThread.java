@@ -321,7 +321,7 @@ public class ReportGenerationThread implements Runnable
 		if(max_level == -1) {
 			String max_level_str = null;
 			try {
-				max_level_str = ReportWriterProperties.getInstance().getProperty(ReportWriterProperties.MAXIMUM_LEVEL);
+				max_level_str = ReportWriterProperties.getProperty(ReportWriterProperties.MAXIMUM_LEVEL);
 				max_level = 20;
 				if(max_level_str != null)
 				{
