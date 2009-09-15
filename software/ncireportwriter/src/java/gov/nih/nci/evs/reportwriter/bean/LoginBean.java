@@ -2,7 +2,6 @@ package gov.nih.nci.evs.reportwriter.bean;
 
 import gov.nih.nci.evs.reportwriter.utils.*;
 import gov.nih.nci.security.*;
-import gov.nih.nci.security.authorization.domainobjects.Group;
 import gov.nih.nci.security.authorization.domainobjects.User;
 
 import java.util.*;
@@ -104,24 +103,22 @@ public class LoginBean extends Object {
 
     public Boolean hasAdminPrivilege() {
         try {
-            AuthorizationManager ami =
+            AuthorizationManager aManager =
                 SecurityServiceProvider.getAuthorizationManager(APP_NAME);
-            if (ami == null)
-                return Boolean.FALSE;
+            if (aManager == null) 
+                throw new Exception("Can not get authorization manager for: "
+                    + APP_NAME);
 
-            ami = (AuthorizationManager) ami;
-            User user = ami.getUser(_userid);
-            Set<?> groups = ami.getGroups(user.getUserId().toString());
-            if (null == groups)
-                return Boolean.FALSE;
-
-            Iterator<?> iter = groups.iterator();
-            while (iter.hasNext()) {
-                Group grp = (Group) iter.next();
-                if (null != grp && grp.getGroupName().startsWith("admin"))
-                    return Boolean.TRUE;
-            }
+            User user = aManager.getUser(_userid);
+            if (user == null)
+                throw new Exception("User " + _userid + " does not exist.");
+            
+            boolean permission = aManager.checkPermission(
+                user.getLoginName(), "admin-pe", "EXECUTE");
+            return new Boolean(permission);
         } catch (Exception e) {
+            _logger.error(e.getClass().getSimpleName() + ": " + e.getMessage());
+            _logger.error("  * Note: Defaulting to non-admin privileges.");
             e.printStackTrace();
         }
         return Boolean.FALSE;
@@ -138,11 +135,13 @@ public class LoginBean extends Object {
             String methodName = "setLoginName";
             Object obj = sdkclientutil.search(FQName, methodName, loginName);
             if (obj == null)
-                return null;
+                throw new Exception("sdkclientutil.search returns null");
             gov.nih.nci.evs.reportwriter.bean.User user =
                 (gov.nih.nci.evs.reportwriter.bean.User) obj;
             return user;
         } catch (Exception e) {
+            _logger.error(e.getClass().getSimpleName() + ": " + e.getMessage());
+            _logger.error("  * getUser(" + loginName + ") method returns null");
             // e.printStackTrace();
         }
         return null;
