@@ -13,7 +13,9 @@ USE @database.name@;
 --
 
 INSERT INTO `USER` (`ID`,`LOGIN_NAME`) VALUES
- (101,'admin');
+ (101,'admin'),
+ (6868,'rwadmin'),
+ (6969,'rwuser');
 
 --
 -- Data for table `hi_value`
