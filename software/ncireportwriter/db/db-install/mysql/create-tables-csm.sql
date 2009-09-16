@@ -322,7 +322,7 @@ ON DELETE CASCADE;
 
 INSERT INTO `CSM_APPLICATION` (`APPLICATION_ID`,`APPLICATION_NAME`,`APPLICATION_DESCRIPTION`,`DECLARATIVE_FLAG`,`ACTIVE_FLAG`,`UPDATE_DATE`,`DATABASE_URL`,`DATABASE_USER_NAME`,`DATABASE_PASSWORD`,`DATABASE_DIALECT`,`DATABASE_DRIVER`) VALUES
  (1,'csmupt','CSM UPT Super Admin Application',0,1,CURDATE(),'','','','org.hibernate.dialect.MySQLDialect','com.mysql.jdbc.Driver'),
- (2,'ncireportwriter','ncireportwriter',0,1,CURDATE(),'','','','org.hibernate.dialect.MySQLDialect','com.mysql.jdbc.Driver');
+ (2,'ncireportwriter','NCI Report Writer',0,1,CURDATE(),'','','','org.hibernate.dialect.MySQLDialect','com.mysql.jdbc.Driver');
 
 --
 -- Data for table `CSM_GROUP`
@@ -351,9 +351,11 @@ INSERT INTO `CSM_PRIVILEGE` (`PRIVILEGE_ID`,`PRIVILEGE_NAME`,`PRIVILEGE_DESCRIPT
 
 INSERT INTO `CSM_PROTECTION_ELEMENT` (`PROTECTION_ELEMENT_ID`,`PROTECTION_ELEMENT_NAME`,`PROTECTION_ELEMENT_DESCRIPTION`,`OBJECT_ID`,`ATTRIBUTE`,`ATTRIBUTE_VALUE`,`PROTECTION_ELEMENT_TYPE`,`APPLICATION_ID`,`UPDATE_DATE`) VALUES
  (1,'csmupt','CSM UPT Super Admin Application Protection Element','csmupt','','','',1,CURDATE()),
- (2,'ncireportwriter','ncireportwriter','ncireportwriter','','','',1,CURDATE()),
- (3,'ncireportwriter','ncireportwriter','ncireportwriter','','','ncireportwriter',2,CURDATE()),
- (4,'csmupt','csmupt','csmupt','','','csmupt',2,CURDATE());
+ (2,'ncireportwriter','NCI Report Writer','ncireportwriter','','','',1,CURDATE()),
+ (3,'ncireportwriter','NCI Report Writer','ncireportwriter','','','ncireportwriter',2,CURDATE()),
+ (4,'csmupt','csmupt','csmupt','','','csmupt',2,CURDATE()),
+ (5,'admin-pe','','admin-pe','','','','2',CURDATE()),
+ (6,'non-admin-pe','','non-admin-pe','','','','2',CURDATE());
 
 --
 -- Data for table `CSM_PROTECTION_GROUP`
@@ -369,7 +371,9 @@ INSERT INTO `CSM_PROTECTION_GROUP` (`PROTECTION_GROUP_ID`,`PROTECTION_GROUP_NAME
 
 INSERT INTO `CSM_PG_PE` (`PG_PE_ID`,`PROTECTION_GROUP_ID`,`PROTECTION_ELEMENT_ID`,`UPDATE_DATE`) VALUES
  (1,1,3,'0000-00-00'),
- (2,2,3,'0000-00-00');
+ (2,2,3,'0000-00-00'),
+ (3,1,5,'0000-00-00'),
+ (4,2,6,'0000-00-00');
 
 --
 -- Data for table `CSM_ROLE`
@@ -398,33 +402,34 @@ INSERT INTO `CSM_ROLE_PRIVILEGE` (`ROLE_PRIVILEGE_ID`,`ROLE_ID`,`PRIVILEGE_ID`) 
 --
 
 INSERT INTO `CSM_USER` (`USER_ID`,`LOGIN_NAME`,`MIGRATED_FLAG`,`FIRST_NAME`,`LAST_NAME`,`ORGANIZATION`,`DEPARTMENT`,`TITLE`,`PHONE_NUMBER`,`PASSWORD`,`EMAIL_ID`,`START_DATE`,`END_DATE`,`UPDATE_DATE`,`PREMGRT_LOGIN_NAME`) VALUES
- (1,'admin',0,'N/A','N/A','NGIT','NGIT','System administrator','','zJPWCwDeSgG8j2uyHEABIQ==','',CURDATE(),NULL,CURDATE(),''),
- (2,'testr',0,'N/A','N/A','NGIT','NGIT','Read only user','','zJPWCwDeSgG8j2uyHEABIQ==','',CURDATE(),NULL,CURDATE(),'');
+ (3,'rwadmin',0,'Report Writer','Administrator','NCIT','NCIT','System Administrator','','zJPWCwDeSgG8j2uyHEABIQ==','',CURDATE(),NULL,CURDATE(),''),
+ (4,'rwuser',0,'Report Writer','User','NCIT','NCIT','Read Only User','','zJPWCwDeSgG8j2uyHEABIQ==','',CURDATE(),NULL,CURDATE(),'');
+UNLOCK TABLES;
 
 --
 -- Data for table `CSM_USER_GROUP`
 --
 
 INSERT INTO `CSM_USER_GROUP` (`USER_GROUP_ID`,`USER_ID`,`GROUP_ID`) VALUES
- (1,1,1),
- (2,2,2);
+ (3,3,1),
+ (4,4,2);
 
 --
 -- Data for table `CSM_USER_GROUP_ROLE_PG`
 --
 
 INSERT INTO `CSM_USER_GROUP_ROLE_PG` (`USER_GROUP_ROLE_PG_ID`,`USER_ID`,`GROUP_ID`,`ROLE_ID`,`PROTECTION_GROUP_ID`,`UPDATE_DATE`) VALUES
- (1,1,NULL,1,1,CURDATE()),
- (2,2,NULL,2,2,CURDATE()),
  (3,NULL,1,1,1,CURDATE()),
- (4,NULL,2,2,2,CURDATE());
+ (4,NULL,2,2,2,CURDATE()),
+ (5,3,NULL,1,1,CURDATE()),
+ (6,4,NULL,2,2,CURDATE());
 
 --
 -- Data for table `CSM_USER_PE`
 --
 
 INSERT INTO `CSM_USER_PE` (`USER_PROTECTION_ELEMENT_ID`,`PROTECTION_ELEMENT_ID`,`USER_ID`) VALUES
- (3,1,1),
- (2,2,1);
+ (6,1,3),
+ (4,2,3);
 
 COMMIT;
