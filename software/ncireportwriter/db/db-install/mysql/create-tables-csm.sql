@@ -353,9 +353,9 @@ INSERT INTO `CSM_PROTECTION_ELEMENT` (`PROTECTION_ELEMENT_ID`,`PROTECTION_ELEMEN
  (1,'csmupt','CSM UPT Super Admin Application Protection Element','csmupt','','','',1,CURDATE()),
  (2,'ncireportwriter','NCI Report Writer','ncireportwriter','','','',1,CURDATE()),
  (3,'ncireportwriter','NCI Report Writer','ncireportwriter','','','ncireportwriter',2,CURDATE()),
- (4,'csmupt','csmupt','csmupt','','','csmupt',2,CURDATE()),
- (5,'admin-pe','','admin-pe','','','','2',CURDATE()),
- (6,'non-admin-pe','','non-admin-pe','','','','2',CURDATE());
+ (4,'csmupt','CSM UPT','csmupt','','','csmupt',2,CURDATE()),
+ (5,'admin-pe','Admin Protection Element','admin-pe','','','','2',CURDATE()),
+ (6,'non-admin-pe','Non-Admin Protection Element','non-admin-pe','','','','2',CURDATE());
 
 --
 -- Data for table `CSM_PROTECTION_GROUP`
