@@ -101,27 +101,22 @@ public class LoginBean extends Object {
         _roleGroupId = roleGroupId;
     }
 
-    public Boolean hasAdminPrivilege() {
-        try {
-            AuthorizationManager aManager =
-                SecurityServiceProvider.getAuthorizationManager(APP_NAME);
-            if (aManager == null) 
-                throw new Exception("Can not get authorization manager for: "
-                    + APP_NAME);
+    public Boolean hasAdminPrivilege() throws Exception {
+        AuthorizationManager aManager =
+            SecurityServiceProvider.getAuthorizationManager(APP_NAME);
+        if (aManager == null)
+            throw new Exception("Can not get authorization manager for: "
+                + APP_NAME);
 
-            User user = aManager.getUser(_userid);
-            if (user == null)
-                throw new Exception("User " + _userid + " does not exist.");
-            
-            boolean permission = aManager.checkPermission(
-                user.getLoginName(), "admin-pe", "EXECUTE");
-            return new Boolean(permission);
-        } catch (Exception e) {
-            _logger.error(e.getClass().getSimpleName() + ": " + e.getMessage());
-            _logger.error("  * Note: Defaulting to non-admin privileges.");
-            e.printStackTrace();
-        }
-        return Boolean.FALSE;
+        User user = aManager.getUser(_userid);
+        if (user == null)
+            throw new Exception("Error retrieving privileges for this user."
+                + "  Please restart server if this user has just been added.");
+
+        boolean permission =
+            aManager
+                .checkPermission(user.getLoginName(), "admin-pe", "EXECUTE");
+        return new Boolean(permission);
     }
 
     public List<SelectItem> getTaskList() {
@@ -155,14 +150,14 @@ public class LoginBean extends Object {
             if (_password.length() <= 0)
                 throw new Exception("Please enter your password.");
 
-            AuthenticationManager authenticationManager = SecurityServiceProvider.
-            getAuthenticationManager(APP_NAME); 
-//            getAuthenticationManager(APP_NAME, 
-//                gov.nih.nci.security.constants.Constants.LOCKOUT_TIME, 
-//                gov.nih.nci.security.constants.Constants.ALLOWED_LOGIN_TIME,
-//                "10");
-            
-            if (! authenticationManager.login(_userid, _password))
+            AuthenticationManager authenticationManager =
+                SecurityServiceProvider.getAuthenticationManager(APP_NAME);
+            // getAuthenticationManager(APP_NAME,
+            // gov.nih.nci.security.constants.Constants.LOCKOUT_TIME,
+            // gov.nih.nci.security.constants.Constants.ALLOWED_LOGIN_TIME,
+            // "10");
+
+            if (!authenticationManager.login(_userid, _password))
                 throw new Exception("Incorrect login credential.");
 
             HttpServletRequest request = SessionUtil.getRequest();
@@ -214,16 +209,16 @@ public class LoginBean extends Object {
         return _context.lookup(serviceBeanName);
     }
 
-//FYI: Does not seem to be used.    
-//    public String logoutAction() {
-//        return logout();
-//    }
+    // FYI: Does not seem to be used.
+    // public String logoutAction() {
+    // return logout();
+    // }
 
-//FYI: Does not seem to be used.    
-//    public String logout() {
-//        HttpSession session = SessionUtil.getSession();
-//        if (session != null)
-//            session.invalidate();
-//        return "logout";
-//    }
+    // FYI: Does not seem to be used.
+    // public String logout() {
+    // HttpSession session = SessionUtil.getSession();
+    // if (session != null)
+    // session.invalidate();
+    // return "logout";
+    // }
 }
