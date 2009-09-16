@@ -322,7 +322,7 @@ ON DELETE CASCADE;
 
 INSERT INTO `CSM_APPLICATION` (`APPLICATION_ID`,`APPLICATION_NAME`,`APPLICATION_DESCRIPTION`,`DECLARATIVE_FLAG`,`ACTIVE_FLAG`,`UPDATE_DATE`,`DATABASE_URL`,`DATABASE_USER_NAME`,`DATABASE_PASSWORD`,`DATABASE_DIALECT`,`DATABASE_DRIVER`) VALUES
  (1,'csmupt','CSM UPT Super Admin Application',0,1,CURDATE(),'','','','org.hibernate.dialect.MySQLDialect','com.mysql.jdbc.Driver'),
- (2,'ncireportwriter','NCI Report Writer',0,1,CURDATE(),'','','','org.hibernate.dialect.MySQLDialect','com.mysql.jdbc.Driver');
+ (2,'ncireportwriter','NCI Report Writer',0,1,CURDATE(),'@database.url@','@database.user@','@database.password@','org.hibernate.dialect.MySQLDialect','com.mysql.jdbc.Driver');
 
 --
 -- Data for table `CSM_GROUP`
