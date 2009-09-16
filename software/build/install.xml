@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8" ?>
 
-<!-- bda-build-template version 1.2.0 -->
+<!-- bda-build-template version 1.2.2 -->
 
 <project name="ncireportwriter-installer" default="upgrade" basedir="."
     xmlns:ivy="antlib:org.apache.ivy.ant"
@@ -40,7 +40,6 @@
     <property file="${properties.file}" />
     <property name="env.name" value="local"/>
 
-
     <property name="project.name" value="ncireportwriter"/>
 
     <!-- Generic properties -->
@@ -51,6 +50,7 @@
     <!-- Install Time properties -->
     <!-- Source and target directories -->
     <property name="bda-utils.dir" value="bda-utils" />
+    <property name="evs-utils.dir" value="evs-utils" />
     <property name="tools.dir" value="${basedir}/${tools.dist.relative.dir}" />
     <property name="common.dir.src" value="${basedir}/${common.dist.relative.dir}" />
     <property name="common.dir.dest" value="${working.dir}/${common.dist.relative.dir}" />
@@ -75,9 +75,17 @@
     <!-- Grid related properties -->
     <!-- Default to false, properties can override -->
     <property name="jboss.ssl.enable" value="false"/>
+
     <!-- Paths -->
     <path id="bda-utils.classpath">
         <fileset dir="${bda-utils.dir}">
+            <include name="**/*.jar" />
+        </fileset>
+    </path>
+
+    <!-- EVS Paths -->
+    <path id="evs-utils.classpath">
+        <fileset dir="${evs-utils.dir}">
             <include name="**/*.jar" />
         </fileset>
     </path>
@@ -88,6 +96,13 @@
     <taskdef resource="net/sf/antcontrib/antcontrib.properties" classpathref="bda-utils.classpath"/>
     <taskdef resource="liquibasetasks.properties" classpathref="bda-utils.classpath"/>
     <taskdef name="groovy" classname="org.codehaus.groovy.ant.Groovy" classpathref="bda-utils.classpath"/>
+
+    <!-- EVS Task definitions -->
+
+    <taskdef name="StringEncrypter"
+        classname="gov.nih.nci.security.util.AntStringEncrypter">
+        <classpath refid="evs-utils.classpath"/>
+    </taskdef>
 
     <!-- Conditionals -->
     <available file="${jboss.home}/server/${jboss.server.name}/conf/jboss-service.xml" property="jboss.exists"/>
@@ -305,12 +320,14 @@
         <echo  message="Checking if database properties exist: ${db.prop.list}"/>
         <properties-exist properties.list="${db.prop.list}"/>
         <echoproperties prefix="database"/>
+        <StringEncrypter string="${database.password}" property="encryptedPassword"/>
         <filterset id="embedded.filterset">
             <filter token="database.name" value="${database.name}"/>
             <filter token="database.server" value="${database.server}"/>
             <filter token="database.port" value="${database.port}"/>
             <filter token="database.user" value="${database.user}"/>
-            <filter token="database.password" value="${database.password}"/>
+            <filter token="database.url" value="${database.url}"/>
+            <filter token="database.password" value="${encryptedPassword}"/>
         </filterset>
         <copy todir="${db.dir.dest}" filtering="true">
             <fileset dir="${db.dir.src}">
@@ -1004,7 +1021,7 @@
             login-config.ldap.file="${login-config.ldap.file}"
             login-config.db.file="${jboss-conf.dir.dest}/login-config.db-block.xml"
         />
-        <!-- Clean up any extra line feeds that was a result of the sunsitutions -->
+        <!-- Clean up any extra line feeds that was a result of the substitutions -->
         <replaceregexp file="${jboss.home}/server/${jboss.server.name}/conf/login-config.xml"
             match="\r\n\r\n\r\n" replace="" flags="g" byline="false"/>
     </target>
