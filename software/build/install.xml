@@ -715,6 +715,7 @@
             <filter token="database.password" value="${database.password}"/>
             <filter token="database.driver" value="${database.driver}"/>
             <filter token="lex.evs.api.url" value="${lex.evs.api.url}"/>
+            <filter token="report.download.directory" value="${application.data.path}/${report.download.directory}"/>
         </filterset>
 
         <copy todir="${working.dir}/ncireportwriter-webapp/WEB-INF/classes" filtering="true" overwrite="true" flatten="true">
@@ -972,31 +973,40 @@
             </then>
         </if>
 
-        <!-- Update login-config.xml if needed -->
-        <antcall target="-fix.login-config"/>
-    </target>
+        <!-- Update login-config.xml -->
 
-    <target name="-fix.login-config">
-        <condition property="login-config.complete">
+        <!-- Backup file -->
+        <copy file="${jboss.home}/server/${jboss.server.name}/conf/login-config.xml"
+            tofile="${jboss.home}/server/${jboss.server.name}/conf/login-config.xml.bak"
+        />
+        <condition property="login-config.hasEntries">
             <isfileselected file="${jboss.home}/server/${jboss.server.name}/conf/login-config.xml">
                 <contains text="${project.name}" casesensitive="no"/>
             </isfileselected>
         </condition>
         <if>
-            <not>
-                <equals arg1="${login-config.complete}" arg2="true"/>
-            </not>
+            <equals arg1="${login-config.hasEntries}" arg2="true"/>
             <then>
-                <echo message="Updating login-config.xml..."/>
-                <jboss-login-config
-                    authentication.type="${authentication.type}"
-                    jboss.home="${jboss.home}"
-                    jboss.server.name="${jboss.server.name}"
-                    login-config.ldap.file="${login-config.ldap.file}"
-                    login-config.db.file="${jboss-conf.dir.dest}/login-config.db-block.xml"
-                />
+                <echo message="Removing RW entries from login-config.xml..."/>
+                <xmltask preservetype="true" source="${jboss.home}/server/${jboss.server.name}/conf/login-config.xml"
+                    dest="${jboss.home}/server/${jboss.server.name}/conf/login-config.xml">
+                    <xmlcatalog refid="bda.xml.catalog"/>
+                    <remove path="/policy/application-policy[@name='${project.name}']"/>
+                    <remove path="/policy/application-policy[@name='csmupt']"/>
+                </xmltask>
             </then>
         </if>
+        <echo message="Updating login-config.xml..."/>
+        <jboss-login-config
+            authentication.type="${authentication.type}"
+            jboss.home="${jboss.home}"
+            jboss.server.name="${jboss.server.name}"
+            login-config.ldap.file="${login-config.ldap.file}"
+            login-config.db.file="${jboss-conf.dir.dest}/login-config.db-block.xml"
+        />
+        <!-- Clean up any extra line feeds that was a result of the sunsitutions -->
+        <replaceregexp file="${jboss.home}/server/${jboss.server.name}/conf/login-config.xml"
+            match="\r\n\r\n\r\n" replace="" flags="g" byline="false"/>
     </target>
 
     <target name="upgrade:common:init" depends="
