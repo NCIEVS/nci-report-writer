@@ -67,6 +67,7 @@
     <property name="temp.dir" location="${target.dir}/temp" />
     <property name="reports.dir" location="${target.dir}/reports" />
     <property name="bda-utils.dir" location="${target.dir}/bda-utils" />
+    <property name="evs-utils.dir" location="${target.dir}/evs-utils" />
     <property name="log.dir" location="${target.dir}/logs" />
     <property name="dist.dir" location="${target.dir}/dist" />
     <property name="download.dir" location="${target.dir}/download" />
@@ -145,6 +146,11 @@
         <property name="software.dir" location="${software.dir}" />
         <property name="commonlibrary.dir" location="${commonlibrary.dir}" />
     </ant>
+
+    <!-- Copy EVS utility jars -->
+    <copy todir="${evs-utils.dir}">
+        <fileset dir="${evs-utils.src.dir}"/>
+    </copy>
 
     <!-- Paths -->
     <path id="bda-utils.classpath">
@@ -367,10 +373,6 @@
         <copy todir="${tools.dist.dir}">
             <fileset dir="${download.dir}"/>
         </copy>
-        <!-- Copy EVS utility jars -->
-        <copy todir="${evs-utils.dist.dir}">
-            <fileset dir="${evs-utils.src.dir}"/>
-        </copy>
     </target>
 
     <target name="dist:installer" depends="dist:installer:prep" description="Produces zip file based on installer distribution area. Zip is used by deploy:remote:* or external installations">
@@ -405,6 +407,15 @@
                 <include name="**/*" />
             </fileset>
         </copy>
+
+        <!-- Copy EVS utility jars -->
+
+        <copy todir="${evs-utils.dist.dir}">
+            <fileset dir="${evs-utils.src.dir}">
+                <include name="**/*" />
+            </fileset>
+        </copy>
+
         <!-- For non DAC upgrades
         <dist-prep
             copy.tools.flag="N"
