@@ -321,13 +321,21 @@
         <properties-exist properties.list="${db.prop.list}"/>
         <echoproperties prefix="database"/>
         <StringEncrypter string="${database.password}" property="encryptedPassword"/>
+        <StringEncrypter string="${rw.admin.user.passwd}" property="encrypted.rw.admin.user.passwd"/>
+        <StringEncrypter string="${rw.user.passwd}" property="encrypted.rw.user.passwd"/>
         <filterset id="embedded.filterset">
+            <!-- Database connection information -->
             <filter token="database.name" value="${database.name}"/>
             <filter token="database.server" value="${database.server}"/>
             <filter token="database.port" value="${database.port}"/>
             <filter token="database.user" value="${database.user}"/>
             <filter token="database.url" value="${database.url}"/>
             <filter token="database.password" value="${encryptedPassword}"/>
+            <!-- User login information -->
+            <filter token="rw.admin.user.name" value="${rw.admin.user.name}"/>
+            <filter token="rw.admin.user.passwd" value="${encrypted.rw.admin.user.passwd}"/>
+            <filter token="rw.user.name" value="${rw.user.name}"/>
+            <filter token="rw.user.passwd" value="${encrypted.rw.user.passwd}"/>
         </filterset>
         <copy todir="${db.dir.dest}" filtering="true">
             <fileset dir="${db.dir.src}">
