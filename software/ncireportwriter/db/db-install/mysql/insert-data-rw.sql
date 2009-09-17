@@ -101,6 +101,24 @@ INSERT INTO `REPORT_COLUMN` (`ID`,`COLUMN_NUMBER`,`LABEL`,`FIELD_ID`,`PROPERTY_T
  (6163,3,'NCI Preferred Term','Property','PRESENTATION','Preferred_Name',NULL,'',' ','','','|',-1,6060);
 
 --
+-- Data for table `REPORT`
+--
+
+INSERT INTO `REPORT` (`ID`,`LABEL`,`LAST_MODIFIED`,`PATH_NAME`,`HAS_FORMAT`,`HAS_STATUS`,`MODIFIED_BY`,`CREATED_BY`) VALUES
+ (5858,'Individual Case Safety (ICS) Subset REPORT.txt',NULL,'',404,505,NULL,101),
+ (5859,'Individual Case Safety (ICS) Subset REPORT.xls',NULL,'',405,505,NULL,101),
+ (5860,'Structured Product Labeling (SPL) REPORT.txt',NULL,'',404,505,NULL,101),
+ (5861,'Structured Product Labeling (SPL) REPORT.xls',NULL,'',405,505,NULL,101),
+ (5862,'CDISC Subset REPORT .txt',NULL,'',404,505,NULL,101),
+ (5863,'CDISC Subset REPORT .xls',NULL,'',405,505,NULL,101),
+ (5959,'CDRH Subset REPORT.txt',NULL,'',404,505,NULL,101),
+ (5960,'CDRH Subset REPORT.xls',NULL,'',405,505,NULL,101),
+ (6262,'FDA-UNII Subset REPORT.txt',NULL,'',404,505,NULL,101),
+ (6263,'FDA-UNII Subset REPORT.xls',NULL,'',405,505,NULL,101),
+ (6767,'FDA-SPL Country Code REPORT.txt',NULL,'',404,505,NULL,101),
+ (6768,'FDA-SPL Country Code REPORT.xls',NULL,'',405,505,NULL,101);
+
+--
 -- Data for table `STANDARD_REPORT`
 --
 
