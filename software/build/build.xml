@@ -369,6 +369,10 @@
                 <include name="**/*" />
             </fileset>
         </copy>
+        <!-- Copy EVS utility jars -->
+        <copy todir="${evs-utils.dist.dir}">
+            <fileset dir="${evs-utils.src.dir}"/>
+        </copy>
         <dist-prep />
         <copy todir="${tools.dist.dir}">
             <fileset dir="${download.dir}"/>
