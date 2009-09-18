@@ -110,8 +110,9 @@ public class LoginBean extends Object {
 
         User user = aManager.getUser(_userid);
         if (user == null)
-            throw new Exception("Error retrieving privileges for this user."
-                + "  Please restart server if this user has just been added.");
+            throw new Exception("Error retrieving privileges for this user.  "
+                + "Please restart the server if this user"
+                + " has just been added.");
 
         boolean permission =
             aManager
@@ -172,11 +173,14 @@ public class LoginBean extends Object {
             gov.nih.nci.evs.reportwriter.bean.User user = getUser(_userid);
             if (user == null) {
                 // Synchronize with CSM User table
+//                SDKClientUtil sdkclientutil = new SDKClientUtil();
+//                gov.nih.nci.evs.reportwriter.bean.User newuser =
+//                    (gov.nih.nci.evs.reportwriter.bean.User) sdkclientutil
+//                        .createUser(_userid);
+//                sdkclientutil.insertUser(newuser);
+
                 SDKClientUtil sdkclientutil = new SDKClientUtil();
-                gov.nih.nci.evs.reportwriter.bean.User newuser =
-                    (gov.nih.nci.evs.reportwriter.bean.User) sdkclientutil
-                        .createUser(_userid);
-                sdkclientutil.insertUser(newuser);
+                sdkclientutil.insertUser(_userid);
             }
             session.setAttribute("isSessionValid", Boolean.TRUE);
             SessionUtil.getRequest().removeAttribute("loginWarning");
