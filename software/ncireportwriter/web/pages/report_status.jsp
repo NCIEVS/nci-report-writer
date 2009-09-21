@@ -83,7 +83,7 @@
 											<td><h:commandButton id="add" action="add" value="Add" /></td>
 											<td><h:commandButton id="activate" action="activate" value="Activate" /></td>
 											<td><h:commandButton id="inactivate" action="inactivate" value="Inactivate" /></td>
-											<td><input type="button" value="Back" onClick="history.go(-1);return true;"></td>
+											<td><h:commandButton id="back" action="back" value="Back" /></td>
 										</tr>
 									</table>
 									<!-- bottom action buttons end -->

@@ -176,7 +176,7 @@ String templatLabel = (String) request.getSession().getAttribute("selectedStanda
 											<td><h:commandButton id="delete" action="#{userSessionBean.deleteColumnAction}" onclick="if (!confirm('You will lose all data entered. Are you sure?')) return false" value="Delete" /></td>
 											
 											
-											<td><input type="button" value="Back" onClick="history.go(-1);return true;"></td>
+											<td><h:commandButton id="back" action="back" value="Back" /></td>
 										</tr>
 									</table>
 									<!-- bottom action buttons end -->
