@@ -157,7 +157,7 @@ public class LoginBean extends Object {
             // getAuthenticationManager(APP_NAME,
             // gov.nih.nci.security.constants.Constants.LOCKOUT_TIME,
             // gov.nih.nci.security.constants.Constants.ALLOWED_LOGIN_TIME,
-            // "10");
+            // gov.nih.nci.security.constants.Constants.ALLOWED_ATTEMPTS);
 
             if (!authenticationManager.login(_userid, _password))
                 throw new Exception("Incorrect login credential.");

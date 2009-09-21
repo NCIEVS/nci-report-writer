@@ -53,6 +53,9 @@ public class ReportWriterProperties {
     public static final String REPORT_DOWNLOAD_DIRECTORY = "REPORT_DOWNLOAD_DIRECTORY";
     public static final String MAXIMUM_LEVEL = "MAXIMUM_LEVEL";
     public static final String MAXIMUM_RETURN = "MAXIMUM_RETURN";
+    public static final String CSM_LOCKOUT_TIME = "CSM_LOCKOUT_TIME";
+    public static final String CSM_ALLOWED_LOGIN_TIME = "CSM_ALLOWED_LOGIN_TIME";
+    public static final String CSM_ALLOWED_ATTEMPTS = "CSM_ALLOWED_ATTEMPTS";
 
     private static Logger _logger = Logger
         .getLogger(ReportWriterProperties.class);
