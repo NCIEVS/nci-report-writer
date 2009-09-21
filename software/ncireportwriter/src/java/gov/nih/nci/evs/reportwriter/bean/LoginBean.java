@@ -126,12 +126,13 @@ public class LoginBean extends Object {
 
     public gov.nih.nci.evs.reportwriter.bean.User getUser(String loginName) {
         try {
-            SDKClientUtil sdkclientutil = new SDKClientUtil();
+            SDKClientUtil sdkClientUtil = new SDKClientUtil();
             String FQName = "gov.nih.nci.evs.reportwriter.bean.User";
             String methodName = "setLoginName";
-            Object obj = sdkclientutil.search(FQName, methodName, loginName);
+            Object obj = sdkClientUtil.search(FQName, methodName, loginName);
             if (obj == null)
-                throw new Exception("sdkclientutil.search returns null");
+                throw new Exception("Error retrieving user: " + loginName +
+                    ".  sdkClientUtil.search returns null");
             gov.nih.nci.evs.reportwriter.bean.User user =
                 (gov.nih.nci.evs.reportwriter.bean.User) obj;
             return user;
@@ -173,12 +174,6 @@ public class LoginBean extends Object {
             gov.nih.nci.evs.reportwriter.bean.User user = getUser(_userid);
             if (user == null) {
                 // Synchronize with CSM User table
-//                SDKClientUtil sdkclientutil = new SDKClientUtil();
-//                gov.nih.nci.evs.reportwriter.bean.User newuser =
-//                    (gov.nih.nci.evs.reportwriter.bean.User) sdkclientutil
-//                        .createUser(_userid);
-//                sdkclientutil.insertUser(newuser);
-
                 SDKClientUtil sdkclientutil = new SDKClientUtil();
                 sdkclientutil.insertUser(_userid);
             }
