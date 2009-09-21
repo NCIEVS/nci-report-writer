@@ -196,7 +196,7 @@
 										<tr>
 											<td><h:commandButton id="save" action="#{userSessionBean.saveModifiedTemplateAction}" value="Save" /></td>
                                             <td><input type="reset" value="Reset" /></td>
-											<td><input type="button" value="Back" onClick="history.go(-1);return true;"></td>
+											<td><h:commandButton id="back" action="back" value="Back" /></td>
 										</tr>
 									</table>
 									<!-- bottom action buttons end -->
