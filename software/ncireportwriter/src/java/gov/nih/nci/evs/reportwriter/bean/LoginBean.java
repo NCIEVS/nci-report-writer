@@ -1,5 +1,6 @@
 package gov.nih.nci.evs.reportwriter.bean;
 
+import gov.nih.nci.evs.reportwriter.properties.*;
 import gov.nih.nci.evs.reportwriter.utils.*;
 import gov.nih.nci.security.*;
 import gov.nih.nci.security.authorization.domainobjects.User;
@@ -61,12 +62,20 @@ import org.apache.log4j.*;
  */
 
 public class LoginBean extends Object {
-    private static final String APP_NAME = "ncireportwriter";
     private static Logger _logger = Logger.getLogger(LoginBean.class);
+    private static final String APP_NAME = "ncireportwriter";
+    private static final String CSM_LOCKOUT_TIME =
+        ReportWriterProperties
+            .getProperty(ReportWriterProperties.CSM_LOCKOUT_TIME);
+    private static final String CSM_ALLOWED_LOGIN_TIME =
+        ReportWriterProperties
+            .getProperty(ReportWriterProperties.CSM_ALLOWED_LOGIN_TIME);
+    private static final String CSM_ALLOWED_ATTEMPTS =
+        ReportWriterProperties
+            .getProperty(ReportWriterProperties.CSM_ALLOWED_ATTEMPTS);
 
     private String _userid;
     private String _password;
-
     private long _roleGroupId;
     private String _selectedTask = null;
     private Boolean _isAdmin = null;
@@ -131,8 +140,8 @@ public class LoginBean extends Object {
             String methodName = "setLoginName";
             Object obj = sdkClientUtil.search(FQName, methodName, loginName);
             if (obj == null)
-                throw new Exception("Error retrieving user: " + loginName +
-                    ".  sdkClientUtil.search returns null");
+                throw new Exception("Error retrieving user: " + loginName
+                    + ".  sdkClientUtil.search returns null");
             gov.nih.nci.evs.reportwriter.bean.User user =
                 (gov.nih.nci.evs.reportwriter.bean.User) obj;
             return user;
@@ -153,11 +162,9 @@ public class LoginBean extends Object {
                 throw new Exception("Please enter your password.");
 
             AuthenticationManager authenticationManager =
-                SecurityServiceProvider.getAuthenticationManager(APP_NAME);
-            // getAuthenticationManager(APP_NAME,
-            // gov.nih.nci.security.constants.Constants.LOCKOUT_TIME,
-            // gov.nih.nci.security.constants.Constants.ALLOWED_LOGIN_TIME,
-            // gov.nih.nci.security.constants.Constants.ALLOWED_ATTEMPTS);
+                SecurityServiceProvider.getAuthenticationManager(APP_NAME,
+                    CSM_LOCKOUT_TIME, CSM_ALLOWED_LOGIN_TIME,
+                    CSM_ALLOWED_ATTEMPTS);
 
             if (!authenticationManager.login(_userid, _password))
                 throw new Exception("Incorrect login credential.");
