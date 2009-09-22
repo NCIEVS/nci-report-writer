@@ -67,12 +67,12 @@ public class ReportGenerationThread implements Runnable {
     private LexBIGService lbSvc;
     private String serviceUrl = null;
 
-    String outputDir = null;
-    String standardReportLabel = null;
-    String uid = null;
+    private String outputDir = null;
+    private String standardReportLabel = null;
+    private String uid = null;
 
-    int count = 0;
-    String hierarchicalAssoName = null;
+    private int count = 0;
+    private String hierarchicalAssoName = null;
 
     public ReportGenerationThread(String outputDir, String standardReportLabel,
             String uid) {
