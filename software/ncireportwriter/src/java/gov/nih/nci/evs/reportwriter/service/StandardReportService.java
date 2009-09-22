@@ -64,7 +64,6 @@ public class StandardReportService {
         Logger.getLogger(StandardReportService.class);
     private EVSApplicationService _appService = null;
     private LexBIGService _lbSvc;
-    private String _serviceUrl = null;
 
     public StandardReportService() {
         try {
@@ -101,7 +100,6 @@ public class StandardReportService {
         }
         try {
             _logger.debug("URL: " + serviceUrl);
-            _serviceUrl = serviceUrl;
             _appService =
                 (EVSApplicationService) ApplicationServiceProvider
                     .getApplicationServiceFromUrl(serviceUrl, "EvsServiceInfo");
@@ -150,8 +148,8 @@ public class StandardReportService {
         String reportFormat_value, String reportStatus_value, String user_value) {
 
         try {
-            Boolean bool_obj = initializeReportFormats();
-            bool_obj = initializeReportStatus();
+            initializeReportFormats();
+            initializeReportStatus();
 
             if (standardReportTemplate_value == null)
                 return "Report template not specified.";
@@ -168,7 +166,6 @@ public class StandardReportService {
             String methodName = null;
             String key = null;
 
-            StandardReportTemplate standardReportTemplate = null;
             FQName = "gov.nih.nci.evs.reportwriter.bean.StandardReportTemplate";
             methodName = "setLabel";
             key = standardReportTemplate_value;
@@ -181,7 +178,6 @@ public class StandardReportService {
                     + standardReportTemplate_value;
             }
 
-            ReportFormat reportFormat = null;
             FQName = "gov.nih.nci.evs.reportwriter.bean.ReportFormat";
             methodName = "setDescription";
             key = reportFormat_value;
@@ -192,7 +188,6 @@ public class StandardReportService {
                 return "Unidentifiable report format -- " + reportFormat_value;
             }
 
-            ReportStatus reportStatus = null;
             FQName = "gov.nih.nci.evs.reportwriter.bean.ReportStatus";
             methodName = "setLabel";
             key = reportStatus_value;
@@ -203,7 +198,6 @@ public class StandardReportService {
                 return "Unidentifiable report status -- " + reportStatus_value;
             }
 
-            User user = null;
             FQName = "gov.nih.nci.evs.reportwriter.bean.User";
             methodName = "setLoginName";
             key = user_value;
@@ -218,9 +212,7 @@ public class StandardReportService {
         } catch (Exception e) {
             e.printStackTrace();
         }
-
         return "Report validation falied";
-
     }
 
     /**
@@ -229,7 +221,6 @@ public class StandardReportService {
      */
     public Boolean createStandardReport(String label, String pathName,
         String templateLabel, String format, String status, String uid) {
-
         try {
 
             _logger.debug("Validing report ");
@@ -266,7 +257,6 @@ public class StandardReportService {
                 sdkclientutil.createStandardReport(label, lastModified,
                     pathName);
 
-            StandardReportTemplate standardReportTemplate = null;
             FQName = "gov.nih.nci.evs.reportwriter.bean.StandardReportTemplate";
             methodName = "setLabel";
 
@@ -283,7 +273,6 @@ public class StandardReportService {
 
             _logger.debug("Assigning report format. ");
 
-            ReportFormat reportformat = null;
             FQName = "gov.nih.nci.evs.reportwriter.bean.ReportFormat";
             methodName = "setDescription";
             key = format;
@@ -299,7 +288,6 @@ public class StandardReportService {
 
             _logger.debug("Assigning report status. ");
 
-            ReportStatus reportstatus = null;
             FQName = "gov.nih.nci.evs.reportwriter.bean.ReportStatus";
             methodName = "setLabel";
             key = status;
@@ -311,7 +299,6 @@ public class StandardReportService {
 
             _logger.debug("Assigning user. ");
 
-            gov.nih.nci.evs.reportwriter.bean.User user = null;
             FQName = "gov.nih.nci.evs.reportwriter.bean.User";
             methodName = "setLoginName";
             key = uid;
@@ -323,14 +310,11 @@ public class StandardReportService {
             }
 
             _logger.debug("Writing record to database. ");
-
             sdkclientutil.insertStandardReport(report);
-
         } catch (Exception e) {
             e.printStackTrace();
             return Boolean.FALSE;
         }
-
         return Boolean.TRUE;
     }
 
@@ -391,7 +375,6 @@ public class StandardReportService {
                     _logger.error("*** insertReportFormat " + description
                         + " failed.");
                 }
-
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -401,7 +384,6 @@ public class StandardReportService {
     }
 
     public static void main(String[] args) {
-
         try {
             StandardReportService standardReportService =
                 new StandardReportService();
@@ -409,9 +391,8 @@ public class StandardReportService {
             String outputfile = standardReportLabel;
             outputfile.replaceAll(" ", "_");
             String outputDir = "G:\\ReportWriter\\test";
-            Boolean retval =
-                standardReportService.generateStandardReport(outputDir,
-                    standardReportLabel, "kimong");
+            standardReportService.generateStandardReport(outputDir,
+                standardReportLabel, "kimong");
 
         } catch (Exception e) {
             _logger.error("REQUEST FAILED !!!");
