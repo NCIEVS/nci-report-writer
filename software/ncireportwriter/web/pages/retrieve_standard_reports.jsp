@@ -81,7 +81,7 @@
 									<!-- bottom action buttons begins -->
 									<table cellpadding="4" cellspacing="0" border="0">
 										<tr>
-											<td><h:commandButton id="download" action="#{userSessionBean.downloadReportAction}" value="download" /></td>
+											<td><h:commandButton id="download" action="#{userSessionBean.downloadReportAction}" value="Download" /></td>
 											<td><h:commandButton id="back" action="back" value="Back" /></td>
 										</tr>
 									</table>
