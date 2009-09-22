@@ -60,7 +60,8 @@ import gov.nih.nci.evs.reportwriter.properties.*;
  */
 
 public class ReportGenerationThread implements Runnable {
-    private static Logger _logger = Logger.getLogger(ReportGenerationThread.class);
+    private static Logger _logger =
+        Logger.getLogger(ReportGenerationThread.class);
 
     private String _outputDir = null;
     private String _standardReportLabel = null;
@@ -104,8 +105,7 @@ public class ReportGenerationThread implements Runnable {
             long ms = System.currentTimeMillis();
             generateStandardReport(_outputDir, _standardReportLabel, _uid);
             _logger.info("Report " + " generated.");
-            _logger.info("Run time (ms): "
-                    + (System.currentTimeMillis() - ms));
+            _logger.info("Run time (ms): " + (System.currentTimeMillis() - ms));
         } catch (Exception e) {
             _logger.error("Exception " + e);
         }
@@ -155,12 +155,11 @@ public class ReportGenerationThread implements Runnable {
                     + " does not exist -- try to create the directory.");
             boolean retval = dir.mkdir();
             if (!retval) {
-                _logger.error("Unable to create output directory "
-                        + outputDir + " - please check privilege setting.");
+                _logger.error("Unable to create output directory " + outputDir
+                        + " - please check privilege setting.");
                 return Boolean.FALSE;
             } else {
-                _logger.debug("Output directory: " + outputDir
-                        + " created.");
+                _logger.debug("Output directory: " + outputDir + " created.");
             }
         } else {
             _logger.debug("Output directory: " + outputDir + " exists.");
@@ -217,9 +216,11 @@ public class ReportGenerationThread implements Runnable {
         String delimeter_str = "\t";
 
         Object[] objs = null;
-        Collection<ReportColumn> cc = standardReportTemplate.getColumnCollection();
+        Collection<ReportColumn> cc =
+            standardReportTemplate.getColumnCollection();
         if (cc == null) {
-            _logger.warn("standardReportTemplate.getColumnCollection returns NULL?????????????");
+            _logger
+                    .warn("standardReportTemplate.getColumnCollection returns NULL?????????????");
         } else {
             objs = cc.toArray();
         }
@@ -243,10 +244,8 @@ public class ReportGenerationThread implements Runnable {
                     _logger.debug("RepresentationalForm: "
                             + col.getRepresentationalForm());
                     _logger.debug("Source: " + col.getSource());
-                    _logger.debug("QualifierName: "
-                            + col.getQualifierName());
-                    _logger.debug("QualifierValue: "
-                            + col.getQualifierValue());
+                    _logger.debug("QualifierName: " + col.getQualifierName());
+                    _logger.debug("QualifierValue: " + col.getQualifierValue());
                     _logger.debug("Delimiter: " + col.getDelimiter());
                     _logger.debug("ConditionalColumnIdD: "
                             + col.getConditionalColumnId());
@@ -322,9 +321,8 @@ public class ReportGenerationThread implements Runnable {
         Boolean bool_obj =
             new StandardReportService().createStandardReport(
                     standardReportLabel + ".txt", pathname,
-                    standardReportTemplate.getLabel(), 
-                        "Text (tab delimited)", "DRAFT",
-                    uid);
+                    standardReportTemplate.getLabel(), "Text (tab delimited)",
+                    "DRAFT", uid);
 
         // convert to Excel
         bool_obj = FileUtil.convertToExcel(pathname, delimeter_str);
@@ -340,8 +338,7 @@ public class ReportGenerationThread implements Runnable {
             new StandardReportService().createStandardReport(
                     standardReportLabel + ".xls", pathname,
                     standardReportTemplate.getLabel(),
-                        "Microsoft Office Excel", "DRAFT",
-                    uid);
+                    "Microsoft Office Excel", "DRAFT", uid);
 
         return bool_obj;
     }
@@ -349,7 +346,8 @@ public class ReportGenerationThread implements Runnable {
     public void printReportHeading(PrintWriter pw, ReportColumn[] cols) {
 
         if (cols == null) {
-            _logger.warn("In printReportHeading numbe of ReportColumn: cols == null ??? ");
+            _logger
+                    .warn("In printReportHeading numbe of ReportColumn: cols == null ??? ");
         }
 
         String columnHeadings = "";
@@ -594,9 +592,9 @@ public class ReportGenerationThread implements Runnable {
                 qualifier_value = null;
                 org.LexGrid.commonTypes.Property p = properties[i];
                 if (p.getPropertyName().compareTo(property_name) == 0) // focus
-                                                                       // on
-                                                                       // matching
-                                                                       // property
+                // on
+                // matching
+                // property
                 {
                     match = true;
 
@@ -631,7 +629,7 @@ public class ReportGenerationThread implements Runnable {
                         // match qualifier
                         if (match) {
                             if (qualifier_name != null) // match property
-                                                        // qualifier, if needed
+                            // qualifier, if needed
                             {
                                 boolean match_found = false;
                                 PropertyQualifier[] qualifiers =
@@ -695,9 +693,9 @@ public class ReportGenerationThread implements Runnable {
                 boolean match = false;
                 org.LexGrid.commonTypes.Property p = properties[i];
                 if (p.getPropertyName().compareTo(property_name) == 0) // focus
-                                                                       // on
-                                                                       // matching
-                                                                       // property
+                // on
+                // matching
+                // property
                 {
                     match = true;
 
@@ -729,7 +727,7 @@ public class ReportGenerationThread implements Runnable {
                         // match qualifier
                         if (match) {
                             if (qualifier_name != null) // match property
-                                                        // qualifier, if needed
+                            // qualifier, if needed
                             {
                                 boolean match_found = false;
                                 PropertyQualifier[] qualifiers =
@@ -860,8 +858,8 @@ public class ReportGenerationThread implements Runnable {
                     + " does not exist -- try to create the directory.");
             boolean retval = dir.mkdir();
             if (!retval) {
-                _logger.error("Unable to create output directory "
-                        + outputDir + " - please check privilege setting.");
+                _logger.error("Unable to create output directory " + outputDir
+                        + " - please check privilege setting.");
                 return Boolean.FALSE;
             } else {
                 _logger.debug("Output directory: " + outputDir + " created.");
@@ -924,9 +922,11 @@ public class ReportGenerationThread implements Runnable {
         String delimeter_str = "\t";
 
         Object[] objs = null;
-        Collection<ReportColumn> cc = standardReportTemplate.getColumnCollection();
+        Collection<ReportColumn> cc =
+            standardReportTemplate.getColumnCollection();
         if (cc == null) {
-            _logger.warn("standardReportTemplate.getColumnCollection returns NULL?????????????");
+            _logger
+                    .warn("standardReportTemplate.getColumnCollection returns NULL?????????????");
         } else {
             objs = cc.toArray();
         }
@@ -943,18 +943,15 @@ public class ReportGenerationThread implements Runnable {
                     _logger.debug("Report Column:");
                     _logger.debug("ID: " + col.getId());
                     _logger.debug("Label: " + col.getLabel());
-                    _logger.debug("Column Number: "
-                            + col.getColumnNumber());
+                    _logger.debug("Column Number: " + col.getColumnNumber());
                     _logger.debug("PropertyType: " + col.getPropertyType());
                     _logger.debug("PropertyName: " + col.getPropertyName());
                     _logger.debug("IsPreferred: " + col.getIsPreferred());
                     _logger.debug("RepresentationalForm: "
                             + col.getRepresentationalForm());
                     _logger.debug("Source: " + col.getSource());
-                    _logger.debug("QualifierName: "
-                            + col.getQualifierName());
-                    _logger.debug("QualifierValue: "
-                            + col.getQualifierValue());
+                    _logger.debug("QualifierName: " + col.getQualifierName());
+                    _logger.debug("QualifierValue: " + col.getQualifierValue());
                     _logger.debug("Delimiter: " + col.getDelimiter());
                     _logger.debug("ConditionalColumnIdD: "
                             + col.getConditionalColumnId());
@@ -969,7 +966,7 @@ public class ReportGenerationThread implements Runnable {
 
         printReportHeading(pw, cols);
 
-        //String scheme = standardReportTemplate.getCodingSchemeName();
+        // String scheme = standardReportTemplate.getCodingSchemeName();
         version = standardReportTemplate.getCodingSchemeVersion();
 
         Vector<String> property_vec = null;
@@ -1018,9 +1015,8 @@ public class ReportGenerationThread implements Runnable {
         Boolean bool_obj =
             new StandardReportService().createStandardReport(
                     standardReportLabel + ".txt", pathname,
-                    standardReportTemplate.getLabel(), 
-                        "Text (tab delimited)", "DRAFT",
-                    uid);
+                    standardReportTemplate.getLabel(), "Text (tab delimited)",
+                    "DRAFT", uid);
 
         // convert to Excel
         bool_obj = FileUtil.convertToExcel(pathname, delimeter_str);
@@ -1035,9 +1031,8 @@ public class ReportGenerationThread implements Runnable {
         bool_obj =
             new StandardReportService().createStandardReport(
                     standardReportLabel + ".xls", pathname,
-                    standardReportTemplate.getLabel(), 
-                        "Microsoft Office Excel", "DRAFT",
-                    uid);
+                    standardReportTemplate.getLabel(),
+                    "Microsoft Office Excel", "DRAFT", uid);
         return bool_obj;
     }
 }
