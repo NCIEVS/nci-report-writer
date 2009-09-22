@@ -5,9 +5,7 @@ import java.util.*;
 
 import gov.nih.nci.evs.reportwriter.bean.*;
 import gov.nih.nci.evs.reportwriter.utils.*;
-import gov.nih.nci.system.applicationservice.*;
 
-import org.LexGrid.LexBIG.LexBIGService.*;
 import org.LexGrid.commonTypes.*;
 import org.LexGrid.concepts.*;
 import org.apache.log4j.*;
@@ -63,9 +61,6 @@ import gov.nih.nci.evs.reportwriter.properties.*;
 
 public class ReportGenerationThread implements Runnable {
     private static Logger _logger = Logger.getLogger(ReportGenerationThread.class);
-    private EVSApplicationService appService = null;
-    private LexBIGService lbSvc;
-    private String serviceUrl = null;
 
     private String outputDir = null;
     private String standardReportLabel = null;
@@ -107,8 +102,7 @@ public class ReportGenerationThread implements Runnable {
         try {
             _logger.info("Generating report -- please wait...");
             long ms = System.currentTimeMillis();
-            Boolean retval =
-                generateStandardReport(outputDir, standardReportLabel, uid);
+            generateStandardReport(outputDir, standardReportLabel, uid);
             _logger.info("Report " + " generated.");
             _logger.info("Run time (ms): "
                     + (System.currentTimeMillis() - ms));
@@ -196,7 +190,6 @@ public class ReportGenerationThread implements Runnable {
         String rootConceptCode = null;
         String associationName = null;
         int level = -1;
-        char delim = '$';
 
         id = standardReportTemplate.getId();
         label = standardReportTemplate.getLabel();
@@ -221,11 +214,10 @@ public class ReportGenerationThread implements Runnable {
         _logger.debug("Level: " + level);
         _logger.debug("Delimiter: " + delimiter);
 
-        String columnHeadings = "";
         String delimeter_str = "\t";
 
         Object[] objs = null;
-        java.util.Collection cc = standardReportTemplate.getColumnCollection();
+        Collection<ReportColumn> cc = standardReportTemplate.getColumnCollection();
         if (cc == null) {
             _logger.warn("standardReportTemplate.getColumnCollection returns NULL?????????????");
         } else {
@@ -301,7 +293,7 @@ public class ReportGenerationThread implements Runnable {
 
         // printReportHeading(pw, cols);
         if (hierarchicalAssoName == null) {
-            Vector hierarchicalAssoName_vec =
+            Vector<String> hierarchicalAssoName_vec =
                 new DataUtils().getHierarchyAssociationId(scheme, version);
             if (hierarchicalAssoName_vec == null
                     || hierarchicalAssoName_vec.size() == 0) {
@@ -327,14 +319,11 @@ public class ReportGenerationThread implements Runnable {
 
         // convert tab-delimited file to Excel
 
-        String reportFormat_value = "Text (tab delimited)";
-        String reportStatus_value = "DRAFT";
-
         Boolean bool_obj =
             new StandardReportService().createStandardReport(
                     standardReportLabel + ".txt", pathname,
-                    standardReportTemplate.getLabel(), reportFormat_value =
-                        "Text (tab delimited)", reportStatus_value = "DRAFT",
+                    standardReportTemplate.getLabel(), 
+                        "Text (tab delimited)", "DRAFT",
                     uid);
 
         // convert to Excel
@@ -350,8 +339,8 @@ public class ReportGenerationThread implements Runnable {
         bool_obj =
             new StandardReportService().createStandardReport(
                     standardReportLabel + ".xls", pathname,
-                    standardReportTemplate.getLabel(), reportFormat_value =
-                        "Microsoft Office Excel", reportStatus_value = "DRAFT",
+                    standardReportTemplate.getLabel(),
+                        "Microsoft Office Excel", "DRAFT",
                     uid);
 
         return bool_obj;
@@ -445,8 +434,7 @@ public class ReportGenerationThread implements Runnable {
         // _logger.debug("Level: " + level + "\tmaxLevel: " + maxLevel);
         if (maxLevel != -1 && level > maxLevel)
             return;
-        EVSApplicationService lbSvc =
-            new RemoteServerUtil().createLexBIGService();
+        RemoteServerUtil.createLexBIGService();
 
         Concept root = DataUtils.getConceptByCode(scheme, version, tag, code);
         if (root == null) {
@@ -458,7 +446,7 @@ public class ReportGenerationThread implements Runnable {
 
         String delim = "\t";
 
-        Vector v = new Vector();
+        Vector<Concept> v = new Vector<Concept>();
         DataUtils util = new DataUtils();
         if (direction) {
             v =
@@ -544,7 +532,7 @@ public class ReportGenerationThread implements Runnable {
             concept = associated_concept;
         } else if (field_Id.indexOf("Parent") != -1) {
             if (hierarchicalAssoName == null) {
-                Vector hierarchicalAssoName_vec =
+                Vector<String> hierarchicalAssoName_vec =
                     new DataUtils().getHierarchyAssociationId(scheme, version);
                 if (hierarchicalAssoName_vec == null
                         || hierarchicalAssoName_vec.size() == 0) {
@@ -555,7 +543,7 @@ public class ReportGenerationThread implements Runnable {
             }
             // Vector superconcept_vec = new DataUtils().getParentCodes(scheme,
             // version, node.getId());
-            Vector superconcept_vec =
+            Vector<String> superconcept_vec =
                 new DataUtils().getAssociationSourceCodes(scheme, version, node
                         .getId(), hierarchicalAssoName);
             if (superconcept_vec != null && superconcept_vec.size() > 0
@@ -814,7 +802,7 @@ public class ReportGenerationThread implements Runnable {
     // //////////////////////////////////////////////////////////////////////////////////////////
 
     private Vector<String> parseData(String line, String delimiter) {
-        Vector data_vec = new Vector();
+        Vector<String> data_vec = new Vector<String>();
         StringTokenizer st = new StringTokenizer(line, delimiter);
         while (st.hasMoreTokens()) {
             String value = st.nextToken();
@@ -933,11 +921,10 @@ public class ReportGenerationThread implements Runnable {
         _logger.debug("Level: " + level);
         // _logger.debug("Delimiter: " + delimiter);
 
-        String columnHeadings = "";
         String delimeter_str = "\t";
 
         Object[] objs = null;
-        java.util.Collection cc = standardReportTemplate.getColumnCollection();
+        Collection<ReportColumn> cc = standardReportTemplate.getColumnCollection();
         if (cc == null) {
             _logger.warn("standardReportTemplate.getColumnCollection returns NULL?????????????");
         } else {
@@ -982,37 +969,37 @@ public class ReportGenerationThread implements Runnable {
 
         printReportHeading(pw, cols);
 
-        String scheme = standardReportTemplate.getCodingSchemeName();
+        //String scheme = standardReportTemplate.getCodingSchemeName();
         version = standardReportTemplate.getCodingSchemeVersion();
 
-        Vector property_vec = null;
+        Vector<String> property_vec = null;
         if (property != null && property.compareTo("null") != 0) {
-            property_vec = new Vector();
+            property_vec = new Vector<String>();
             property_vec.add(property);
         }
 
-        Vector source_vec = null;
+        Vector<String> source_vec = null;
         if (source != null && source.compareTo("null") != 0) {
-            source_vec = new Vector();
+            source_vec = new Vector<String>();
             source_vec.add(source);
         }
 
-        Vector qualifier_name_vec = null;
+        Vector<String> qualifier_name_vec = null;
         if (qualifier_name != null && qualifier_name.compareTo("null") != 0) {
-            qualifier_name_vec = new Vector();
+            qualifier_name_vec = new Vector<String>();
             qualifier_name_vec.add(qualifier_name);
         }
 
-        Vector qualifier_value_vec = null;
+        Vector<String> qualifier_value_vec = null;
         if (qualifier_value != null && qualifier_value.compareTo("null") != 0) {
-            qualifier_value_vec = new Vector();
+            qualifier_value_vec = new Vector<String>();
             qualifier_value_vec.add(qualifier_value);
         }
 
         int maxToReturn = 10000;
         String language = null;
 
-        Vector concept_vec =
+        Vector<Concept> concept_vec =
             DataUtils.restrictToMatchingProperty(codingSchemeName, version,
                     property_vec, source_vec, qualifier_name_vec,
                     qualifier_value_vec, matchText, matchAlgorithm, language,
@@ -1028,14 +1015,11 @@ public class ReportGenerationThread implements Runnable {
         closePrintWriter(pw);
         _logger.debug("Output file " + pathname + " generated.");
 
-        String reportFormat_value = "Text (tab delimited)";
-        String reportStatus_value = "DRAFT";
-
         Boolean bool_obj =
             new StandardReportService().createStandardReport(
                     standardReportLabel + ".txt", pathname,
-                    standardReportTemplate.getLabel(), reportFormat_value =
-                        "Text (tab delimited)", reportStatus_value = "DRAFT",
+                    standardReportTemplate.getLabel(), 
+                        "Text (tab delimited)", "DRAFT",
                     uid);
 
         // convert to Excel
@@ -1051,11 +1035,9 @@ public class ReportGenerationThread implements Runnable {
         bool_obj =
             new StandardReportService().createStandardReport(
                     standardReportLabel + ".xls", pathname,
-                    standardReportTemplate.getLabel(), reportFormat_value =
-                        "Microsoft Office Excel", reportStatus_value = "DRAFT",
+                    standardReportTemplate.getLabel(), 
+                        "Microsoft Office Excel", "DRAFT",
                     uid);
-
         return bool_obj;
-
     }
 }
