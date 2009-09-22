@@ -72,9 +72,9 @@ public class ReportGenerationThread implements Runnable {
 
     public ReportGenerationThread(String outputDir, String standardReportLabel,
             String uid) {
-        this._outputDir = outputDir;
-        this._standardReportLabel = standardReportLabel;
-        this._uid = uid;
+        _outputDir = outputDir;
+        _standardReportLabel = standardReportLabel;
+        _uid = uid;
 
         _count = 0;
     }
