@@ -1,60 +1,17 @@
 package gov.nih.nci.evs.reportwriter.service;
 
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileWriter;
-import java.io.PrintWriter;
-import java.lang.reflect.Method;
-import java.util.Collection;
-import java.util.Date;
-import java.util.Vector;
+import java.io.*;
+import java.util.*;
+
 
 import gov.nih.nci.evs.reportwriter.bean.*;
-import gov.nih.nci.evs.reportwriter.bean.StandardReportTemplate;
 import gov.nih.nci.evs.reportwriter.utils.*;
-import gov.nih.nci.evs.reportwriter.utils.RemoteServerUtil;
-import gov.nih.nci.evs.reportwriter.utils.SDKClientUtil;
-import gov.nih.nci.system.applicationservice.ApplicationService;
-import gov.nih.nci.system.applicationservice.EVSApplicationService;
-import gov.nih.nci.system.client.ApplicationServiceProvider;
+import gov.nih.nci.system.applicationservice.*;
+import gov.nih.nci.system.client.*;
 
-import org.LexGrid.LexBIG.DataModel.Collections.AssociatedConceptList;
-import org.LexGrid.LexBIG.DataModel.Collections.AssociationList;
-import org.LexGrid.LexBIG.DataModel.Collections.ConceptReferenceList;
-import org.LexGrid.LexBIG.DataModel.Collections.LocalNameList;
-import org.LexGrid.LexBIG.DataModel.Collections.ModuleDescriptionList;
-import org.LexGrid.LexBIG.DataModel.Collections.NameAndValueList;
-import org.LexGrid.LexBIG.DataModel.Collections.ResolvedConceptReferenceList;
-import org.LexGrid.LexBIG.DataModel.Core.AssociatedConcept;
-import org.LexGrid.LexBIG.DataModel.Core.Association;
-import org.LexGrid.LexBIG.DataModel.Core.CodingSchemeSummary;
-import org.LexGrid.LexBIG.DataModel.Core.CodingSchemeVersionOrTag;
-import org.LexGrid.LexBIG.DataModel.Core.ConceptReference;
-import org.LexGrid.LexBIG.DataModel.Core.NameAndValue;
-import org.LexGrid.LexBIG.DataModel.Core.ResolvedConceptReference;
-import org.LexGrid.LexBIG.DataModel.InterfaceElements.ModuleDescription;
-import org.LexGrid.LexBIG.Exceptions.LBException;
-import org.LexGrid.LexBIG.Exceptions.LBInvocationException;
-import org.LexGrid.LexBIG.Exceptions.LBResourceUnavailableException;
-import org.LexGrid.LexBIG.Impl.LexBIGServiceImpl;
-import org.LexGrid.LexBIG.LexBIGService.CodedNodeGraph;
-import org.LexGrid.LexBIG.LexBIGService.CodedNodeSet.ActiveOption;
-import org.LexGrid.LexBIG.LexBIGService.LexBIGService;
-import org.LexGrid.LexBIG.Utility.ConvenienceMethods;
-import org.LexGrid.LexBIG.Utility.Iterators.ResolvedConceptReferencesIterator;
-import org.LexGrid.codingSchemes.CodingScheme;
-import org.LexGrid.commonTypes.EntityDescription;
-import org.LexGrid.commonTypes.Property;
-import org.LexGrid.commonTypes.PropertyQualifier;
-import org.LexGrid.commonTypes.Source;
-import org.LexGrid.concepts.Comment;
-import org.LexGrid.concepts.Concept;
-import org.LexGrid.concepts.ConceptProperty;
-import org.LexGrid.concepts.Definition;
-import org.LexGrid.concepts.Instruction;
-import org.LexGrid.concepts.Presentation;
-import org.LexGrid.relations.Relations;
-import org.apache.log4j.Logger;
+import org.LexGrid.LexBIG.Impl.*;
+import org.LexGrid.LexBIG.LexBIGService.*;
+import org.apache.log4j.*;
 
 /**
  * <!-- LICENSE_TEXT_START -->
