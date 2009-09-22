@@ -166,7 +166,7 @@ public class ReportGenerationThread implements Runnable {
         }
 
         String version = standardReportTemplate.getCodingSchemeVersion();
-        // append verision to the report file name:
+        // append version to the report file name:
         String pathname =
             outputDir + File.separator + standardReportLabel + "__" + version
                     + ".txt";
@@ -219,8 +219,8 @@ public class ReportGenerationThread implements Runnable {
         Collection<ReportColumn> cc =
             standardReportTemplate.getColumnCollection();
         if (cc == null) {
-            _logger
-                    .warn("standardReportTemplate.getColumnCollection returns NULL?????????????");
+            _logger.warn("standardReportTemplate.getColumnCollection"
+                    + " returns NULL?????????????");
         } else {
             objs = cc.toArray();
         }
@@ -346,8 +346,8 @@ public class ReportGenerationThread implements Runnable {
     public void printReportHeading(PrintWriter pw, ReportColumn[] cols) {
 
         if (cols == null) {
-            _logger
-                    .warn("In printReportHeading numbe of ReportColumn: cols == null ??? ");
+            _logger.warn("In printReportHeading number of ReportColumn:"
+                    + " cols == null ??? ");
         }
 
         String columnHeadings = "";
@@ -795,9 +795,9 @@ public class ReportGenerationThread implements Runnable {
         return false;
     }
 
-    // //////////////////////////////////////////////////////////////////////////////////////////
+    // /////////////////////////////////////////////////////////////////////////
     // Code for supporting country code like report generation:
-    // //////////////////////////////////////////////////////////////////////////////////////////
+    // /////////////////////////////////////////////////////////////////////////
 
     private Vector<String> parseData(String line, String delimiter) {
         Vector<String> data_vec = new Vector<String>();
@@ -925,8 +925,8 @@ public class ReportGenerationThread implements Runnable {
         Collection<ReportColumn> cc =
             standardReportTemplate.getColumnCollection();
         if (cc == null) {
-            _logger
-                    .warn("standardReportTemplate.getColumnCollection returns NULL?????????????");
+            _logger.warn("standardReportTemplate.getColumnCollection"
+                    + " returns NULL?????????????");
         } else {
             objs = cc.toArray();
         }
