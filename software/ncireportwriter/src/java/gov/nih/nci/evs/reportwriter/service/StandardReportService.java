@@ -3,7 +3,6 @@ package gov.nih.nci.evs.reportwriter.service;
 import java.io.*;
 import java.util.*;
 
-
 import gov.nih.nci.evs.reportwriter.bean.*;
 import gov.nih.nci.evs.reportwriter.utils.*;
 import gov.nih.nci.system.applicationservice.*;
@@ -61,7 +60,8 @@ import org.apache.log4j.*;
  */
 
 public class StandardReportService {
-
+    private static Logger _logger =
+        Logger.getLogger(StandardReportService.class);
     private EVSApplicationService appService = null;
     private LexBIGService lbSvc;
 
@@ -78,7 +78,6 @@ public class StandardReportService {
     public StandardReportService() {
         try {
             this.lbSvc = RemoteServerUtil.createLexBIGService();
-
         } catch (Exception ex) {
             ex.printStackTrace();
         }
@@ -110,7 +109,7 @@ public class StandardReportService {
             }
         }
         try {
-            System.out.println("URL: " + serviceUrl);
+            _logger.debug("URL: " + serviceUrl);
             this.serviceUrl = serviceUrl;
             this.appService =
                 (EVSApplicationService) ApplicationServiceProvider
@@ -138,7 +137,7 @@ public class StandardReportService {
 
     public void closePrintWriter(PrintWriter pw) {
         if (pw == null) {
-            System.out.println("WARNING: pw is not open.");
+            _logger.debug("PrintWriter is not open.");
             return;
         }
         pw.close();
@@ -185,7 +184,7 @@ public class StandardReportService {
             Object standardReportTemplate_obj =
                 sdkclientutil.search(FQName, methodName, key);
             if (standardReportTemplate_obj == null) {
-                System.out.println("Object " + standardReportTemplate_value
+                _logger.error("Object " + standardReportTemplate_value
                     + " not found.");
                 return "Unidentifiable report template label -- "
                     + standardReportTemplate_value;
@@ -198,8 +197,7 @@ public class StandardReportService {
             Object reportFormat_obj =
                 sdkclientutil.search(FQName, methodName, key);
             if (reportFormat_obj == null) {
-                System.out.println("Object " + reportFormat_value
-                    + " not found.");
+                _logger.error("Object " + reportFormat_value + " not found.");
                 return "Unidentifiable report format -- " + reportFormat_value;
             }
 
@@ -210,8 +208,7 @@ public class StandardReportService {
             Object reportStatus_obj =
                 sdkclientutil.search(FQName, methodName, key);
             if (reportStatus_obj == null) {
-                System.out.println("Object " + reportStatus_value
-                    + " not found.");
+                _logger.error("Object " + reportStatus_value + " not found.");
                 return "Unidentifiable report status -- " + reportStatus_value;
             }
 
@@ -221,7 +218,7 @@ public class StandardReportService {
             key = user_value;
             Object user_obj = sdkclientutil.search(FQName, methodName, key);
             if (user_obj == null) {
-                System.out.println("Object " + user_value + " not found.");
+                _logger.error("Object " + user_value + " not found.");
                 return "Unidentifiable user -- " + user_value;
             }
 
@@ -235,19 +232,20 @@ public class StandardReportService {
 
     }
 
+    /**
+     * Method called upon generation of two reports 
+     *   (tab-delimited and Excel).
+     */
     public Boolean createStandardReport(String label, String pathName,
+        String templateLabel, String format, String status, String uid) {
 
-    String templateLabel, String format, String status, String uid) {
-
-        // Method called upon generation of two reports (tab-delimited and
-        // Excel)
         try {
 
-            System.out.println("Validing report ");
+            _logger.debug("Validing report ");
 
             String msg = validReport(templateLabel, format, status, uid);
             if (msg.compareTo("success") != 0) {
-                System.out.println("Report object not created.");
+                _logger.error("Report object not created.");
                 return Boolean.FALSE;
             }
 
@@ -257,7 +255,7 @@ public class StandardReportService {
             String key = label;
             Object[] objs = sdkclientutil.search(FQName);
 
-            System.out.println("Deleting old report objects from database. ");
+            _logger.debug("Deleting old report objects from database. ");
 
             if (objs != null) {
                 // report already exists, delete it
@@ -270,7 +268,7 @@ public class StandardReportService {
                 }
             }
 
-            System.out.println("Creating StandardReport object. ");
+            _logger.debug("Creating StandardReport object. ");
 
             java.util.Date lastModified = new Date(); // system date
             StandardReport report =
@@ -281,19 +279,18 @@ public class StandardReportService {
             FQName = "gov.nih.nci.evs.reportwriter.bean.StandardReportTemplate";
             methodName = "setLabel";
 
-            System.out.println("Report template: " + label);
+            _logger.debug("Report template: " + label);
             key = templateLabel;
 
             Object template_obj = sdkclientutil.search(FQName, methodName, key);
             if (template_obj != null) {
                 report.setTemplate((StandardReportTemplate) template_obj);
             } else {
-                System.out.println("WARNING: Report template: " + label
-                    + " not found???");
+                _logger.error("Report template: " + label + " not found???");
                 return Boolean.FALSE;
             }
 
-            System.out.println("Assigning report format. ");
+            _logger.debug("Assigning report format. ");
 
             ReportFormat reportformat = null;
             FQName = "gov.nih.nci.evs.reportwriter.bean.ReportFormat";
@@ -304,12 +301,12 @@ public class StandardReportService {
             if (format_obj != null) {
                 report.setFormat((ReportFormat) format_obj);
             } else {
-                System.out.println("WARNING: Format " + format
+                _logger.error("Format " + format
                     + " not found -- report not created.");
                 return Boolean.FALSE;
             }
 
-            System.out.println("Assigning report status. ");
+            _logger.debug("Assigning report status. ");
 
             ReportStatus reportstatus = null;
             FQName = "gov.nih.nci.evs.reportwriter.bean.ReportStatus";
@@ -321,7 +318,7 @@ public class StandardReportService {
                 report.setStatus((ReportStatus) status_obj);
             }
 
-            System.out.println("Assigning user. ");
+            _logger.debug("Assigning user. ");
 
             gov.nih.nci.evs.reportwriter.bean.User user = null;
             FQName = "gov.nih.nci.evs.reportwriter.bean.User";
@@ -334,7 +331,7 @@ public class StandardReportService {
                     .setCreatedBy((gov.nih.nci.evs.reportwriter.bean.User) user_obj);
             }
 
-            System.out.println("Writing record to database. ");
+            _logger.debug("Writing record to database. ");
 
             sdkclientutil.insertStandardReport(report);
 
@@ -362,8 +359,7 @@ public class StandardReportService {
                 try {
                     util.insertReportStatus(label, description, active);
                 } catch (Exception ex) {
-                    System.out
-                        .println("====== insertReportStatus DRAFT failed.");
+                    _logger.error("*** insertReportStatus DRAFT failed.");
                 }
 
                 label = "APPROVED";
@@ -372,8 +368,7 @@ public class StandardReportService {
                 try {
                     util.insertReportStatus(label, description, active);
                 } catch (Exception ex) {
-                    System.out
-                        .println("====== insertReportStatus APPROVED failed.");
+                    _logger.error("*** insertReportStatus APPROVED failed.");
                 }
             }
         } catch (Exception e) {
@@ -394,16 +389,16 @@ public class StandardReportService {
                 try {
                     util.insertReportFormat(description);
                 } catch (Exception ex) {
-                    System.out.println("====== insertReportFormat "
-                        + description + " failed.");
+                    _logger.error("*** insertReportFormat " + description
+                        + " failed.");
                 }
 
                 description = "Microsoft Office Excel";
                 try {
                     util.insertReportFormat(description);
                 } catch (Exception ex) {
-                    System.out.println("====== insertReportFormat "
-                        + description + " failed.");
+                    _logger.error("*** insertReportFormat " + description
+                        + " failed.");
                 }
 
             }
@@ -428,7 +423,7 @@ public class StandardReportService {
                     standardReportLabel, "kimong");
 
         } catch (Exception e) {
-            System.out.println("REQUEST FAILED !!!");
+            _logger.error("REQUEST FAILED !!!");
         }
     }
 }
