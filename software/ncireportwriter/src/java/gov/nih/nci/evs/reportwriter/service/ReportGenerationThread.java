@@ -62,20 +62,20 @@ import gov.nih.nci.evs.reportwriter.properties.*;
 public class ReportGenerationThread implements Runnable {
     private static Logger _logger = Logger.getLogger(ReportGenerationThread.class);
 
-    private String outputDir = null;
-    private String standardReportLabel = null;
-    private String uid = null;
+    private String _outputDir = null;
+    private String _standardReportLabel = null;
+    private String _uid = null;
 
-    private int count = 0;
-    private String hierarchicalAssoName = null;
+    private int _count = 0;
+    private String _hierarchicalAssoName = null;
 
     public ReportGenerationThread(String outputDir, String standardReportLabel,
             String uid) {
-        this.outputDir = outputDir;
-        this.standardReportLabel = standardReportLabel;
-        this.uid = uid;
+        this._outputDir = outputDir;
+        this._standardReportLabel = standardReportLabel;
+        this._uid = uid;
 
-        count = 0;
+        _count = 0;
     }
 
     public PrintWriter openPrintWriter(String outputfile) {
@@ -102,7 +102,7 @@ public class ReportGenerationThread implements Runnable {
         try {
             _logger.info("Generating report -- please wait...");
             long ms = System.currentTimeMillis();
-            generateStandardReport(outputDir, standardReportLabel, uid);
+            generateStandardReport(_outputDir, _standardReportLabel, _uid);
             _logger.info("Report " + " generated.");
             _logger.info("Run time (ms): "
                     + (System.currentTimeMillis() - ms));
@@ -292,22 +292,22 @@ public class ReportGenerationThread implements Runnable {
         }
 
         // printReportHeading(pw, cols);
-        if (hierarchicalAssoName == null) {
+        if (_hierarchicalAssoName == null) {
             Vector<String> hierarchicalAssoName_vec =
                 new DataUtils().getHierarchyAssociationId(scheme, version);
             if (hierarchicalAssoName_vec == null
                     || hierarchicalAssoName_vec.size() == 0) {
                 return Boolean.FALSE;
             }
-            hierarchicalAssoName =
+            _hierarchicalAssoName =
                 (String) hierarchicalAssoName_vec.elementAt(0);
         }
         traverse(pw, scheme, version, tag, defining_root_concept, code,
-                hierarchicalAssoName, associationName, direction, curr_level,
+                _hierarchicalAssoName, associationName, direction, curr_level,
                 max_level, cols);
         closePrintWriter(pw);
 
-        _logger.debug("Total number of concepts processed: " + count);
+        _logger.debug("Total number of concepts processed: " + _count);
 
         // convert to Excel:
 
@@ -397,9 +397,9 @@ public class ReportGenerationThread implements Runnable {
         }
         pw.println(output_line);
 
-        count++;
-        if ((count / 100) * 100 == count) {
-            _logger.debug("Number of concepts processed: " + count);
+        _count++;
+        if ((_count / 100) * 100 == _count) {
+            _logger.debug("Number of concepts processed: " + _count);
         }
     }
 
@@ -421,9 +421,9 @@ public class ReportGenerationThread implements Runnable {
         }
         pw.println(output_line);
 
-        count++;
-        if ((count / 100) * 100 == count) {
-            _logger.debug("Number of concepts processed: " + count);
+        _count++;
+        if ((_count / 100) * 100 == _count) {
+            _logger.debug("Number of concepts processed: " + _count);
         }
     }
 
@@ -531,21 +531,21 @@ public class ReportGenerationThread implements Runnable {
         } else if (field_Id.indexOf("Associated") != -1) {
             concept = associated_concept;
         } else if (field_Id.indexOf("Parent") != -1) {
-            if (hierarchicalAssoName == null) {
+            if (_hierarchicalAssoName == null) {
                 Vector<String> hierarchicalAssoName_vec =
                     new DataUtils().getHierarchyAssociationId(scheme, version);
                 if (hierarchicalAssoName_vec == null
                         || hierarchicalAssoName_vec.size() == 0) {
                     return null;
                 }
-                hierarchicalAssoName =
+                _hierarchicalAssoName =
                     (String) hierarchicalAssoName_vec.elementAt(0);
             }
             // Vector superconcept_vec = new DataUtils().getParentCodes(scheme,
             // version, node.getId());
             Vector<String> superconcept_vec =
                 new DataUtils().getAssociationSourceCodes(scheme, version, node
-                        .getId(), hierarchicalAssoName);
+                        .getId(), _hierarchicalAssoName);
             if (superconcept_vec != null && superconcept_vec.size() > 0
                     && field_Id.indexOf("1st Parent") != -1) {
                 String superconceptCode =
