@@ -10,41 +10,59 @@ import gov.nih.nci.system.applicationservice.*;
 import org.LexGrid.LexBIG.LexBIGService.*;
 import org.LexGrid.commonTypes.*;
 import org.LexGrid.concepts.*;
+import org.apache.log4j.*;
 
 import gov.nih.nci.evs.reportwriter.properties.*;
 
 /**
  * <!-- LICENSE_TEXT_START -->
- * Copyright 2008,2009 NGIT. This software was developed in conjunction with the National Cancer Institute,
- * and so to the extent government employees are co-authors, any rights in such works shall be subject to Title 17 of the United States Code, section 105.
- * Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:
- * 1. Redistributions of source code must retain the above copyright notice, this list of conditions and the disclaimer of Article 3, below. Redistributions
- * in binary form must reproduce the above copyright notice, this list of conditions and the following disclaimer in the documentation and/or other
- * materials provided with the distribution.
- * 2. The end-user documentation included with the redistribution, if any, must include the following acknowledgment:
- * "This product includes software developed by NGIT and the National Cancer Institute."
- * If no such end-user documentation is to be included, this acknowledgment shall appear in the software itself,
- * wherever such third-party acknowledgments normally appear.
- * 3. The names "The National Cancer Institute", "NCI" and "NGIT" must not be used to endorse or promote products derived from this software.
- * 4. This license does not authorize the incorporation of this software into any third party proprietary programs. This license does not authorize
- * the recipient to use any trademarks owned by either NCI or NGIT
- * 5. THIS SOFTWARE IS PROVIDED "AS IS," AND ANY EXPRESSED OR IMPLIED WARRANTIES, (INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
- * MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE) ARE DISCLAIMED. IN NO EVENT SHALL THE NATIONAL CANCER INSTITUTE,
- * NGIT, OR THEIR AFFILIATES BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
- * PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY,
- * WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ * Copyright 2008,2009 NGIT. This software was developed in conjunction 
+ * with the National Cancer Institute, and so to the extent government 
+ * employees are co-authors, any rights in such works shall be subject 
+ * to Title 17 of the United States Code, section 105.
+ * Redistribution and use in source and binary forms, with or without 
+ * modification, are permitted provided that the following conditions 
+ * are met:
+ *   1. Redistributions of source code must retain the above copyright 
+ *      notice, this list of conditions and the disclaimer of Article 3, 
+ *      below. Redistributions in binary form must reproduce the above 
+ *      copyright notice, this list of conditions and the following 
+ *      disclaimer in the documentation and/or other materials provided 
+ *      with the distribution.
+ *   2. The end-user documentation included with the redistribution, 
+ *      if any, must include the following acknowledgment:
+ *      "This product includes software developed by NGIT and the National 
+ *      Cancer Institute."   If no such end-user documentation is to be
+ *      included, this acknowledgment shall appear in the software itself,
+ *      wherever such third-party acknowledgments normally appear.
+ *   3. The names "The National Cancer Institute", "NCI" and "NGIT" must 
+ *      not be used to endorse or promote products derived from this software.
+ *   4. This license does not authorize the incorporation of this software
+ *      into any third party proprietary programs. This license does not 
+ *      authorize the recipient to use any trademarks owned by either NCI 
+ *      or NGIT 
+ *   5. THIS SOFTWARE IS PROVIDED "AS IS," AND ANY EXPRESSED OR IMPLIED 
+ *      WARRANTIES, (INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES 
+ *      OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE) ARE 
+ *      DISCLAIMED. IN NO EVENT SHALL THE NATIONAL CANCER INSTITUTE,
+ *      NGIT, OR THEIR AFFILIATES BE LIABLE FOR ANY DIRECT, INDIRECT, 
+ *      INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, 
+ *      BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; 
+ *      LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER 
+ *      CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT 
+ *      LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN 
+ *      ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE 
+ *      POSSIBILITY OF SUCH DAMAGE.
  * <!-- LICENSE_TEXT_END -->
  */
 
 /**
  * @author EVS Team
  * @version 1.0
- * 
- *          Modification history Initial implementation kim.ong@ngc.com
- * 
  */
 
 public class ReportGenerationThread implements Runnable {
+    private static Logger _logger = Logger.getLogger(ReportGenerationThread.class);
     private EVSApplicationService appService = null;
     private LexBIGService lbSvc;
     private String serviceUrl = null;
@@ -78,7 +96,7 @@ public class ReportGenerationThread implements Runnable {
 
     public void closePrintWriter(PrintWriter pw) {
         if (pw == null) {
-            System.out.println("WARNING: pw is not open.");
+            _logger.warn("PrintWriter is not open.");
             return;
         }
         pw.close();
@@ -87,15 +105,15 @@ public class ReportGenerationThread implements Runnable {
 
     public void run() {
         try {
-            System.out.print("Generating report -- please wait...");
+            _logger.info("Generating report -- please wait...");
             long ms = System.currentTimeMillis();
             Boolean retval =
                 generateStandardReport(outputDir, standardReportLabel, uid);
-            System.out.print("Report " + " generated.\n");
-            System.out.println("Run time (ms): "
+            _logger.info("Report " + " generated.");
+            _logger.info("Run time (ms): "
                     + (System.currentTimeMillis() - ms));
         } catch (Exception e) {
-            System.out.println("Exception " + e);
+            _logger.error("Exception " + e);
         }
     }
 
@@ -110,19 +128,19 @@ public class ReportGenerationThread implements Runnable {
             Object obj =
                 sdkclientutil.search(FQName, methodName, standardReportLabel);
             standardReportTemplate = (StandardReportTemplate) obj;
-            System.out.println("standardReportTemplate ID: "
+            _logger.debug("standardReportTemplate ID: "
                     + standardReportTemplate.getId());
-            System.out.println("standardReportTemplate label: "
+            _logger.debug("standardReportTemplate label: "
                     + standardReportTemplate.getLabel());
 
         } catch (Exception e) {
-            System.out.println("Unable to identify report label "
+            _logger.error("Unable to identify report label "
                     + standardReportLabel + " -- report not generated.");
             return Boolean.FALSE;
         }
 
         if (standardReportTemplate == null) {
-            System.out.println("Unable to identify report label "
+            _logger.error("Unable to identify report label "
                     + standardReportLabel + " -- report not generated.");
             return Boolean.FALSE;
         }
@@ -133,25 +151,25 @@ public class ReportGenerationThread implements Runnable {
             return generateSpecialReport(outputDir, standardReportLabel, uid);
         }
 
-        System.out.println("Output directory: " + outputDir);
-        System.out.println("standardReportLabel: " + standardReportLabel);
-        System.out.println("uid: " + uid);
+        _logger.debug("Output directory: " + outputDir);
+        _logger.debug("standardReportLabel: " + standardReportLabel);
+        _logger.debug("uid: " + uid);
 
         File dir = new File(outputDir);
         if (!dir.exists()) {
-            System.out.println("Output directory " + outputDir
+            _logger.debug("Output directory " + outputDir
                     + " does not exist -- try to create the directory.");
             boolean retval = dir.mkdir();
             if (!retval) {
-                System.out.println("Unable to create output directory "
+                _logger.error("Unable to create output directory "
                         + outputDir + " - please check privilege setting.");
                 return Boolean.FALSE;
             } else {
-                System.out.println("Output directory: " + outputDir
+                _logger.debug("Output directory: " + outputDir
                         + " created.");
             }
         } else {
-            System.out.println("Output directory: " + outputDir + " exists.");
+            _logger.debug("Output directory: " + outputDir + " exists.");
         }
 
         String version = standardReportTemplate.getCodingSchemeVersion();
@@ -160,15 +178,15 @@ public class ReportGenerationThread implements Runnable {
             outputDir + File.separator + standardReportLabel + "__" + version
                     + ".txt";
         pathname = pathname.replaceAll(" ", "_");
-        System.out.println("Full path name: " + pathname);
+        _logger.debug("Full path name: " + pathname);
 
         PrintWriter pw = openPrintWriter(pathname);
         if (pw == null) {
-            System.out.println("Unable to create output file " + pathname
+            _logger.error("Unable to create output file " + pathname
                     + " - please check privilege setting.");
             return Boolean.FALSE;
         } else {
-            System.out.println("opened PrintWriter " + pathname);
+            _logger.debug("opened PrintWriter " + pathname);
         }
 
         int id = -1;
@@ -192,15 +210,16 @@ public class ReportGenerationThread implements Runnable {
         level = standardReportTemplate.getLevel();
         Character delimiter = standardReportTemplate.getDelimiter();
 
-        System.out.println("ID: " + id);
-        System.out.println("Label: " + label);
-        System.out.println("CodingSchemeName: " + codingSchemeName);
-        System.out.println("CodingSchemeVersion: " + codingSchemeVersion);
-        System.out.println("Root: " + rootConceptCode);
-        System.out.println("AssociationName: " + associationName);
-        System.out.println("Direction: " + direction);
-        System.out.println("Level: " + level);
-        System.out.println("Delimiter: " + delimiter);
+        _logger.debug(StringUtils.SEPARATOR);
+        _logger.debug("ID: " + id);
+        _logger.debug("Label: " + label);
+        _logger.debug("CodingSchemeName: " + codingSchemeName);
+        _logger.debug("CodingSchemeVersion: " + codingSchemeVersion);
+        _logger.debug("Root: " + rootConceptCode);
+        _logger.debug("AssociationName: " + associationName);
+        _logger.debug("Direction: " + direction);
+        _logger.debug("Level: " + level);
+        _logger.debug("Delimiter: " + delimiter);
 
         String columnHeadings = "";
         String delimeter_str = "\t";
@@ -208,8 +227,7 @@ public class ReportGenerationThread implements Runnable {
         Object[] objs = null;
         java.util.Collection cc = standardReportTemplate.getColumnCollection();
         if (cc == null) {
-            System.out
-                    .println("standardReportTemplate.getColumnCollection returns NULL?????????????");
+            _logger.warn("standardReportTemplate.getColumnCollection returns NULL?????????????");
         } else {
             objs = cc.toArray();
         }
@@ -222,25 +240,23 @@ public class ReportGenerationThread implements Runnable {
                     gov.nih.nci.evs.reportwriter.bean.ReportColumn col =
                         (gov.nih.nci.evs.reportwriter.bean.ReportColumn) objs[i];
 
-                    System.out.println("\nReport Column:");
-                    System.out.println("ID: " + col.getId());
-                    System.out.println("Label: " + col.getLabel());
-                    System.out.println("Column Number: "
-                            + col.getColumnNumber());
-                    System.out
-                            .println("PropertyType: " + col.getPropertyType());
-                    System.out
-                            .println("PropertyName: " + col.getPropertyName());
-                    System.out.println("IsPreferred: " + col.getIsPreferred());
-                    System.out.println("RepresentationalForm: "
+                    _logger.debug(StringUtils.SEPARATOR);
+                    _logger.debug("Report Column:");
+                    _logger.debug("ID: " + col.getId());
+                    _logger.debug("Label: " + col.getLabel());
+                    _logger.debug("Column Number: " + col.getColumnNumber());
+                    _logger.debug("PropertyType: " + col.getPropertyType());
+                    _logger.debug("PropertyName: " + col.getPropertyName());
+                    _logger.debug("IsPreferred: " + col.getIsPreferred());
+                    _logger.debug("RepresentationalForm: "
                             + col.getRepresentationalForm());
-                    System.out.println("Source: " + col.getSource());
-                    System.out.println("QualifierName: "
+                    _logger.debug("Source: " + col.getSource());
+                    _logger.debug("QualifierName: "
                             + col.getQualifierName());
-                    System.out.println("QualifierValue: "
+                    _logger.debug("QualifierValue: "
                             + col.getQualifierValue());
-                    System.out.println("Delimiter: " + col.getDelimiter());
-                    System.out.println("ConditionalColumnIdD: "
+                    _logger.debug("Delimiter: " + col.getDelimiter());
+                    _logger.debug("ConditionalColumnIdD: "
                             + col.getConditionalColumnId());
 
                     cols[i] = col;
@@ -248,7 +264,8 @@ public class ReportGenerationThread implements Runnable {
             }
         }
 
-        System.out.println("********** Start generating report..." + pathname);
+        _logger.debug(StringUtils.SEPARATOR);
+        _logger.debug("* Start generating report..." + pathname);
 
         printReportHeading(pw, cols);
 
@@ -298,7 +315,7 @@ public class ReportGenerationThread implements Runnable {
                 max_level, cols);
         closePrintWriter(pw);
 
-        System.out.println("Total number of concepts processed: " + count);
+        _logger.debug("Total number of concepts processed: " + count);
 
         // convert to Excel:
 
@@ -306,7 +323,7 @@ public class ReportGenerationThread implements Runnable {
         // StandardReport extends Report
         // private StandardReportTemplate template;
 
-        System.out.println("Output file " + pathname + " generated.");
+        _logger.debug("Output file " + pathname + " generated.");
 
         // convert tab-delimited file to Excel
 
@@ -328,7 +345,7 @@ public class ReportGenerationThread implements Runnable {
             outputDir + File.separator + standardReportLabel + "__" + version
                     + ".xls";
         pathname = pathname.replaceAll(" ", "_");
-        System.out.println("Full path name: " + pathname);
+        _logger.debug("Full path name: " + pathname);
 
         bool_obj =
             new StandardReportService().createStandardReport(
@@ -343,8 +360,7 @@ public class ReportGenerationThread implements Runnable {
     public void printReportHeading(PrintWriter pw, ReportColumn[] cols) {
 
         if (cols == null) {
-            System.out
-                    .println("** In printReportHeading numbe of ReportColumn: cols == null ??? ");
+            _logger.warn("In printReportHeading numbe of ReportColumn: cols == null ??? ");
         }
 
         String columnHeadings = "";
@@ -394,7 +410,7 @@ public class ReportGenerationThread implements Runnable {
 
         count++;
         if ((count / 100) * 100 == count) {
-            System.out.println("Number of concepts processed: " + count);
+            _logger.debug("Number of concepts processed: " + count);
         }
     }
 
@@ -418,7 +434,7 @@ public class ReportGenerationThread implements Runnable {
 
         count++;
         if ((count / 100) * 100 == count) {
-            System.out.println("Number of concepts processed: " + count);
+            _logger.debug("Number of concepts processed: " + count);
         }
     }
 
@@ -426,7 +442,7 @@ public class ReportGenerationThread implements Runnable {
             String tag, Concept defining_root_concept, String code,
             String hierarchyAssociationName, String associationName,
             boolean direction, int level, int maxLevel, ReportColumn[] cols) {
-        // System.out.println("Level: " + level + "\tmaxLevel: " + maxLevel);
+        // _logger.debug("Level: " + level + "\tmaxLevel: " + maxLevel);
         if (maxLevel != -1 && level > maxLevel)
             return;
         EVSApplicationService lbSvc =
@@ -434,11 +450,10 @@ public class ReportGenerationThread implements Runnable {
 
         Concept root = DataUtils.getConceptByCode(scheme, version, tag, code);
         if (root == null) {
-            System.out.println("WARNING: Concept with code " + code
-                    + " not found.");
+            _logger.warn("Concept with code " + code + " not found.");
             return;
         } else {
-            System.out.println("Level: " + level + " Subset: " + root.getId());
+            _logger.debug("Level: " + level + " Subset: " + root.getId());
         }
 
         String delim = "\t";
@@ -458,7 +473,7 @@ public class ReportGenerationThread implements Runnable {
         // associated concepts (i.e., concepts in subset)
         if (v == null)
             return;
-        System.out.println("Subset size: " + v.size());
+        _logger.debug("Subset size: " + v.size());
         for (int i = 0; i < v.size(); i++) {
             // subset member element
             Concept c = (Concept) v.elementAt(i);
@@ -819,19 +834,19 @@ public class ReportGenerationThread implements Runnable {
             Object obj =
                 sdkclientutil.search(FQName, methodName, standardReportLabel);
             standardReportTemplate = (StandardReportTemplate) obj;
-            System.out.println("standardReportTemplate ID: "
+            _logger.debug("standardReportTemplate ID: "
                     + standardReportTemplate.getId());
-            System.out.println("standardReportTemplate label: "
+            _logger.debug("standardReportTemplate label: "
                     + standardReportTemplate.getLabel());
 
         } catch (Exception e) {
-            System.out.println("Unable to identify report label "
+            _logger.error("Unable to identify report label "
                     + standardReportLabel + " -- report not generated.");
             return Boolean.FALSE;
         }
 
         if (standardReportTemplate == null) {
-            System.out.println("Unable to identify report label "
+            _logger.error("Unable to identify report label "
                     + standardReportLabel + " -- report not generated.");
             return Boolean.FALSE;
         }
@@ -847,25 +862,24 @@ public class ReportGenerationThread implements Runnable {
         String matchText = (String) v.elementAt(4);
         String matchAlgorithm = (String) v.elementAt(5);
 
-        System.out.println("Output directory: " + outputDir);
-        System.out.println("standardReportLabel: " + standardReportLabel);
-        System.out.println("uid: " + uid);
+        _logger.debug("Output directory: " + outputDir);
+        _logger.debug("standardReportLabel: " + standardReportLabel);
+        _logger.debug("uid: " + uid);
 
         File dir = new File(outputDir);
         if (!dir.exists()) {
-            System.out.println("Output directory " + outputDir
+            _logger.debug("Output directory " + outputDir
                     + " does not exist -- try to create the directory.");
             boolean retval = dir.mkdir();
             if (!retval) {
-                System.out.println("Unable to create output directory "
+                _logger.error("Unable to create output directory "
                         + outputDir + " - please check privilege setting.");
                 return Boolean.FALSE;
             } else {
-                System.out.println("Output directory: " + outputDir
-                        + " created.");
+                _logger.debug("Output directory: " + outputDir + " created.");
             }
         } else {
-            System.out.println("Output directory: " + outputDir + " exists.");
+            _logger.debug("Output directory: " + outputDir + " exists.");
         }
 
         String version = standardReportTemplate.getCodingSchemeVersion();
@@ -874,15 +888,15 @@ public class ReportGenerationThread implements Runnable {
             outputDir + File.separator + standardReportLabel + "__" + version
                     + ".txt";
         pathname = pathname.replaceAll(" ", "_");
-        System.out.println("Full path name: " + pathname);
+        _logger.debug("Full path name: " + pathname);
 
         PrintWriter pw = openPrintWriter(pathname);
         if (pw == null) {
-            System.out.println("Unable to create output file " + pathname
+            _logger.error("Unable to create output file " + pathname
                     + " - please check privilege setting.");
             return Boolean.FALSE;
         } else {
-            System.out.println("opened PrintWriter " + pathname);
+            _logger.debug("opened PrintWriter " + pathname);
         }
 
         int id = -1;
@@ -908,15 +922,16 @@ public class ReportGenerationThread implements Runnable {
 
         // Character delimiter = standardReportTemplate.getDelimiter();
 
-        System.out.println("ID: " + id);
-        System.out.println("Label: " + label);
-        System.out.println("CodingSchemeName: " + codingSchemeName);
-        System.out.println("CodingSchemeVersion: " + codingSchemeVersion);
-        System.out.println("Root: " + rootConceptCode);
-        System.out.println("AssociationName: " + associationName);
-        System.out.println("Direction: " + direction);
-        System.out.println("Level: " + level);
-        // System.out.println("Delimiter: " + delimiter);
+        _logger.debug(StringUtils.SEPARATOR);
+        _logger.debug("ID: " + id);
+        _logger.debug("Label: " + label);
+        _logger.debug("CodingSchemeName: " + codingSchemeName);
+        _logger.debug("CodingSchemeVersion: " + codingSchemeVersion);
+        _logger.debug("Root: " + rootConceptCode);
+        _logger.debug("AssociationName: " + associationName);
+        _logger.debug("Direction: " + direction);
+        _logger.debug("Level: " + level);
+        // _logger.debug("Delimiter: " + delimiter);
 
         String columnHeadings = "";
         String delimeter_str = "\t";
@@ -924,8 +939,7 @@ public class ReportGenerationThread implements Runnable {
         Object[] objs = null;
         java.util.Collection cc = standardReportTemplate.getColumnCollection();
         if (cc == null) {
-            System.out
-                    .println("standardReportTemplate.getColumnCollection returns NULL?????????????");
+            _logger.warn("standardReportTemplate.getColumnCollection returns NULL?????????????");
         } else {
             objs = cc.toArray();
         }
@@ -938,25 +952,24 @@ public class ReportGenerationThread implements Runnable {
                     gov.nih.nci.evs.reportwriter.bean.ReportColumn col =
                         (gov.nih.nci.evs.reportwriter.bean.ReportColumn) objs[i];
 
-                    System.out.println("\nReport Column:");
-                    System.out.println("ID: " + col.getId());
-                    System.out.println("Label: " + col.getLabel());
-                    System.out.println("Column Number: "
+                    _logger.debug(StringUtils.SEPARATOR);
+                    _logger.debug("Report Column:");
+                    _logger.debug("ID: " + col.getId());
+                    _logger.debug("Label: " + col.getLabel());
+                    _logger.debug("Column Number: "
                             + col.getColumnNumber());
-                    System.out
-                            .println("PropertyType: " + col.getPropertyType());
-                    System.out
-                            .println("PropertyName: " + col.getPropertyName());
-                    System.out.println("IsPreferred: " + col.getIsPreferred());
-                    System.out.println("RepresentationalForm: "
+                    _logger.debug("PropertyType: " + col.getPropertyType());
+                    _logger.debug("PropertyName: " + col.getPropertyName());
+                    _logger.debug("IsPreferred: " + col.getIsPreferred());
+                    _logger.debug("RepresentationalForm: "
                             + col.getRepresentationalForm());
-                    System.out.println("Source: " + col.getSource());
-                    System.out.println("QualifierName: "
+                    _logger.debug("Source: " + col.getSource());
+                    _logger.debug("QualifierName: "
                             + col.getQualifierName());
-                    System.out.println("QualifierValue: "
+                    _logger.debug("QualifierValue: "
                             + col.getQualifierValue());
-                    System.out.println("Delimiter: " + col.getDelimiter());
-                    System.out.println("ConditionalColumnIdD: "
+                    _logger.debug("Delimiter: " + col.getDelimiter());
+                    _logger.debug("ConditionalColumnIdD: "
                             + col.getConditionalColumnId());
 
                     cols[i] = col;
@@ -964,7 +977,8 @@ public class ReportGenerationThread implements Runnable {
             }
         }
 
-        System.out.println("********** Start generating report..." + pathname);
+        _logger.debug(StringUtils.SEPARATOR);
+        _logger.debug("* Start generating report..." + pathname);
 
         printReportHeading(pw, cols);
 
@@ -1012,7 +1026,7 @@ public class ReportGenerationThread implements Runnable {
         }
 
         closePrintWriter(pw);
-        System.out.println("Output file " + pathname + " generated.");
+        _logger.debug("Output file " + pathname + " generated.");
 
         String reportFormat_value = "Text (tab delimited)";
         String reportStatus_value = "DRAFT";
@@ -1032,7 +1046,7 @@ public class ReportGenerationThread implements Runnable {
             outputDir + File.separator + standardReportLabel + "__" + version
                     + ".xls";
         pathname = pathname.replaceAll(" ", "_");
-        System.out.println("Full path name: " + pathname);
+        _logger.debug("Full path name: " + pathname);
 
         bool_obj =
             new StandardReportService().createStandardReport(
