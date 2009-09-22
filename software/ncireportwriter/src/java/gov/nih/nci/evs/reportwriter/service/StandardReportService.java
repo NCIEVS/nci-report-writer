@@ -62,22 +62,13 @@ import org.apache.log4j.*;
 public class StandardReportService {
     private static Logger _logger =
         Logger.getLogger(StandardReportService.class);
-    private EVSApplicationService appService = null;
-    private LexBIGService lbSvc;
+    private EVSApplicationService _appService = null;
+    private LexBIGService _lbSvc;
+    private String _serviceUrl = null;
 
-    private String serviceUrl = null;
-
-    private String codingScheme = null;
-    private String version = null;
-
-    private PrintWriter writer = null;
-
-    /**
-     * Default constructor.
-     */
     public StandardReportService() {
         try {
-            this.lbSvc = RemoteServerUtil.createLexBIGService();
+            this._lbSvc = RemoteServerUtil.createLexBIGService();
         } catch (Exception ex) {
             ex.printStackTrace();
         }
@@ -87,7 +78,7 @@ public class StandardReportService {
         try {
             Boolean retval = connect(url);
             if (retval == Boolean.TRUE) {
-                this.lbSvc = RemoteServerUtil.createLexBIGService(url);
+                this._lbSvc = RemoteServerUtil.createLexBIGService(url);
             }
         } catch (Exception ex) {
             ex.printStackTrace();
@@ -95,13 +86,13 @@ public class StandardReportService {
     }
 
     public LexBIGService getLexBIGService() {
-        return this.lbSvc;
+        return this._lbSvc;
     }
 
     private Boolean connect(String serviceUrl) {
         if (serviceUrl == null || serviceUrl.compareTo("") == 0) {
             try {
-                this.lbSvc = new LexBIGServiceImpl();
+                this._lbSvc = new LexBIGServiceImpl();
                 return Boolean.TRUE;
             } catch (Exception ex) {
                 ex.printStackTrace();
@@ -110,12 +101,12 @@ public class StandardReportService {
         }
         try {
             _logger.debug("URL: " + serviceUrl);
-            this.serviceUrl = serviceUrl;
-            this.appService =
+            this._serviceUrl = serviceUrl;
+            this._appService =
                 (EVSApplicationService) ApplicationServiceProvider
                     .getApplicationServiceFromUrl(serviceUrl, "EvsServiceInfo");
 
-            this.lbSvc = (LexBIGService) this.appService;
+            this._lbSvc = (LexBIGService) this._appService;
 
             return Boolean.TRUE;
         } catch (Exception e) {
