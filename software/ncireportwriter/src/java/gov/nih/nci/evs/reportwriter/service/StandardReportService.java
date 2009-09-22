@@ -68,7 +68,7 @@ public class StandardReportService {
 
     public StandardReportService() {
         try {
-            this._lbSvc = RemoteServerUtil.createLexBIGService();
+            _lbSvc = RemoteServerUtil.createLexBIGService();
         } catch (Exception ex) {
             ex.printStackTrace();
         }
@@ -78,7 +78,7 @@ public class StandardReportService {
         try {
             Boolean retval = connect(url);
             if (retval == Boolean.TRUE) {
-                this._lbSvc = RemoteServerUtil.createLexBIGService(url);
+                _lbSvc = RemoteServerUtil.createLexBIGService(url);
             }
         } catch (Exception ex) {
             ex.printStackTrace();
@@ -86,13 +86,13 @@ public class StandardReportService {
     }
 
     public LexBIGService getLexBIGService() {
-        return this._lbSvc;
+        return _lbSvc;
     }
 
     private Boolean connect(String serviceUrl) {
         if (serviceUrl == null || serviceUrl.compareTo("") == 0) {
             try {
-                this._lbSvc = new LexBIGServiceImpl();
+                _lbSvc = new LexBIGServiceImpl();
                 return Boolean.TRUE;
             } catch (Exception ex) {
                 ex.printStackTrace();
@@ -101,12 +101,12 @@ public class StandardReportService {
         }
         try {
             _logger.debug("URL: " + serviceUrl);
-            this._serviceUrl = serviceUrl;
-            this._appService =
+            _serviceUrl = serviceUrl;
+            _appService =
                 (EVSApplicationService) ApplicationServiceProvider
                     .getApplicationServiceFromUrl(serviceUrl, "EvsServiceInfo");
 
-            this._lbSvc = (LexBIGService) this._appService;
+            _lbSvc = (LexBIGService) _appService;
 
             return Boolean.TRUE;
         } catch (Exception e) {
