@@ -216,8 +216,7 @@ public class StandardReportService {
     }
 
     /**
-     * Method called upon generation of two reports 
-     *   (tab-delimited and Excel).
+     * Method called upon generation of two reports (tab-delimited and Excel).
      */
     public Boolean createStandardReport(String label, String pathName,
         String templateLabel, String format, String status, String uid) {
