@@ -119,9 +119,7 @@ public class LoginBean extends Object {
 
         User user = aManager.getUser(_userid);
         if (user == null)
-            throw new Exception("Error retrieving privileges for this user.  "
-                + "Please restart the server if this user"
-                + " has just been added.");
+            throw new Exception("Error retrieving privileges for this user.");
 
         boolean permission =
             aManager

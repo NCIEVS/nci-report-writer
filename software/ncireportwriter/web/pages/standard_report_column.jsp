@@ -123,17 +123,17 @@ String templatLabel = (String) request.getSession().getAttribute("selectedStanda
 													<td class="dataCellNumerical"><%= c.getId() %></td>
 													
 												
-													<td class="dataCellText"><%= c.getLabel() %></td>
-													<td class="dataCellText"><%= c.getFieldId() %></td>
+													<td class="dataCellText"><%= StringUtils.getSpaceIfBlank(c.getLabel()) %></td>
+													<td class="dataCellText"><%= StringUtils.getSpaceIfBlank(c.getFieldId()) %></td>
 													
-													<td class="dataCellText"><%= c.getPropertyType() %></td>
-													<td class="dataCellText"><%= c.getPropertyName() %></td>
-													<td class="dataCellText"><%= c.getIsPreferred() %></td>
-													<td class="dataCellText"><%= c.getRepresentationalForm() %></td>
-													<td class="dataCellText"><%= c.getSource() %></td>
-													<td class="dataCellText"><%= c.getQualifierName() %></td>
-													<td class="dataCellText"><%= c.getQualifierValue() %></td>
-													<td class="dataCellText"><%= c.getDelimiter() %></td>
+													<td class="dataCellText"><%= StringUtils.getSpaceIfBlank(c.getPropertyType()) %></td>
+													<td class="dataCellText"><%= StringUtils.getSpaceIfBlank(c.getPropertyName()) %></td>
+													<td class="dataCellText"><%= StringUtils.getSpaceIfBlank(c.getIsPreferred()) %></td>
+													<td class="dataCellText"><%= StringUtils.getSpaceIfBlank(c.getRepresentationalForm()) %></td>
+													<td class="dataCellText"><%= StringUtils.getSpaceIfBlank(c.getSource()) %></td>
+													<td class="dataCellText"><%= StringUtils.getSpaceIfBlank(c.getQualifierName()) %></td>
+													<td class="dataCellText"><%= StringUtils.getSpaceIfBlank(c.getQualifierValue()) %></td>
+													<td class="dataCellText"><%= StringUtils.getSpaceIfBlank(c.getDelimiter()) %></td>
 													<td class="dataCellNumerical"><%= c.getConditionalColumnId() %></td>
 													
 												</tr>

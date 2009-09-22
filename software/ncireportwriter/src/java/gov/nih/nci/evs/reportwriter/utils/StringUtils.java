@@ -46,10 +46,29 @@ public class StringUtils {
     public static final String SEPARATOR =
         "----------------------------------------" +
         "----------------------------------------";
-    
+    public static final String HTML_SPACE = "&nbsp;";
+
     public static String toHtml(String text) {
         text = text.replaceAll("\n", "<br/>");
         text = text.replaceAll("  ", "&nbsp;&nbsp;");
         return text;
+    }
+    
+    public static String getSpaceIfBlank(String value) {
+        if (value == null || value.trim().length() <= 0)
+            return HTML_SPACE;
+        return value;
+    }
+
+    public static String getSpaceIfBlank(Boolean value) {
+        if (value == null)
+            return HTML_SPACE;
+        return value.toString();
+    }
+
+    public static String getSpaceIfBlank(Character value) {
+        if (value == null)
+            return HTML_SPACE;
+        return getSpaceIfBlank(value.toString());
     }
 }
