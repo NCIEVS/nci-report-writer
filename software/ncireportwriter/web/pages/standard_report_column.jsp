@@ -160,17 +160,17 @@ String templatLabel = (String) request.getSession().getAttribute("selectedStanda
 					<%					
 					if (objs.length == -1) {
 					%>
-											<td><h:commandButton id="insertbefore" action="#{userSessionBean.insertbeforeColumnAction}" value="InsertBefore" /></td>
-					                                                <td><h:commandButton id="insertafter" action="#{userSessionBean.insertafterColumnAction}" value="InsertAfter" /></td>
+											<td><h:commandButton id="insertbefore" action="#{userSessionBean.insertBeforeColumnAction}" value="InsertBefore" /></td>
+					                                                <td><h:commandButton id="insertafter" action="#{userSessionBean.insertAfterColumnAction}" value="InsertAfter" /></td>
                                         <%
                                         } else {
                                         %>
- 											<td><h:commandButton id="insertbefore" action="#{userSessionBean.insertbeforeColumnAction}" value="Add" /></td>
+ 											<td><h:commandButton id="insertbefore" action="#{userSessionBean.insertBeforeColumnAction}" value="Add" /></td>
                                         <%
                                         }
                                         %>
                                         
-											<td><h:commandButton id="modify" action="modify" value="Modify" /></td>
+											<td><h:commandButton id="modify" action="#{userSessionBean.modifyColumnAction}" value="Modify" /></td>
 											
 											
 											<td><h:commandButton id="delete" action="#{userSessionBean.deleteColumnAction}" onclick="if (!confirm('You will lose all data entered. Are you sure?')) return false" value="Delete" /></td>
