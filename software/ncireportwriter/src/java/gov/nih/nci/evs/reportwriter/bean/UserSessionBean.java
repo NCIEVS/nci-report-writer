@@ -374,7 +374,7 @@ public class UserSessionBean extends Object {
         String selectedColumnInfo = request.getParameter("selectedColumnInfo");
         _logger.debug("Selected Column Info: " + selectedColumnInfo);
         if (selectedColumnInfo == null)
-            throw new Exception("Please select a column.\n");
+            throw new Exception("Please select a column.");
         
         StringTokenizer tokenizer = new StringTokenizer(selectedColumnInfo, ":");
         int[] info = new int[tokenizer.countTokens()];

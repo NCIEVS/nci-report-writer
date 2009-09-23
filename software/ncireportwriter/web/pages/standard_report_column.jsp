@@ -62,7 +62,7 @@ Object[] objs = null;
                 <% if (request.getAttribute("warningMsg") != null) { %>
                   <tr><td class="warningMsgColor">
                     Warning:<br/>
-                    <%=request.getAttribute("warningMsg")%><br/>
+                    <%=StringUtils.toHtml((String) request.getAttribute("warningMsg"))%><br/>
                     <br/>
                   </td></tr>
                 <% } %>
