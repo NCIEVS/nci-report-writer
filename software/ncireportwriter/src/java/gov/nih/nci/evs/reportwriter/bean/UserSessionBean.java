@@ -366,54 +366,73 @@ public class UserSessionBean extends Object {
         }
         return null;
     }
+    
+    private final int COL_NUM = 0;
+    private final int FIELD_NUM = 1;
+    private int[] getColumnInfo() throws Exception {
+        HttpServletRequest request = SessionUtil.getRequest();
+        String selectedColumnInfo = request.getParameter("selectedColumnInfo");
+        _logger.debug("Selected Column Info: " + selectedColumnInfo);
+        if (selectedColumnInfo == null)
+            throw new Exception("Please select a column.\n");
+        
+        StringTokenizer tokenizer = new StringTokenizer(selectedColumnInfo, ":");
+        int[] info = new int[tokenizer.countTokens()];
+        int i=0;
+        while (tokenizer.hasMoreTokens())
+            info[i++] = Integer.parseInt(tokenizer.nextToken());
+        return info;
+    }
+    
+    private void initColumnAction() {
+        HttpServletRequest request = SessionUtil.getRequest();
+        request.removeAttribute("warningMsg");
+    }
 
     public String addColumnAction() {
-        // logger.debug("========== addColumnAction() ");
-        // add_standard_report_column.jsp
         return "add_standard_report_column";
     }
 
     public String modifyColumnAction() {
-        // not functional, to be modifid need to track coding scheme
-        // need to populate selected report_column data
-        return "add_standard_report_column";
+        try {
+            initColumnAction();
+            int[] info = getColumnInfo();
+
+            _logger.debug("info: " + info[COL_NUM]);
+            _logger.debug("info: " + info[FIELD_NUM]);
+            return "add_standard_report_column";
+        } catch (Exception e) {
+            SessionUtil.getRequest().setAttribute("warningMsg",
+                e.getMessage());
+            return "standard_report_column";
+        }
     }
 
     public String insertBeforeColumnAction() {
-        // not functional, to be modifid need to track coding scheme
-        // track selected column number
         return "add_standard_report_column";
     }
 
     public String insertAfterColumnAction() {
-        // not functional, to be modifid need to track coding scheme
-        // track selected column number
         return "add_standard_report_column";
     }
 
     public String deleteColumnAction() {
-        // not functional, to be modifid need to track coding scheme
-        // track selected column number
-
-        // selectedcolumn
-        HttpServletRequest request = SessionUtil.getRequest();
-        String id_str = (String) request.getParameter("selectedcolumn");
-        int id = Integer.parseInt(id_str);
-
-        _logger.debug("deleting column with ID = " + id
-            + " (yet to be implemented)");
-
         try {
+            initColumnAction();
+            int info[] = getColumnInfo();
+            int id = info[FIELD_NUM];
+            _logger.debug("Deleting column with ID = " + id);
+    
             ReportColumn reportColumn = getReportColumn(id);
             SDKClientUtil sdkclientutil = new SDKClientUtil();
             sdkclientutil.deleteReportColumn(reportColumn);
             // setSelectedStandardReportTemplate(label);
-
+            return "standard_report_column";
         } catch (Exception e) {
-            e.printStackTrace();
+            SessionUtil.getRequest().setAttribute("warningMsg",
+                e.getMessage());
+            return "standard_report_column";
         }
-
-        return "standard_report_column";
     }
 
     public String getRootConceptCode() {

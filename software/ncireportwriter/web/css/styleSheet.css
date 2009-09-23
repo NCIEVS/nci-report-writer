@@ -39,6 +39,13 @@ body{
 }
 
 /*###############
+MISCELLANEOUS
+###############*/
+.warningMsgColor {
+  color: red;
+}
+
+/*###############
 HDR AND FTR BEGINS 
 ###############*/
 .hdrBG{ /* for the cell that contains the required cancer.gov header */

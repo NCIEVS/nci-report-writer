@@ -17,7 +17,6 @@
 <body>
 
 <f:view>
-
 <table summary="" cellpadding="0" cellspacing="0" border="0" width="100%" height="100%">
 	
   <%@ include file="/pages/templates/nciHeader.html" %>
@@ -60,6 +59,13 @@ Object[] objs = null;
 		<!-- target of anchor to skip menus -->
 		<a name="content" />
 			<table summary="" cellpadding="0" cellspacing="0" border="0" class="contentPage" width="600">
+                <% if (request.getAttribute("warningMsg") != null) { %>
+                  <tr><td class="warningMsgColor">
+                    Warning:<br/>
+                    <%=request.getAttribute("warningMsg")%><br/>
+                    <br/>
+                  </td></tr>
+                <% } %>
 				<tr>
 					<td>
 						<table summary="" cellpadding="0" cellspacing="0" border="0">
@@ -118,7 +124,7 @@ String templatLabel = (String) request.getSession().getAttribute("selectedStanda
 
 										%>
 												<tr>
-													<td class="dataCellText"> <input type="radio" name="selectedcolumn" value=<%= c.getId() %>></td>
+													<td class="dataCellText"> <input type="radio" name="selectedColumnInfo" value="<%=c.getColumnNumber()%>:<%=c.getId()%>"></td>
 													<td class="dataCellNumerical"><%= c.getColumnNumber() %></td>
 													<td class="dataCellNumerical"><%= c.getId() %></td>
 													
