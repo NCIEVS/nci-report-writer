@@ -379,13 +379,13 @@ public class UserSessionBean extends Object {
         return "add_standard_report_column";
     }
 
-    public String insertbeforeColumnAction() {
+    public String insertBeforeColumnAction() {
         // not functional, to be modifid need to track coding scheme
         // track selected column number
         return "add_standard_report_column";
     }
 
-    public String insertafterColumnAction() {
+    public String insertAfterColumnAction() {
         // not functional, to be modifid need to track coding scheme
         // track selected column number
         return "add_standard_report_column";

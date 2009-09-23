@@ -304,20 +304,20 @@
 
     <from-view-id>/pages/standard_report_column.jsp</from-view-id>
     <navigation-case>
-       <from-action>#{userSessionBean.insertbeforeColumnAction}</from-action>
+       <from-action>#{userSessionBean.insertBeforeColumnAction}</from-action>
        <from-outcome>add_standard_report_column</from-outcome>
        <to-view-id>/pages/add_standard_report_column.jsp</to-view-id>
     </navigation-case>
 
     <navigation-case>
-       <from-action>#{userSessionBean.insertafterColumnAction}</from-action>
+       <from-action>#{userSessionBean.insertAfterColumnAction}</from-action>
        <from-outcome>add_standard_report_column</from-outcome>
        <to-view-id>/pages/add_standard_report_column.jsp</to-view-id>
     </navigation-case>
 
     <navigation-case>
      <from-action>#{userSessionBean.modifyColumnAction}</from-action>
-     <from-outcome>modify</from-outcome>
+     <from-outcome>add_standard_report_column</from-outcome>
      <to-view-id>/pages/add_standard_report_column.jsp</to-view-id>
     </navigation-case>
     
