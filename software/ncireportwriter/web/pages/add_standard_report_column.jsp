@@ -4,6 +4,7 @@
 <f:loadBundle basename="gov.nih.nci.evs.reportwriter.bean.Resources" var="reportwriterBundle"/>
 
 <%@ page contentType="text/html;charset=windows-1252"%>
+<%@ page import="gov.nih.nci.evs.reportwriter.bean.*" %>
 
 <html>
 <head>
@@ -12,7 +13,19 @@
 <script src="script.js" type="text/javascript"></script>
 </head>
 <body>
-
+<%
+  OntologyBean ontologyBean = BeanUtils.getOntologyBean();
+  ReportColumn reportColumn = (ReportColumn) request.getAttribute("reportColumn");
+  String columnNumber = "";
+  String fieldlabel = "";
+  if (reportColumn != null) {
+      columnNumber = reportColumn.getColumnNumber().toString();
+      fieldlabel = reportColumn.getLabel();
+      ontologyBean.setSelectedDataCategory(reportColumn.getFieldId());
+  } else {
+      ontologyBean.setSelectedDataCategory(null);
+  }
+%>
 <f:view>
 
 <table summary="" cellpadding="0" cellspacing="0" border="0" width="100%" height="100%">
@@ -64,35 +77,26 @@
 										<tr class="dataRowLight">
 											<td class="dataCellText">Column Number</td>
 											<td class="dataCellText">
-											<input type="text" name="columnNumber"></td>
+											<input type="text" name="columnNumber" value="<%=columnNumber%>"></td>
 										</tr>
 
-									
 										<tr class="dataRowDark">
 											<td class="dataCellText">Field Label</td>
 											<td class="dataCellText">
-											<input type="text" name="fieldlabel"></td>
+											<input type="text" name="fieldlabel" value="<%=fieldlabel%>"></td>
 										</tr>
 
 										<tr class="dataRowLight">
-											<td class="dataCellText">
-												<h:outputText value="Field Type" />
-											</td>
-
+											<td class="dataCellText">Field Type</td>
 											<td class="dataCellText">
 												<h:selectOneMenu id="DataCategoryId" value="#{ontologyBean.selectedDataCategory}" valueChangeListener="#{ontologyBean.dataCategorySelectionChanged}" >
 													<f:selectItems value="#{ontologyBean.dataCategoryList}" />
 												</h:selectOneMenu>
 											</td>									
 										</tr> 
-										
-																				
-										<tr class="dataRowDark">
-										
-											<td class="dataCellText">											
-												<h:outputText value="Property Type" />
-											</td>
 
+										<tr class="dataRowDark">
+											<td class="dataCellText">Property Type</td>
 											<td class="dataCellText">
 												<h:selectOneMenu id="id" value="#{userSessionBean.selectedPropertyType}">
 												     <f:selectItems value="#{userSessionBean.propertyTypeList}" />
