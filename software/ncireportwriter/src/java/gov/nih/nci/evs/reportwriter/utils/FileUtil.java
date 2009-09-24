@@ -241,12 +241,12 @@ public class FileUtil {
 			  }
 		   }
 		   
-		   for( int i=0; i < 255; i++) {
+/* 		   for( int i=0; i < 255; i++) {
 			   if( b[i] != 0) {
 				   System.out.println("Max for column " + i + ": " + b[i]);
 			   }
 		   }
-                   System.out.println("----------");
+                   System.out.println("----------"); */
 		   //RWW GF20673 assign widths
 		   //315 is the magic number for this font and size
 		   for( int i=0; i < 255; i++) {
@@ -256,7 +256,7 @@ public class FileUtil {
                                    if( colWidth > 20000 ) {
                                      colWidth = 20000;
                                    }
-                                   System.out.println("Calculated width for column " + i + ": " + colWidth);
+/*                                    System.out.println("Calculated width for column " + i + ": " + colWidth); */
 				   ws.setColumnWidth( i,  colWidth );
 			   }
 		   }
