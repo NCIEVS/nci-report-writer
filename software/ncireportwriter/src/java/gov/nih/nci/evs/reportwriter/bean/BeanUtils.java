@@ -1,8 +1,6 @@
 package gov.nih.nci.evs.reportwriter.bean;
 
-import java.util.*;
-
-import javax.faces.context.*;
+import gov.nih.nci.evs.reportwriter.utils.*;
 
 /**
  * <!-- LICENSE_TEXT_START -->
@@ -47,17 +45,13 @@ import javax.faces.context.*;
  */
 
 public class BeanUtils {
-    @SuppressWarnings("unchecked")
     public static OntologyBean getOntologyBean() {
-        Map<Object, Object> map =
-            FacesContext.getCurrentInstance().getExternalContext()
-                .getSessionMap();
-        String key = "ontologyBean";
-        OntologyBean bean = (OntologyBean) map.get(key);
-        if (bean == null) {
-            bean = new OntologyBean();
-            map.put(key, bean);
-        }
-        return bean;
+        return (OntologyBean) SessionUtil.getBean("ontologyBean",
+            "gov.nih.nci.evs.reportwriter.bean.OntologyBean");
+    }
+
+    public static UserSessionBean getUserSessionBean() {
+        return (UserSessionBean) SessionUtil.getBean("userSessionBean",
+            "gov.nih.nci.evs.reportwriter.bean.UserSessionBean");
     }
 }

@@ -1,5 +1,7 @@
 package gov.nih.nci.evs.reportwriter.utils;
 
+import java.util.Map;
+
 import javax.faces.context.*;
 import javax.servlet.http.*;
 
@@ -48,9 +50,6 @@ import javax.servlet.http.*;
 /**
  * @author EVS Team
  * @version 1.0
- * 
- *          Modification history Initial implementation kim.ong@ngc.com
- * 
  */
 
 public class SessionUtil {
@@ -62,5 +61,24 @@ public class SessionUtil {
     public static HttpServletRequest getRequest() {
         return (HttpServletRequest) FacesContext.getCurrentInstance()
             .getExternalContext().getRequest();
+    }
+
+    @SuppressWarnings("unchecked")
+    public static Object getBean(String name, String classPath) {
+        try {
+            Map<Object, Object> map =
+                FacesContext.getCurrentInstance().getExternalContext()
+                    .getSessionMap();
+            
+            Object bean =  map.get(name);
+            if (bean == null) {
+                Class klass = Class.forName(classPath);
+                bean = klass.newInstance();
+                map.put(name, bean);
+            }
+            return bean;
+        } catch (Exception e) {
+            return null;
+        }
     }
 }
