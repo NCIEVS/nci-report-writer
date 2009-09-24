@@ -15,6 +15,7 @@
 <body>
 <%
   OntologyBean ontologyBean = BeanUtils.getOntologyBean();
+  UserSessionBean userSessionBean = BeanUtils.getUserSessionBean();
   ReportColumn reportColumn = (ReportColumn) request.getAttribute("reportColumn");
   String columnNumber = "";
   String fieldlabel = "";
@@ -22,8 +23,16 @@
       columnNumber = reportColumn.getColumnNumber().toString();
       fieldlabel = reportColumn.getLabel();
       ontologyBean.setSelectedDataCategory(reportColumn.getFieldId());
+      userSessionBean.setSelectedPropertyType(reportColumn.getPropertyType());
+      ontologyBean.setSelectedPropertyName(reportColumn.getPropertyName());
+      ontologyBean.setSelectedRepresentationalForm(reportColumn.getRepresentationalForm());
+      ontologyBean.setSelectedSource(reportColumn.getSource());
   } else {
       ontologyBean.setSelectedDataCategory(null);
+      userSessionBean.setSelectedPropertyType(null);
+      ontologyBean.setSelectedPropertyName(null);
+      ontologyBean.setSelectedRepresentationalForm(null);
+      ontologyBean.setSelectedSource(null);
   }
 %>
 <f:view>
@@ -102,83 +111,62 @@
 												     <f:selectItems value="#{userSessionBean.propertyTypeList}" />
 												</h:selectOneMenu>											
 											</td>											
-		
 										</tr>
-										<tr class="dataRowLight">
-		
-											<td class="dataCellText">
-												<h:outputText value="Property Name" />
-											</td>
 
+										<tr class="dataRowLight">
+											<td class="dataCellText">Property Name</td>
 											<td class="dataCellText">
 												<h:selectOneMenu id="PropertyNameId" value="#{ontologyBean.selectedPropertyName}" valueChangeListener="#{ontologyBean.propertyNameSelectionChanged}" >
 													<f:selectItems value="#{ontologyBean.propertyNameList}" />
 												</h:selectOneMenu>
 											</td>										        
-										        
-										        
 										</tr>
+
 										<tr class="dataRowDark">
 											<td class="dataCellText">Is Preferred?</td>
 											<td class="dataCellText">
-											<input type="radio" name="preferred" value="yes" >Yes&nbsp;
-											<input type="radio" name="preferred" value="no">No
-											<input type="radio" name="preferred" value="na" checked>NA</td>
+      											<input type="radio" name="preferred" value="yes" >Yes&nbsp;
+      											<input type="radio" name="preferred" value="no">No
+      											<input type="radio" name="preferred" value="na" checked>NA
+                                            </td>
 										</tr>
-										<tr class="dataRowLight">
-												
-											<td class="dataCellText">
-												<h:outputText value="Representational Form" />
-											</td>
 
+										<tr class="dataRowLight">
+											<td class="dataCellText">Representational Form</td>
 											<td class="dataCellText">
 												<h:selectOneMenu id="RepresentationalFormId" value="#{ontologyBean.selectedRepresentationalForm}" valueChangeListener="#{ontologyBean.representationalFormSelectionChanged}" >
 													<f:selectItems value="#{ontologyBean.representationalFormList}" />
 												</h:selectOneMenu>
 											</td>
-											
 										</tr>
+          
 										<tr class="dataRowDark">
-		
-											
-											<td class="dataCellText">
-												<h:outputText value="Source" />
-											</td>
-
+											<td class="dataCellText">Source</td>
 											<td class="dataCellText">
 												<h:selectOneMenu id="SourceId" value="#{ontologyBean.selectedSource}" valueChangeListener="#{ontologyBean.sourceSelectionChanged}" >
 													<f:selectItems value="#{ontologyBean.sourceList}" />
 												</h:selectOneMenu>
 											</td>					
-											
-											
 										</tr>
-										<tr class="dataRowLight">
-										
-											
-											<td class="dataCellText">
-												<h:outputText value="Property Qualifier" />
-											</td>
 
+										<tr class="dataRowLight">
+											<td class="dataCellText">Property Qualifier</td>
 											<td class="dataCellText">
 												<h:selectOneMenu id="PropertyQualifierId" value="#{ontologyBean.selectedPropertyQualifier}" valueChangeListener="#{ontologyBean.propertyQualifierSelectionChanged}" >
 													<f:selectItems value="#{ontologyBean.propertyQualifierList}" />
 												</h:selectOneMenu>
 											</td>							
-											
 										</tr>
+
 										<tr class="dataRowDark">
 											<td class="dataCellText">Qualifier Value</td>
 											<td class="dataCellText">
-											<input type="text" name="qualifiervalue"></td>
+    											<input type="text" name="qualifiervalue">
+                                            </td>
 										</tr>
 		
-										
 										<tr class="dataRowLight">
-											<td class="dataCellText">
-												<h:outputText value="Delimiter" />
-											</td>
-
+											<td class="dataCellText">Delimiter</td>
 											<td class="dataCellText">
 												<h:selectOneMenu id="DelimiterId" value="#{ontologyBean.selectedDelimiter}" valueChangeListener="#{ontologyBean.delimiterSelectionChanged}" >
 													<f:selectItems value="#{ontologyBean.delimiterList}" />
@@ -189,10 +177,10 @@
 										<tr class="dataRowDark">
 											<td class="dataCellText">Dependent Field (if applicable)</td>
 											<td class="dataCellText">
-											<input type="text" name="dependentfield"></td>
+											     <input type="text" name="dependentfield">
+                                            </td>
 										</tr>
-										
-										
+
 									</table>
 								</td>
 							</tr>

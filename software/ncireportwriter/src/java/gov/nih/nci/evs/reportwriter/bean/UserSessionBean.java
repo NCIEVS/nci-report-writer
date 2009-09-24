@@ -155,10 +155,6 @@ public class UserSessionBean extends Object {
 
     public List<SelectItem> getPropertyTypeList() {
         List<SelectItem> list = DataUtils.getPropertyTypeList();
-        if (_selectedPropertyType == null) {
-            SelectItem item = (SelectItem) list.get(0);
-            _selectedPropertyType = item.getLabel();
-        }
         return list;
     }
 

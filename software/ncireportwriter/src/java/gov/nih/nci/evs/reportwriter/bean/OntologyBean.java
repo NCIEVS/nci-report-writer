@@ -272,7 +272,6 @@ public class OntologyBean // extends BaseBean
     private Vector<String> _propertyNameListData = null;
 
     public List<SelectItem> getPropertyNameList() {
-
         HttpServletRequest request = SessionUtil.getRequest();
         String selectedOntology =
             (String) request.getSession().getAttribute("selectedOntology");
@@ -287,17 +286,10 @@ public class OntologyBean // extends BaseBean
                     String t = (String) _propertyNameListData.elementAt(i);
                     _propertyNameList.add(new SelectItem(t));
                 }
-                if (_propertyNameList != null && _propertyNameList.size() > 0) {
-                    _selectedPropertyName =
-                        ((SelectItem) _propertyNameList.get(0)).getLabel();
-                    setSelectedPropertyName(_selectedPropertyName);
-                }
             }
-
         } catch (Exception ex) {
-            _logger
-                .error("=========================== getPropertyNameList() Exception  "
-                    + selectedOntology);
+            _logger.error("*** getPropertyNameList() Exception  "
+                + selectedOntology);
         }
         return _propertyNameList;
     }
@@ -339,11 +331,6 @@ public class OntologyBean // extends BaseBean
             for (int i = 0; i < _representationalFormListData.size(); i++) {
                 String t = (String) _representationalFormListData.elementAt(i);
                 _representationalFormList.add(new SelectItem(t));
-            }
-            if (_representationalFormList != null
-                && _representationalFormList.size() > 0) {
-                _selectedRepresentationalForm =
-                    ((SelectItem) _representationalFormList.get(0)).getLabel();
             }
         }
         return _representationalFormList;
@@ -536,16 +523,11 @@ public class OntologyBean // extends BaseBean
         }
 
         _sourceListData = DataUtils.getSourceListData(selectedOntology);
-
         _sourceList = new ArrayList<SelectItem>();
         _sourceList.add(new SelectItem(" "));
         for (int i = 0; i < _sourceListData.size(); i++) {
             String t = (String) _sourceListData.elementAt(i);
             _sourceList.add(new SelectItem(t));
-        }
-
-        if (_sourceList != null && _sourceList.size() > 0) {
-            _selectedSource = ((SelectItem) _sourceList.get(0)).getLabel();
         }
         return _sourceList;
     }
