@@ -456,6 +456,9 @@ public class OntologyBean // extends BaseBean
     private List<SelectItem> _dataCategoryList = null;
 
     public List<SelectItem> getDataCategoryList() {
+        if (_dataCategoryList != null)
+            return _dataCategoryList;
+        
         _dataCategoryList = new ArrayList<SelectItem>();
         _dataCategoryList.add(new SelectItem("Code"));
         _dataCategoryList.add(new SelectItem("Property"));
@@ -474,10 +477,6 @@ public class OntologyBean // extends BaseBean
         _dataCategoryList.add(new SelectItem("2nd Parent Property"));
         _dataCategoryList.add(new SelectItem("2nd Parent Property Qualifier"));
 
-        if (_dataCategoryList != null && _dataCategoryList.size() > 0) {
-            _selectedDataCategory =
-                ((SelectItem) _dataCategoryList.get(0)).getLabel();
-        }
         return _dataCategoryList;
     }
 
