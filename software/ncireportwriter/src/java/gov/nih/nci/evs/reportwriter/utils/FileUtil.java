@@ -229,9 +229,9 @@ public class FileUtil {
 				     String s = (String) v.elementAt(i);
 				     s = s.trim();
 
-      				     if( s.length() > b[i] ) {
-      				    	 b[i] = s.length();
-      				     }
+  				     if( s.length() > b[i] ) {
+  				    	 b[i] = s.length();
+  				     }
 				     if( s.equals("") ) {
                          s = null;
                      }
@@ -246,20 +246,23 @@ public class FileUtil {
 				   System.out.println("Max for column " + i + ": " + b[i]);
 			   }
 		   }
-                   System.out.println("----------"); */
+                   System.out.println("----------"); 
+*/
+		   
 		   //RWW GF20673 assign widths
 		   //315 is the magic number for this font and size
 		   for( int i=0; i < 255; i++) {
 			   if( b[i] != 0) {
-                                   int colWidth = b[i] * 315;
-                                   // fileds like definition run long, some sanity required
-                                   if( colWidth > 20000 ) {
-                                     colWidth = 20000;
-                                   }
-/*                                    System.out.println("Calculated width for column " + i + ": " + colWidth); */
+                   int colWidth = b[i] * 315;
+                   // fileds like definition run long, some sanity required
+                   if( colWidth > 20000 ) {
+                     colWidth = 20000;
+                   }
+//                                    System.out.println("Calculated width for column " + i + ": " + colWidth);
 				   ws.setColumnWidth( i,  colWidth );
 			   }
 		   }
+		   
 		   //RWW GF20673 freeze top row
 		   ws.createFreezePane( 0, 1, 0, 1 );
 		   wb.write(fout);
