@@ -153,6 +153,10 @@ public class FileUtil {
 
     public static Boolean convertToExcel(String textfile, String delimiter, String excelfile) {
         Boolean[] a = findWrappedColumns(textfile, delimiter, MAX_WIDTH);
+        int[] b = new int[255]; // RWW, The max number of columns allowed in an Excel spreadsheet is 256
+        for( int i=0; i < 255; i++) {
+        	b[i] = 0;
+        }
 		File file = new File(textfile);
 
 		String absolutePath = file.getAbsolutePath();
@@ -224,6 +228,10 @@ public class FileUtil {
 
 				     String s = (String) v.elementAt(i);
 				     s = s.trim();
+
+      				     if( s.length() > b[i] ) {
+      				    	 b[i] = s.length();
+      				     }
 				     if( s.equals("") ) {
                          s = null;
                      }
@@ -233,6 +241,24 @@ public class FileUtil {
 			  }
 		   }
 		   
+		   for( int i=0; i < 255; i++) {
+			   if( b[i] != 0) {
+				   System.out.println("Max for column " + i + ": " + b[i]);
+			   }
+		   }
+                   System.out.println("----------");
+		   //RWW assign widths
+		   //330 is the magic number with this font and size
+		   for( int i=0; i < 255; i++) {
+			   if( b[i] != 0) {
+                                   int colWidth = b[i] * 315;
+                                   if( colWidth > 20000 ) {
+                                     colWidth = 20000;
+                                   }
+                                   System.out.println("Calculated width for column " + i + ": " + colWidth);
+				   ws.setColumnWidth( i,  colWidth );
+			   }
+		   }
 		   //RWW GF20673 freeze top row
 		   ws.createFreezePane( 0, 1, 0, 1 );
 		   wb.write(fout);
