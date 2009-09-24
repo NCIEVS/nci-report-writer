@@ -19,6 +19,15 @@
   ReportColumn reportColumn = (ReportColumn) request.getAttribute("reportColumn");
   String columnNumber = "";
   String fieldlabel = "";
+  ontologyBean.setSelectedDataCategory(null);
+  userSessionBean.setSelectedPropertyType(null);
+  ontologyBean.setSelectedPropertyName(null);
+  ontologyBean.setSelectedRepresentationalForm(null);
+  ontologyBean.setSelectedSource(null);
+  ontologyBean.setSelectedPropertyQualifier(null);
+  String qualifiervalue = "";
+  ontologyBean.setSelectedDelimiter(null);
+  String dependentfield = "";
   if (reportColumn != null) {
       columnNumber = reportColumn.getColumnNumber().toString();
       fieldlabel = reportColumn.getLabel();
@@ -27,12 +36,10 @@
       ontologyBean.setSelectedPropertyName(reportColumn.getPropertyName());
       ontologyBean.setSelectedRepresentationalForm(reportColumn.getRepresentationalForm());
       ontologyBean.setSelectedSource(reportColumn.getSource());
-  } else {
-      ontologyBean.setSelectedDataCategory(null);
-      userSessionBean.setSelectedPropertyType(null);
-      ontologyBean.setSelectedPropertyName(null);
-      ontologyBean.setSelectedRepresentationalForm(null);
-      ontologyBean.setSelectedSource(null);
+      ontologyBean.setSelectedPropertyQualifier(reportColumn.getQualifierName());
+      qualifiervalue = reportColumn.getQualifierValue();
+      ontologyBean.setSelectedDelimiter(reportColumn.getDelimiter().toString());
+      dependentfield = reportColumn.getConditionalColumnId().toString();
   }
 %>
 <f:view>
@@ -161,7 +168,7 @@
 										<tr class="dataRowDark">
 											<td class="dataCellText">Qualifier Value</td>
 											<td class="dataCellText">
-    											<input type="text" name="qualifiervalue">
+    											<input type="text" name="qualifiervalue" value="<%=qualifiervalue%>">
                                             </td>
 										</tr>
 		
@@ -177,7 +184,7 @@
 										<tr class="dataRowDark">
 											<td class="dataCellText">Dependent Field (if applicable)</td>
 											<td class="dataCellText">
-											     <input type="text" name="dependentfield">
+											     <input type="text" name="dependentfield" value="<%=dependentfield%>">
                                             </td>
 										</tr>
 

@@ -363,9 +363,7 @@ public class OntologyBean // extends BaseBean
         _delimiterList.add(new SelectItem(" "));
         _delimiterList.add(new SelectItem("|"));
         _delimiterList.add(new SelectItem("$"));
-        // delimiterList.add(new SelectItem("tab")); // used for separating
-        // fields/columns
-        setSelectedDelimiter("|");
+        // _delimiterList.add(new SelectItem("tab"));
         return _delimiterList;
     }
 
@@ -404,10 +402,6 @@ public class OntologyBean // extends BaseBean
         for (int i = 0; i < _propertyQualifierListData.size(); i++) {
             String t = (String) _propertyQualifierListData.elementAt(i);
             _propertyQualifierList.add(new SelectItem(t));
-        }
-        if (_propertyQualifierList != null && _propertyQualifierList.size() > 0) {
-            _selectedPropertyQualifier =
-                ((SelectItem) _propertyQualifierList.get(0)).getLabel();
         }
         return _propertyQualifierList;
     }
