@@ -247,11 +247,12 @@ public class FileUtil {
 			   }
 		   }
                    System.out.println("----------");
-		   //RWW assign widths
-		   //330 is the magic number with this font and size
+		   //RWW GF20673 assign widths
+		   //315 is the magic number for this font and size
 		   for( int i=0; i < 255; i++) {
 			   if( b[i] != 0) {
                                    int colWidth = b[i] * 315;
+                                   // fileds like definition run long, some sanity required
                                    if( colWidth > 20000 ) {
                                      colWidth = 20000;
                                    }
