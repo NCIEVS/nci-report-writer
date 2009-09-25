@@ -121,9 +121,8 @@
 										
 										<tr class="dataRowDark">
                                             <td class="dataCellText">Version</td>
-                                            <td class="dataCellText"><%=version%></td>
+                                            <td class="dataCellText"><input type="text" name="version" value="<%=version%>"></td>
 										</tr>
-                                        <input type="hidden" name="version" value="<%=version%>">
 										
 										<tr class="dataRowLight">
 											<td class="dataCellText">Root Concept Code</td>

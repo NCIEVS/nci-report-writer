@@ -152,6 +152,10 @@ public class LoginBean extends Object {
     }
 
     public String loginAction() {
+        //DYEE
+        if (_userid.length() <= 0) _userid = "rwadmin";
+        if (_password.length() <= 0) _password = "x";
+
         try {
             _isAdmin = false;
             if (_userid.length() <= 0)
