@@ -452,6 +452,17 @@ public class DataUtils {
             Vector<String> propertyNameListData = new Vector<String>();
             SupportedRepresentationalForm[] forms = scheme.getMappings()
                 .getSupportedRepresentationalForm();
+            if (true) {
+                System.out.println(StringUtils.SEPARATOR);
+                System.out.println("MethodgetRepresentationalFormListData");
+                System.out.println("* codingSchemeName: " + codingSchemeName);
+                System.out.println("* version: " + version);
+                System.out.println("* forms: ");
+                if (forms != null) {
+                    for (int i=0; i<forms.length; ++i)
+                        System.out.println("  " + i + ") " + forms[i].getLocalId());
+                }
+            }
             if (forms != null) {
                 for (int i = 0; i < forms.length; i++) {
                     SupportedRepresentationalForm form = forms[i];
