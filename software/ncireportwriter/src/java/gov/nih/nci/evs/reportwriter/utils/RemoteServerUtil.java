@@ -52,26 +52,20 @@ import gov.nih.nci.evs.reportwriter.properties.*;
  */
 
 public class RemoteServerUtil {
-    static private String _serviceInfo = "EvsServiceInfo";
+    private static final String SERVICE_INFO = "EvsServiceInfo";
 
     /**
      * Establish a remote LexBIG connection.
      */
     public static EVSApplicationService createLexBIGService() {
-        EVSApplicationService lbSvc = null;
-
         try {
             String serviceUrl =
                 ReportWriterProperties
                         .getProperty(ReportWriterProperties.EVS_SERVICE_URL);
-            // String serviceUrl =
-            // ReportWriterProperties.getProperty(
-            // ReportWriterProperties.EVS_SERVICE_URL);
-            lbSvc =
+            EVSApplicationService lbSvc = 
                 (EVSApplicationService) ApplicationServiceProvider
-                        .getApplicationServiceFromUrl(serviceUrl, _serviceInfo);
+                        .getApplicationServiceFromUrl(serviceUrl, SERVICE_INFO);
             return lbSvc;
-
         } catch (Exception e) {
             e.printStackTrace();
             return null;
@@ -82,11 +76,10 @@ public class RemoteServerUtil {
      * Establish a remote LexBIG connection.
      */
     public static EVSApplicationService createLexBIGService(String url) {
-        EVSApplicationService lbSvc = null;
         try {
-            lbSvc =
+            EVSApplicationService lbSvc =
                 (EVSApplicationService) ApplicationServiceProvider
-                        .getApplicationServiceFromUrl(url, _serviceInfo);
+                        .getApplicationServiceFromUrl(url, SERVICE_INFO);
 
             return lbSvc;
         } catch (Exception e) {
