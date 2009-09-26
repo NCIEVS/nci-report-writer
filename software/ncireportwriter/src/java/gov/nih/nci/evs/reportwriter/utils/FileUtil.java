@@ -54,14 +54,11 @@ import org.apache.poi.hssf.util.*;
  */
 
 public class FileUtil {
-    static final int MAX_WIDTH = 30;
-
-    public FileUtil() {
-    }
+    private static final int MAX_WIDTH = 30;
 
     private static Vector<String> parseData(String line, String tab) {
         Vector<String> data_vec = new Vector<String>();
-        // GF20743, delimiters are returned as tokens
+        // RWW GF20743, delimiters are returned as tokens
         // first value could be a tab
         StringTokenizer st = new StringTokenizer(line, tab, true);
         boolean lastWasDelim = true;
@@ -87,10 +84,7 @@ public class FileUtil {
         FileInputStream fis = null;
         BufferedInputStream bis = null;
         DataInputStream dis = null;
-
         Boolean[] a = null;
-
-        // String heading = null;
 
         try {
             fis = new FileInputStream(file);
@@ -105,7 +99,6 @@ public class FileUtil {
                 if (line.length() > 0) {
                     Vector<String> v = parseData(line, delimiter);
                     if (rownum == 0) {
-                        // heading = line;
                         a = new Boolean[v.size()];
                         for (int i = 0; i < v.size(); i++) {
                             a[i] = Boolean.FALSE;
@@ -142,8 +135,9 @@ public class FileUtil {
     public static Boolean convertToExcel(String textfile, String delimiter,
             String excelfile) {
         Boolean[] a = findWrappedColumns(textfile, delimiter, MAX_WIDTH);
-        int[] b = new int[255]; // RWW, The max number of columns allowed in an
-                                // Excel spreadsheet is 256
+        // RWW, The max number of columns allowed in an
+        // Excel spreadsheet is 256
+        int[] b = new int[255]; 
         for (int i = 0; i < 255; i++) {
             b[i] = 0;
         }
