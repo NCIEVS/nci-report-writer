@@ -82,17 +82,17 @@ public class DataUtils {
     private static HashMap<String, String> _csnv2codingSchemeNameMap = null;
     private static HashMap<String, String> _csnv2VersionMap = null;
 
-    //==========================================================================
+    // ==========================================================================
     // For customized query use
-    //==========================================================================
+    // ==========================================================================
     public static int ALL = 0;
     public static int PREFERRED_ONLY = 1;
     public static int NON_PREFERRED_ONLY = 2;
 
-//    private static int RESOLVE_SOURCE = 1;
-//    private static int RESOLVE_TARGET = -1;
-//    private static int RESTRICT_SOURCE = -1;
-//    private static int RESTRICT_TARGET = 1;
+    // private static int RESOLVE_SOURCE = 1;
+    // private static int RESOLVE_TARGET = -1;
+    // private static int RESTRICT_SOURCE = -1;
+    // private static int RESTRICT_TARGET = 1;
 
     public static final int SEARCH_NAME_CODE = 1;
     public static final int SEARCH_DEFINITION = 2;
@@ -101,11 +101,11 @@ public class DataUtils {
     public static final int SEARCH_ROLE_VALUE = 6;
     public static final int SEARCH_ASSOCIATION_VALUE = 7;
 
-//    private static final List<String> STOP_WORDS =
-//        Arrays.asList(new String[] { "a", "an", "and", "by", "for", "of", "on",
-//                "in", "nos", "the", "to", "with" });
+    // private static final List<String> STOP_WORDS =
+    // Arrays.asList(new String[] { "a", "an", "and", "by", "for", "of", "on",
+    // "in", "nos", "the", "to", "with" });
 
-    //==========================================================================
+    // ==========================================================================
     public DataUtils() {
         _adminTaskList = new ArrayList<SelectItem>();
         _adminTaskList.add(new SelectItem("Administer Standard Reports"));
@@ -205,25 +205,28 @@ public class DataUtils {
     }
 
     public static Boolean validateCodingScheme(String formalname, String version) {
-        // to be implemented:
-        /*
-         * System.out.println("DataUtils 	validateCodingScheme " ); if
-         * (csnv2codingSchemeNameMap == null || csnv2VersionMap == null) {
-         * System
-         * .out.println("DataUtils 	validateCodingScheme calling setCodingSchemeMap"
-         * ); setCodingSchemeMap(); return validateCodingScheme(formalname,
-         * version); }
-         * 
-         * String key = formalname + " (version: " + version + ")";
-         * System.out.println("DataUtils 	validateCodingScheme key: " + key); if
-         * (csnv2codingSchemeNameMap.get(key) == null ||
-         * csnv2VersionMap.get(key) == null ) {System.out.println( "DataUtils
-         * validateCodingScheme csnv2codingSchemeNameMap.get(key) == null ||
-         * csnv2VersionMap.get(key) == null :??? " );
-         * System.out.println("DataUtils 	Boolean.FALSE "); return
-         * Boolean.FALSE; } else {
-         * System.out.println("DataUtils 	Boolean.TRUE "); }
-         */
+        // Note: To be implemented:
+        // System.out.println("Method: DataUtils.validateCodingScheme");
+        //                                                                                                         
+        // if (csnv2codingSchemeNameMap == null ||
+        // csnv2VersionMap == null) {
+        // System.out.println("DataUtils.validateCodingScheme "
+        // + "calling setCodingSchemeMap");
+        // setCodingSchemeMap();
+        // return validateCodingScheme(formalname, version);
+        // }
+        //                                                                                                         
+        // String key = formalname + " (version: " + version + ")";
+        // System.out.println("DataUtils   validateCodingScheme key: " + key);
+        // if (csnv2codingSchemeNameMap.get(key) == null ||
+        // csnv2VersionMap.get(key) == null ) {
+        // System.out.println("DataUtils.validateCodingScheme "
+        // + "csnv2codingSchemeNameMap.get(key) == null "
+        // + "|| csnv2VersionMap.get(key) == null :??? ");
+        // System.out.println("* return Boolean.FALSE ");
+        // return Boolean.FALSE;
+        // }
+        // System.out.println("* return Boolean.TRUE ");
         return Boolean.TRUE;
     }
 
@@ -286,7 +289,8 @@ public class DataUtils {
                                             + representsVersion + ")";
                                 _ontologies.add(new SelectItem(value, value));
 
-                                _csnv2codingSchemeNameMap.put(value, formalname);
+                                _csnv2codingSchemeNameMap
+                                        .put(value, formalname);
                                 _csnv2VersionMap.put(value, representsVersion);
                             }
 
@@ -1269,7 +1273,7 @@ public class DataUtils {
         return temp;
     }
 
-    //==========================================================================
+    // ==========================================================================
     public static LocalNameList vector2LocalNameList(Vector<String> v) {
         if (v == null)
             return null;
@@ -1340,8 +1344,7 @@ public class DataUtils {
             LocalNameList propertyList,
             CodedNodeSet.PropertyType[] propertyTypes,
             LocalNameList sourceList, NameAndValueList qualifierList,
-            int maxToReturn)
-    {
+            int maxToReturn) {
         CodedNodeSet cns = null;
         Vector<org.LexGrid.concepts.Concept> v =
             new Vector<org.LexGrid.concepts.Concept>();
@@ -1404,9 +1407,7 @@ public class DataUtils {
             CodedNodeSet.PropertyType[] propertyTypes,
             LocalNameList sourceList, NameAndValueList qualifierList,
             java.lang.String matchText, java.lang.String matchAlgorithm,
-            java.lang.String language,
-            int maxToReturn)
-    {
+            java.lang.String language, int maxToReturn) {
         CodedNodeSet cns = null;
         Vector<org.LexGrid.concepts.Concept> v =
             new Vector<org.LexGrid.concepts.Concept>();
