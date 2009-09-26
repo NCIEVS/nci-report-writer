@@ -52,47 +52,46 @@ import gov.nih.nci.evs.reportwriter.properties.*;
  */
 
 public class RemoteServerUtil {
-	static private String _serviceInfo = "EvsServiceInfo";
+    static private String _serviceInfo = "EvsServiceInfo";
 
-    public RemoteServerUtil() {
+    /**
+     * Establish a remote LexBIG connection.
+     */
+    public static EVSApplicationService createLexBIGService() {
+        EVSApplicationService lbSvc = null;
 
+        try {
+            String serviceUrl =
+                ReportWriterProperties
+                        .getProperty(ReportWriterProperties.EVS_SERVICE_URL);
+            // String serviceUrl =
+            // ReportWriterProperties.getProperty(
+            // ReportWriterProperties.EVS_SERVICE_URL);
+            lbSvc =
+                (EVSApplicationService) ApplicationServiceProvider
+                        .getApplicationServiceFromUrl(serviceUrl, _serviceInfo);
+            return lbSvc;
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
     }
 
-	/**
-	 * Establish a remote LexBIG connection.
-	 *
-	 */
-	public static EVSApplicationService createLexBIGService()
-    {
-		EVSApplicationService lbSvc = null;
+    /**
+     * Establish a remote LexBIG connection.
+     */
+    public static EVSApplicationService createLexBIGService(String url) {
+        EVSApplicationService lbSvc = null;
+        try {
+            lbSvc =
+                (EVSApplicationService) ApplicationServiceProvider
+                        .getApplicationServiceFromUrl(url, _serviceInfo);
 
-		try {
-			String serviceUrl = ReportWriterProperties.getProperty(ReportWriterProperties.EVS_SERVICE_URL);
-			//String serviceUrl = ReportWriterProperties.getInstance().getProperty(ReportWriterProperties.EVS_SERVICE_URL);
-			lbSvc = (EVSApplicationService) ApplicationServiceProvider.getApplicationServiceFromUrl(serviceUrl, _serviceInfo);
-			return lbSvc;
-
-	    } catch (Exception e) {
-			e.printStackTrace();
+            return lbSvc;
+        } catch (Exception e) {
+            e.printStackTrace();
             return null;
         }
-	}
-
-	/**
-	 * Establish a remote LexBIG connection.
-	 *
-	 */
-	public static EVSApplicationService createLexBIGService(String url)
-    {
-		EVSApplicationService lbSvc = null;
-		try {
-		    lbSvc = (EVSApplicationService) ApplicationServiceProvider.getApplicationServiceFromUrl(url, _serviceInfo);
-
-			return lbSvc;
-	    } catch (Exception e) {
-			e.printStackTrace();
-            return null;
-        }
-	}
-
+    }
 }
