@@ -4,7 +4,6 @@ import java.io.*;
 import java.util.*;
 import gov.nih.nci.system.applicationservice.*;
 import gov.nih.nci.evs.reportwriter.bean.*;
-import java.sql.*;
 import javax.faces.model.*;
 import org.LexGrid.LexBIG.DataModel.Collections.*;
 import org.LexGrid.LexBIG.DataModel.Core.*;
@@ -69,16 +68,11 @@ import org.LexGrid.LexBIG.Exceptions.*;
 
 public class DataUtils {
     private int maxReturn = 5000;
-    private Connection con;
-    private Statement stmt;
-    private ResultSet rs;
 
     private static List<SelectItem> standardReportTemplateList = null;
     private static List<SelectItem> adminTaskList = null;
     private static List<SelectItem> userTaskList = null;
-
     private static List<SelectItem> propertyTypeList = null;
-
     private static List<SelectItem> _ontologies = null;
 
     public org.LexGrid.LexBIG.Utility.ConvenienceMethods lbConvMethods = null;
@@ -88,17 +82,17 @@ public class DataUtils {
     private static HashMap<String, String> csnv2codingSchemeNameMap = null;
     private static HashMap<String, String> csnv2VersionMap = null;
 
-    // =========================================================================
+    //==========================================================================
     // For customized query use
-
+    //==========================================================================
     public static int ALL = 0;
     public static int PREFERRED_ONLY = 1;
     public static int NON_PREFERRED_ONLY = 2;
 
-    private static int RESOLVE_SOURCE = 1;
-    private static int RESOLVE_TARGET = -1;
-    private static int RESTRICT_SOURCE = -1;
-    private static int RESTRICT_TARGET = 1;
+//    private static int RESOLVE_SOURCE = 1;
+//    private static int RESOLVE_TARGET = -1;
+//    private static int RESTRICT_SOURCE = -1;
+//    private static int RESTRICT_TARGET = 1;
 
     public static final int SEARCH_NAME_CODE = 1;
     public static final int SEARCH_DEFINITION = 2;
@@ -107,9 +101,9 @@ public class DataUtils {
     public static final int SEARCH_ROLE_VALUE = 6;
     public static final int SEARCH_ASSOCIATION_VALUE = 7;
 
-    private static final List<String> STOP_WORDS =
-        Arrays.asList(new String[] { "a", "an", "and", "by", "for", "of", "on",
-                "in", "nos", "the", "to", "with" });
+//    private static final List<String> STOP_WORDS =
+//        Arrays.asList(new String[] { "a", "an", "and", "by", "for", "of", "on",
+//                "in", "nos", "the", "to", "with" });
 
     //==========================================================================
     public DataUtils() {
@@ -756,7 +750,7 @@ public class DataUtils {
                 cns.resolveToList(null, null, null, 1);
 
             if (matches == null) {
-                System.out.println("Concep not found.");
+                System.out.println("Concept not found.");
                 return null;
             }
 
