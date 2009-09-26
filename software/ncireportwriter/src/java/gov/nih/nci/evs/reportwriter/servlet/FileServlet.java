@@ -58,8 +58,7 @@ import gov.nih.nci.evs.reportwriter.bean.*;
  */
 
 public final class FileServlet extends HttpServlet {
-
-    protected final Logger logger = Logger.getLogger(FileServlet.class);
+    private final Logger _logger = Logger.getLogger(FileServlet.class);
 
     /**
      * Route the user to the execute method
@@ -139,8 +138,8 @@ public final class FileServlet extends HttpServlet {
         response.addHeader("Content-Disposition", "attachment;filename=\""
                 + filename + "\"");
 
-        System.out.println("Full path name =" + fullPathName);
-        System.out.println("File name =" + filename);
+        _logger.debug("Full path name =" + fullPathName);
+        _logger.debug("File name =" + filename);
 
         if (format.indexOf("Excel") == -1) {
             try {
