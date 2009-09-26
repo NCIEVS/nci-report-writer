@@ -58,7 +58,7 @@ public class StringUtils {
         text = text.replaceAll("  ", "&nbsp;&nbsp;");
         return text;
     }
-    
+
     public static String getSpaceIfBlank(String value) {
         if (value == null || value.trim().length() <= 0)
             return HTML_SPACE;

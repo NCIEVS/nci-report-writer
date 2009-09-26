@@ -50,7 +50,6 @@ import java.util.*;
  */
 
 public class SortUtils {
-
     public static int SORT_BY_NAME = 1;
     public static int SORT_BY_CODE = 2;
 
@@ -87,7 +86,6 @@ public class SortUtils {
      * @param v an instance of Vector
      * @param sort_option, an integer; 1, if sort by name; 2: if sort by code
      */
-
     public static Vector quickSort(Vector v, int sort_option) {
         if (v == null)
             return v;
@@ -107,7 +105,6 @@ public class SortUtils {
      * 
      * @param v an instance of Vector
      */
-
     public static Vector quickSort(Vector v) {
         return quickSort(v, SORT_BY_NAME);
     }
