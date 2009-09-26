@@ -69,12 +69,8 @@ import org.apache.log4j.Logger;
  */
 
 /**
-  * @author EVS Team
-  * @version 1.0
-  *
-  * Modification history
-  *     Initial implementation kim.ong@ngc.com
-  *
+ * @author EVS Team (Kim Ong, David Yee)
+ * @version 1.0
  */
 
 public class SDKClientUtil {

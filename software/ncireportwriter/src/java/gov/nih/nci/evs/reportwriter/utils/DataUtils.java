@@ -63,11 +63,8 @@ import org.LexGrid.LexBIG.Exceptions.*;
  */
 
 /**
- * @author EVS Team
+ * @author EVS Team (Kim Ong, David Yee)
  * @version 1.0
- * 
- *          Modification history Initial implementation kim.ong@ngc.com
- * 
  */
 
 public class DataUtils {

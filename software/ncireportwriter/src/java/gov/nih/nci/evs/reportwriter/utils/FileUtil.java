@@ -6,7 +6,6 @@ import java.util.*;
 import org.apache.poi.hssf.usermodel.*;
 import org.apache.poi.hssf.util.*;
 
-
 /**
  * <!-- LICENSE_TEXT_START -->
  * Copyright 2008,2009 NGIT. This software was developed in conjunction 
@@ -50,12 +49,8 @@ import org.apache.poi.hssf.util.*;
  */
 
 /**
-  * @author EVS Team
-  * @version 1.0
-  *
-  * Modification history
-  *     Initial implementation kim.ong@ngc.com
-  *
+ * @author EVS Team (Kim Ong, David Yee)
+ * @version 1.0
  */
 
 public class FileUtil {
