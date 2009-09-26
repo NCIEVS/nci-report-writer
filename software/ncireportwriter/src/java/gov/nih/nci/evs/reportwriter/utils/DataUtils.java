@@ -67,20 +67,20 @@ import org.LexGrid.LexBIG.Exceptions.*;
  */
 
 public class DataUtils {
-    private int maxReturn = 5000;
+    private int _maxReturn = 5000;
 
-    private static List<SelectItem> standardReportTemplateList = null;
-    private static List<SelectItem> adminTaskList = null;
-    private static List<SelectItem> userTaskList = null;
-    private static List<SelectItem> propertyTypeList = null;
+    private static List<SelectItem> _standardReportTemplateList = null;
+    private static List<SelectItem> _adminTaskList = null;
+    private static List<SelectItem> _userTaskList = null;
+    private static List<SelectItem> _propertyTypeList = null;
     private static List<SelectItem> _ontologies = null;
 
-    public org.LexGrid.LexBIG.Utility.ConvenienceMethods lbConvMethods = null;
-    public CodingSchemeRenderingList csrl = null;
-    private static HashMap<String, CodingScheme> codingSchemeMap = null;
+    public org.LexGrid.LexBIG.Utility.ConvenienceMethods _lbConvMethods = null;
+    public CodingSchemeRenderingList _csrl = null;
+    private static HashMap<String, CodingScheme> _codingSchemeMap = null;
 
-    private static HashMap<String, String> csnv2codingSchemeNameMap = null;
-    private static HashMap<String, String> csnv2VersionMap = null;
+    private static HashMap<String, String> _csnv2codingSchemeNameMap = null;
+    private static HashMap<String, String> _csnv2VersionMap = null;
 
     //==========================================================================
     // For customized query use
@@ -107,16 +107,16 @@ public class DataUtils {
 
     //==========================================================================
     public DataUtils() {
-        adminTaskList = new ArrayList<SelectItem>();
-        adminTaskList.add(new SelectItem("Administer Standard Reports"));
-        adminTaskList.add(new SelectItem("Maintain Report Status"));
-        adminTaskList.add(new SelectItem("Assign Report Status"));
-        adminTaskList.add(new SelectItem("Retrieve Standard Reports"));
+        _adminTaskList = new ArrayList<SelectItem>();
+        _adminTaskList.add(new SelectItem("Administer Standard Reports"));
+        _adminTaskList.add(new SelectItem("Maintain Report Status"));
+        _adminTaskList.add(new SelectItem("Assign Report Status"));
+        _adminTaskList.add(new SelectItem("Retrieve Standard Reports"));
 
-        userTaskList = new ArrayList<SelectItem>();
-        userTaskList.add(new SelectItem("Retrieve Standard Reports"));
+        _userTaskList = new ArrayList<SelectItem>();
+        _userTaskList.add(new SelectItem("Retrieve Standard Reports"));
 
-        standardReportTemplateList = new ArrayList<SelectItem>();
+        _standardReportTemplateList = new ArrayList<SelectItem>();
 
         setCodingSchemeMap();
 
@@ -126,46 +126,44 @@ public class DataUtils {
                 ReportWriterProperties
                         .getProperty(ReportWriterProperties.MAXIMUM_RETURN);
             if (max_return_str != null) {
-                maxReturn = Integer.parseInt(max_return_str);
+                _maxReturn = Integer.parseInt(max_return_str);
             }
         } catch (Exception ex) {
-
         }
     }
 
     public static List<SelectItem> getPropertyTypeList() {
-        if (propertyTypeList == null) {
-            propertyTypeList = new ArrayList<SelectItem>();
-            propertyTypeList.add(new SelectItem(""));
-            propertyTypeList.add(new SelectItem("COMMENT"));
-            propertyTypeList.add(new SelectItem("DEFINITION"));
-            propertyTypeList.add(new SelectItem("GENERIC"));
-            propertyTypeList.add(new SelectItem("INSTRUCTION"));
-            propertyTypeList.add(new SelectItem("PRESENTATION"));
+        if (_propertyTypeList == null) {
+            _propertyTypeList = new ArrayList<SelectItem>();
+            _propertyTypeList.add(new SelectItem(""));
+            _propertyTypeList.add(new SelectItem("COMMENT"));
+            _propertyTypeList.add(new SelectItem("DEFINITION"));
+            _propertyTypeList.add(new SelectItem("GENERIC"));
+            _propertyTypeList.add(new SelectItem("INSTRUCTION"));
+            _propertyTypeList.add(new SelectItem("PRESENTATION"));
         }
-        return propertyTypeList;
+        return _propertyTypeList;
     }
 
     public static List<SelectItem> getTaskList(Boolean isAdmin) {
-
         if (isAdmin == null)
             return null;
         else if (isAdmin.equals(Boolean.TRUE)) {
-            if (adminTaskList == null) {
-                adminTaskList = new ArrayList<SelectItem>();
-                adminTaskList
+            if (_adminTaskList == null) {
+                _adminTaskList = new ArrayList<SelectItem>();
+                _adminTaskList
                         .add(new SelectItem("Administer Standard Reports"));
-                adminTaskList.add(new SelectItem("Maintain Report Status"));
-                adminTaskList.add(new SelectItem("Assign Report Status"));
-                adminTaskList.add(new SelectItem("Retrieve Standard Reports"));
+                _adminTaskList.add(new SelectItem("Maintain Report Status"));
+                _adminTaskList.add(new SelectItem("Assign Report Status"));
+                _adminTaskList.add(new SelectItem("Retrieve Standard Reports"));
             }
-            return adminTaskList;
+            return _adminTaskList;
         } else {
-            if (userTaskList == null) {
-                userTaskList = new ArrayList<SelectItem>();
-                userTaskList.add(new SelectItem("Retrieve Standard Reports"));
+            if (_userTaskList == null) {
+                _userTaskList = new ArrayList<SelectItem>();
+                _userTaskList.add(new SelectItem("Retrieve Standard Reports"));
             }
-            return userTaskList;
+            return _userTaskList;
         }
     }
 
@@ -173,14 +171,14 @@ public class DataUtils {
     public static List<SelectItem> getStandardReportTemplateList() {
         // if (isAdmin == null || isAdmin == Boolean.FALSE) return null;
 
-        standardReportTemplateList = new ArrayList<SelectItem>();
+        _standardReportTemplateList = new ArrayList<SelectItem>();
         try {
             SDKClientUtil util = new SDKClientUtil();
             String FQName =
                 "gov.nih.nci.evs.reportwriter.bean.StandardReportTemplate";
             Object[] objs = util.search(FQName);
             if (objs.length == 0)
-                return standardReportTemplateList;
+                return _standardReportTemplateList;
             Vector<String> v = new Vector<String>();
             for (int i = 0; i < objs.length; i++) {
                 StandardReportTemplate standardReportTemplate =
@@ -192,12 +190,12 @@ public class DataUtils {
             SortUtils.quickSort(v);
             for (int i = 0; i < v.size(); i++) {
                 String name = (String) v.elementAt(i);
-                standardReportTemplateList.add(new SelectItem(name));
+                _standardReportTemplateList.add(new SelectItem(name));
             }
         } catch (Exception e) {
             e.printStackTrace();
         }
-        return standardReportTemplateList;
+        return _standardReportTemplateList;
     }
 
     public static List<SelectItem> getOntologyList() {
@@ -232,9 +230,9 @@ public class DataUtils {
     private static void setCodingSchemeMap() {
         // if (_ontologies != null) return;
         _ontologies = new ArrayList<SelectItem>();
-        codingSchemeMap = new HashMap<String, CodingScheme>();
-        csnv2codingSchemeNameMap = new HashMap<String, String>();
-        csnv2VersionMap = new HashMap<String, String>();
+        _codingSchemeMap = new HashMap<String, CodingScheme>();
+        _csnv2codingSchemeNameMap = new HashMap<String, String>();
+        _csnv2VersionMap = new HashMap<String, String>();
 
         try {
             EVSApplicationService lbSvc =
@@ -264,15 +262,15 @@ public class DataUtils {
                         } catch (Exception ex) {
                         }
                         if (scheme != null) {
-                            codingSchemeMap.put(formalname, scheme);
+                            _codingSchemeMap.put(formalname, scheme);
 
                             String value =
                                 formalname + " (version: " + representsVersion
                                         + ")";
                             _ontologies.add(new SelectItem(value, value));
 
-                            csnv2codingSchemeNameMap.put(value, formalname);
-                            csnv2VersionMap.put(value, representsVersion);
+                            _csnv2codingSchemeNameMap.put(value, formalname);
+                            _csnv2VersionMap.put(value, representsVersion);
 
                         }
 
@@ -281,16 +279,15 @@ public class DataUtils {
                         try {
                             scheme = lbSvc.resolveCodingScheme(urn, vt);
                             if (scheme != null) {
-                                codingSchemeMap.put(formalname, scheme);
+                                _codingSchemeMap.put(formalname, scheme);
 
                                 String value =
                                     formalname + " (version: "
                                             + representsVersion + ")";
                                 _ontologies.add(new SelectItem(value, value));
 
-                                csnv2codingSchemeNameMap.put(value, formalname);
-                                csnv2VersionMap.put(value, representsVersion);
-
+                                _csnv2codingSchemeNameMap.put(value, formalname);
+                                _csnv2VersionMap.put(value, representsVersion);
                             }
 
                         } catch (Exception ex) {
@@ -300,7 +297,7 @@ public class DataUtils {
                                 scheme =
                                     lbSvc.resolveCodingScheme(localname, vt);
                                 if (scheme != null) {
-                                    codingSchemeMap.put(formalname, scheme);
+                                    _codingSchemeMap.put(formalname, scheme);
 
                                     String value =
                                         formalname + " (version: "
@@ -308,11 +305,10 @@ public class DataUtils {
                                     _ontologies
                                             .add(new SelectItem(value, value));
 
-                                    csnv2codingSchemeNameMap.put(value,
+                                    _csnv2codingSchemeNameMap.put(value,
                                             formalname);
-                                    csnv2VersionMap.put(value,
+                                    _csnv2VersionMap.put(value,
                                             representsVersion);
-
                                 }
                             } catch (Exception e2) {
                                 e2.printStackTrace();
@@ -320,7 +316,6 @@ public class DataUtils {
                         }
                     }
                 }
-
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -328,14 +323,14 @@ public class DataUtils {
     }
 
     public static Vector<String> getSupportedAssociationNames(String key) {
-        if (csnv2codingSchemeNameMap == null) {
+        if (_csnv2codingSchemeNameMap == null) {
             setCodingSchemeMap();
             return getSupportedAssociationNames(key);
         }
-        String codingSchemeName = csnv2codingSchemeNameMap.get(key);
+        String codingSchemeName = _csnv2codingSchemeNameMap.get(key);
         if (codingSchemeName == null)
             return null;
-        String version = csnv2VersionMap.get(key);
+        String version = _csnv2VersionMap.get(key);
         if (version == null)
             return null;
         return getSupportedAssociationNames(codingSchemeName, version);
@@ -373,15 +368,15 @@ public class DataUtils {
     }
 
     public static Vector<String> getPropertyNameListData(String key) {
-        if (csnv2codingSchemeNameMap == null) {
+        if (_csnv2codingSchemeNameMap == null) {
             setCodingSchemeMap();
         }
 
-        String codingSchemeName = csnv2codingSchemeNameMap.get(key);
+        String codingSchemeName = _csnv2codingSchemeNameMap.get(key);
         if (codingSchemeName == null) {
             return null;
         }
-        String version = csnv2VersionMap.get(key);
+        String version = _csnv2VersionMap.get(key);
         if (version == null) {
             return null;
         }
@@ -416,18 +411,18 @@ public class DataUtils {
     }
 
     public static String getCodingSchemeName(String key) {
-        return csnv2codingSchemeNameMap.get(key);
+        return _csnv2codingSchemeNameMap.get(key);
     }
 
     public static String getCodingSchemeVersion(String key) {
-        return csnv2VersionMap.get(key);
+        return _csnv2VersionMap.get(key);
     }
 
     public static Vector<String> getRepresentationalFormListData(String key) {
-        String codingSchemeName = csnv2codingSchemeNameMap.get(key);
+        String codingSchemeName = _csnv2codingSchemeNameMap.get(key);
         if (codingSchemeName == null)
             return null;
-        String version = csnv2VersionMap.get(key);
+        String version = _csnv2VersionMap.get(key);
         if (version == null)
             return null;
         return getRepresentationalFormListData(codingSchemeName, version);
@@ -475,10 +470,10 @@ public class DataUtils {
     }
 
     public static Vector<String> getPropertyQualifierListData(String key) {
-        String codingSchemeName = csnv2codingSchemeNameMap.get(key);
+        String codingSchemeName = _csnv2codingSchemeNameMap.get(key);
         if (codingSchemeName == null)
             return null;
-        String version = csnv2VersionMap.get(key);
+        String version = _csnv2VersionMap.get(key);
         if (version == null)
             return null;
         return getPropertyQualifierListData(codingSchemeName, version);
@@ -513,14 +508,14 @@ public class DataUtils {
     }
 
     public static Vector<String> getSourceListData(String key) {
-        if (csnv2codingSchemeNameMap == null) {
+        if (_csnv2codingSchemeNameMap == null) {
             setCodingSchemeMap();
             return getSourceListData(key);
         }
-        String codingSchemeName = csnv2codingSchemeNameMap.get(key);
+        String codingSchemeName = _csnv2codingSchemeNameMap.get(key);
         if (codingSchemeName == null)
             return null;
-        String version = csnv2VersionMap.get(key);
+        String version = _csnv2VersionMap.get(key);
         if (version == null)
             return null;
         return getSourceListData(codingSchemeName, version);
@@ -729,11 +724,9 @@ public class DataUtils {
             CodedNodeSet cns = null;
 
             try {
-
                 System.out
                         .println("DataUtils calling getCodingSchemeConcepts: "
                                 + code);
-
                 cns =
                     lbSvc.getCodingSchemeConcepts(codingSchemeName,
                             versionOrTag);
@@ -810,7 +803,7 @@ public class DataUtils {
             matches =
                 cng.resolveAsList(ConvenienceMethods.createConceptReference(
                         code, scheme), true, false, 1, 1, new LocalNameList(),
-                        null, null, maxReturn);
+                        null, null, _maxReturn);
 
             if (matches.getResolvedConceptReferenceCount() > 0) {
                 Enumeration<ResolvedConceptReference> refEnum =
@@ -907,7 +900,7 @@ public class DataUtils {
             matches =
                 cng.resolveAsList(ConvenienceMethods.createConceptReference(
                         code, scheme), false, true, 1, 1, new LocalNameList(),
-                        null, null, maxReturn);
+                        null, null, _maxReturn);
 
             if (matches.getResolvedConceptReferenceCount() > 0) {
                 Enumeration<ResolvedConceptReference> refEnum =
@@ -986,7 +979,7 @@ public class DataUtils {
             matches =
                 cng.resolveAsList(ConvenienceMethods.createConceptReference(
                         code, scheme), false, true, 1, 1, new LocalNameList(),
-                        null, null, maxReturn);
+                        null, null, _maxReturn);
 
             if (matches.getResolvedConceptReferenceCount() > 0) {
                 Enumeration<ResolvedConceptReference> refEnum =
@@ -1276,8 +1269,7 @@ public class DataUtils {
         return temp;
     }
 
-    // /////////////////////////////////////////////////////////////////////////
-
+    //==========================================================================
     public static LocalNameList vector2LocalNameList(Vector<String> v) {
         if (v == null)
             return null;
@@ -1325,7 +1317,6 @@ public class DataUtils {
         return restrictToMatchingProperty(codingSchemeName, version,
                 propertyList, propertyTypes, sourceList, qualifierList,
                 matchText, matchAlgorithm, language, maxToReturn);
-
     }
 
     public static Vector<org.LexGrid.concepts.Concept> restrictToProperty(
@@ -1350,8 +1341,6 @@ public class DataUtils {
             CodedNodeSet.PropertyType[] propertyTypes,
             LocalNameList sourceList, NameAndValueList qualifierList,
             int maxToReturn)
-
-    // throws LBParameterException
     {
         CodedNodeSet cns = null;
         Vector<org.LexGrid.concepts.Concept> v =
@@ -1411,17 +1400,12 @@ public class DataUtils {
 
     public static Vector<org.LexGrid.concepts.Concept> restrictToMatchingProperty(
             String codingSchemeName, String version,
-
             LocalNameList propertyList,
             CodedNodeSet.PropertyType[] propertyTypes,
             LocalNameList sourceList, NameAndValueList qualifierList,
-
             java.lang.String matchText, java.lang.String matchAlgorithm,
             java.lang.String language,
-
             int maxToReturn)
-
-    // throws LBParameterException
     {
         CodedNodeSet cns = null;
         Vector<org.LexGrid.concepts.Concept> v =
@@ -1451,8 +1435,6 @@ public class DataUtils {
 
             LocalNameList restrictToProperties = new LocalNameList();
             SortOptionList sortCriteria =
-            // Constructors.createSortOptionList(new String[]{"matchToQuery",
-                // "code"});
                 Constructors
                         .createSortOptionList(new String[] { "matchToQuery" });
 
