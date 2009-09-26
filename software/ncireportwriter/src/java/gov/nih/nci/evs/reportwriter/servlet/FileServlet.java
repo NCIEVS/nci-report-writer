@@ -58,6 +58,7 @@ import gov.nih.nci.evs.reportwriter.bean.*;
  */
 
 public final class FileServlet extends HttpServlet {
+    private static final long serialVersionUID = 1L;
     private final Logger _logger = Logger.getLogger(FileServlet.class);
 
     /**
@@ -191,11 +192,9 @@ public final class FileServlet extends HttpServlet {
         // Get ReportFormat from database
         String formatId = request.getParameter("format");
         String templateId = request.getParameter("template");
-        ReportFormat reportFormat = null;
         StandardReportTemplate standardReportTemplate = null;
         String message = "Format ID " + formatId + " not found.";
         try {
-            reportFormat = null;
             String FQName = "gov.nih.nci.evs.reportwriter.bean.ReportFormat";
             String methodName = "setId";
             int format_id = Integer.parseInt(formatId);
@@ -205,8 +204,6 @@ public final class FileServlet extends HttpServlet {
             if (reportFormat_obj == null) {
                 sendErrorResponse(request, response, message);
                 return;
-            } else {
-                reportFormat = (ReportFormat) reportFormat_obj;
             }
             // Get StandardReportTemplate from database
             message = "Template ID " + templateId + " not found.";
