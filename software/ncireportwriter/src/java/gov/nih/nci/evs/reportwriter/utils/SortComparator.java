@@ -1,7 +1,6 @@
 package gov.nih.nci.evs.reportwriter.utils;
 
 import java.util.*;
-
 import org.LexGrid.LexBIG.DataModel.Core.*;
 
 /**
@@ -51,51 +50,45 @@ import org.LexGrid.LexBIG.DataModel.Core.*;
  * @version 1.0
  */
 
-public class SortComparator implements Comparator<Object>{
+public class SortComparator implements Comparator<Object> {
 
     private static int SORT_BY_NAME = 1;
     private static int SORT_BY_CODE = 2;
     private int sort_option = SORT_BY_NAME;
 
-    public SortComparator()
-    {
-
-	}
-
-    public SortComparator(int sort_option)
-    {
-		this.sort_option = sort_option;
-	}
-
-
-    private String getKey(Object c, int sort_option)
-    {
-		if (c == null) return "NULL";
-	    if (c instanceof org.LexGrid.concepts.Concept)
-	    {
-			org.LexGrid.concepts.Concept concept = (org.LexGrid.concepts.Concept) c;
-			if (sort_option == SORT_BY_CODE) return concept.getId();
-			return concept.getEntityDescription().getContent();
-
-		}
-
-	    else if (c instanceof AssociatedConcept)
-	    {
-			AssociatedConcept ac = (AssociatedConcept) c;
-			if (sort_option == SORT_BY_CODE) return ac.getConceptCode();
-			return ac.getEntityDescription().getContent();
-		}
-
-	    else if (c instanceof String)
-	    {
-			String s = (String) c;
-			return s;
-		}
-
-	    return c.toString();
+    public SortComparator() {
     }
 
+    public SortComparator(int sort_option) {
+        this.sort_option = sort_option;
+    }
 
+    private String getKey(Object c, int sort_option) {
+        if (c == null)
+            return "NULL";
+        if (c instanceof org.LexGrid.concepts.Concept) {
+            org.LexGrid.concepts.Concept concept =
+                (org.LexGrid.concepts.Concept) c;
+            if (sort_option == SORT_BY_CODE)
+                return concept.getId();
+            return concept.getEntityDescription().getContent();
+
+        }
+
+        else if (c instanceof AssociatedConcept) {
+            AssociatedConcept ac = (AssociatedConcept) c;
+            if (sort_option == SORT_BY_CODE)
+                return ac.getConceptCode();
+            return ac.getEntityDescription().getContent();
+        }
+
+        else if (c instanceof String) {
+            String s = (String) c;
+            return s;
+        }
+
+        return c.toString();
+    }
 
     public int compare(Object object1, Object object2) {
         String key1 = getKey(object1, sort_option);
