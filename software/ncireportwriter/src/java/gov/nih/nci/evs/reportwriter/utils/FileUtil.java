@@ -54,230 +54,221 @@ import org.apache.poi.hssf.util.*;
  */
 
 public class FileUtil {
+    static final int MAX_WIDTH = 30;
 
-	static final int MAX_WIDTH = 30;
+    public FileUtil() {
+    }
 
-    public FileUtil() {};
+    private static Vector<String> parseData(String line, String tab) {
+        Vector<String> data_vec = new Vector<String>();
+        // GF20743, delimiters are returned as tokens
+        // first value could be a tab
+        StringTokenizer st = new StringTokenizer(line, tab, true);
+        boolean lastWasDelim = true;
+        while (st.hasMoreTokens()) {
+            String value = st.nextToken();
+            if (value.equals(tab)) {
+                if (lastWasDelim) {
+                    data_vec.add("");
+                }
+                lastWasDelim = true;
+            } else {
+                data_vec.add(value);
+                lastWasDelim = false;
+            }
+        }
+        return data_vec;
+    }
 
-    private static Vector<String> parseData(String line, String tab)
-    {
-		Vector<String> data_vec = new Vector<String>();
-	    StringTokenizer st = new StringTokenizer(line, tab, true);  //RWW GF#20743, delimiters are returned as tokens
-	    boolean lastWasDelim = true;                                // first value could be a tab
-		while (st.hasMoreTokens()) {
-			String value = st.nextToken();
-			if( value.equals(tab) ) {
-				if( lastWasDelim ) {
-					data_vec.add("");
-				}
-				lastWasDelim = true;
-			}
-			else {
-				data_vec.add(value);
-				lastWasDelim = false;
-			}
-		}
-		return data_vec;
-	}
-    
+    public static Boolean[] findWrappedColumns(String textfile,
+            String delimiter, int maxLength) {
+        File file = new File(textfile);
 
+        FileInputStream fis = null;
+        BufferedInputStream bis = null;
+        DataInputStream dis = null;
 
-    public static Boolean[] findWrappedColumns(String textfile, String delimiter, int maxLength) {
-		File file = new File(textfile);
+        Boolean[] a = null;
 
-		FileInputStream fis = null;
-		BufferedInputStream bis = null;
-		DataInputStream dis = null;
+        // String heading = null;
 
-		Boolean[] a = null;
+        try {
+            fis = new FileInputStream(file);
+            bis = new BufferedInputStream(fis);
+            dis = new DataInputStream(bis);
 
-		//String heading = null;
+            int rownum = 0;
+            while (dis.available() != 0) {
+                String line = dis.readLine();
+                // line = line.trim(); RWW - 090512 first value could be empty
+                // (\t)
+                if (line.length() > 0) {
+                    Vector<String> v = parseData(line, delimiter);
+                    if (rownum == 0) {
+                        // heading = line;
+                        a = new Boolean[v.size()];
+                        for (int i = 0; i < v.size(); i++) {
+                            a[i] = Boolean.FALSE;
+                        }
+                    } else {
+                        for (int i = 0; i < v.size(); i++) {
+                            String s = (String) v.elementAt(i);
+                            if (s.length() > maxLength
+                                    && a[i].equals(Boolean.FALSE)) {
+                                // System.out.println("\n" + line);
+                                // System.out.println("i: " + i + " " + s);
+                                a[i] = Boolean.TRUE;
+                            }
+                        }
+                    }
+                    rownum++;
+                }
+            }
 
-		try {
-		   fis = new FileInputStream(file);
-		   bis = new BufferedInputStream(fis);
-		   dis = new DataInputStream(bis);
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+        return a;
 
-           int rownum = 0;
-		   while (dis.available() != 0) {
-			  String line = dis.readLine();
-			  // line = line.trim();  RWW - 090512 first value could be empty (\t)
-			  if (line.length() > 0)
-			  {
-				  Vector<String> v = parseData(line, delimiter);
-				  if (rownum == 0)
-				  {
-					  //heading = line;
-					  a = new Boolean[v.size()];
-					  for (int i=0; i<v.size(); i++) {
-						  a[i] = Boolean.FALSE;
-					  }
-				  }
-				  else
-				  {
-					  for (int i=0; i<v.size(); i++) {
-						 String s = (String) v.elementAt(i);
-						 if (s.length() > maxLength && a[i].equals(Boolean.FALSE))
-						 {
-							 //System.out.println("\n" + line);
-							 //System.out.println("i: " + i + " " + s);
-							 a[i] = Boolean.TRUE;
-						 }
-					  }
-			      }
-				  rownum++;
-			  }
-		   }
-
-
-		} catch (Exception ex) {
-			ex.printStackTrace();
-		}
-		return a;
-
-	}
-
+    }
 
     public static Boolean convertToExcel(String textfile, String delimiter) {
-		int k = textfile.indexOf(".txt");
-		String excelfile = textfile.substring(0, k) + ".xls";
-		return convertToExcel(textfile, delimiter, excelfile);
+        int k = textfile.indexOf(".txt");
+        String excelfile = textfile.substring(0, k) + ".xls";
+        return convertToExcel(textfile, delimiter, excelfile);
 
-	}
+    }
 
-
-    public static Boolean convertToExcel(String textfile, String delimiter, String excelfile) {
+    public static Boolean convertToExcel(String textfile, String delimiter,
+            String excelfile) {
         Boolean[] a = findWrappedColumns(textfile, delimiter, MAX_WIDTH);
-        int[] b = new int[255]; // RWW, The max number of columns allowed in an Excel spreadsheet is 256
-        for( int i=0; i < 255; i++) {
-        	b[i] = 0;
+        int[] b = new int[255]; // RWW, The max number of columns allowed in an
+                                // Excel spreadsheet is 256
+        for (int i = 0; i < 255; i++) {
+            b[i] = 0;
         }
-		File file = new File(textfile);
+        File file = new File(textfile);
 
-		String absolutePath = file.getAbsolutePath();
-		System.out.println("Absolute Path: " + absolutePath);
+        String absolutePath = file.getAbsolutePath();
+        System.out.println("Absolute Path: " + absolutePath);
 
-		String filename = file.getName();
-		System.out.println("filename: " + filename);
+        String filename = file.getName();
+        System.out.println("filename: " + filename);
 
-		int m = filename.indexOf(".");
-		String workSheetLabel = filename.substring(0, m);
-		int n = workSheetLabel.indexOf("__");
-		workSheetLabel = workSheetLabel.substring(0, n);
-		System.out.println("workSheetLabel: " + workSheetLabel);
+        int m = filename.indexOf(".");
+        String workSheetLabel = filename.substring(0, m);
+        int n = workSheetLabel.indexOf("__");
+        workSheetLabel = workSheetLabel.substring(0, n);
+        System.out.println("workSheetLabel: " + workSheetLabel);
 
-		if (workSheetLabel.compareTo("") == 0) return Boolean.FALSE;
+        if (workSheetLabel.compareTo("") == 0)
+            return Boolean.FALSE;
 
-		String pathName = file.getPath();
-		System.out.println("Path: " + pathName);
+        String pathName = file.getPath();
+        System.out.println("Path: " + pathName);
 
-		FileInputStream fis = null;
-		BufferedInputStream bis = null;
-		DataInputStream dis = null;
-		try {
-		   fis = new FileInputStream(file);
-		   bis = new BufferedInputStream(fis);
-		   dis = new DataInputStream(bis);
+        FileInputStream fis = null;
+        BufferedInputStream bis = null;
+        DataInputStream dis = null;
+        try {
+            fis = new FileInputStream(file);
+            bis = new BufferedInputStream(fis);
+            dis = new DataInputStream(bis);
 
-		   FileOutputStream fout = new FileOutputStream(excelfile);
-		   HSSFWorkbook wb = new HSSFWorkbook();
-		   HSSFSheet ws = wb.createSheet(workSheetLabel);
+            FileOutputStream fout = new FileOutputStream(excelfile);
+            HSSFWorkbook wb = new HSSFWorkbook();
+            HSSFSheet ws = wb.createSheet(workSheetLabel);
 
-		   HSSFCellStyle toprow = wb.createCellStyle();
-		   HSSFCellStyle cs = wb.createCellStyle();
-		   
-		   //RWW GF20673 shade top row
-		   HSSFFont font = wb.createFont();
-		   font.setColor(HSSFColor.BLACK.index);
-		   font.setBoldweight(HSSFFont.BOLDWEIGHT_BOLD);
-		   toprow.setFont(font);
-		   toprow.setFillForegroundColor(HSSFColor.GREY_25_PERCENT.index);
-		   toprow.setFillPattern(HSSFCellStyle.SOLID_FOREGROUND);
-		   toprow.setWrapText(true);
-		   
-		   cs.setWrapText(true);
-		   cs.setAlignment(HSSFCellStyle.ALIGN_JUSTIFY);
+            HSSFCellStyle toprow = wb.createCellStyle();
+            HSSFCellStyle cs = wb.createCellStyle();
 
-		   HSSFRow wr=null;
-                   int rownum = 0;
-		   while (dis.available() != 0) {
-			  String line = dis.readLine();
-			  // line = line.trim();  RWW - 090512 first value could be empty (\t)
-			  if (line.length() > 0)
-			  {
-				  Vector<String> v = parseData(line, delimiter);
-				  wr = ws.createRow(rownum);
+            // RWW GF20673 shade top row
+            HSSFFont font = wb.createFont();
+            font.setColor(HSSFColor.BLACK.index);
+            font.setBoldweight(HSSFFont.BOLDWEIGHT_BOLD);
+            toprow.setFont(font);
+            toprow.setFillForegroundColor(HSSFColor.GREY_25_PERCENT.index);
+            toprow.setFillPattern(HSSFCellStyle.SOLID_FOREGROUND);
+            toprow.setWrapText(true);
 
-				  wr.setHeightInPoints(60);
+            cs.setWrapText(true);
+            cs.setAlignment(HSSFCellStyle.ALIGN_JUSTIFY);
 
-				  for (int i=0; i<v.size();i++) {
-				     HSSFCell wc = wr.createCell(i);
-				     if( rownum == 0) {
-				    	 wc.setCellStyle(toprow);
-				     }				     
-				     else if(a[i].equals(Boolean.TRUE))
-				     {
-						 wc.setCellStyle(cs);
-						 wc.setCellType(HSSFCell.CELL_TYPE_STRING);
-					 }
+            HSSFRow wr = null;
+            int rownum = 0;
+            while (dis.available() != 0) {
+                String line = dis.readLine();
+                // line = line.trim(); RWW - 090512 first value could be empty
+                // (\t)
+                if (line.length() > 0) {
+                    Vector<String> v = parseData(line, delimiter);
+                    wr = ws.createRow(rownum);
 
-				     String s = (String) v.elementAt(i);
-				     s = s.trim();
+                    wr.setHeightInPoints(60);
 
-  				     if( s.length() > b[i] ) {
-  				    	 b[i] = s.length();
-  				     }
-				     if( s.equals("") ) {
-                         s = null;
-                     }
-				   	 wc.setCellValue(s);
-				  }
-				  rownum++;
-			  }
-		   }
-		   
-/* 		   for( int i=0; i < 255; i++) {
-			   if( b[i] != 0) {
-				   System.out.println("Max for column " + i + ": " + b[i]);
-			   }
-		   }
-                   System.out.println("----------"); 
-*/
-		   
-		   //RWW GF20673 assign widths
-		   //315 is the magic number for this font and size
-		   for( int i=0; i < 255; i++) {
-			   if( b[i] != 0) {
-                   int colWidth = b[i] * 315;
-                   // fileds like definition run long, some sanity required
-                   if( colWidth > 20000 ) {
-                     colWidth = 20000;
-                   }
-//                                    System.out.println("Calculated width for column " + i + ": " + colWidth);
-				   ws.setColumnWidth( i,  colWidth );
-			   }
-		   }
-		   
-		   //RWW GF20673 freeze top row
-		   ws.createFreezePane( 0, 1, 0, 1 );
-		   wb.write(fout);
-		   fout.close();
-		   return Boolean.TRUE;
-		} catch (Exception ex) {
-			ex.printStackTrace();
-		}
-		return null;
-   }
+                    for (int i = 0; i < v.size(); i++) {
+                        HSSFCell wc = wr.createCell(i);
+                        if (rownum == 0) {
+                            wc.setCellStyle(toprow);
+                        } else if (a[i].equals(Boolean.TRUE)) {
+                            wc.setCellStyle(cs);
+                            wc.setCellType(HSSFCell.CELL_TYPE_STRING);
+                        }
 
+                        String s = (String) v.elementAt(i);
+                        s = s.trim();
 
-   public static void main(String[] args) {
-      try {
-   	     String delimiter = "\t";
-   	     FileUtil.convertToExcel(args[0], delimiter, args[1]);
+                        if (s.length() > b[i]) {
+                            b[i] = s.length();
+                        }
+                        if (s.equals("")) {
+                            s = null;
+                        }
+                        wc.setCellValue(s);
+                    }
+                    rownum++;
+                }
+            }
 
-      } catch (Exception e) {
-         e.printStackTrace();
-      }
-   }
+            /*
+             * for( int i=0; i < 255; i++) { if( b[i] != 0) {
+             * System.out.println("Max for column " + i + ": " + b[i]); } }
+             * System.out.println("----------");
+             */
+
+            // RWW GF20673 assign widths
+            // 315 is the magic number for this font and size
+            for (int i = 0; i < 255; i++) {
+                if (b[i] != 0) {
+                    int colWidth = b[i] * 315;
+                    // fileds like definition run long, some sanity required
+                    if (colWidth > 20000) {
+                        colWidth = 20000;
+                    }
+                    // System.out.println("Calculated width for column " + i +
+                    // ": " + colWidth);
+                    ws.setColumnWidth(i, colWidth);
+                }
+            }
+
+            // RWW GF20673 freeze top row
+            ws.createFreezePane(0, 1, 0, 1);
+            wb.write(fout);
+            fout.close();
+            return Boolean.TRUE;
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+        return null;
+    }
+
+    public static void main(String[] args) {
+        try {
+            String delimiter = "\t";
+            FileUtil.convertToExcel(args[0], delimiter, args[1]);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 }
-
