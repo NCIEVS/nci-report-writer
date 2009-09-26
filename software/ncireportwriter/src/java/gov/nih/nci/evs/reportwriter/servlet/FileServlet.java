@@ -61,17 +61,6 @@ public final class FileServlet extends HttpServlet {
 
     protected final Logger logger = Logger.getLogger(FileServlet.class);
 
-    // private SearchSessionBean searchService = null;
-    /**
-     * Validates the Init and Context parameters, configures authentication URL
-     * 
-     * @throws ServletException if the init parameters are invalid or any other
-     *         problems occur during initialisation
-     */
-    public void init() throws ServletException {
-
-    }
-
     /**
      * Route the user to the execute method
      * 
@@ -125,9 +114,6 @@ public final class FileServlet extends HttpServlet {
         }
     }
 
-    // String description = "Text (tab delimited)";
-    // description = "Microsoft Office Excel";
-
     public void sendResponse(HttpServletResponse response,
             StandardReport standardReport) throws IOException, ServletException {
         // processing download
@@ -137,7 +123,6 @@ public final class FileServlet extends HttpServlet {
         String format = rf.getDescription();
         response.setContentType("text/html");
         // String line_br = "\n";
-
         String line_br = "\r\n";
 
         response.setHeader("Cache-Control", "no-cache");
@@ -200,10 +185,10 @@ public final class FileServlet extends HttpServlet {
 
     public void execute(HttpServletRequest request, HttpServletResponse response)
             throws IOException, ServletException {
-
         // <td class="dataCellText"><a
         // href="<%=request.getContextPath() %>/fileServlet?template=<%=templateId%>&format=<%=formatId%>"
         // ><%=template%> (<%=formatDescription%>)</a></td>
+
         // Get ReportFormat from database
         String formatId = request.getParameter("format");
         String templateId = request.getParameter("template");
