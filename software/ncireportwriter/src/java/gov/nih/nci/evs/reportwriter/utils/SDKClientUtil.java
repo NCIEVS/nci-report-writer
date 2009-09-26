@@ -59,12 +59,7 @@ import org.apache.log4j.*;
  */
 
 public class SDKClientUtil {
-
     private static Logger logger = Logger.getLogger(SDKClientUtil.class);
-
-    public SDKClientUtil() {
-
-    }
 
     private CustomizedQuery createCustomizedQuery(int ID,
             String queryExpression, String codingSchemeName,
@@ -81,7 +76,6 @@ public class SDKClientUtil {
     public void insertCustomizedQuery(int ID, String queryExpression,
             String codingSchemeName, String codingSchemeVersion,
             Date lastModified) throws Exception {
-
         CustomizedQuery customizedQuery =
             createCustomizedQuery(ID, queryExpression, codingSchemeName,
                     codingSchemeVersion, lastModified);
@@ -91,7 +85,6 @@ public class SDKClientUtil {
     public void updateCustomizedQuery(int ID, String queryExpression,
             String codingSchemeName, String codingSchemeVersion,
             Date lastModified) throws Exception {
-
         CustomizedQuery customizedQuery =
             createCustomizedQuery(ID, queryExpression, codingSchemeName,
                     codingSchemeVersion, lastModified);
@@ -101,7 +94,6 @@ public class SDKClientUtil {
     public void deleteCustomizedQuery(int ID, String queryExpression,
             String codingSchemeName, String codingSchemeVersion,
             Date lastModified) throws Exception {
-
         CustomizedQuery customizedQuery =
             createCustomizedQuery(ID, queryExpression, codingSchemeName,
                     codingSchemeVersion, lastModified);
@@ -420,19 +412,16 @@ public class SDKClientUtil {
     }
 
     public void insertReportFormat(String description) throws Exception {
-
         ReportFormat reportFormat = createReportFormat(description);
         insertReportFormat(reportFormat);
     }
 
     public void updateReportFormat(String description) throws Exception {
-
         ReportFormat reportFormat = createReportFormat(description);
         updateReportFormat(reportFormat);
     }
 
     public void deleteReportFormat(String description) throws Exception {
-
         ReportFormat reportFormat = createReportFormat(description);
         deleteReportFormat(reportFormat);
     }
@@ -474,7 +463,6 @@ public class SDKClientUtil {
 
     public void insertReportStatus(String label, String description,
             boolean active) throws Exception {
-
         ReportStatus reportStatus =
             createReportStatus(label, description, active);
         insertReportStatus(reportStatus);
@@ -482,7 +470,6 @@ public class SDKClientUtil {
 
     public void updateReportStatus(String label, String description,
             boolean active) throws Exception {
-
         ReportStatus reportStatus =
             createReportStatus(label, description, active);
         updateReportStatus(reportStatus);
@@ -490,7 +477,6 @@ public class SDKClientUtil {
 
     public void deleteReportStatus(String label, String description,
             boolean active) throws Exception {
-
         ReportStatus reportStatus =
             createReportStatus(label, description, active);
         deleteReportStatus(reportStatus);
@@ -522,10 +508,9 @@ public class SDKClientUtil {
         SDKQueryResult queryResult = appService.executeQuery(query);
     }
 
-    // ///////////////////////////////////////////////////////////////////////
-
+    // =========================================================================
     // StandardReport extends Report
-
+    // =========================================================================
     public StandardReport createStandardReport(String label, Date lastModified,
             String pathName) {
         StandardReport standardReport = new StandardReport();
@@ -537,7 +522,6 @@ public class SDKClientUtil {
 
     public void insertStandardReport(String label, Date lastModified,
             String pathName) throws Exception {
-
         StandardReport standardReport =
             createStandardReport(label, lastModified, pathName);
         insertStandardReport(standardReport);
@@ -545,7 +529,6 @@ public class SDKClientUtil {
 
     public void updateStandardReport(String label, Date lastModified,
             String pathName) throws Exception {
-
         StandardReport standardReport =
             createStandardReport(label, lastModified, pathName);
         updateStandardReport(standardReport);
@@ -553,7 +536,6 @@ public class SDKClientUtil {
 
     public void deleteStandardReport(String label, Date lastModified,
             String pathName) throws Exception {
-
         StandardReport standardReport =
             createStandardReport(label, lastModified, pathName);
         deleteStandardReport(standardReport);
@@ -588,8 +570,7 @@ public class SDKClientUtil {
         SDKQueryResult queryResult = appService.executeQuery(query);
     }
 
-    // /////////////////////////////////////////////////////////////////////////////////////////////
-
+    // =========================================================================
     private StandardReportTemplate createStandardReportTemplate(String label,
             String codingSchemeName, String codingSchemeVersion,
             String rootConceptCode, String associationName, Boolean direction,
@@ -615,7 +596,6 @@ public class SDKClientUtil {
             String codingSchemeName, String codingSchemeVersion,
             String rootConceptCode, String associationName, Boolean direction,
             int level, char delimiter) throws Exception {
-
         StandardReportTemplate standardReportTemplate =
             createStandardReportTemplate(label, codingSchemeName,
                     codingSchemeVersion, rootConceptCode, associationName,
@@ -627,7 +607,6 @@ public class SDKClientUtil {
             String codingSchemeName, String codingSchemeVersion,
             String rootConceptCode, String associationName, Boolean direction,
             int level, char delimiter) throws Exception {
-
         StandardReportTemplate standardReportTemplate =
             createStandardReportTemplate(label, codingSchemeName,
                     codingSchemeVersion, rootConceptCode, associationName,
@@ -639,7 +618,6 @@ public class SDKClientUtil {
             String codingSchemeName, String codingSchemeVersion,
             String rootConceptCode, String associationName, Boolean direction,
             int level, char delimiter) throws Exception {
-
         StandardReportTemplate standardReportTemplate =
             createStandardReportTemplate(label, codingSchemeName,
                     codingSchemeVersion, rootConceptCode, associationName,
@@ -859,5 +837,4 @@ public class SDKClientUtil {
         }
         return null;
     }
-
 }
