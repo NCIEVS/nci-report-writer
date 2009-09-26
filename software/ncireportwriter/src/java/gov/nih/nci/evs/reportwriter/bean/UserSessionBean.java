@@ -59,7 +59,7 @@ import org.LexGrid.concepts.*;
  */
 
 /**
- * @author EVS Team
+ * @author EVS Team (Kim Ong, David Yee)
  * @version 1.0
  */
 

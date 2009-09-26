@@ -44,6 +44,11 @@ import gov.nih.nci.evs.reportwriter.utils.*;
  * <!-- LICENSE_TEXT_END -->
  */
 
+/**
+ * @author EVS Team (Kim Ong, David Yee)
+ * @version 1.0
+ */
+
 public class BeanUtils {
     public static OntologyBean getOntologyBean() {
         return (OntologyBean) SessionUtil.getBean("ontologyBean",
