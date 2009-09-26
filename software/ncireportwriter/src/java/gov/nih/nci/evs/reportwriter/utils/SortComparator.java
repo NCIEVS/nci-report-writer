@@ -51,16 +51,12 @@ import org.LexGrid.LexBIG.DataModel.Core.*;
  */
 
 public class SortComparator implements Comparator<Object> {
-
     private static int SORT_BY_NAME = 1;
     private static int SORT_BY_CODE = 2;
-    private int sort_option = SORT_BY_NAME;
-
-    public SortComparator() {
-    }
+    private int _sort_option = SORT_BY_NAME;
 
     public SortComparator(int sort_option) {
-        this.sort_option = sort_option;
+        this._sort_option = sort_option;
     }
 
     private String getKey(Object c, int sort_option) {
@@ -91,8 +87,8 @@ public class SortComparator implements Comparator<Object> {
     }
 
     public int compare(Object object1, Object object2) {
-        String key1 = getKey(object1, sort_option);
-        String key2 = getKey(object2, sort_option);
+        String key1 = getKey(object1, _sort_option);
+        String key2 = getKey(object2, _sort_option);
         return key1.compareTo(key2);
     }
 }
