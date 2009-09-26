@@ -3,6 +3,7 @@ package gov.nih.nci.evs.reportwriter.utils;
 import java.io.*;
 import java.util.*;
 
+import org.apache.log4j.*;
 import org.apache.poi.hssf.usermodel.*;
 import org.apache.poi.hssf.util.*;
 
@@ -54,6 +55,7 @@ import org.apache.poi.hssf.util.*;
  */
 
 public class FileUtil {
+    private static Logger _logger = Logger.getLogger(FileUtil.class);
     private static final int MAX_WIDTH = 30;
 
     private static Vector<String> parseData(String line, String tab) {
@@ -108,8 +110,8 @@ public class FileUtil {
                             String s = (String) v.elementAt(i);
                             if (s.length() > maxLength
                                     && a[i].equals(Boolean.FALSE)) {
-                                // System.out.println("\n" + line);
-                                // System.out.println("i: " + i + " " + s);
+                                // _logger.debug("\n" + line);
+                                // _logger.debug("i: " + i + " " + s);
                                 a[i] = Boolean.TRUE;
                             }
                         }
@@ -122,14 +124,12 @@ public class FileUtil {
             ex.printStackTrace();
         }
         return a;
-
     }
 
     public static Boolean convertToExcel(String textfile, String delimiter) {
         int k = textfile.indexOf(".txt");
         String excelfile = textfile.substring(0, k) + ".xls";
         return convertToExcel(textfile, delimiter, excelfile);
-
     }
 
     public static Boolean convertToExcel(String textfile, String delimiter,
@@ -144,22 +144,22 @@ public class FileUtil {
         File file = new File(textfile);
 
         String absolutePath = file.getAbsolutePath();
-        System.out.println("Absolute Path: " + absolutePath);
+        _logger.debug("Absolute Path: " + absolutePath);
 
         String filename = file.getName();
-        System.out.println("filename: " + filename);
+        _logger.debug("filename: " + filename);
 
         int m = filename.indexOf(".");
         String workSheetLabel = filename.substring(0, m);
         int n = workSheetLabel.indexOf("__");
         workSheetLabel = workSheetLabel.substring(0, n);
-        System.out.println("workSheetLabel: " + workSheetLabel);
+        _logger.debug("workSheetLabel: " + workSheetLabel);
 
         if (workSheetLabel.compareTo("") == 0)
             return Boolean.FALSE;
 
         String pathName = file.getPath();
-        System.out.println("Path: " + pathName);
+        _logger.debug("Path: " + pathName);
 
         FileInputStream fis = null;
         BufferedInputStream bis = null;
@@ -197,7 +197,6 @@ public class FileUtil {
                 if (line.length() > 0) {
                     Vector<String> v = parseData(line, delimiter);
                     wr = ws.createRow(rownum);
-
                     wr.setHeightInPoints(60);
 
                     for (int i = 0; i < v.size(); i++) {
@@ -226,8 +225,8 @@ public class FileUtil {
 
             /*
              * for( int i=0; i < 255; i++) { if( b[i] != 0) {
-             * System.out.println("Max for column " + i + ": " + b[i]); } }
-             * System.out.println("----------");
+             * _logger.debug("Max for column " + i + ": " + b[i]); } }
+             * _logger.debug("----------");
              */
 
             // RWW GF20673 assign widths
@@ -239,7 +238,7 @@ public class FileUtil {
                     if (colWidth > 20000) {
                         colWidth = 20000;
                     }
-                    // System.out.println("Calculated width for column " + i +
+                    // _logger.debug("Calculated width for column " + i +
                     // ": " + colWidth);
                     ws.setColumnWidth(i, colWidth);
                 }
