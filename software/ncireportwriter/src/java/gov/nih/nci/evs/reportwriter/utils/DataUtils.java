@@ -4,6 +4,7 @@ import java.io.*;
 import java.util.*;
 import gov.nih.nci.system.applicationservice.*;
 import gov.nih.nci.evs.reportwriter.bean.*;
+
 import javax.faces.model.*;
 import org.LexGrid.LexBIG.DataModel.Collections.*;
 import org.LexGrid.LexBIG.DataModel.Core.*;
@@ -18,6 +19,7 @@ import org.LexGrid.LexBIG.DataModel.Core.types.*;
 import org.LexGrid.LexBIG.Extensions.Generic.*;
 import gov.nih.nci.evs.reportwriter.properties.*;
 import org.LexGrid.LexBIG.Exceptions.*;
+import org.apache.log4j.*;
 
 /**
  * <!-- LICENSE_TEXT_START -->
@@ -67,6 +69,7 @@ import org.LexGrid.LexBIG.Exceptions.*;
  */
 
 public class DataUtils {
+    private static Logger _logger = Logger.getLogger(DataUtils.class);
     private int _maxReturn = 5000;
 
     private static List<SelectItem> _standardReportTemplateList = null;
@@ -82,9 +85,9 @@ public class DataUtils {
     private static HashMap<String, String> _csnv2codingSchemeNameMap = null;
     private static HashMap<String, String> _csnv2VersionMap = null;
 
-    // ==========================================================================
+    // =========================================================================
     // For customized query use
-    // ==========================================================================
+    // =========================================================================
     public static int ALL = 0;
     public static int PREFERRED_ONLY = 1;
     public static int NON_PREFERRED_ONLY = 2;
@@ -206,27 +209,27 @@ public class DataUtils {
 
     public static Boolean validateCodingScheme(String formalname, String version) {
         // Note: To be implemented:
-        // System.out.println("Method: DataUtils.validateCodingScheme");
+        // _logger.debug("Method: DataUtils.validateCodingScheme");
         //                                                                                                         
         // if (csnv2codingSchemeNameMap == null ||
         // csnv2VersionMap == null) {
-        // System.out.println("DataUtils.validateCodingScheme "
+        // _logger.debug("DataUtils.validateCodingScheme "
         // + "calling setCodingSchemeMap");
         // setCodingSchemeMap();
         // return validateCodingScheme(formalname, version);
         // }
         //                                                                                                         
         // String key = formalname + " (version: " + version + ")";
-        // System.out.println("DataUtils   validateCodingScheme key: " + key);
+        // _logger.debug("DataUtils   validateCodingScheme key: " + key);
         // if (csnv2codingSchemeNameMap.get(key) == null ||
         // csnv2VersionMap.get(key) == null ) {
-        // System.out.println("DataUtils.validateCodingScheme "
+        // _logger.debug("DataUtils.validateCodingScheme "
         // + "csnv2codingSchemeNameMap.get(key) == null "
         // + "|| csnv2VersionMap.get(key) == null :??? ");
-        // System.out.println("* return Boolean.FALSE ");
+        // _logger.debug("* return Boolean.FALSE ");
         // return Boolean.FALSE;
         // }
-        // System.out.println("* return Boolean.TRUE ");
+        // _logger.debug("* return Boolean.TRUE ");
         return Boolean.TRUE;
     }
 
@@ -242,7 +245,7 @@ public class DataUtils {
                 RemoteServerUtil.createLexBIGService();
             CodingSchemeRenderingList csrl = lbSvc.getSupportedCodingSchemes();
             if (csrl == null)
-                System.out.println("csrl is NULL");
+                _logger.debug("csrl is NULL");
 
             CodingSchemeRendering[] csrs = csrl.getCodingSchemeRendering();
             for (int i = 0; i < csrs.length; i++) {
@@ -353,7 +356,7 @@ public class DataUtils {
                 RemoteServerUtil.createLexBIGService();
             scheme = lbSvc.resolveCodingScheme(codingSchemeName, vt);
             if (scheme == null) {
-                System.out.println("scheme is NULL");
+                _logger.debug("scheme is NULL");
                 return null;
             }
 
@@ -449,15 +452,14 @@ public class DataUtils {
             SupportedRepresentationalForm[] forms =
                 scheme.getMappings().getSupportedRepresentationalForm();
             if (true) {
-                System.out.println(StringUtils.SEPARATOR);
-                System.out.println("MethodgetRepresentationalFormListData");
-                System.out.println("* codingSchemeName: " + codingSchemeName);
-                System.out.println("* version: " + version);
-                System.out.println("* forms: ");
+                _logger.debug(StringUtils.SEPARATOR);
+                _logger.debug("MethodgetRepresentationalFormListData");
+                _logger.debug("* codingSchemeName: " + codingSchemeName);
+                _logger.debug("* version: " + version);
+                _logger.debug("* forms: ");
                 if (forms != null) {
                     for (int i = 0; i < forms.length; ++i)
-                        System.out.println("  " + i + ") "
-                                + forms[i].getLocalId());
+                        _logger.debug("  " + i + ") " + forms[i].getLocalId());
                 }
             }
             if (forms != null) {
@@ -576,8 +578,7 @@ public class DataUtils {
                 try {
                     util.insertReportStatus(label, description, active);
                 } catch (Exception ex) {
-                    System.out
-                            .println("====== insertReportStatus DRAFT failed.");
+                    _logger.error("*** insertReportStatus DRAFT failed.");
                 }
 
                 label = "APPROVED";
@@ -586,8 +587,7 @@ public class DataUtils {
                 try {
                     util.insertReportStatus(label, description, active);
                 } catch (Exception ex) {
-                    System.out
-                            .println("====== insertReportStatus APPROVED failed.");
+                    _logger.error("*** insertReportStatus APPROVED failed.");
                 }
 
                 objs = util.search(FQName);
@@ -621,16 +621,16 @@ public class DataUtils {
                 try {
                     util.insertReportFormat(description);
                 } catch (Exception ex) {
-                    System.out.println("====== insertReportFormat "
-                            + description + " failed.");
+                    _logger.debug("*** insertReportFormat " + description
+                            + " failed.");
                 }
 
                 description = "Microsoft Office Excel";
                 try {
                     util.insertReportFormat(description);
                 } catch (Exception ex) {
-                    System.out.println("====== insertReportFormat "
-                            + description + " failed.");
+                    _logger.debug("*** insertReportFormat " + description
+                            + " failed.");
                 }
 
                 objs = util.search(FQName);
@@ -659,16 +659,16 @@ public class DataUtils {
                 try {
                     util.insertReportFormat(description);
                 } catch (Exception ex) {
-                    System.out.println("====== insertReportFormat "
-                            + description + " failed.");
+                    _logger.debug("*** insertReportFormat " + description
+                            + " failed.");
                 }
 
                 description = "Microsoft Office Excel";
                 try {
                     util.insertReportFormat(description);
                 } catch (Exception ex) {
-                    System.out.println("====== insertReportFormat "
-                            + description + " failed.");
+                    _logger.debug("*** insertReportFormat " + description
+                            + " failed.");
                 }
 
                 objs = util.search(FQName);
@@ -713,7 +713,7 @@ public class DataUtils {
             EVSApplicationService lbSvc =
                 RemoteServerUtil.createLexBIGService();
             if (lbSvc == null) {
-                System.out.println("lbSvc == null???");
+                _logger.error("lbSvc == null???");
                 return null;
             }
 
@@ -728,16 +728,14 @@ public class DataUtils {
             CodedNodeSet cns = null;
 
             try {
-                System.out
-                        .println("DataUtils calling getCodingSchemeConcepts: "
-                                + code);
+                _logger.debug("DataUtils calling getCodingSchemeConcepts: "
+                        + code);
                 cns =
                     lbSvc.getCodingSchemeConcepts(codingSchemeName,
                             versionOrTag);
             } catch (Exception e1) {
-                System.out
-                        .println("DataUtils lbSvc.getCodingSchemeConcepts threw exception??? "
-                                + code);
+                _logger.error("DataUtils lbSvc.getCodingSchemeConcepts "
+                        + "threw exception??? " + code);
                 // e1.printStackTrace();
                 return null;
             }
@@ -747,7 +745,7 @@ public class DataUtils {
                 cns.resolveToList(null, null, null, 1);
 
             if (matches == null) {
-                System.out.println("Concept not found.");
+                _logger.warn("Concept not found.");
                 return null;
             }
 
@@ -792,7 +790,7 @@ public class DataUtils {
             EVSApplicationService lbSvc =
                 RemoteServerUtil.createLexBIGService();
             if (lbSvc == null) {
-                System.out.println("lbSvc == null???");
+                _logger.error("lbSvc == null???");
                 return null;
             }
             CodedNodeGraph cng = lbSvc.getNodeGraph(scheme, csvt, null);
@@ -855,7 +853,7 @@ public class DataUtils {
             ResolvedConceptReferencesIterator iterator, int maxToReturn) {
         Vector<Concept> v = new Vector<Concept>();
         if (iterator == null) {
-            System.out.println("No match.");
+            _logger.debug("No match.");
             return v;
         }
         try {
@@ -869,7 +867,7 @@ public class DataUtils {
                 for (int i = 0; i < rcra.length; i++) {
                     ResolvedConceptReference rcr = rcra[i];
                     Concept ce = rcr.getReferencedEntry();
-                    // System.out.println("Iteration " + iteration + " " +
+                    // _logger.debug("Iteration " + iteration + " " +
                     // ce.getId() + " " +
                     // ce.getEntityDescription().getContent());
                     v.add(ce);
@@ -1064,8 +1062,8 @@ public class DataUtils {
                         lbscm.getHierarchyLevelNext(scheme, csvt, hierarchyID,
                                 code, false, null);
                 } catch (Exception e) {
-                    System.out
-                            .println("getSubconceptCodes - Exception lbscm.getHierarchyLevelNext  ");
+                    _logger.error("getSubconceptCodes "
+                            + "Exception lbscm.getHierarchyLevelNext");
                     return v;
                 }
 
@@ -1130,7 +1128,7 @@ public class DataUtils {
         } catch (Exception ex) {
             ex.printStackTrace();
         } finally {
-            System.out.println("Run time (ms): "
+            _logger.debug("Run time (ms): "
                     + (System.currentTimeMillis() - ms));
         }
         return v;
@@ -1195,8 +1193,8 @@ public class DataUtils {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        System.out.println("Version corresponding to tag " + ltag
-                + " is not found " + " in " + codingSchemeName);
+        _logger.debug("Version corresponding to tag " + ltag + " is not found "
+                + " in " + codingSchemeName);
         return null;
     }
 
@@ -1208,7 +1206,7 @@ public class DataUtils {
                 RemoteServerUtil.createLexBIGService();
             CodingSchemeRenderingList csrl = lbSvc.getSupportedCodingSchemes();
             if (csrl == null)
-                System.out.println("csrl is NULL");
+                _logger.debug("csrl is NULL");
 
             CodingSchemeRendering[] csrs = csrl.getCodingSchemeRendering();
             for (int i = 0; i < csrs.length; i++) {
@@ -1384,8 +1382,8 @@ public class DataUtils {
             ResolvedConceptReference[] rcrArray =
                 list.getResolvedConceptReference();
             if (rcrArray == null) {
-                System.out
-                        .println("WARNING: DLBWrapper getResolvedConceptReference returns null");
+                _logger
+                        .warn("DLBWrapper getResolvedConceptReference returns null");
             }
 
             for (int i = 0; i < rcrArray.length; i++) {
@@ -1420,7 +1418,7 @@ public class DataUtils {
                 RemoteServerUtil.createLexBIGService();
 
             if (lbSvc == null) {
-                System.out.println("ERROR: lbSvc == null???");
+                _logger.error("lbSvc == null???");
                 return null;
             }
 
@@ -1453,8 +1451,7 @@ public class DataUtils {
             ResolvedConceptReference[] rcrArray =
                 list.getResolvedConceptReference();
             if (rcrArray == null) {
-                System.out
-                        .println("WARNING: getResolvedConceptReference returns null");
+                _logger.warn("getResolvedConceptReference returns null");
             }
 
             for (int i = 0; i < rcrArray.length; i++) {
