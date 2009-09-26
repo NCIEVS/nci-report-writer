@@ -68,10 +68,10 @@ import org.LexGrid.LexBIG.Exceptions.*;
  */
 
 public class DataUtils {
-    int maxReturn = 5000;
-    Connection con;
-    Statement stmt;
-    ResultSet rs;
+    private int maxReturn = 5000;
+    private Connection con;
+    private Statement stmt;
+    private ResultSet rs;
 
     private static List<SelectItem> standardReportTemplateList = null;
     private static List<SelectItem> adminTaskList = null;
@@ -95,10 +95,10 @@ public class DataUtils {
     public static int PREFERRED_ONLY = 1;
     public static int NON_PREFERRED_ONLY = 2;
 
-    static int RESOLVE_SOURCE = 1;
-    static int RESOLVE_TARGET = -1;
-    static int RESTRICT_SOURCE = -1;
-    static int RESTRICT_TARGET = 1;
+    private static int RESOLVE_SOURCE = 1;
+    private static int RESOLVE_TARGET = -1;
+    private static int RESTRICT_SOURCE = -1;
+    private static int RESTRICT_TARGET = 1;
 
     public static final int SEARCH_NAME_CODE = 1;
     public static final int SEARCH_DEFINITION = 2;
@@ -107,12 +107,11 @@ public class DataUtils {
     public static final int SEARCH_ROLE_VALUE = 6;
     public static final int SEARCH_ASSOCIATION_VALUE = 7;
 
-    static final List<String> STOP_WORDS =
+    private static final List<String> STOP_WORDS =
         Arrays.asList(new String[] { "a", "an", "and", "by", "for", "of", "on",
                 "in", "nos", "the", "to", "with" });
 
-    // ==================================================================================
-
+    //==========================================================================
     public DataUtils() {
         adminTaskList = new ArrayList<SelectItem>();
         adminTaskList.add(new SelectItem("Administer Standard Reports"));
