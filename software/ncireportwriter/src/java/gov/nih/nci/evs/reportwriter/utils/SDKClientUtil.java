@@ -1,30 +1,15 @@
 package gov.nih.nci.evs.reportwriter.utils;
 
-import gov.nih.nci.evs.reportwriter.bean.CustomizedQuery;
-import gov.nih.nci.evs.reportwriter.bean.CustomizedReport;
-import gov.nih.nci.evs.reportwriter.bean.Report;
-import gov.nih.nci.evs.reportwriter.bean.ReportColumn;
-import gov.nih.nci.evs.reportwriter.bean.ReportFormat;
-import gov.nih.nci.evs.reportwriter.bean.ReportStatus;
-import gov.nih.nci.evs.reportwriter.bean.StandardReport;
-import gov.nih.nci.evs.reportwriter.bean.StandardReportTemplate;
-import gov.nih.nci.evs.reportwriter.bean.User;
+import gov.nih.nci.evs.reportwriter.bean.*;
+import gov.nih.nci.system.applicationservice.*;
+import gov.nih.nci.system.client.*;
+import gov.nih.nci.system.query.*;
+import gov.nih.nci.system.query.example.*;
 
-import gov.nih.nci.system.applicationservice.WritableApplicationService;
-import gov.nih.nci.system.client.ApplicationServiceProvider;
-import gov.nih.nci.system.query.SDKQueryResult;
-import gov.nih.nci.system.query.example.DeleteExampleQuery;
-import gov.nih.nci.system.query.example.InsertExampleQuery;
-import gov.nih.nci.system.query.example.SearchExampleQuery;
-import gov.nih.nci.system.query.example.UpdateExampleQuery;
+import java.lang.reflect.*;
+import java.util.*;
 
-import gov.nih.nci.system.applicationservice.ApplicationService;
-
-import java.lang.reflect.Method;
-import java.util.Collection;
-import java.util.Date;
-
-import org.apache.log4j.Logger;
+import org.apache.log4j.*;
 
 /**
  * <!-- LICENSE_TEXT_START -->
