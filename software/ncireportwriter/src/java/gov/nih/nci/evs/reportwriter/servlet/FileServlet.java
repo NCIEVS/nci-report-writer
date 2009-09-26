@@ -1,47 +1,14 @@
 package gov.nih.nci.evs.reportwriter.servlet;
 
-import java.io.IOException;
-import java.io.PrintWriter;
-import java.util.Collection;
-import java.util.ArrayList;
+import java.io.*;
+import javax.servlet.*;
+import javax.servlet.http.*;
 
-import java.util.HashMap;
-
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServlet;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
-import org.apache.log4j.Level;
-import org.apache.log4j.Logger;
-
-import java.util.Iterator;
-import java.util.List;
-
-import javax.faces.model.SelectItem;
-import javax.naming.InitialContext;
-
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
-
-import java.io.BufferedInputStream;
-import java.io.DataInputStream;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-
+import org.apache.log4j.*;
 import org.apache.poi.hssf.usermodel.*;
-import org.apache.poi.poifs.filesystem.POIFSFileSystem;
-
-import java.io.InputStream;
 
 import gov.nih.nci.evs.reportwriter.utils.*;
 import gov.nih.nci.evs.reportwriter.bean.*;
-
-import javax.servlet.RequestDispatcher;
 
 /**
  * <!-- LICENSE_TEXT_START -->
