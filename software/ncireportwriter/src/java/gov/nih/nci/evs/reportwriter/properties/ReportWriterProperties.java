@@ -47,6 +47,11 @@ import org.apache.log4j.*;
  * <!-- LICENSE_TEXT_END -->
  */
 
+/**
+ * @author EVS Team (Kim Ong, David Yee)
+ * @version 1.0
+ */
+
 public class ReportWriterProperties {
     public static final String BUILD_INFO = "BUILD_INFO";
     public static final String EVS_SERVICE_URL = "EVS_SERVICE_URL";

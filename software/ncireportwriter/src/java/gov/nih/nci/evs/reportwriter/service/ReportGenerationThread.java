@@ -55,9 +55,10 @@ import gov.nih.nci.evs.reportwriter.properties.*;
  */
 
 /**
- * @author EVS Team
+ * @author EVS Team (Kim Ong, David Yee)
  * @version 1.0
  */
+
 
 public class ReportGenerationThread implements Runnable {
     private static Logger _logger =
