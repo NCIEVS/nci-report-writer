@@ -1,7 +1,6 @@
 package gov.nih.nci.evs.reportwriter.utils;
 
-import java.util.Map;
-
+import java.util.*;
 import javax.faces.context.*;
 import javax.servlet.http.*;
 
@@ -55,12 +54,12 @@ import javax.servlet.http.*;
 public class SessionUtil {
     public static HttpSession getSession() {
         return (HttpSession) FacesContext.getCurrentInstance()
-            .getExternalContext().getSession(true);
+                .getExternalContext().getSession(true);
     }
 
     public static HttpServletRequest getRequest() {
         return (HttpServletRequest) FacesContext.getCurrentInstance()
-            .getExternalContext().getRequest();
+                .getExternalContext().getRequest();
     }
 
     @SuppressWarnings("unchecked")
@@ -68,9 +67,9 @@ public class SessionUtil {
         try {
             Map<Object, Object> map =
                 FacesContext.getCurrentInstance().getExternalContext()
-                    .getSessionMap();
-            
-            Object bean =  map.get(name);
+                        .getSessionMap();
+
+            Object bean = map.get(name);
             if (bean == null) {
                 Class klass = Class.forName(classPath);
                 bean = klass.newInstance();
