@@ -56,7 +56,7 @@ public class SortComparator implements Comparator<Object> {
     private int _sort_option = SORT_BY_NAME;
 
     public SortComparator(int sort_option) {
-        this._sort_option = sort_option;
+        _sort_option = sort_option;
     }
 
     private String getKey(Object c, int sort_option) {
