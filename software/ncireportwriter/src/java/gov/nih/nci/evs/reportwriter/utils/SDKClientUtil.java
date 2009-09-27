@@ -305,7 +305,7 @@ public class SDKClientUtil {
 //            qualifierValue,
 //            delimiter,
 //            conditionalColumnIdId);
-//        //System.out.println("created report column instance... ");
+//        //_logger.debug("Created report column instance... ");
 //        insertReportColumn(reportColumn);
 //    }
 //
@@ -364,14 +364,14 @@ public class SDKClientUtil {
 //    }
 //
 //    public void insertReportColumn(ReportColumn reportColumn) throws Exception {
-//        //System.out.println("creating writeable app service... ");
+//        //_logger.debug("Creating writeable app service... ");
 //        WritableApplicationService appService = (WritableApplicationService)
 //            ApplicationServiceProvider.getApplicationService();
-//        //System.out.println("creating query... ");
+//        //_logger.debug("Creating query... ");
 //        InsertExampleQuery query = new InsertExampleQuery(reportColumn);
-//        //System.out.println("obtaining query results... ");
+//        //_logger.debug("Obtaining query results... ");
 //        SDKQueryResult queryResult = appService.executeQuery(query);
-//        //System.out.println("DONE inserting a report column... ");
+//        //_logger.debug("DONE inserting a report column... ");
 //        //reportColumn = (ReportColumn)queryResult.getObjectResult();
 //    }
 //
@@ -650,11 +650,10 @@ public class SDKClientUtil {
             String rootConceptCode, String associationName, Boolean direction,
             int level, char delimiter) {
 
-        // System.out.println("************** SDCLIENT: In create method ********************");
         StandardReportTemplate standardReportTemplate =
             new StandardReportTemplate();
-        // System.out.println("************** SDCLIENT: StandardReportTemplate ID is ********************"+
-        // standardReportTemplate.getId());
+        _logger.debug("Create Method: StandardReportTemplate ID: " 
+                + standardReportTemplate.getId());
         standardReportTemplate.setLabel(label);
         standardReportTemplate.setCodingSchemeName(codingSchemeName);
         standardReportTemplate.setCodingSchemeVersion(codingSchemeVersion);
@@ -701,16 +700,16 @@ public class SDKClientUtil {
 
     public void insertStandardReportTemplate(
             StandardReportTemplate standardReportTemplate) throws Exception {
-        // System.out.println("************** SDCLIENT: creating writeable app service ********************");
+         _logger.debug("Creating writeable app service");
         WritableApplicationService appService =
             (WritableApplicationService) ApplicationServiceProvider
                     .getApplicationService();
-        // System.out.println("************** SDCLIENT: creating query ********************");
+        _logger.debug("Creating query");
         InsertExampleQuery query =
             new InsertExampleQuery(standardReportTemplate);
-        // System.out.println("************** SDCLIENT: obtaining query result ********************");
+        _logger.debug("Obtaining query result");
         /* SDKQueryResult queryResult = */ appService.executeQuery(query);
-        // System.out.println("************** SDCLIENT: DONE... ********************");
+        _logger.debug("DONE");
         // standardReportTemplate =
         // (StandardReportTemplate)queryResult.getObjectResult();
     }
@@ -785,17 +784,17 @@ public class SDKClientUtil {
     }
 
 //    private void printObject(Object obj, Class<?> klass) throws Exception {
-//        System.out.println("Printing " + klass.getName());
+//        _logger.debug("Printing " + klass.getName());
 //        Method[] methods = klass.getMethods();
 //        for (Method method : methods) {
 //            if (method.getName().startsWith("get")
 //                    && !method.getName().equals("getClass")) {
-//                System.out.print("\t" + method.getName().substring(3) + ":");
+//                String msg = "\t" + method.getName().substring(3) + ":";
 //                Object val = method.invoke(obj, (Object[]) null);
 //                if (val instanceof java.util.Set)
-//                    System.out.println("size=" + ((Collection<?>) val).size());
+//                    _logger.debug(msg + "size=" + ((Collection<?>) val).size());
 //                else
-//                    System.out.println(val);
+//                    _logger.debug(msg + val);
 //            }
 //        }
 //    }
