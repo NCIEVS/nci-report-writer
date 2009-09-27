@@ -1464,6 +1464,17 @@ public class DataUtils {
             e.printStackTrace();
             return v;
         }
-        return SortUtils.quickSort(v);
+
+        return toConcept(SortUtils.quickSort(v));
+    }
+    
+    private static Vector<Concept> toConcept(Vector<?> v) {
+        Iterator<?> iterator = v.iterator();
+        Vector<Concept> newV = new Vector<Concept>();
+        while (iterator.hasNext()) {
+            Concept concept = (Concept) iterator.next();
+            newV.add(concept);
+        }
+        return newV;
     }
 }
