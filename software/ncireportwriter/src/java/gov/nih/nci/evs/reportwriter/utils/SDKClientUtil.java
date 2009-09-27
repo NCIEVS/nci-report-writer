@@ -3,7 +3,6 @@ package gov.nih.nci.evs.reportwriter.utils;
 import gov.nih.nci.evs.reportwriter.bean.*;
 import gov.nih.nci.system.applicationservice.*;
 import gov.nih.nci.system.client.*;
-import gov.nih.nci.system.query.*;
 import gov.nih.nci.system.query.example.*;
 
 import java.lang.reflect.*;
@@ -59,7 +58,7 @@ import org.apache.log4j.*;
  */
 
 public class SDKClientUtil {
-    private static Logger logger = Logger.getLogger(SDKClientUtil.class);
+    private static Logger _logger = Logger.getLogger(SDKClientUtil.class);
 
     private CustomizedQuery createCustomizedQuery(int ID,
             String queryExpression, String codingSchemeName,
@@ -106,7 +105,7 @@ public class SDKClientUtil {
             (WritableApplicationService) ApplicationServiceProvider
                     .getApplicationService();
         InsertExampleQuery query = new InsertExampleQuery(customizedQuery);
-        SDKQueryResult queryResult = appService.executeQuery(query);
+        /* SDKQueryResult queryResult = */ appService.executeQuery(query);
         // customizedQuery = (CustomizedQuery)queryResult.getObjectResult();
     }
 
@@ -116,7 +115,7 @@ public class SDKClientUtil {
             (WritableApplicationService) ApplicationServiceProvider
                     .getApplicationService();
         UpdateExampleQuery query = new UpdateExampleQuery(customizedQuery);
-        SDKQueryResult queryResult = appService.executeQuery(query);
+        /* SDKQueryResult queryResult = */ appService.executeQuery(query);
         // customizedQuery = (CustomizedQuery)queryResult.getObjectResult();
     }
 
@@ -126,7 +125,7 @@ public class SDKClientUtil {
             (WritableApplicationService) ApplicationServiceProvider
                     .getApplicationService();
         DeleteExampleQuery query = new DeleteExampleQuery(customizedQuery);
-        SDKQueryResult queryResult = appService.executeQuery(query);
+        /* SDKQueryResult queryResult = */ appService.executeQuery(query);
     }
 
     private CustomizedReport createCustomizedReport(int reportID) {
@@ -157,7 +156,7 @@ public class SDKClientUtil {
             (WritableApplicationService) ApplicationServiceProvider
                     .getApplicationService();
         InsertExampleQuery query = new InsertExampleQuery(customizedReport);
-        SDKQueryResult queryResult = appService.executeQuery(query);
+        /* SDKQueryResult queryResult = */ appService.executeQuery(query);
         // customizedReport = (CustomizedReport)queryResult.getObjectResult();
     }
 
@@ -167,7 +166,7 @@ public class SDKClientUtil {
             (WritableApplicationService) ApplicationServiceProvider
                     .getApplicationService();
         UpdateExampleQuery query = new UpdateExampleQuery(customizedReport);
-        SDKQueryResult queryResult = appService.executeQuery(query);
+        /* SDKQueryResult queryResult = */ appService.executeQuery(query);
         // customizedReport = (CustomizedReport)queryResult.getObjectResult();
     }
 
@@ -177,7 +176,7 @@ public class SDKClientUtil {
             (WritableApplicationService) ApplicationServiceProvider
                     .getApplicationService();
         DeleteExampleQuery query = new DeleteExampleQuery(customizedReport);
-        SDKQueryResult queryResult = appService.executeQuery(query);
+        /* SDKQueryResult queryResult = */ appService.executeQuery(query);
     }
 
     /*
@@ -384,7 +383,7 @@ public class SDKClientUtil {
             (WritableApplicationService) ApplicationServiceProvider
                     .getApplicationService();
         InsertExampleQuery query = new InsertExampleQuery(reportColumn);
-        SDKQueryResult queryResult = appService.executeQuery(query);
+        /* SDKQueryResult queryResult = */ appService.executeQuery(query);
         // reportColumn = (ReportColumn)queryResult.getObjectResult();
     }
 
@@ -393,7 +392,7 @@ public class SDKClientUtil {
             (WritableApplicationService) ApplicationServiceProvider
                     .getApplicationService();
         UpdateExampleQuery query = new UpdateExampleQuery(reportColumn);
-        SDKQueryResult queryResult = appService.executeQuery(query);
+        /* SDKQueryResult queryResult = */ appService.executeQuery(query);
         // reportColumn = (ReportColumn)queryResult.getObjectResult();
     }
 
@@ -402,7 +401,7 @@ public class SDKClientUtil {
             (WritableApplicationService) ApplicationServiceProvider
                     .getApplicationService();
         DeleteExampleQuery query = new DeleteExampleQuery(reportColumn);
-        SDKQueryResult queryResult = appService.executeQuery(query);
+        /* SDKQueryResult queryResult = */ appService.executeQuery(query);
     }
 
     private ReportFormat createReportFormat(String description) {
@@ -431,7 +430,7 @@ public class SDKClientUtil {
             (WritableApplicationService) ApplicationServiceProvider
                     .getApplicationService();
         InsertExampleQuery query = new InsertExampleQuery(reportFormat);
-        SDKQueryResult queryResult = appService.executeQuery(query);
+        /* SDKQueryResult queryResult = */ appService.executeQuery(query);
         // reportFormat = (ReportFormat)queryResult.getObjectResult();
     }
 
@@ -440,7 +439,7 @@ public class SDKClientUtil {
             (WritableApplicationService) ApplicationServiceProvider
                     .getApplicationService();
         UpdateExampleQuery query = new UpdateExampleQuery(reportFormat);
-        SDKQueryResult queryResult = appService.executeQuery(query);
+        /* SDKQueryResult queryResult = */ appService.executeQuery(query);
         // reportFormat = (ReportFormat)queryResult.getObjectResult();
     }
 
@@ -449,7 +448,7 @@ public class SDKClientUtil {
             (WritableApplicationService) ApplicationServiceProvider
                     .getApplicationService();
         DeleteExampleQuery query = new DeleteExampleQuery(reportFormat);
-        SDKQueryResult queryResult = appService.executeQuery(query);
+        /* SDKQueryResult queryResult = */ appService.executeQuery(query);
     }
 
     private ReportStatus createReportStatus(String label, String description,
@@ -487,7 +486,7 @@ public class SDKClientUtil {
             (WritableApplicationService) ApplicationServiceProvider
                     .getApplicationService();
         InsertExampleQuery query = new InsertExampleQuery(reportStatus);
-        SDKQueryResult queryResult = appService.executeQuery(query);
+        /* SDKQueryResult queryResult = */ appService.executeQuery(query);
         // reportStatus = (ReportStatus)queryResult.getObjectResult();
     }
 
@@ -496,7 +495,7 @@ public class SDKClientUtil {
             (WritableApplicationService) ApplicationServiceProvider
                     .getApplicationService();
         UpdateExampleQuery query = new UpdateExampleQuery(reportStatus);
-        SDKQueryResult queryResult = appService.executeQuery(query);
+        /* SDKQueryResult queryResult = */ appService.executeQuery(query);
         // reportStatus = (ReportStatus)queryResult.getObjectResult();
     }
 
@@ -505,7 +504,7 @@ public class SDKClientUtil {
             (WritableApplicationService) ApplicationServiceProvider
                     .getApplicationService();
         DeleteExampleQuery query = new DeleteExampleQuery(reportStatus);
-        SDKQueryResult queryResult = appService.executeQuery(query);
+        /* SDKQueryResult queryResult = */ appService.executeQuery(query);
     }
 
     // =========================================================================
@@ -547,7 +546,7 @@ public class SDKClientUtil {
             (WritableApplicationService) ApplicationServiceProvider
                     .getApplicationService();
         InsertExampleQuery query = new InsertExampleQuery(standardReport);
-        SDKQueryResult queryResult = appService.executeQuery(query);
+        /* SDKQueryResult queryResult = */ appService.executeQuery(query);
         // standardReport = (StandardReport)queryResult.getObjectResult();
     }
 
@@ -557,7 +556,7 @@ public class SDKClientUtil {
             (WritableApplicationService) ApplicationServiceProvider
                     .getApplicationService();
         UpdateExampleQuery query = new UpdateExampleQuery(standardReport);
-        SDKQueryResult queryResult = appService.executeQuery(query);
+        /* SDKQueryResult queryResult = */ appService.executeQuery(query);
         // standardReport = (StandardReport)queryResult.getObjectResult();
     }
 
@@ -567,7 +566,7 @@ public class SDKClientUtil {
             (WritableApplicationService) ApplicationServiceProvider
                     .getApplicationService();
         DeleteExampleQuery query = new DeleteExampleQuery(standardReport);
-        SDKQueryResult queryResult = appService.executeQuery(query);
+        /* SDKQueryResult queryResult = */ appService.executeQuery(query);
     }
 
     // =========================================================================
@@ -635,7 +634,7 @@ public class SDKClientUtil {
         InsertExampleQuery query =
             new InsertExampleQuery(standardReportTemplate);
         // System.out.println("************** SDCLIENT: obtaining query result ********************");
-        SDKQueryResult queryResult = appService.executeQuery(query);
+        /* SDKQueryResult queryResult = */ appService.executeQuery(query);
         // System.out.println("************** SDCLIENT: DONE... ********************");
         // standardReportTemplate =
         // (StandardReportTemplate)queryResult.getObjectResult();
@@ -648,7 +647,7 @@ public class SDKClientUtil {
                     .getApplicationService();
         UpdateExampleQuery query =
             new UpdateExampleQuery(standardReportTemplate);
-        SDKQueryResult queryResult = appService.executeQuery(query);
+        /* SDKQueryResult queryResult = */ appService.executeQuery(query);
         // standardReportTemplate =
         // (StandardReportTemplate)queryResult.getObjectResult();
     }
@@ -660,7 +659,7 @@ public class SDKClientUtil {
                     .getApplicationService();
         DeleteExampleQuery query =
             new DeleteExampleQuery(standardReportTemplate);
-        SDKQueryResult queryResult = appService.executeQuery(query);
+        /* SDKQueryResult queryResult = */ appService.executeQuery(query);
     }
 
     public gov.nih.nci.evs.reportwriter.bean.User createUser(String loginName) {
@@ -689,7 +688,7 @@ public class SDKClientUtil {
             (WritableApplicationService) ApplicationServiceProvider
                     .getApplicationService();
         InsertExampleQuery query = new InsertExampleQuery(user);
-        SDKQueryResult queryResult = appService.executeQuery(query);
+        /* SDKQueryResult queryResult = */ appService.executeQuery(query);
         // user = (User)queryResult.getObjectResult();
     }
 
@@ -698,7 +697,7 @@ public class SDKClientUtil {
             (WritableApplicationService) ApplicationServiceProvider
                     .getApplicationService();
         UpdateExampleQuery query = new UpdateExampleQuery(user);
-        SDKQueryResult queryResult = appService.executeQuery(query);
+        /* SDKQueryResult queryResult = */ appService.executeQuery(query);
         // user = (User)queryResult.getObjectResult();
     }
 
@@ -707,24 +706,24 @@ public class SDKClientUtil {
             (WritableApplicationService) ApplicationServiceProvider
                     .getApplicationService();
         DeleteExampleQuery query = new DeleteExampleQuery(user);
-        SDKQueryResult queryResult = appService.executeQuery(query);
+        /* SDKQueryResult queryResult = */ appService.executeQuery(query);
     }
 
-    private void printObject(Object obj, Class klass) throws Exception {
-        System.out.println("Printing " + klass.getName());
-        Method[] methods = klass.getMethods();
-        for (Method method : methods) {
-            if (method.getName().startsWith("get")
-                    && !method.getName().equals("getClass")) {
-                System.out.print("\t" + method.getName().substring(3) + ":");
-                Object val = method.invoke(obj, (Object[]) null);
-                if (val instanceof java.util.Set)
-                    System.out.println("size=" + ((Collection) val).size());
-                else
-                    System.out.println(val);
-            }
-        }
-    }
+//    private void printObject(Object obj, Class<?> klass) throws Exception {
+//        System.out.println("Printing " + klass.getName());
+//        Method[] methods = klass.getMethods();
+//        for (Method method : methods) {
+//            if (method.getName().startsWith("get")
+//                    && !method.getName().equals("getClass")) {
+//                System.out.print("\t" + method.getName().substring(3) + ":");
+//                Object val = method.invoke(obj, (Object[]) null);
+//                if (val instanceof java.util.Set)
+//                    System.out.println("size=" + ((Collection<?>) val).size());
+//                else
+//                    System.out.println(val);
+//            }
+//        }
+//    }
 
     // FQName: gov.nih.nci.evs.reportwriter.bean.StandardReportTemplate
     // String methodName = "setLabel";
@@ -732,7 +731,7 @@ public class SDKClientUtil {
 
     public Object search(String FQName, String methodName, String key) {
         try {
-            Class klass = Class.forName(FQName);
+            Class<?> klass = Class.forName(FQName);
             Object o = klass.newInstance();
             Method[] methods = klass.getMethods();
             Object[] params = new Object[1];
@@ -745,7 +744,7 @@ public class SDKClientUtil {
             }
             ApplicationService appService =
                 ApplicationServiceProvider.getApplicationService();
-            Collection results = appService.search(klass, o);
+            Collection<Object> results = appService.search(klass, o);
 
             if (results == null)
                 return null;
@@ -762,7 +761,7 @@ public class SDKClientUtil {
 
     public Object search(String FQName, String methodName, int key) {
         try {
-            Class klass = Class.forName(FQName);
+            Class<?> klass = Class.forName(FQName);
             Object o = klass.newInstance();
             Method[] methods = klass.getMethods();
             Object[] params = new Object[1];
@@ -775,7 +774,7 @@ public class SDKClientUtil {
             }
             ApplicationService appService =
                 ApplicationServiceProvider.getApplicationService();
-            Collection results = appService.search(klass, o);
+            Collection<Object> results = appService.search(klass, o);
 
             if (results == null)
                 return null;
@@ -789,7 +788,7 @@ public class SDKClientUtil {
 
     public Object search(String FQName, String[] methodName, String[] key) {
         try {
-            Class klass = Class.forName(FQName);
+            Class<?> klass = Class.forName(FQName);
             Object o = klass.newInstance();
             Method[] methods = klass.getMethods();
             int dim = key.length;
@@ -809,7 +808,7 @@ public class SDKClientUtil {
             }
             ApplicationService appService =
                 ApplicationServiceProvider.getApplicationService();
-            Collection results = appService.search(klass, o);
+            Collection<Object> results = appService.search(klass, o);
 
             if (results == null)
                 return null;
@@ -823,11 +822,11 @@ public class SDKClientUtil {
 
     public Object[] search(String FQName) {
         try {
-            Class klass = Class.forName(FQName);
+            Class<?> klass = Class.forName(FQName);
             Object o = klass.newInstance();
             ApplicationService appService =
                 ApplicationServiceProvider.getApplicationService();
-            Collection results = appService.search(klass, o);
+            Collection<Object> results = appService.search(klass, o);
             if (results == null)
                 return null;
             Object[] a = results.toArray();
