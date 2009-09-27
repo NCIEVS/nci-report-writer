@@ -58,8 +58,8 @@ public class SortUtils {
      * 
      * @param list an instance of List
      */
-    public static void quickSort(List list) {
-        quickSort(list, SORT_BY_NAME);
+    public static List<?> quickSort(List<?> list) {
+        return quickSort(list, SORT_BY_NAME);
     }
 
     /**
@@ -68,32 +68,34 @@ public class SortUtils {
      * @param list an instance of List
      * @param sort_option, an integer; 1, if sort by name; 2: if sort by code
      */
-    public static void quickSort(List list, int sort_option) {
+    public static List<?> quickSort(List<?> list, int sort_option) {
         if (list == null)
-            return;
+            return list;
         if (list.size() <= 1)
-            return;
+            return list;
         try {
             Collections.sort(list, new SortComparator(sort_option));
+            return list;
         } catch (Exception ex) {
             ex.printStackTrace();
         }
+        return null;
     }
 
     /**
      * Performs quick sort of a Vector by a specified sort option.
      * 
-     * @param v an instance of Vector
+     * @param vector an instance of Vector
      * @param sort_option, an integer; 1, if sort by name; 2: if sort by code
      */
-    public static Vector quickSort(Vector v, int sort_option) {
-        if (v == null)
-            return v;
-        if (v.size() <= 1)
-            return v;
+    public static Vector<?> quickSort(Vector<?> vector, int sort_option) {
+        if (vector == null)
+            return vector;
+        if (vector.size() <= 1)
+            return vector;
         try {
-            Collections.sort((List) v, new SortComparator(sort_option));
-            return v;
+            Collections.sort(vector, new SortComparator(sort_option));
+            return vector;
         } catch (Exception ex) {
             ex.printStackTrace();
         }
@@ -103,9 +105,9 @@ public class SortUtils {
     /**
      * Performs quick sort of a Vector by name.
      * 
-     * @param v an instance of Vector
+     * @param vector an instance of Vector
      */
-    public static Vector quickSort(Vector v) {
-        return quickSort(v, SORT_BY_NAME);
+    public static Vector<?> quickSort(Vector<?> vector) {
+        return quickSort(vector, SORT_BY_NAME);
     }
 }
