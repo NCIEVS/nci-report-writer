@@ -65,7 +65,9 @@ import org.LexGrid.concepts.*;
 
 public class UserSessionBean extends Object {
     private static Logger _logger = Logger.getLogger(UserSessionBean.class);
-
+    // private final int COL_NUM = 0;
+    private final int FIELD_NUM = 1;
+    
     private Boolean _isAdmin = null;
     private String _selectedTask = null;
 
@@ -363,8 +365,6 @@ public class UserSessionBean extends Object {
         return null;
     }
     
-    private final int COL_NUM = 0;
-    private final int FIELD_NUM = 1;
     private int[] getColumnInfo() throws Exception {
         HttpServletRequest request = SessionUtil.getRequest();
         String selectedColumnInfo = request.getParameter("selectedColumnInfo");
