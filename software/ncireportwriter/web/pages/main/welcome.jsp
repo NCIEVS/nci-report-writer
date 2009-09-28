@@ -2,7 +2,7 @@
  <body>
   <jsp:forward page="/pages/templates/template.jsp">
     <jsp:param name="content_title" value="NCI Report Writer"/>
-    <jsp:param name="content_page" value="welcome2.jsp"/>
+    <jsp:param name="content_page" value="/pages/contents/welcome2.jsp"/>
   </jsp:forward>
  </body>
 </html>
