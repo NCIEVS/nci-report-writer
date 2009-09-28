@@ -6,13 +6,13 @@
   <a href="http://www.cancer.gov" target="_blank"
      alt="National Cancer Institute" >
     <img src="<%=imagesPath%>/logotype.gif"
-      <%-- width="440" height="39" --%> border="0"
+      width="440" height="39" border="0"
       alt="National Cancer Institute" />
   </a>
   <a href="http://www.cancer.gov" target="_blank"
      alt="National Cancer Institute" >
     <img src="<%=imagesPath%>/spacer.gif"
-      width="192" height="39" border="0" 
+      width="48" height="39" border="0" 
       alt="National Cancer Institute" class="print-header" /></a>
   <a href="http://www.nih.gov" target="_blank"
       alt="U.S. National Institutes of Health">
