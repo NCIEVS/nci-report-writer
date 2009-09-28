@@ -33,11 +33,6 @@ For example using the blue color sheme, darker means use the darker blue and lig
  #000000 = black
 */
 
-body{
-  margin:0; 
-  padding:0;
-}
-
 /*###############
 MISCELLANEOUS
 ###############*/
@@ -447,6 +442,21 @@ img.img{ /* for images that need a border */
 }
 
 /* --- From Term Suggestion --- */
+body
+{
+ background-image: url(../images/background.gif);
+ background-color: #ffffff;
+ background-repeat: repeat-x;
+ margin: 0;
+ padding: 0;
+ font-family: Arial, Verdana, Helvetica, sans-serif;
+ font-size: 12px;
+ color: #444444;
+ font-weight: normal;
+ text-decoration: none;
+ text-align: center;
+}
+
 .center-page
 {
  width: 746px;
