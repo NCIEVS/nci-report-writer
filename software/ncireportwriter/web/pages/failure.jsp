@@ -30,7 +30,7 @@
                <tr>
                     <td width="190" valign="top" class="subMenu">
           
-<%@ include file="/pages/templates/sideMenu.html" %>
+<%@ include file="/pages/templates/sideMenu.jsp" %>
             
                     </td>
                     <td valign="top" width="100%">
@@ -68,7 +68,7 @@
                             <td>
 
 
-<%@ include file="/pages/templates/welcome.html" %>
+<%@ include file="/pages/templates/welcome.jsp" %>
 
                             
                             </td>
@@ -137,7 +137,7 @@
                                 
                                 
                                 
-<%@ include file="/pages/templates/whatsNews.html" %>
+<%@ include file="/pages/templates/whatsNews.jsp" %>
                                 
                                 
                                 
