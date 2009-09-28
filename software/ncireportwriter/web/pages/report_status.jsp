@@ -29,7 +29,7 @@
                <tr>
                     <td width="190" valign="top" class="subMenu">
           
-<%@ include file="/pages/templates/sideMenu.html" %>
+<%@ include file="/pages/templates/sideMenu.jsp" %>
             
                     </td>
                     <td valign="top" width="100%">
