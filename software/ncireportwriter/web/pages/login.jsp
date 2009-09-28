@@ -23,14 +23,14 @@
 
 <table summary="" cellpadding="0" cellspacing="0" border="0" width="100%" height="100%">
 	
-  <%@ include file="/pages/templates/nciHeader.html" %>
+  <%@ include file="/pages/templates/nciHeader.jsp" %>
 	
   <tr>
       <td height="100%" valign="top">
       
            <table summary="" cellpadding="0" cellspacing="0" border="0" height="100%">
 			
-               <%@ include file="/pages/templates/applicationHeader.xhtml" %>
+               <%@ include file="/pages/templates/applicationHeader.jsp" %>
 				
                <tr>
                     <td width="190" valign="top" class="subMenu">
@@ -43,7 +43,7 @@
                               <tr>
                                     <td height="20" width="100%" class="mainMenu">
 
-<%@ include file="/pages/templates/menuBar_skip.xhtml" %>
+<%@ include file="/pages/templates/menuBar_skip.jsp" %>
 
                                     </td>
                               </tr>
@@ -185,7 +185,7 @@ if(request.getQueryString() != null && request.getQueryString().equals("logout")
               <tr>
                 <td height="20" width="100%" class="footerMenu">
                 
-                     <%@ include file="/pages/templates/applicationFooter.html" %>
+                     <%@ include file="/pages/templates/applicationFooter.jsp" %>
                   
                 </td>
               </tr>
@@ -198,7 +198,7 @@ if(request.getQueryString() != null && request.getQueryString().equals("logout")
   <tr>
     <td>
     
-        <%@ include file="/pages/templates/nciFooter.html" %>
+        <%@ include file="/pages/templates/nciFooter.jsp" %>
     
     </td>
   </tr>

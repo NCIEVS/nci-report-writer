@@ -22,10 +22,10 @@
   <tr:form usesUpload="${(usesUpload != null) ? usesUpload : 'false'}" id="pg_form">
 
 		<ui:insert name="nciHeader">
-			<ui:include src="nciHeader.html"/>
+			<ui:include src="nciHeader.jsp"/>
 		</ui:insert>
 		<ui:insert name="applicationHeader">
-			<ui:include src="applicationHeader.xhtml"/>
+			<ui:include src="applicationHeader.jsp"/>
 		</ui:insert>
 		
   		<table width="100%">
@@ -53,10 +53,10 @@
   		</table>
 		
  		<ui:insert name="applicationFooter">
-			<ui:include src="applicationFooter.html"/>
+			<ui:include src="applicationFooter.jsp"/>
 		</ui:insert>
 		<ui:insert name="nciFooter">
-			<ui:include src="nciFooter.html"/>
+			<ui:include src="nciFooter.jsp"/>
 		</ui:insert>
 		
   </tr:form>
