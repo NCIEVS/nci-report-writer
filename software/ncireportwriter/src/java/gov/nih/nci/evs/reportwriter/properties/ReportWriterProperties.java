@@ -66,12 +66,13 @@ public class ReportWriterProperties {
         .getLogger(ReportWriterProperties.class);
     private static ReportWriterProperties _instance;
     private Properties _properties = new Properties();
-
+    private String _buildInfo = null;
+    
     private ReportWriterProperties() {
         loadProperties();
     }
 
-    private static ReportWriterProperties getInstance() {
+    public static ReportWriterProperties getInstance() {
         if (_instance == null) {
             synchronized (ReportWriterProperties.class) {
                 _instance = new ReportWriterProperties();
@@ -118,5 +119,20 @@ public class ReportWriterProperties {
             String value = _properties.getProperty(key);
             _logger.debug("* " + key + ": " + value);
         }
+    }
+
+    public String getBuildInfo() {
+        if (_buildInfo != null)
+            return _buildInfo;
+        try {
+            _buildInfo = getProperty(BUILD_INFO);
+            if (_buildInfo == null)
+                _buildInfo = "null";
+        } catch (Exception ex) {
+            _buildInfo = ex.getMessage();
+        }
+
+        _logger.info("getBuildInfo returns " + _buildInfo);
+        return _buildInfo;
     }
 }
