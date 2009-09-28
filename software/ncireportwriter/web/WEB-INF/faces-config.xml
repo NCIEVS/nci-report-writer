@@ -344,6 +344,15 @@
     
   </navigation-rule>  
   
+  <navigation-rule>
+ 
+    <from-view-id>/pages/main/welcome1.jsp</from-view-id>
+    <navigation-case>
+     <from-outcome>message</from-outcome>
+     <to-view-id>/pages/message.jsp</to-view-id>
+    </navigation-case>
+    
+  </navigation-rule>  
   
 <managed-bean>
   <managed-bean-name>loginBean</managed-bean-name>
