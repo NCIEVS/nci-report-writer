@@ -442,6 +442,26 @@ img.img{ /* for images that need a border */
 }
 
 /* --- From Term Suggestion --- */
+@media print
+{
+.print-header
+{
+ display: none;
+}
+
+.mainbox-top, .mainbox-bottom
+{
+ display: none;
+ margin-bottom: 0;
+}
+
+#main-area
+{
+ border-width: 0;
+}
+}
+
+/* --- From Term Suggestion --- */
 body
 {
  background-image: url(../images/background.gif);
@@ -466,12 +486,6 @@ body
  margin-left: auto;
  padding: 0;
  text-align: left;
-}
-
-.mainbox-top, .mainbox-bottom
-{
- display: none;
- margin-bottom: 0;
 }
 
 .pagecontent
