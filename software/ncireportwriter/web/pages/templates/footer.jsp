@@ -5,7 +5,7 @@
 %>
 <div class="footer">
   <ul>
-    <li> | <a href="http://www.cancer.gov" target="_blank" 
+    <li><a href="http://www.cancer.gov" target="_blank" 
       alt="National Cancer Institute">NCI Home</a></li>
     <li> | <a href="<%=pagesPath%>/contact_us.jsf"
       alt="NCIt Contact Us">Contact Us</a></li>

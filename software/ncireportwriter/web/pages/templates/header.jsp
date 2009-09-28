@@ -6,7 +6,7 @@
   <a href="http://www.cancer.gov" target="_blank"
      alt="National Cancer Institute" >
     <img src="<%=imagesPath%>/logotype.gif"
-      width="440" height="39" border="0"
+      <%-- width="440" height="39" --%> border="0"
       alt="National Cancer Institute" />
   </a>
   <a href="http://www.cancer.gov" target="_blank"
