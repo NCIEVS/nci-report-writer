@@ -149,19 +149,19 @@
 											if (direction.equals(Boolean.FALSE))
 											{
 											%>
-											    <input type="radio" name="direction" value="source" checked>Source&nbsp;
-											    <input type="radio" name="direction" value="target">Target</td>
+											    <input type="radio" name="direction" value="source" checked="checked">Source&nbsp;
+											    <input type="radio" name="direction" value="target">Target
 											<%
 											}
 											else
 											{
 											%>
 											    <input type="radio" name="direction" value="source" >Source&nbsp;
-											    <input type="radio" name="direction" value="target" checked>Target</td>
+											    <input type="radio" name="direction" value="target" checked="checked">Target
 											<%
 											}
 											%>
-											
+									       </td>
 											
 										</tr>										
 										
