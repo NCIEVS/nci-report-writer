@@ -7,8 +7,7 @@
   String content_title = request.getParameter("content_title");
   if (content_title == null || content_title.trim().length() <= 0)
       content_title = "NCI Report Writer";
-  String content_page = "/pages/contents/";
-  content_page += request.getParameter("content_page");
+  String content_page = request.getParameter("content_page");
   String buildInfo = ReportWriterProperties.getInstance().getBuildInfo();
 %>
 <!-- Build info: <%=buildInfo%> -->
