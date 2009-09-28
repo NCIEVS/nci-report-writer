@@ -17,7 +17,7 @@
     <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
     <title><%=content_title%></title>
     <link rel="stylesheet" type="text/css" href="<%= FormUtils.getCSSPath(request) %>/styleSheet.css" />
-    <link rel="shortcut icon" href="<%= request.getContextPath() %>/favicon.ico" type="image/x-icon" />
+    <link rel="shortcut icon" href="<%= FormUtils.getBasePath(request) %>/favicon.ico" type="image/x-icon" />
   </head>
   <body>
     <jsp:include page="/pages/templates/header.jsp" />

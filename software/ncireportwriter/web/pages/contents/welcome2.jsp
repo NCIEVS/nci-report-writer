@@ -1,1 +1,4 @@
-Hello World
+<%
+  String msg = "Hello World";
+%>
+<%= msg %>
