@@ -18,7 +18,7 @@
 
   <navigation-rule>
 
-   <from-view-id>/pages/login.jsp</from-view-id>
+   <from-view-id>/pages/main/login.jsp</from-view-id>
    <navigation-case> 
     <description>Handle case for unsuccessful login</description>
     <from-action>#{loginBean.loginAction}</from-action>
