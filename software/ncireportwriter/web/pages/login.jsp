@@ -73,7 +73,7 @@
                             <td>
 
 
-<%@ include file="/pages/templates/welcome.jsp" %>
+<%@ include file="/pages/contents/welcome.jsp" %>
 
                             
                             </td>
