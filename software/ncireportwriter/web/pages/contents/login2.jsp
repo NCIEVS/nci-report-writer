@@ -4,11 +4,11 @@
 <f:view>
   <table summary="" cellpadding="0" cellspacing="0" border="0" height="100%">
     <tr>
+<%-- No longer needed (Begin)
       <td width="190" valign="top" class="subMenu">
-
 <%@ include file="/pages/templates/sideMenu.jsp" %>
-            
       </td>
+--%> <%-- No longer needed (End) --%>
       <td valign="top" width="100%">
         <table summary="" cellpadding="0" cellspacing="0" border="0" width="100%" height="100%">
           <tr>
@@ -99,12 +99,9 @@
                               </td>
                             </tr>
                             <!-- === Login (End) =========================== -->
-                            
-                            
-                            
+
 <%@ include file="/pages/templates/whatsNews.jsp" %>
-                            
-                            
+
                             <!-- === Spacer Cell (Begin): keep for dynamic expanding -->
                             <tr>
                               <td valign="top" height="100%">
