@@ -31,7 +31,7 @@
                <tr>
                     <td width="190" valign="top" class="subMenu">
           
-<%@ include file="/pages/templates/sideMenu.jsp" %>
+<%@ include file="/pages/contents/sideMenu.jsp" %>
             
                     </td>
                     <td valign="top" width="100%">
@@ -39,7 +39,7 @@
                               <tr>
                                     <td height="20" width="100%" class="mainMenu">
                 
-<%@ include file="/pages/templates/menuBar.jsp" %>
+<%@ include file="/pages/contents/menuBar.jsp" %>
                   
                                     </td>
                               </tr>
