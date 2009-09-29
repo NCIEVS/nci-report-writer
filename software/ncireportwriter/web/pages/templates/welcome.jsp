@@ -1,5 +1,5 @@
                               <!-- welcome begins -->
-                              <table summary="" cellpadding="0" cellspacing="0" border="0" width="390" height="100%">
+                              <table summary="" cellpadding="0" cellspacing="0" border="0" width="540" height="100%">
                                 <tr><td class="welcomeTitle" height="20">WELCOME TO NCI EVS Report Writer</td>
                                 </tr>
                                 <tr>
