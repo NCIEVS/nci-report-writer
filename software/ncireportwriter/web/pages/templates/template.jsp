@@ -22,10 +22,11 @@
     <jsp:include page="/pages/templates/header.jsp" />
     <div class="center-page">
       <jsp:include page="/pages/templates/sub_header.jsp" />
-      <jsp:include page="/pages/templates/quickLinks.jsp" />
       <div class="mainbox-top"><img src="<%=imagesPath%>/mainbox-top.gif"
         width="745" height="5" alt="Mainbox Top" /></div>
       <div id="main-area">
+        <jsp:include page="/pages/templates/application_banner.jsp" />
+        <jsp:include page="/pages/templates/quickLinks.jsp" />
         <div class="pagecontent">
           <jsp:include page="<%=content_page%>" />
           <jsp:include page="/pages/templates/footer.jsp" />
