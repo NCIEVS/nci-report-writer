@@ -570,3 +570,82 @@ body
  margin-left: 0;
  padding: 0;
 }
+
+.bluebar 
+{
+ background-image: url(../images/quicklinks.gif);
+ background-repeat: repeat-x;
+ height: 32px;
+}
+
+/* --- Quick links (Begin) --- */
+#quicklinksholder 
+{
+ margin-left: 570px;
+ padding-top: 7px;
+}
+
+#quicklinks, #quicklinks ul 
+{
+ padding: 0;
+ margin: 0;
+ list-style: none;
+}
+
+#quicklinks a 
+{
+ display: block;
+ width: 146px;
+}
+
+#quicklinks li 
+{
+ float: left;
+ width: 146px;
+}
+
+#quicklinks li ul 
+{
+ position: absolute;
+ background-color: #ffffff;
+ width: 160px;
+ left: -999em;
+ border-left-color: #8c8c8c;
+ border-left-width: 1px;
+ border-left-style: solid;
+ border-right-color: #8c8c8c;
+ border-right-width: 1px;
+ border-right-style: solid;
+ border-bottom-color: #8c8c8c;
+ border-bottom-width: 1px;
+ border-bottom-style: solid;
+}
+
+#quicklinks li:hover ul 
+{
+ left: auto;
+}
+
+#quicklinks li:hover ul, #quicklinks li.sfhover ul 
+{
+ left: auto;
+}
+
+#quicklinks li ul li a 
+{
+ text-decoration: none;
+ padding-top: 3px;
+ padding-right: 7px;
+ padding-bottom: 3px;
+ padding-left: 7px;
+ font-family: arial;
+ font-size: 11px;
+ color: #444444;
+}
+
+#quicklinks li ul li a:hover 
+{
+ background-color: #e5e5e5;
+}
+
+/* --- Quick links (End) --- */
