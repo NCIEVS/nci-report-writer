@@ -45,9 +45,9 @@
                               <td valign="top">
                                 <h:form id="loginForm">                                  
                                   <table summary="" cellpadding="2" cellspacing="0" border="0" width="100%" class="sidebarSection">
-
                                   <% 
-                                    if(request.getQueryString() != null && request.getQueryString().equals("logout")) { 
+                                    String queryString = request.getQueryString();
+                                    if (queryString != null && queryString.contains("logout=true")) { 
                                   %>
                                     <tr>
                                       <td class="sidebarTitle" height="20">LOGOUT REPORT WRITER</td>
@@ -60,6 +60,12 @@
                                       <td class="sidebarTitle" height="20">LOGIN TO REPORT WRITER</td>
                                     </tr>
                                   <% } %>
+                                  <% if (request.getAttribute("loginWarning") != null) { %>                                      
+                                    <tr>
+                                      <td class="txtHighlight"><%=request.getAttribute("loginWarning")%></td>
+                                    </tr>
+                                  <% }%>
+
                                     <tr>
                                       <td class="sidebarContent">
                                         <table cellpadding="2" cellspacing="0" border="0">
