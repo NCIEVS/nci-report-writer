@@ -75,8 +75,9 @@ public class LoginFilter implements Filter {
             int index = uri.lastIndexOf("/");
             String path = uri.substring(index);
 
-            if (path.equals("/login.jsf") || path.equals("/failure.jsf")
-                || path.equals("/") || path.equals("/download_nologin.jsf")
+            if (path.equals("/login.jsf")
+                || path.equals("/") 
+                || path.equals("/download_nologin.jsf")
                 || path.equals("/download.jsf")) {
                 chain.doFilter(request, response);
                 return;
