@@ -4,8 +4,9 @@
     <td class="subMenuPrimaryTitle" height="21">QUICK LINKS
       <!-- anchor to skip sub menu -->
       <a href="#content">
-        <img src="/reportwriter/images/shim.gif" alt="Skip Menu" 
-            width="1" height="1" border="0" /></a>
+        <img src="/images/shim.gif" alt="Skip Menu" 
+            width="1" height="1" border="0" />
+      </a>
     </td>
   </tr>
 
@@ -14,8 +15,7 @@
         onmouseover="changeMenuStyle(this,'subMenuSecondaryTitleOver'),showCursor()" 
         onmouseout="changeMenuStyle(this,'subMenuSecondaryTitle'),hideCursor()" 
         height="20" onclick="document.location.href='#'">
-      <a class="subMenuSecondary" href="#" 
-          onclick="javascript:window.open('http://www.cancer.gov', '_blank','top=100, left=100, height=740, width=780, status=no, menubar=no, resizable=yes, scrollbars=yes, toolbar=no, location=no, directories=no');">National Cancer Institute</a>
+      <a class="subMenuSecondary" href="#" onclick="javascript:window.open('http://www.cancer.gov', '_blank','top=100, left=100, height=740, width=780, status=no, menubar=no, resizable=yes, scrollbars=yes, toolbar=no, location=no, directories=no');">National Cancer Institute</a>
     </td>
   </tr>
 
@@ -24,8 +24,7 @@
         onmouseover="changeMenuStyle(this,'subMenuSecondaryTitleOver'),showCursor()" 
         onmouseout="changeMenuStyle(this,'subMenuSecondaryTitle'),hideCursor()" 
         height="20" onclick="document.location.href='#'">
-      <a class="subMenuSecondary" href="#" 
-        onclick="javascript:window.open('http://ncicb.nci.nih.gov/', '_blank','top=100, left=100, height=740, width=780, status=no, menubar=no, resizable=yes, scrollbars=yes, toolbar=no, location=no, directories=no');">NCI Center for Bioinformatics</a>
+      <a class="subMenuSecondary" href="#" onclick="javascript:window.open('http://ncicb.nci.nih.gov/', '_blank','top=100, left=100, height=740, width=780, status=no, menubar=no, resizable=yes, scrollbars=yes, toolbar=no, location=no, directories=no');">NCI Center for Bioinformatics</a>
     </td>
   </tr>
 
@@ -50,8 +49,8 @@
   <tr>
     <td class="subMenuSecondaryTitle" 
         onmouseover="changeMenuStyle(this,'subMenuSecondaryTitleOver'),showCursor()" 
-        onmouseout="changeMenuStyle(this,'subMenuSecondaryTitle'),hideCursor()" height="20" 
-        onclick="document.location.href='#'">
+        onmouseout="changeMenuStyle(this,'subMenuSecondaryTitle'),hideCursor()" 
+        height="20" onclick="document.location.href='#'">
       <a class="subMenuSecondary" href="#" onclick="javascript:window.open('http://bioportal.nci.nih.gov', '_blank','top=100, left=100, height=740, width=780, status=no, menubar=no, resizable=yes, scrollbars=yes, toolbar=no, location=no, directories=no');">NCI Bioportal</a>
     </td>
   </tr>
