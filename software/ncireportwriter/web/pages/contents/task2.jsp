@@ -2,11 +2,18 @@
 <%@ taglib uri="http://java.sun.com/jsf/core" prefix="f" %> 
 
 <f:view>
-  <table summary="" cellpadding="0" cellspacing="0" border="0" 
-      width="100%" height="100%">
-    <h:form id="SELECT_TASKForm">
+  <h:form id="SELECT_TASKForm">
+    <table summary="" cellpadding="0" cellspacing="0" border="0" 
+        width="100%" height="100%">
+        
       <tr>
-        <td width="100%" valign="top"><br>
+        <td height="20" width="100%" class="mainMenu">
+          <%@ include file="/pages/contents/menuBar.jsp" %>
+        </td>
+      </tr>
+
+      <tr>
+        <td height="500" width="100%" valign="top"><br>
           <!-- target of anchor to skip menus -->
           <a name="content" />
           <table summary="" cellpadding="0" cellspacing="0" border="0" 
@@ -47,6 +54,6 @@
           </table>
         </td>
       </tr>
-    </h:form>
-  </table>
+    </table>
+  </h:form>
 </f:view>
