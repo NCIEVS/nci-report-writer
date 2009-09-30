@@ -1,4 +1,4 @@
-<!-- welcome begins -->
+<!-- Welcome (Begin) -->
 <table summary="" cellpadding="0" cellspacing="0" border="0" width="540" height="100%">
   <tr>
     <td class="welcomeTitle" height="20">WELCOME TO NCI EVS Report Writer</td>
@@ -18,4 +18,4 @@
     </td>
   </tr>
 </table>
-<!-- welcome ends -->
+<!-- Welcome (End) -->
