@@ -23,7 +23,7 @@
     <description>Handle case for unsuccessful login</description>
     <from-action>#{loginBean.loginAction}</from-action>
     <from-outcome>failure</from-outcome>
-    <to-view-id>/pages/main/failure.jsp</to-view-id>
+    <to-view-id>/pages/main/login.jsp</to-view-id>
    </navigation-case>
    
    <navigation-case> 
@@ -35,27 +35,6 @@
 
   </navigation-rule>
   
- 
-   <navigation-rule>
-
-   <from-view-id>/pages/main/failure.jsp</from-view-id>
-   <navigation-case> 
-    <description>Handle case for unsuccessful login</description>
-    <from-action>#{loginBean.loginAction}</from-action>
-    <from-outcome>failure</from-outcome>
-    <to-view-id>/pages/main/failure.jsp</to-view-id>
-   </navigation-case>
-
-   <navigation-case> 
-    <description>Handle case for successful login</description>
-    <from-action>#{loginBean.loginAction}</from-action>
-    <from-outcome>success</from-outcome>
-    <to-view-id>/pages/task.jsp</to-view-id>
-   </navigation-case>
-
-  </navigation-rule>
-  
-
   <navigation-rule>
 
     <from-view-id>/pages/task.jsp</from-view-id>
