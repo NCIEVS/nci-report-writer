@@ -40,12 +40,12 @@
     <from-view-id>/pages/main/task.jsp</from-view-id>
     <navigation-case>
      <from-outcome>administer_standard_reports</from-outcome>
-     <to-view-id>/pages/standard_report_template.jsp</to-view-id>
+     <to-view-id>/pages/main/standard_report_template.jsp</to-view-id>
     </navigation-case>
 
     <navigation-case>
      <from-outcome>add_standard_report_template</from-outcome>
-     <to-view-id>/pages/add_standard_report_template.jsp</to-view-id>
+     <to-view-id>/pages/main/add_standard_report_template.jsp</to-view-id>
     </navigation-case>
         
     <navigation-case>
@@ -153,10 +153,10 @@
   
   
   <navigation-rule>
-    <from-view-id>/pages/standard_report_template.jsp</from-view-id>
+    <from-view-id>/pages/main/standard_report_template.jsp</from-view-id>
     <navigation-case>
      <from-outcome>add</from-outcome>
-     <to-view-id>/pages/add_standard_report_template.jsp</to-view-id>
+     <to-view-id>/pages/main/add_standard_report_template.jsp</to-view-id>
     </navigation-case>
    
     <navigation-case>
@@ -173,13 +173,13 @@
     <navigation-case>
        <from-action>#{userSessionBean.deleteReportTemplateAction}</from-action>
        <from-outcome>standard_report_template</from-outcome>
-       <to-view-id>/pages/standard_report_template.jsp</to-view-id>
+       <to-view-id>/pages/main/standard_report_template.jsp</to-view-id>
     </navigation-case>
     
     <navigation-case>
        <from-action>#{userSessionBean.addReportTemplateAction}</from-action>
        <from-outcome>add_standard_report_template</from-outcome>
-       <to-view-id>/pages/add_standard_report_template.jsp</to-view-id>
+       <to-view-id>/pages/main/add_standard_report_template.jsp</to-view-id>
     </navigation-case>
 
     <navigation-case>
@@ -221,33 +221,33 @@
        <navigation-case>
         <from-action>#{userSessionBean.saveModifiedTemplateAction}</from-action> 
         <from-outcome>standard_report_template</from-outcome>
-         <to-view-id>/pages/standard_report_template.jsp</to-view-id>
+         <to-view-id>/pages/main/standard_report_template.jsp</to-view-id>
      </navigation-case>
 
     <navigation-case>
      <from-outcome>back</from-outcome>
-     <to-view-id>/pages/standard_report_template.jsp</to-view-id>
+     <to-view-id>/pages/main/standard_report_template.jsp</to-view-id>
     </navigation-case>
      
    </navigation-rule>  
      
    <navigation-rule>
 
-     <from-view-id>/pages/add_standard_report_template.jsp</from-view-id>
+     <from-view-id>/pages/main/add_standard_report_template.jsp</from-view-id>
      <navigation-case>
       <from-outcome>back</from-outcome>
-      <to-view-id>/pages/standard_report_template.jsp</to-view-id>
+      <to-view-id>/pages/main/standard_report_template.jsp</to-view-id>
      </navigation-case>
      
      <navigation-case>
       <from-outcome>reset</from-outcome>
-      <to-view-id>/pages/add_standard_report_template.jsp</to-view-id>
+      <to-view-id>/pages/main/add_standard_report_template.jsp</to-view-id>
      </navigation-case>
 
       <navigation-case>
        <from-action>#{userSessionBean.saveTemplateAction}</from-action> 
        <from-outcome>standard_report_template</from-outcome>
-        <to-view-id>/pages/standard_report_template.jsp</to-view-id>
+        <to-view-id>/pages/main/standard_report_template.jsp</to-view-id>
      </navigation-case>
  
       <navigation-case>
@@ -308,7 +308,7 @@
     
     <navigation-case>
      <from-outcome>back</from-outcome>
-     <to-view-id>/pages/standard_report_template.jsp</to-view-id>
+     <to-view-id>/pages/main/standard_report_template.jsp</to-view-id>
     </navigation-case>
 
   </navigation-rule>
