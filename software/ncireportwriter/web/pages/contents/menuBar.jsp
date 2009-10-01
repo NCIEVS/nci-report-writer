@@ -12,8 +12,8 @@
     <td height="20" class="mainMenuItemOver" 
         onmouseover="changeMenuStyle(this,'mainMenuItemOver'),showCursor()" 
         onmouseout="changeMenuStyle(this,'mainMenuItemOver'),hideCursor()" 
-        onclick="document.location.href='<%= request.getContextPath() %>/pages/task.jsf'">
-      <a class="mainMenuLink" href="<%= request.getContextPath() %>/pages/task.jsf">MAIN</a>
+        onclick="document.location.href='<%= request.getContextPath() %>/pages/main/task.jsf'">
+      <a class="mainMenuLink" href="<%= request.getContextPath() %>/pages/main/task.jsf">MAIN</a>
     </td>
 
     <td>
