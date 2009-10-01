@@ -30,7 +30,7 @@
                     <!-- target of anchor to skip menus --><a name="content" />
                     <table summary="" cellpadding="0" cellspacing="0" border="0" height="100%">
                       <tr>
-                        <td>
+                        <td height="500">
 
 <%@ include file="/pages/contents/welcome.jsp" %>
 
