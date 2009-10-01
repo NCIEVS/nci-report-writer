@@ -11,10 +11,10 @@
           <%@ include file="/pages/contents/menuBar.jsp" %>
         </td>
       </tr>
-      
-      
+
       <tr>
-        <td width="100%" valign="top"><br>
+        <td width="100%" valign="top">
+          <br>
           <!-- target of anchor to skip menus -->
           <a name="content" />
           <table summary="" cellpadding="0" cellspacing="0" border="0" 
@@ -92,7 +92,8 @@
                             <h:outputText value="Level" />
                           </td>
                           <td class="dataCellText">
-                            <h:selectOneMenu id="LevelId" value="#{ontologyBean.selectedLevel}" valueChangeListener="#{ontologyBean.levelSelectionChanged}" >
+                            <h:selectOneMenu id="LevelId" value="#{ontologyBean.selectedLevel}" 
+                                valueChangeListener="#{ontologyBean.levelSelectionChanged}" >
                               <f:selectItems value="#{ontologyBean.levelList}" />
                             </h:selectOneMenu>
                           </td>                                       
@@ -105,9 +106,10 @@
                     <td align="right" class="actionSection">
                       <table cellpadding="4" cellspacing="0" border="0">
                         <tr>
-                          <td><h:commandButton id="save" action="#{userSessionBean.saveTemplateAction}" value="Save" /></td>
+                          <td><h:commandButton id="save" value="Save" 
+                              action="#{userSessionBean.saveTemplateAction}" /></td>
                           <td><input type="reset" value="Reset" /></td>
-                          <td><h:commandButton id="back" action="back" value="Back" /></td>
+                          <td><h:commandButton id="back" value="Back" action="back" /></td>
                         </tr>
                       </table>
                     </td>
