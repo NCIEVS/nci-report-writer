@@ -7,6 +7,7 @@
   String content_title = request.getParameter("content_title");
   if (content_title == null || content_title.trim().length() <= 0)
       content_title = "NCI Report Writer";
+  String menu_bar = request.getParameter("menu_bar");
   String content_page = request.getParameter("content_page");
   String buildInfo = ReportWriterProperties.getInstance().getBuildInfo();
 %>
@@ -28,7 +29,14 @@
         <jsp:include page="/pages/templates/application_banner.jsp" />
         <jsp:include page="/pages/templates/quickLinks.jsp" />
         <div class="pagecontent">
-          <jsp:include page="<%=content_page%>" />
+        <% if (menu_bar != null) { %>
+          <jsp:include page="/pages/contents/menu_bar_template.jsp">
+            <jsp:param name="menu_bar" value="<%=menu_bar%>"/>
+            <jsp:param name="content_page" value="<%=content_page%>"/>
+          </jsp:include>
+        <% } else { %>
+          <jsp:include page="<%=content_page%>"/>
+        <% } %>
           <jsp:include page="/pages/templates/footer.jsp" />
         </div>
       </div>
