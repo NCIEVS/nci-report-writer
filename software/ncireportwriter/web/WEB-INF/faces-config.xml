@@ -191,7 +191,7 @@
     <navigation-case>
        <from-action>#{userSessionBean.modifyReportTemplateAction}</from-action>
        <from-outcome>modify_standard_report_template</from-outcome>
-       <to-view-id>/pages/modify_standard_report_template.jsp</to-view-id>
+       <to-view-id>/pages/main/modify_standard_report_template.jsp</to-view-id>
     </navigation-case>
 
     <navigation-case>
@@ -211,7 +211,7 @@
  
     <navigation-rule>
  
-      <from-view-id>/pages/modify_standard_report_template.jsp</from-view-id>
+      <from-view-id>/pages/main/modify_standard_report_template.jsp</from-view-id>
        <navigation-case>
         <from-action>#{userSessionBean.saveModifiedTemplateAction}</from-action> 
         <from-outcome>message</from-outcome>
