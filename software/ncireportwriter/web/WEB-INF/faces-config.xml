@@ -204,7 +204,7 @@
      <navigation-case>
        <from-action>#{userSessionBean.editReportContentAction}</from-action>
        <from-outcome>standard_report_column</from-outcome>
-       <to-view-id>/pages/standard_report_column.jsp</to-view-id>
+       <to-view-id>/pages/main/standard_report_column.jsp</to-view-id>
     </navigation-case>
     
    </navigation-rule>
@@ -262,13 +262,13 @@
     <from-view-id>/pages/add_standard_report_column.jsp</from-view-id>
     <navigation-case>
      <from-outcome>back</from-outcome>
-     <to-view-id>/pages/standard_report_column.jsp</to-view-id>
+     <to-view-id>/pages/main/standard_report_column.jsp</to-view-id>
     </navigation-case>
     
     <navigation-case>
      <from-action>#{userSessionBean.saveReportColumnAction}</from-action> 
      <from-outcome>standard_report_column</from-outcome>
-     <to-view-id>/pages/standard_report_column.jsp</to-view-id>
+     <to-view-id>/pages/main/standard_report_column.jsp</to-view-id>
     </navigation-case>
 
     <navigation-case>
@@ -281,7 +281,7 @@
 
   <navigation-rule>
 
-    <from-view-id>/pages/standard_report_column.jsp</from-view-id>
+    <from-view-id>/pages/main/standard_report_column.jsp</from-view-id>
     <navigation-case>
        <from-action>#{userSessionBean.insertBeforeColumnAction}</from-action>
        <from-outcome>add_standard_report_column</from-outcome>
@@ -303,7 +303,7 @@
     <navigation-case>
      <from-action>#{userSessionBean.deleteColumnAction}</from-action>
      <from-outcome>standard_report_column</from-outcome>
-     <to-view-id>/pages/standard_report_column.jsp</to-view-id>
+     <to-view-id>/pages/main/standard_report_column.jsp</to-view-id>
     </navigation-case>
     
     <navigation-case>
