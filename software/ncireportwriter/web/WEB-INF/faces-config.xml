@@ -126,7 +126,7 @@
      <navigation-case>
         <from-action>#{userSessionBean.downloadReportAction}</from-action>
         <from-outcome>download</from-outcome>
-        <to-view-id>/pages/download.jsp</to-view-id>
+        <to-view-id>/pages/main/download.jsp</to-view-id>
     </navigation-case>
     
      <navigation-case>
@@ -144,7 +144,7 @@
     
 
   <navigation-rule>
-    <from-view-id>/pages/download.jsp</from-view-id>
+    <from-view-id>/pages/main/download.jsp</from-view-id>
     <navigation-case>
      <from-outcome>back</from-outcome>
      <to-view-id>/pages/main/retrieve_standard_reports.jsp</to-view-id>
