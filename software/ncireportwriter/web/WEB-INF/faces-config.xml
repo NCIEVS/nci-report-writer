@@ -75,7 +75,7 @@
     <from-view-id>/pages/main/report_status.jsp</from-view-id>
     <navigation-case>
      <from-outcome>add</from-outcome>
-     <to-view-id>/pages/add_report_status.jsp</to-view-id>
+     <to-view-id>/pages/main/add_report_status.jsp</to-view-id>
     </navigation-case>
     
     <navigation-case>
@@ -86,7 +86,7 @@
   
   <navigation-rule>
 
-    <from-view-id>/pages/add_report_status.jsp</from-view-id>
+    <from-view-id>/pages/main/add_report_status.jsp</from-view-id>
     <navigation-case>
      <from-action>#{userSessionBean.addStatusAction}</from-action>
      <from-outcome>report_status</from-outcome>
