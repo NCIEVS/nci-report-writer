@@ -37,14 +37,13 @@
     <table summary="" cellpadding="0" cellspacing="0" border="0" 
         width="100%" height="100%"> <!-- Table 1 (Begin) -->
       <tr>
-        <td width="100%" valign="top">
+        <td height="500" width="100%" valign="top">
           <br>
           <table summary="" cellpadding="0" cellspacing="0" border="0" 
-              class="contentPage" width="600"> <!-- Table 2 (Begin) -->
+              width="725" class="contentPage"> <!-- Table 2 (Begin) -->
             <tr>
               <td>
-                <table summary="" cellpadding="0" cellspacing="0" border="0">
-                    <!-- Table 3 (Begin) -->
+                <table summary="" cellpadding="0" cellspacing="0" border="0"> <!-- Table 3 (Begin) -->
                   <tr>
                     <td class="dataTablePrimaryLabel" height="20">ADD REPORT FIELD</td>
                   </tr>
