@@ -4,7 +4,7 @@
 <f:view>
   <h:form id="ADD_REPORT_STATUSForm">
     <table summary="" cellpadding="0" cellspacing="0" border="0" 
-      width="100%" height="100%"> <!-- Table 1 (Begin) -->
+        width="100%" height="100%"> <!-- Table 1 (Begin) -->
       <tr>
         <td height="500" width="100%" valign="top">
         <br>
