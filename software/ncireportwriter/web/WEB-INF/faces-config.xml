@@ -315,7 +315,7 @@
 
   <navigation-rule>
  
-    <from-view-id>/pages/download_nologin.jsp</from-view-id>
+    <from-view-id>/pages/main/download_nologin.jsp</from-view-id>
     <navigation-case>
      <from-outcome>back</from-outcome>
      <to-view-id>/pages/main/login.jsp</to-view-id>

@@ -13,7 +13,7 @@
       the tool with the required search criteria and desired output data.
       <br/><br/>
       Standard reports can be found
-      <a href="<%= request.getContextPath() %>/pages/download_nologin.jsf" >here</a>.
+      <a href="<%= request.getContextPath() %>/pages/main/download_nologin.jsf" >here</a>.
       &nbsp;No user authentication is required.
     </td>
   </tr>
