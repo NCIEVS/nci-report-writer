@@ -4,7 +4,7 @@
   "http://java.sun.com/dtd/web-facesconfig_1_0.dtd">
 
 <faces-config>
-
+  <!-- ===================================================================== -->
   <application>
     <message-bundle>gov.nih.nci.evs.reportwriter.bean.Resources</message-bundle>
     <locale-config>
@@ -15,348 +15,328 @@
     </locale-config>
   </application>
 
-
+  <!-- ===================================================================== -->
   <navigation-rule>
-
-   <from-view-id>/pages/main/login.jsp</from-view-id>
-   <navigation-case> 
-    <description>Handle case for unsuccessful login</description>
-    <from-action>#{loginBean.loginAction}</from-action>
-    <from-outcome>failure</from-outcome>
-    <to-view-id>/pages/main/login.jsp</to-view-id>
-   </navigation-case>
+    <from-view-id>/pages/main/login.jsp</from-view-id>
+    <navigation-case> 
+      <description>Handle case for unsuccessful login</description>
+      <from-action>#{loginBean.loginAction}</from-action>
+      <from-outcome>failure</from-outcome>
+      <to-view-id>/pages/main/login.jsp</to-view-id>
+    </navigation-case>
    
-   <navigation-case> 
-    <description>Handle case for successful login</description>
-    <from-action>#{loginBean.loginAction}</from-action>
-    <from-outcome>success</from-outcome>
-    <to-view-id>/pages/main/task.jsp</to-view-id>
-   </navigation-case>
-
+    <navigation-case> 
+      <description>Handle case for successful login</description>
+        <from-action>#{loginBean.loginAction}</from-action>
+        <from-outcome>success</from-outcome>
+        <to-view-id>/pages/main/task.jsp</to-view-id>
+    </navigation-case>
   </navigation-rule>
   
+  <!-- ===================================================================== -->
   <navigation-rule>
-
     <from-view-id>/pages/main/task.jsp</from-view-id>
     <navigation-case>
-     <from-outcome>administer_standard_reports</from-outcome>
-     <to-view-id>/pages/main/standard_report_template.jsp</to-view-id>
+      <from-outcome>administer_standard_reports</from-outcome>
+      <to-view-id>/pages/main/standard_report_template.jsp</to-view-id>
     </navigation-case>
 
     <navigation-case>
-     <from-outcome>add_standard_report_template</from-outcome>
-     <to-view-id>/pages/main/add_standard_report_template.jsp</to-view-id>
+      <from-outcome>add_standard_report_template</from-outcome>
+      <to-view-id>/pages/main/add_standard_report_template.jsp</to-view-id>
     </navigation-case>
         
     <navigation-case>
-     <from-outcome>retrieve_standard_reports</from-outcome>
-     <to-view-id>/pages/main/retrieve_standard_reports.jsp</to-view-id>
+      <from-outcome>retrieve_standard_reports</from-outcome>
+      <to-view-id>/pages/main/retrieve_standard_reports.jsp</to-view-id>
     </navigation-case>
 
     <navigation-case>
-     <from-outcome>assign_report_status</from-outcome>
-     <to-view-id>/pages/main/assign_report_status.jsp</to-view-id>
+      <from-outcome>assign_report_status</from-outcome>
+      <to-view-id>/pages/main/assign_report_status.jsp</to-view-id>
     </navigation-case>
 
     <navigation-case>
-     <from-outcome>message</from-outcome>
-     <to-view-id>/pages/main/message.jsp</to-view-id>
+      <from-outcome>message</from-outcome>
+      <to-view-id>/pages/main/message.jsp</to-view-id>
     </navigation-case>
 
     <navigation-case>
-     <from-outcome>report_status</from-outcome>
-     <to-view-id>/pages/main/report_status.jsp</to-view-id>
+      <from-outcome>report_status</from-outcome>
+      <to-view-id>/pages/main/report_status.jsp</to-view-id>
     </navigation-case>
-    
-   </navigation-rule>
+  </navigation-rule>
    
-
+  <!-- ===================================================================== -->
   <navigation-rule>
     <from-view-id>/pages/main/report_status.jsp</from-view-id>
     <navigation-case>
-     <from-outcome>add</from-outcome>
-     <to-view-id>/pages/main/add_report_status.jsp</to-view-id>
+      <from-outcome>add</from-outcome>
+      <to-view-id>/pages/main/add_report_status.jsp</to-view-id>
     </navigation-case>
     
     <navigation-case>
-     <from-outcome>back</from-outcome>
-     <to-view-id>/pages/main/task.jsp</to-view-id>
+      <from-outcome>back</from-outcome>
+      <to-view-id>/pages/main/task.jsp</to-view-id>
     </navigation-case>
   </navigation-rule>  
   
+  <!-- ===================================================================== -->
   <navigation-rule>
-
     <from-view-id>/pages/main/add_report_status.jsp</from-view-id>
     <navigation-case>
-     <from-action>#{userSessionBean.addStatusAction}</from-action>
-     <from-outcome>report_status</from-outcome>
-     <to-view-id>/pages/main/report_status.jsp</to-view-id>
+      <from-action>#{userSessionBean.addStatusAction}</from-action>
+      <from-outcome>report_status</from-outcome>
+      <to-view-id>/pages/main/report_status.jsp</to-view-id>
     </navigation-case>
 
     <navigation-case>
-     <from-outcome>back</from-outcome>
-     <to-view-id>/pages/main/report_status.jsp</to-view-id>
+      <from-outcome>back</from-outcome>
+      <to-view-id>/pages/main/report_status.jsp</to-view-id>
     </navigation-case>
-
   </navigation-rule>  
    
-
+  <!-- ===================================================================== -->
   <navigation-rule>
-
     <from-view-id>/pages/main/assign_report_status.jsp</from-view-id>
-
     <navigation-case>
-     <from-action>#{userSessionBean.saveStatusAction}</from-action>
-     <from-outcome>message</from-outcome>
-     <to-view-id>/pages/main/message.jsp</to-view-id>
+      <from-action>#{userSessionBean.saveStatusAction}</from-action>
+      <from-outcome>message</from-outcome>
+      <to-view-id>/pages/main/message.jsp</to-view-id>
     </navigation-case>
 
     <navigation-case>
-     <from-outcome>back</from-outcome>
-     <to-view-id>/pages/main/task.jsp</to-view-id>
+      <from-outcome>back</from-outcome>
+      <to-view-id>/pages/main/task.jsp</to-view-id>
     </navigation-case>
-
   </navigation-rule>  
-  
-  
+
+  <!-- ===================================================================== -->
   <navigation-rule>
-
     <from-view-id>/pages/main/retrieve_standard_reports.jsp</from-view-id>
-
      <navigation-case>
-        <from-action>#{userSessionBean.downloadReportAction}</from-action>
-        <from-outcome>download</from-outcome>
-        <to-view-id>/pages/main/download.jsp</to-view-id>
+       <from-action>#{userSessionBean.downloadReportAction}</from-action>
+       <from-outcome>download</from-outcome>
+       <to-view-id>/pages/main/download.jsp</to-view-id>
     </navigation-case>
     
-     <navigation-case>
-        <from-action>#{userSessionBean.downloadReportAction}</from-action>
-        <from-outcome>message</from-outcome>
-        <to-view-id>/pages/main/message.jsp</to-view-id>
+    <navigation-case>
+      <from-action>#{userSessionBean.downloadReportAction}</from-action>
+      <from-outcome>message</from-outcome>
+      <to-view-id>/pages/main/message.jsp</to-view-id>
     </navigation-case>
     
-     <navigation-case>
-        <from-outcome>back</from-outcome>
-        <to-view-id>/pages/main/task.jsp</to-view-id>
+    <navigation-case>
+      <from-outcome>back</from-outcome>
+      <to-view-id>/pages/main/task.jsp</to-view-id>
     </navigation-case>
-    
   </navigation-rule>  
     
-
+  <!-- ===================================================================== -->
   <navigation-rule>
     <from-view-id>/pages/main/download.jsp</from-view-id>
     <navigation-case>
-     <from-outcome>back</from-outcome>
-     <to-view-id>/pages/main/retrieve_standard_reports.jsp</to-view-id>
+      <from-outcome>back</from-outcome>
+      <to-view-id>/pages/main/retrieve_standard_reports.jsp</to-view-id>
     </navigation-case>
   </navigation-rule>  
-  
-  
+
+  <!-- ===================================================================== -->
   <navigation-rule>
     <from-view-id>/pages/main/standard_report_template.jsp</from-view-id>
     <navigation-case>
-     <from-outcome>add</from-outcome>
-     <to-view-id>/pages/main/add_standard_report_template.jsp</to-view-id>
+      <from-outcome>add</from-outcome>
+      <to-view-id>/pages/main/add_standard_report_template.jsp</to-view-id>
     </navigation-case>
    
     <navigation-case>
-     <from-outcome>back</from-outcome>
-     <to-view-id>/pages/main/task.jsp</to-view-id>
+      <from-outcome>back</from-outcome>
+      <to-view-id>/pages/main/task.jsp</to-view-id>
     </navigation-case>
 
     <navigation-case>
-     <from-action>#{userSessionBean.generateStandardReportAction}</from-action>
-     <from-outcome>message</from-outcome>
-     <to-view-id>/pages/main/message.jsp</to-view-id>
+      <from-action>#{userSessionBean.generateStandardReportAction}</from-action>
+      <from-outcome>message</from-outcome>
+      <to-view-id>/pages/main/message.jsp</to-view-id>
     </navigation-case>
    
     <navigation-case>
-       <from-action>#{userSessionBean.deleteReportTemplateAction}</from-action>
-       <from-outcome>standard_report_template</from-outcome>
-       <to-view-id>/pages/main/standard_report_template.jsp</to-view-id>
+      <from-action>#{userSessionBean.deleteReportTemplateAction}</from-action>
+      <from-outcome>standard_report_template</from-outcome>
+      <to-view-id>/pages/main/standard_report_template.jsp</to-view-id>
     </navigation-case>
     
     <navigation-case>
-       <from-action>#{userSessionBean.addReportTemplateAction}</from-action>
-       <from-outcome>add_standard_report_template</from-outcome>
-       <to-view-id>/pages/main/add_standard_report_template.jsp</to-view-id>
+      <from-action>#{userSessionBean.addReportTemplateAction}</from-action>
+      <from-outcome>add_standard_report_template</from-outcome>
+      <to-view-id>/pages/main/add_standard_report_template.jsp</to-view-id>
     </navigation-case>
 
     <navigation-case>
-       <from-action>#{userSessionBean.addReportTemplateAction}</from-action>
-       <from-outcome>message</from-outcome>
-       <to-view-id>/pages/main/message.jsp</to-view-id>
+      <from-action>#{userSessionBean.addReportTemplateAction}</from-action>
+      <from-outcome>message</from-outcome>
+      <to-view-id>/pages/main/message.jsp</to-view-id>
     </navigation-case>
     
     <navigation-case>
-       <from-action>#{userSessionBean.modifyReportTemplateAction}</from-action>
-       <from-outcome>modify_standard_report_template</from-outcome>
-       <to-view-id>/pages/main/modify_standard_report_template.jsp</to-view-id>
+      <from-action>#{userSessionBean.modifyReportTemplateAction}</from-action>
+      <from-outcome>modify_standard_report_template</from-outcome>
+      <to-view-id>/pages/main/modify_standard_report_template.jsp</to-view-id>
     </navigation-case>
 
     <navigation-case>
-       <from-action>#{userSessionBean.modifyReportTemplateAction}</from-action>
-       <from-outcome>message</from-outcome>
-       <to-view-id>/pages/main/message.jsp</to-view-id>
+      <from-action>#{userSessionBean.modifyReportTemplateAction}</from-action>
+      <from-outcome>message</from-outcome>
+      <to-view-id>/pages/main/message.jsp</to-view-id>
     </navigation-case>
   
-  
-     <navigation-case>
-       <from-action>#{userSessionBean.editReportContentAction}</from-action>
-       <from-outcome>standard_report_column</from-outcome>
-       <to-view-id>/pages/main/standard_report_column.jsp</to-view-id>
+    <navigation-case>
+      <from-action>#{userSessionBean.editReportContentAction}</from-action>
+      <from-outcome>standard_report_column</from-outcome>
+      <to-view-id>/pages/main/standard_report_column.jsp</to-view-id>
     </navigation-case>
-    
-   </navigation-rule>
+  </navigation-rule>
  
-    <navigation-rule>
- 
-      <from-view-id>/pages/main/modify_standard_report_template.jsp</from-view-id>
-       <navigation-case>
-        <from-action>#{userSessionBean.saveModifiedTemplateAction}</from-action> 
-        <from-outcome>message</from-outcome>
-         <to-view-id>/pages/main/message.jsp</to-view-id>
-     </navigation-case>
+  <!-- ===================================================================== -->
+  <navigation-rule>
+    <from-view-id>/pages/main/modify_standard_report_template.jsp</from-view-id>
+    <navigation-case>
+      <from-action>#{userSessionBean.saveModifiedTemplateAction}</from-action> 
+      <from-outcome>message</from-outcome>
+      <to-view-id>/pages/main/message.jsp</to-view-id>
+    </navigation-case>
      
-       <navigation-case>
-        <from-action>#{userSessionBean.saveModifiedTemplateAction}</from-action> 
-        <from-outcome>standard_report_template</from-outcome>
-         <to-view-id>/pages/main/standard_report_template.jsp</to-view-id>
-     </navigation-case>
+    <navigation-case>
+      <from-action>#{userSessionBean.saveModifiedTemplateAction}</from-action> 
+      <from-outcome>standard_report_template</from-outcome>
+      <to-view-id>/pages/main/standard_report_template.jsp</to-view-id>
+    </navigation-case>
 
     <navigation-case>
-     <from-outcome>back</from-outcome>
-     <to-view-id>/pages/main/standard_report_template.jsp</to-view-id>
-    </navigation-case>
-     
-   </navigation-rule>  
-     
-   <navigation-rule>
-
-     <from-view-id>/pages/main/add_standard_report_template.jsp</from-view-id>
-     <navigation-case>
       <from-outcome>back</from-outcome>
       <to-view-id>/pages/main/standard_report_template.jsp</to-view-id>
-     </navigation-case>
+    </navigation-case>   
+  </navigation-rule>  
+
+  <!-- ===================================================================== -->
+  <navigation-rule>
+    <from-view-id>/pages/main/add_standard_report_template.jsp</from-view-id>
+    <navigation-case>
+      <from-outcome>back</from-outcome>
+      <to-view-id>/pages/main/standard_report_template.jsp</to-view-id>
+    </navigation-case>
      
-     <navigation-case>
+    <navigation-case>
       <from-outcome>reset</from-outcome>
       <to-view-id>/pages/main/add_standard_report_template.jsp</to-view-id>
-     </navigation-case>
+    </navigation-case>
 
-      <navigation-case>
-       <from-action>#{userSessionBean.saveTemplateAction}</from-action> 
-       <from-outcome>standard_report_template</from-outcome>
-        <to-view-id>/pages/main/standard_report_template.jsp</to-view-id>
-     </navigation-case>
+    <navigation-case>
+      <from-action>#{userSessionBean.saveTemplateAction}</from-action> 
+      <from-outcome>standard_report_template</from-outcome>
+      <to-view-id>/pages/main/standard_report_template.jsp</to-view-id>
+    </navigation-case>
  
-      <navigation-case>
-       <from-outcome>message</from-outcome>
-       <to-view-id>/pages/main/message.jsp</to-view-id>
-      </navigation-case>
-
+    <navigation-case>
+      <from-outcome>message</from-outcome>
+      <to-view-id>/pages/main/message.jsp</to-view-id>
+    </navigation-case>
   </navigation-rule>
- 
-  <navigation-rule>
 
+  <!-- ===================================================================== -->
+  <navigation-rule>
     <from-view-id>/pages/main/add_standard_report_column.jsp</from-view-id>
     <navigation-case>
-     <from-outcome>back</from-outcome>
-     <to-view-id>/pages/main/standard_report_column.jsp</to-view-id>
+      <from-outcome>back</from-outcome>
+      <to-view-id>/pages/main/standard_report_column.jsp</to-view-id>
     </navigation-case>
     
     <navigation-case>
-     <from-action>#{userSessionBean.saveReportColumnAction}</from-action> 
-     <from-outcome>standard_report_column</from-outcome>
-     <to-view-id>/pages/main/standard_report_column.jsp</to-view-id>
+      <from-action>#{userSessionBean.saveReportColumnAction}</from-action> 
+      <from-outcome>standard_report_column</from-outcome>
+      <to-view-id>/pages/main/standard_report_column.jsp</to-view-id>
     </navigation-case>
 
     <navigation-case>
-     <from-action>#{userSessionBean.saveReportColumnAction}</from-action> 
-     <from-outcome>message</from-outcome>
-     <to-view-id>/pages/main/message.jsp</to-view-id>
+      <from-action>#{userSessionBean.saveReportColumnAction}</from-action> 
+      <from-outcome>message</from-outcome>
+      <to-view-id>/pages/main/message.jsp</to-view-id>
     </navigation-case>
-    
   </navigation-rule>
 
+  <!-- ===================================================================== -->
   <navigation-rule>
-
     <from-view-id>/pages/main/standard_report_column.jsp</from-view-id>
     <navigation-case>
-       <from-action>#{userSessionBean.insertBeforeColumnAction}</from-action>
-       <from-outcome>add_standard_report_column</from-outcome>
-       <to-view-id>/pages/main/add_standard_report_column.jsp</to-view-id>
+      <from-action>#{userSessionBean.insertBeforeColumnAction}</from-action>
+      <from-outcome>add_standard_report_column</from-outcome>
+      <to-view-id>/pages/main/add_standard_report_column.jsp</to-view-id>
     </navigation-case>
 
     <navigation-case>
-       <from-action>#{userSessionBean.insertAfterColumnAction}</from-action>
-       <from-outcome>add_standard_report_column</from-outcome>
-       <to-view-id>/pages/main/add_standard_report_column.jsp</to-view-id>
+      <from-action>#{userSessionBean.insertAfterColumnAction}</from-action>
+      <from-outcome>add_standard_report_column</from-outcome>
+      <to-view-id>/pages/main/add_standard_report_column.jsp</to-view-id>
     </navigation-case>
 
     <navigation-case>
-     <from-action>#{userSessionBean.modifyColumnAction}</from-action>
-     <from-outcome>add_standard_report_column</from-outcome>
-     <to-view-id>/pages/main/add_standard_report_column.jsp</to-view-id>
+      <from-action>#{userSessionBean.modifyColumnAction}</from-action>
+      <from-outcome>add_standard_report_column</from-outcome>
+      <to-view-id>/pages/main/add_standard_report_column.jsp</to-view-id>
     </navigation-case>
     
     <navigation-case>
-     <from-action>#{userSessionBean.deleteColumnAction}</from-action>
-     <from-outcome>standard_report_column</from-outcome>
-     <to-view-id>/pages/main/standard_report_column.jsp</to-view-id>
+      <from-action>#{userSessionBean.deleteColumnAction}</from-action>
+      <from-outcome>standard_report_column</from-outcome>
+      <to-view-id>/pages/main/standard_report_column.jsp</to-view-id>
     </navigation-case>
     
     <navigation-case>
-     <from-outcome>back</from-outcome>
-     <to-view-id>/pages/main/standard_report_template.jsp</to-view-id>
+      <from-outcome>back</from-outcome>
+      <to-view-id>/pages/main/standard_report_template.jsp</to-view-id>
     </navigation-case>
-
   </navigation-rule>
 
+  <!-- ===================================================================== -->
   <navigation-rule>
- 
     <from-view-id>/pages/main/download_nologin.jsp</from-view-id>
     <navigation-case>
-     <from-outcome>back</from-outcome>
-     <to-view-id>/pages/main/login.jsp</to-view-id>
+      <from-outcome>back</from-outcome>
+      <to-view-id>/pages/main/login.jsp</to-view-id>
     </navigation-case>
-    
   </navigation-rule>  
-  
-  <navigation-rule>
  
+  <!-- ===================================================================== -->
+  <navigation-rule>
     <from-view-id>/pages/main/welcome1.jsp</from-view-id>
     <navigation-case>
-     <from-outcome>message</from-outcome>
-     <to-view-id>/pages/main/message.jsp</to-view-id>
-    </navigation-case>
-    
+      <from-outcome>message</from-outcome>
+      <to-view-id>/pages/main/message.jsp</to-view-id>
+    </navigation-case>    
   </navigation-rule>  
+
+  <!-- ===================================================================== -->
+  <managed-bean>
+    <managed-bean-name>loginBean</managed-bean-name>
+    <managed-bean-class>gov.nih.nci.evs.reportwriter.bean.LoginBean</managed-bean-class>
+    <managed-bean-scope>session</managed-bean-scope>
+  </managed-bean> 
   
-<managed-bean>
-  <managed-bean-name>loginBean</managed-bean-name>
-  <managed-bean-class>gov.nih.nci.evs.reportwriter.bean.LoginBean</managed-bean-class>
-  <managed-bean-scope>session</managed-bean-scope>
-</managed-bean> 
-
-<managed-bean>
-  <managed-bean-name>DataUtils</managed-bean-name>
-  <managed-bean-class>gov.nih.nci.evs.reportwriter.bean.DataUtils</managed-bean-class>
-  <managed-bean-scope>session</managed-bean-scope>
-</managed-bean>
-
-<managed-bean>
-  <managed-bean-name>userSessionBean</managed-bean-name>
-  <managed-bean-class>gov.nih.nci.evs.reportwriter.bean.UserSessionBean</managed-bean-class>
-  <managed-bean-scope>session</managed-bean-scope>
-</managed-bean>
- 
-<managed-bean>
-  <managed-bean-name>ontologyBean</managed-bean-name>
-  <managed-bean-class>gov.nih.nci.evs.reportwriter.bean.OntologyBean</managed-bean-class>
-  <managed-bean-scope>session</managed-bean-scope>
-</managed-bean>
- 
-
+  <managed-bean>
+    <managed-bean-name>DataUtils</managed-bean-name>
+    <managed-bean-class>gov.nih.nci.evs.reportwriter.bean.DataUtils</managed-bean-class>
+    <managed-bean-scope>session</managed-bean-scope>
+  </managed-bean>
+  
+  <managed-bean>
+    <managed-bean-name>userSessionBean</managed-bean-name>
+    <managed-bean-class>gov.nih.nci.evs.reportwriter.bean.UserSessionBean</managed-bean-class>
+    <managed-bean-scope>session</managed-bean-scope>
+  </managed-bean>
+   
+  <managed-bean>
+    <managed-bean-name>ontologyBean</managed-bean-name>
+    <managed-bean-class>gov.nih.nci.evs.reportwriter.bean.OntologyBean</managed-bean-class>
+    <managed-bean-scope>session</managed-bean-scope>
+  </managed-bean>
 </faces-config>
-
