@@ -193,7 +193,7 @@
   <tr>
        <td>
     
-        <%@ include file="/pages/templates/nciFooter.jsp" %>
+        <%@ include file="/pages/templates/nci_footer.jsp" %>
     
        </td>
   </tr>
