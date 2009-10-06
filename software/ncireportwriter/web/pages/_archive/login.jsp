@@ -43,7 +43,7 @@
                               <tr>
                                     <td height="20" width="100%" class="mainMenu">
 
-<%@ include file="/pages/contents/menuBar_skip.jsp" %>
+<%@ include file="/pages/contents/menu_bar_skip.jsp" %>
 
                                     </td>
                               </tr>
