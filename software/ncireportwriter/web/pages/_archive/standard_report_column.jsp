@@ -19,7 +19,7 @@
 <f:view>
 <table summary="" cellpadding="0" cellspacing="0" border="0" width="100%" height="100%">
 	
-  <%@ include file="/pages/templates/nciHeader.jsp" %>
+  <%@ include file="/pages/templates/nci_header.jsp" %>
 	
   <tr>
       <td height="100%" valign="top">
