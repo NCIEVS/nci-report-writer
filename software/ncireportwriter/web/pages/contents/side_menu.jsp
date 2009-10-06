@@ -10,9 +10,9 @@
         <img src="<%= request.getContextPath() %>/images/subMenuArrow.gif" 
             width="5" height="5" alt="" /> 
         <a class="subMenuPrimary" href="#" 
-            onclick="javascript:window.open('<%= request.getContextPath() %>/pages/download_nologin.jsf', '_blank','top=100, left=100, height=740, width=780, status=no, menubar=no, resizable=yes, scrollbars=yes, toolbar=no, location=no, directories=no');">DOWNLOAD REPORTS</a>
+            onclick="javascript:window.open('<%= request.getContextPath() %>/pages/_archive/download_nologin.jsf', '_blank','top=100, left=100, height=740, width=780, status=no, menubar=no, resizable=yes, scrollbars=yes, toolbar=no, location=no, directories=no');">DOWNLOAD REPORTS</a>
       </div>
-      <!-- href="<%= request.getContextPath() %>/pages/download_nologin.jsf" >DOWNLOAD REPORTS</a></div>  -->
+      <!-- href="<%= request.getContextPath() %>/pages/_archive/download_nologin.jsf" >DOWNLOAD REPORTS</a></div>  -->
     </td>
   </tr>
   
