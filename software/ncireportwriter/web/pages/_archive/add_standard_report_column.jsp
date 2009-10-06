@@ -53,7 +53,7 @@
       
            <table summary="" cellpadding="0" cellspacing="0" border="0" height="100%">
 			
-               <%@ include file="/pages/templates/applicationHeader.jsp" %>
+               <%@ include file="/pages/templates/application_header.jsp" %>
 				
                <tr>
                     <td width="190" valign="top" class="subMenu">
