@@ -152,7 +152,7 @@ if(request.getQueryString() != null && request.getQueryString().equals("logout")
                                 
                                 
                                 
-<%@ include file="/pages/contents/whatsNew.jsp" %>
+<%@ include file="/pages/contents/whats_new.jsp" %>
                                 
                                 
                                 
