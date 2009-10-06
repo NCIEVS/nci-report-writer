@@ -12,10 +12,10 @@
               <%@ include file="/pages/contents/menuBar_skip.jsp" %>
             </td>
           </tr>
-        <% } else if (menu_bar != null && menu_bar.equals("/pages/contents/menuBar.jsp")) { %>
+        <% } else if (menu_bar != null && menu_bar.equals("/pages/contents/menu_bar.jsp")) { %>
           <tr>
             <td height="20" width="100%" class="mainMenu">
-              <%@ include file="/pages/contents/menuBar.jsp" %>
+              <%@ include file="/pages/contents/menu_bar.jsp" %>
             </td>
           </tr>
         <% } %>
