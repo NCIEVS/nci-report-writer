@@ -63,14 +63,14 @@ td.mainMenu{
   border-top:1px solid #CCCCCC; /* constant: medium gray */
 }
 td.mainMenuItem{ /* for the off state of the main menu (top) cells */
-  font-size:0.6em;
+  font-size:0.8em;
   font-weight:bold;
   background-color:#5C5C5C; /* constant: dark gray */
   padding-left:1em;
   padding-right:1em;
 }
 td.mainMenuItemOver{ /* for the over state of the main menu (top) cells */
-  font-size:0.6em;
+  font-size:0.8em;
   font-weight:bold;
   background-color:#475B82; /* darker */
   padding-left:1em;
@@ -83,14 +83,14 @@ td.footerMenu{ /* for the basic style of the footer menu (bottom) area */
   border-bottom:1px solid #CCCCCC; /* constant: medium gray */
 }
 td.footerMenuItem{ /* for the off state of the footer menu (bottom) cells */
-  font-size:0.6em;
+  font-size:0.8em;
   font-weight:bold;
   background-color:#5C5C5C; /* constant: dark gray */
   padding-left:1em;
   padding-right:1em;
 }
 td.footerMenuItemOver{ /* for the over state of the footer menu (bottom) cells */
-  font-size:0.6em;
+  font-size:0.8em;
   font-weight:bold;
   background-color:#475B82; /* darker */
   padding-left:1em;
@@ -101,7 +101,7 @@ td.subMenu{ /* for the basic style of the sub-menu area */
   font-family:arial,helvetica,verdana,sans-serif;
 }
 td.subMenuPrimaryTitle{ /* for the title elements of the sub menu (left-side) */
-  font-size:0.6em;
+  font-size:0.8em;
   font-weight:bold;
   padding-left:0.8em;
   background-color:#5C5C5C; /* constant: dark gray */
@@ -111,7 +111,7 @@ td.subMenuPrimaryTitle{ /* for the title elements of the sub menu (left-side) */
   border-right:1px solid #CCCCCC; /* constant: medium gray */
 }
 td.subMenuPrimaryItems{ /* for the items under the sub-menu title elements */
-  font-size:0.6em;
+  font-size:0.8em;
   background-color:#FFFFFF; /* constant: white */
   font-weight:bold;
   padding-top:0.8em;
@@ -120,7 +120,7 @@ td.subMenuPrimaryItems{ /* for the items under the sub-menu title elements */
   border-right:1px solid #CCCCCC; /* constant: medium gray */
 }
 td.subMenuSecondaryTitle{ /* for the off state of the cell for the elements (usually common among pages) below the primary items */
-  font-size:0.6em;
+  font-size:0.8em;
   font-weight:bold;
   padding-left:0.8em;
   background-color:#6E81A6; /* lighter */
@@ -129,7 +129,7 @@ td.subMenuSecondaryTitle{ /* for the off state of the cell for the elements (usu
   border-right:1px solid #CCCCCC; /* constant: medium gray */
 }
 td.subMenuSecondaryTitleOver{ /* for the over state of the cell for the elements (usually common among pages) below the primary items */
-  font-size:0.6em;
+  font-size:0.8em;
   font-weight:bold;
   padding-left:0.8em;
   background-color:#475B82; /* darker */
@@ -141,7 +141,7 @@ td.subMenuFill{ /* for the empty cell below the sub-menu items */
   border-right:1px solid #CCCCCC; /* constant: medium gray */
 }
 td.subMenuFooter{ /* for the last row in the submenu left of the footer menu */
-  font-size:0.6em;
+  font-size:0.8em;
   font-weight:bold;
   padding-left:0.8em;
   background-color:#5C5C5C; /* constant: dark gray */
@@ -433,7 +433,7 @@ p,.p{ /* for paragraphs */
 }
 .welcomeContent{ /* for the area below the title content of the home page */
   font-family:arial,helvetica,verdana,sans-serif;
-  font-size:0.6em;
+  font-size:0.8em;
   padding:1em;
   line-height:1.5em;
 }
