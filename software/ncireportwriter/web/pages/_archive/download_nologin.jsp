@@ -36,7 +36,7 @@
                <tr>
                     <td width="190" valign="top" class="subMenu">
           
-<%@ include file="/pages/contents/sideMenu_skip_download.jsp" %>
+<%@ include file="/pages/contents/side_menu_skip_download.jsp" %>
             
                     </td>
                     <td valign="top" width="100%">
