@@ -27,7 +27,7 @@
         width="745" height="5" alt="Mainbox Top" /></div>
       <div id="main-area">
         <jsp:include page="/pages/templates/application_banner.jsp" />
-        <jsp:include page="/pages/templates/quickLinks.jsp" />
+        <jsp:include page="/pages/templates/quick_links.jsp" />
         <div class="pagecontent">
         <% if (menu_bar != null) { %>
           <jsp:include page="/pages/contents/menu_bar_template.jsp">
