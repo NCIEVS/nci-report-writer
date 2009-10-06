@@ -30,7 +30,7 @@
                <tr>
                     <td width="190" valign="top" class="subMenu">
           
-<%@ include file="/pages/contents/sideMenu.jsp" %>
+<%@ include file="/pages/contents/side_menu.jsp" %>
             
                     </td>
                     <td valign="top" width="100%">
