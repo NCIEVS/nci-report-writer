@@ -107,7 +107,7 @@
                                <tr>
                                     <td height="20" width="100%" class="footerMenu">
                 
-                                         <%@ include file="/pages/templates/applicationFooter.jsp" %>
+                                         <%@ include file="/pages/templates/application_footer.jsp" %>
                   
                                     </td>
                               </tr>
