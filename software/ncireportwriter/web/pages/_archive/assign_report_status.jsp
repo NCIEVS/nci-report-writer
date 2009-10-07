@@ -11,7 +11,7 @@
 <html>
 <head>
 <title>Home</title>
-<link rel="stylesheet" type="text/css" href="<%= request.getContextPath() %>/css/styleSheet.css" />
+<link rel="stylesheet" type="text/css" href="<%= request.getContextPath() %>/css/styleSheet_r568.css" />
 <script src="script.js" type="text/javascript"></script>
 </head>
 <body>

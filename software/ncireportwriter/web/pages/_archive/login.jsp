@@ -11,7 +11,7 @@
 <html>
 <head>
 <title>Home</title>
-<link rel="stylesheet" type="text/css" href="<%= request.getContextPath() %>/css/styleSheet.css" />
+<link rel="stylesheet" type="text/css" href="<%= request.getContextPath() %>/css/styleSheet_r568.css" />
 <meta http-equiv="Pragma" content="no-cache">
 <meta http-equiv="Cache-Control" content="no-cache">
 <meta http-equiv="expires" content="0">
