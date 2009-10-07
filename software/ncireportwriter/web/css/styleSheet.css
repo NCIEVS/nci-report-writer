@@ -217,7 +217,7 @@ FORM BEGINS
 }
 .formRequiredLabel{ /* for the required form labels */
   font-family:arial,helvetica,verdana,sans-serif;
-  font-size:0.7em;
+  font-size:0.8em;
   font-weight:bold;
   background-color:#F4F4F5; /* constant: light gray */
   color:#000000; /* constant: black */
@@ -227,7 +227,7 @@ FORM BEGINS
 }
 .formLabel{ /* for the non-required form labels */
   font-family:arial,helvetica,verdana,sans-serif;
-  font-size:0.7em;
+  font-size:0.8em;
   background-color:#F4F4F5; /* constant: light gray */
   color:#000000; /* constant: black */
   border-right:1px solid #5C5C5C; /* constant: dark gray */
@@ -247,7 +247,7 @@ FORM BEGINS
 }
 td.formField{ /* for the cell that contains the form elements */
   font-family:arial,helvetica,verdana,sans-serif;
-  font-size:0.7em;
+  font-size:0.8em;
   color:#000000; /* constant: black */
   border-right:1px solid #5C5C5C; /* constant: dark gray */
   border-bottom:1px solid #5C5C5C; /* constant: dark gray */
@@ -255,7 +255,7 @@ td.formField{ /* for the cell that contains the form elements */
 }
 td.formFieldLogin{ /* for the cell that contains the form elements */
   font-family:arial,helvetica,verdana,sans-serif;
-  font-size:0.7em;
+  font-size:0.8em;
   color:#000000; /* constant: black */
 }
 input.formField,textarea.formField,select.formField{ /* for the form elements themselves (on elements) */
@@ -277,7 +277,7 @@ input.actionButton{ /* optional style for form and action buttons */
 }
 .formMessage{ /* for messages above the form */
   font-family:arial,helvetica,verdana,sans-serif;
-  font-size:0.7em;
+  font-size:0.8em;
   color:#000000; /* constant: black */
 }
 .normalForm{ /* for a general form in a content page */
@@ -290,7 +290,7 @@ SIDEBAR BEGINS
 .sidebarSection{ /* for the individual sidebar sections */
   background-color:#F4F4F5; /* constant: light gray */
   font-family:verdana, arial, helvetica, sans-serif;
-  font-size:0.7em;
+  font-size:0.8em;
 }
 .sidebarTitle{ /* for the titles of the individual sidebar sections */
   font-size:1em;
@@ -306,7 +306,7 @@ SIDEBAR BEGINS
   border-left:1px solid #CCCCCC; /* constant: medium gray */
 }
 .sidebarLogin{ /* for the sidebar login cells */
-  font-size:0.7em;
+  font-size:0.8em;
   padding-left:0.8em;
 }
 
@@ -326,7 +326,7 @@ DATA TABLE BEGINS
 }
 .dataTableSecondaryLabel{ /* for the optional second row */
   font-family:arial,helvetica,verdana,sans-serif;
-  font-size:0.7em;
+  font-size:0.8em;
   font-weight:bold;
   background-color:#CCCCCC; /* constant: medium gray */
   color:#5C5C5C; /* constant: dark gray */
@@ -345,7 +345,7 @@ DATA TABLE BEGINS
 }
 .dataTable{ /* for the main table below the labels */
   font-family:arial,helvetica,verdana,sans-serif;
-  font-size:0.7em;
+  font-size:0.8em;
   color:#000000; /* constant: black */
   border-top:1px solid #5C5C5C; /* constant: dark gray */
   border-left:1px solid #5C5C5C; /* constant: dark gray */
@@ -376,7 +376,7 @@ DATA TABLE BEGINS
 }
 .dataPagingText{ /* for the cells that contain the paging text */
   font-family:arial,helvetica,verdana,sans-serif;
-  font-size:0.7em;
+  font-size:0.8em;
   font-weight:bold;
   color:#5C5C5C; /* constant: dark gray */
   padding-right:0.5em;
@@ -395,7 +395,7 @@ table.contentPage{ /* for overall top style for a content page */
   font-family:arial,helvetica,verdana,sans-serif;
   padding-left:1em;
   padding-right:1em;
-  font-size:0.7em;
+  font-size:0.8em;
   color:#000000; /* constant: black */
 }
 h2,.h2{ /* for header of page */
@@ -413,7 +413,7 @@ p,.p{ /* for paragraphs */
 }
 .standardText{ /* for stand-alone text not affected by any cascading text styles */
   font-family:arial,helvetica,verdana,sans-serif;
-  font-size:0.7em;
+  font-size:0.8em;
   color:#000000; /* constant: black */
 }
 .bannerHome{ /* for the banner area of the home page */
@@ -425,7 +425,7 @@ p,.p{ /* for paragraphs */
 }
 .welcomeTitle{ /* for titles of sections inside the content area */
   font-family:verdana, arial, helvetica, sans-serif;
-  font-size:0.7em;
+  font-size:0.8em;
   font-weight:bold;
   padding-left:1em;
   background-color:#CCCCCC; /* constant: medium gray */
