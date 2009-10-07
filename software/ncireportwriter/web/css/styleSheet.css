@@ -306,7 +306,7 @@ SIDEBAR BEGINS
   border-left:1px solid #CCCCCC; /* constant: medium gray */
 }
 .sidebarLogin{ /* for the sidebar login cells */
-  font-size:0.8em;
+  font-size:1em;
   padding-left:0.8em;
 }
 
