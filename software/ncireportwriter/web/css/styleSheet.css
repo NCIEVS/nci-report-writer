@@ -413,7 +413,7 @@ p,.p{ /* for paragraphs */
 }
 .standardText{ /* for stand-alone text not affected by any cascading text styles */
   font-family:arial,helvetica,verdana,sans-serif;
-  font-size:0.8em;
+  font-size:1em;
   color:#000000; /* constant: black */
 }
 .bannerHome{ /* for the banner area of the home page */
