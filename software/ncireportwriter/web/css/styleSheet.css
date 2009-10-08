@@ -315,7 +315,7 @@ DATA TABLE BEGINS
 ###############*/
 .dataTablePrimaryLabel{ /* for the first row */
   font-family:arial,helvetica,verdana,sans-serif;
-  font-size:1em;
+  font-size:0.9em;
   font-weight:bold;
   background-color:#5C5C5C; /* constant: dark gray */
   color:#FFFFFF; /* constant: white */
@@ -326,7 +326,7 @@ DATA TABLE BEGINS
 }
 .dataTableSecondaryLabel{ /* for the optional second row */
   font-family:arial,helvetica,verdana,sans-serif;
-  font-size:1em;
+  font-size:0.9em;
   font-weight:bold;
   background-color:#CCCCCC; /* constant: medium gray */
   color:#5C5C5C; /* constant: dark gray */
@@ -345,7 +345,7 @@ DATA TABLE BEGINS
 }
 .dataTable{ /* for the main table below the labels */
   font-family:arial,helvetica,verdana,sans-serif;
-  font-size:1em;
+  font-size:0.9em;
   color:#000000; /* constant: black */
   border-top:1px solid #5C5C5C; /* constant: dark gray */
   border-left:1px solid #5C5C5C; /* constant: dark gray */
@@ -376,7 +376,7 @@ DATA TABLE BEGINS
 }
 .dataPagingText{ /* for the cells that contain the paging text */
   font-family:arial,helvetica,verdana,sans-serif;
-  font-size:1em;
+  font-size:0.9em;
   font-weight:bold;
   color:#5C5C5C; /* constant: dark gray */
   padding-right:0.5em;
