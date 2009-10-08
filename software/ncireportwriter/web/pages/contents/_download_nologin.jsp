@@ -24,9 +24,10 @@
               width="725" class="contentPage"> <!-- Table 2 (Begin) -->
             <tr>
               <td valign="bottom" class="standardText">
-                Reports with a DRAFT status are under review by subject experts; 
-                others with an APPROVED status are ready for download. 
-                Click on the report label to download the selected report.
+                Reports with a DRAFT status are under review by subject experts;<br/>
+                others with an APPROVED status are ready for download.<br/>
+                Click on the report label to download the selected report.<br/>
+                <br/>
               </td>
             </tr>
 

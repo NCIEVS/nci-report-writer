@@ -40,19 +40,19 @@
                     class="dataTable" width="100%"> <!-- Table 4 (Begin) -->
                   <tr>
                     <th class="dataTableHeader" scope="col" align="center">Data Field</th>
-                    <th class="dataTableHeader" scope="col" align="center">Column Number</th>
-                    <th class="dataTableHeader" scope="col" align="center">Field No</th>
+                    <th class="dataTableHeader" scope="col" align="center">Col. #</th>
+                    <th class="dataTableHeader" scope="col" align="center">Field #</th>
                     <th class="dataTableHeader" scope="col" align="center">Field Label</th>
                     <th class="dataTableHeader" scope="col" align="center">Field Type</th>
                     <th class="dataTableHeader" scope="col" align="center">Property Type</th>
                     <th class="dataTableHeader" scope="col" align="center">Property Name</th>
                     <th class="dataTableHeader" scope="col" align="center">Is Preferred?</th>
-                    <th class="dataTableHeader" scope="col" align="center">Representational Form</th>
+                    <th class="dataTableHeader" scope="col" align="center">Represent- ational Form</th>
                     <th class="dataTableHeader" scope="col" align="center">Source</th>
                     <th class="dataTableHeader" scope="col" align="center">Qualifier Name</th>
                     <th class="dataTableHeader" scope="col" align="center">Qualifier Value</th>
                     <th class="dataTableHeader" scope="col" align="center">Delimiter</th>
-                    <th class="dataTableHeader" scope="col" align="center">Dependency</th>
+                    <th class="dataTableHeader" scope="col" align="center">Depend- ency</th>
                   </tr>
                   <% 
                     try {
