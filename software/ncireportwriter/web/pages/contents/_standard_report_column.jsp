@@ -1,13 +1,22 @@
 <%@ taglib uri="http://java.sun.com/jsf/html" prefix="h" %>
 <%@ taglib uri="http://java.sun.com/jsf/core" prefix="f" %> 
+<%@ page import="java.util.*" %>
 <%@ page import="gov.nih.nci.evs.reportwriter.bean.*" %>
 <%@ page import="gov.nih.nci.evs.reportwriter.utils.*" %>
 
 <%
-  Object[] objs = null;
   String template_label = (String) request.getSession().
     getAttribute("selectedStandardReportTemplate");
   String warningMsg = (String) request.getAttribute("warningMsg");
+  
+  String templatLabel = (String) request.getSession().getAttribute("selectedStandardReportTemplate");
+  SDKClientUtil sdkclientutil = new SDKClientUtil();
+  String FQName = "gov.nih.nci.evs.reportwriter.bean.StandardReportTemplate";
+  String methodName = "setLabel";
+  Object obj = sdkclientutil.search(FQName, methodName, templatLabel);
+  StandardReportTemplate standardReportTemplate = (StandardReportTemplate) obj;
+  Collection cc = standardReportTemplate.getColumnCollection();
+  Object[] objs = cc == null ? null : cc.toArray();
 %>
 <f:view>
   <h:form id="STANDARD_REPORT_FIELDSForm">
@@ -36,7 +45,7 @@
             <tr>
               <td>
                 <table summary="Enter summary of data here" 
-                    cellpadding="3" cellspacing="0" border="0" 
+                    cellpadding="2" cellspacing="0" border="0" 
                     class="dataTable" width="100%"> <!-- Table 4 (Begin) -->
                   <tr>
                     <th class="dataTableHeader" scope="col" align="center">Data Field</th>
@@ -55,45 +64,29 @@
                     <th class="dataTableHeader" scope="col" align="center">Depend- ency</th>
                   </tr>
                   <% 
-                    try {
-                      String templatLabel = (String) request.getSession().getAttribute("selectedStandardReportTemplate");
-                      SDKClientUtil sdkclientutil = new SDKClientUtil();
-                      String FQName = "gov.nih.nci.evs.reportwriter.bean.StandardReportTemplate";
-                      String methodName = "setLabel";
-                      Object obj = sdkclientutil.search(FQName, methodName, templatLabel);
-                      StandardReportTemplate standardReportTemplate = (StandardReportTemplate) obj;
-                      java.util.Collection cc = standardReportTemplate.getColumnCollection();
-                            
-                      if (cc != null) {
-                        objs = cc.toArray();
-                        if (objs.length > 0) {
-                          for (int i=0; i<objs.length; i++) {
-                            gov.nih.nci.evs.reportwriter.bean.ReportColumn c = 
-                              (gov.nih.nci.evs.reportwriter.bean.ReportColumn) objs[i];
+                    if (objs != null) {
+                      for (int i=0; i<objs.length; i++) {
+                        ReportColumn c = (ReportColumn) objs[i];
                   %>
-                            <tr>
-                              <td class="dataCellText"> <input type="radio" name="selectedColumnInfo" 
-                                  value="<%=c.getColumnNumber()%>:<%=c.getId()%>"></td>
-                              <td class="dataCellNumerical"><%= c.getColumnNumber() %></td>
-                              <td class="dataCellNumerical"><%= c.getId() %></td>
-                              <td class="dataCellText"><%= StringUtils.getSpaceIfBlank(c.getLabel()) %></td>
-                              <td class="dataCellText"><%= StringUtils.getSpaceIfBlank(c.getFieldId()) %></td>
-                              <td class="dataCellText"><%= StringUtils.getSpaceIfBlank(c.getPropertyType()) %></td>
-                              <td class="dataCellText"><%= StringUtils.getSpaceIfBlank(c.getPropertyName()) %></td>
-                              <td class="dataCellText"><%= StringUtils.getSpaceIfBlank(c.getIsPreferred()) %></td>
-                              <td class="dataCellText"><%= StringUtils.getSpaceIfBlank(c.getRepresentationalForm()) %></td>
-                              <td class="dataCellText"><%= StringUtils.getSpaceIfBlank(c.getSource()) %></td>
-                              <td class="dataCellText"><%= StringUtils.getSpaceIfBlank(c.getQualifierName()) %></td>
-                              <td class="dataCellText"><%= StringUtils.getSpaceIfBlank(c.getQualifierValue()) %></td>
-                              <td class="dataCellText"><%= StringUtils.getSpaceIfBlank(c.getDelimiter()) %></td>
-                              <td class="dataCellNumerical"><%= c.getConditionalColumnId() %></td>
-                            </tr>
+                        <tr>
+                          <td class="dataCellText"> <input type="radio" name="selectedColumnInfo" 
+                              value="<%=c.getColumnNumber()%>:<%=c.getId()%>"></td>
+                          <td class="dataCellNumerical"><%= c.getColumnNumber() %></td>
+                          <td class="dataCellNumerical"><%= c.getId() %></td>
+                          <td class="dataCellText"><%= StringUtils.getSpaceIfBlank(c.getLabel()) %></td>
+                          <td class="dataCellText"><%= StringUtils.getSpaceIfBlank(c.getFieldId()) %></td>
+                          <td class="dataCellText"><%= StringUtils.getSpaceIfBlank(c.getPropertyType()) %></td>
+                          <td class="dataCellText"><%= StringUtils.getSpaceIfBlank(c.getPropertyName()) %></td>
+                          <td class="dataCellText"><%= StringUtils.getSpaceIfBlank(c.getIsPreferred()) %></td>
+                          <td class="dataCellText"><%= StringUtils.getSpaceIfBlank(c.getRepresentationalForm()) %></td>
+                          <td class="dataCellText"><%= StringUtils.getSpaceIfBlank(c.getSource()) %></td>
+                          <td class="dataCellText"><%= StringUtils.getSpaceIfBlank(c.getQualifierName()) %></td>
+                          <td class="dataCellText"><%= StringUtils.getSpaceIfBlank(c.getQualifierValue()) %></td>
+                          <td class="dataCellText"><%= StringUtils.getSpaceIfBlank(c.getDelimiter()) %></td>
+                          <td class="dataCellNumerical"><%= c.getConditionalColumnId() %></td>
+                        </tr>
                   <% 
-                          } // for
-                        } // if
-                      } // if
-                    } catch(Exception e) {
-                      e.printStackTrace();
+                      }
                     }
                   %>  
                 </table>
