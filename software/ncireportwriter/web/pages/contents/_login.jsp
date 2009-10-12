@@ -3,9 +3,9 @@
 <f:loadBundle basename="gov.nih.nci.evs.reportwriter.bean.Resources" var="reportwriterBundle"/>
 
 <f:view>
-  <table summary="" cellpadding="0" cellspacing="0" border="0" height="100%">
+  <table summary="" cellpadding="0" cellspacing="0" border="0" height="500">
     <tr>
-      <td height="500">
+      <td valign="top">
 
 <%@ include file="/pages/contents/welcome.jsp" %>
 
