@@ -9,10 +9,7 @@
       </a>
     </td>
 
-    <td height="20" class="mainMenuItem" 
-        onmouseover="changeMenuStyle(this,'mainMenuItemOver'),showCursor()" 
-        onmouseout="changeMenuStyle(this,'mainMenuItem'),hideCursor()">
-      <%-- <a class="mainMenuLink" href="<%= request.getContextPath() %>/pages/main/download_nologin.jsf">DOWNLOAD</a> --%>
+    <td height="20" class="mainMenuItem">
       <a class="mainMenuLink" href="#" 
           onclick="javascript:window.open('<%= request.getContextPath() %>/pages/main/download_nologin.jsf', '_blank','top=100, left=100, height=740, width=780, status=no, menubar=no, resizable=yes, scrollbars=yes, toolbar=no, location=no, directories=no');">DOWNLOAD REPORTS</a>
     </td>
