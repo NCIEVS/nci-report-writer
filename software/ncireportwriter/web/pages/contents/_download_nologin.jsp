@@ -86,15 +86,15 @@
                         <% if (labelUrl != null) { %>
                           <td class="dataCellText"><a href="<%=labelUrl%>"><%=label%></a></td>
                         <% } else { %>
-                          <td class="dataCellText"><%=label%></td>
+                          <td class="dataCellText"><%=StringUtils.getSpaceIfBlank(label)%></td>
                         <% } %>
-                          <td class="dataCellText"><%=filename%></td>
-                          <td class="dataCellText"><%=format%></td>
-                          <td class="dataCellText"><%=codingScheme%></td>
-                          <td class="dataCellText"><%=version%></td>
-                          <td class="dataCellText"><%=loginName%></td>
-                          <td class="dataCellText"><%=date_str%></td>
-                          <td class="dataCellText"><%=status%></td>
+                          <td class="dataCellText"><%=StringUtils.getSpaceIfBlank(filename)%></td>
+                          <td class="dataCellText"><%=StringUtils.getSpaceIfBlank(format)%></td>
+                          <td class="dataCellText"><%=StringUtils.getSpaceIfBlank(codingScheme)%></td>
+                          <td class="dataCellText"><%=StringUtils.getSpaceIfBlank(version)%></td>
+                          <td class="dataCellText"><%=StringUtils.getSpaceIfBlank(loginName)%></td>
+                          <td class="dataCellText"><%=StringUtils.getSpaceIfBlank(date_str)%></td>
+                          <td class="dataCellText"><%=StringUtils.getSpaceIfBlank(status)%></td>
                         </tr>
                   <%
                       }
