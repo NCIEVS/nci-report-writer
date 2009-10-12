@@ -3,22 +3,22 @@
 <f:loadBundle basename="gov.nih.nci.evs.reportwriter.bean.Resources" var="reportwriterBundle"/>
 
 <f:view>
-  <table summary="" cellpadding="0" cellspacing="0" border="0" height="500">
-    <tr>
-      <td valign="top">
-
-<%@ include file="/pages/contents/welcome.jsp" %>
-
-      </td>
-      <td valign="top">
-        
-        <!-- === Sidebar (Begin) =========================================== -->
-        <table summary="" cellpadding="0" cellspacing="0" border="0" height="100%">
+  <h:form id="loginForm">                  
+    <table summary="" cellpadding="0" cellspacing="0" border="0" height="500">
+      <tr>
+        <td valign="top">
+  
+  <%@ include file="/pages/contents/welcome.jsp" %>
+  
+        </td>
+        <td valign="top">
           
-          <!-- === Login (Begin) =========================================== -->
-          <tr>
-            <td valign="top">
-              <h:form id="loginForm">                  
+          <!-- === Sidebar (Begin) =========================================== -->
+          <table summary="" cellpadding="0" cellspacing="0" border="0" height="100%">
+            
+            <!-- === Login (Begin) =========================================== -->
+            <tr>
+              <td valign="top">
                 <table summary="" cellpadding="2" cellspacing="0" border="0" 
                     width="100%" class="sidebarSection">
                 <% 
@@ -41,7 +41,7 @@
                     <td class="txtHighlight"><%=request.getAttribute("loginWarning")%></td>
                   </tr>
                 <% }%>
-
+    
                   <tr>
                     <td class="sidebarContent">
                       <table cellpadding="2" cellspacing="0" border="0">
@@ -56,7 +56,7 @@
                             </h:inputText>  
                           </td> 
                         </tr>
-
+    
                         <tr>
                           <td class="sidebarLogin" align="right">
                             <label for="password">PASSWORD</label>
@@ -68,7 +68,7 @@
                             </h:inputSecret>
                           </td>
                         </tr>
-
+    
                         <tr>
                           <td>&nbsp;</td>
                           <td>                                         
@@ -81,30 +81,30 @@
                     </td>
                   </tr>
                 </table>
-              </h:form>
-            </td>
-          </tr>
-          <!-- === Login (End) ============================================= -->
-
-<%@ include file="/pages/contents/whats_new.jsp" %>
-
-          <!-- === Spacer Cell (Begin): keep for dynamic expanding ========= -->
-          <tr>
-            <td valign="top" height="100%">
-              <table summary="" cellpadding="0" cellspacing="0" border="0" 
-                  width="100%" height="100%" class="sidebarSection">
-                <tr>
-                  <td class="sidebarContent" valign="top">&nbsp;</td>
-                </tr>
-              </table>
-            </td>
-          </tr>
-          <!-- === Spacer Cell (End) ======================================= -->
-
-        </table>
-        <!-- === Sidebar (End) ============================================= -->
-        
-      </td>
-    </tr>
-  </table>
+              </td>
+            </tr>
+            <!-- === Login (End) ============================================= -->
+  
+  <%@ include file="/pages/contents/whats_new.jsp" %>
+  
+            <!-- === Spacer Cell (Begin): keep for dynamic expanding ========= -->
+            <tr>
+              <td valign="top" height="100%">
+                <table summary="" cellpadding="0" cellspacing="0" border="0" 
+                    width="100%" height="100%" class="sidebarSection">
+                  <tr>
+                    <td class="sidebarContent" valign="top">&nbsp;</td>
+                  </tr>
+                </table>
+              </td>
+            </tr>
+            <!-- === Spacer Cell (End) ======================================= -->
+  
+          </table>
+          <!-- === Sidebar (End) ============================================= -->
+          
+        </td>
+      </tr>
+    </table>
+  </h:form>
 </f:view>

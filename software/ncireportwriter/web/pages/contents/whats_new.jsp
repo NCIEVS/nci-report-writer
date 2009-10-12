@@ -15,7 +15,6 @@
   </td>
 </tr>
 <!-- What's New (End) -->
-
 <!-- Did You Know? (Begin) -->
 <tr>
   <td valign="top">
