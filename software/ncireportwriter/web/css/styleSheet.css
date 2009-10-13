@@ -398,6 +398,13 @@ table.contentPage{ /* for overall top style for a content page */
   font-size:0.8em;
   color:#000000; /* constant: black */
 }
+table.contentPageWithoutPadding{ /* for overall top style for a content page */
+  font-family:arial,helvetica,verdana,sans-serif;
+  padding-left:0em;
+  padding-right:0.1em;
+  font-size:0.8em;
+  color:#000000; /* constant: black */
+}
 h2,.h2{ /* for header of page */
   font-size:1.6em;
   font-weight:bold;
