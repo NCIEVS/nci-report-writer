@@ -102,7 +102,7 @@
                           <td class="dataCellText">Is Preferred?</td>
                           <td class="dataCellText">
                             <input type="radio" name="preferred" value="yes" >Yes&nbsp;
-                            <input type="radio" name="preferred" value="no">No
+                            <input type="radio" name="preferred" value="no">No&nbsp;
                             <input type="radio" name="preferred" value="na" checked="checked">NA
                           </td>
                         </tr>
