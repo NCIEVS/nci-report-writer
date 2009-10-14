@@ -395,13 +395,15 @@ public class OntologyBean // extends BaseBean
             _selectedOntology =
                 (String) request.getSession().getAttribute("selectedOntology");
         }
-        _propertyQualifierListData =
-            DataUtils.getPropertyQualifierListData(_selectedOntology);
         _propertyQualifierList = new ArrayList<SelectItem>();
         _propertyQualifierList.add(new SelectItem(""));
-        for (int i = 0; i < _propertyQualifierListData.size(); i++) {
-            String t = (String) _propertyQualifierListData.elementAt(i);
-            _propertyQualifierList.add(new SelectItem(t));
+        _propertyQualifierListData =
+            DataUtils.getPropertyQualifierListData(_selectedOntology);
+        if (_propertyQualifierListData != null) {
+            for (int i = 0; i < _propertyQualifierListData.size(); i++) {
+                String t = (String) _propertyQualifierListData.elementAt(i);
+                _propertyQualifierList.add(new SelectItem(t));
+            }
         }
         return _propertyQualifierList;
     }
@@ -516,12 +518,14 @@ public class OntologyBean // extends BaseBean
             }
         }
 
-        _sourceListData = DataUtils.getSourceListData(selectedOntology);
         _sourceList = new ArrayList<SelectItem>();
         _sourceList.add(new SelectItem(" "));
-        for (int i = 0; i < _sourceListData.size(); i++) {
-            String t = (String) _sourceListData.elementAt(i);
-            _sourceList.add(new SelectItem(t));
+        _sourceListData = DataUtils.getSourceListData(selectedOntology);
+        if (_sourceListData != null) {
+            for (int i = 0; i < _sourceListData.size(); i++) {
+                String t = (String) _sourceListData.elementAt(i);
+                _sourceList.add(new SelectItem(t));
+            }
         }
         return _sourceList;
     }
