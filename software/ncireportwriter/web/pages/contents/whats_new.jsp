@@ -1,7 +1,7 @@
 <!-- What's New (Begin) -->
 <tr>
   <td valign="top">
-    <table summary="" cellpadding="0" cellspacing="0" border="0" 
+    <table summary="" cellpadding="0" cellspacing="0" border="0"
         width="100%" class="sidebarSection">
       <tr>
         <td class="sidebarTitle" height="20">WHAT'S NEW</td>
@@ -18,8 +18,8 @@
 <!-- Did You Know? (Begin) -->
 <tr>
   <td valign="top">
-    <table summary="" cellpadding="0" cellspacing="0" border="0" 
-        width="100%" height="100%" class="sidebarSection">
+    <table summary="" cellpadding="0" cellspacing="0" border="0"
+        width="100%" class="sidebarSection">
       <tr>
         <td class="sidebarTitle" height="20">DID YOU KNOW?</td>
       </tr>
