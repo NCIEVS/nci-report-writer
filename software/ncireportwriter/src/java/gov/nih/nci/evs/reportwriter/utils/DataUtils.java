@@ -23,42 +23,42 @@ import org.apache.log4j.*;
 
 /**
  * <!-- LICENSE_TEXT_START -->
- * Copyright 2008,2009 NGIT. This software was developed in conjunction 
- * with the National Cancer Institute, and so to the extent government 
- * employees are co-authors, any rights in such works shall be subject 
+ * Copyright 2008,2009 NGIT. This software was developed in conjunction
+ * with the National Cancer Institute, and so to the extent government
+ * employees are co-authors, any rights in such works shall be subject
  * to Title 17 of the United States Code, section 105.
- * Redistribution and use in source and binary forms, with or without 
- * modification, are permitted provided that the following conditions 
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions
  * are met:
- *   1. Redistributions of source code must retain the above copyright 
- *      notice, this list of conditions and the disclaimer of Article 3, 
- *      below. Redistributions in binary form must reproduce the above 
- *      copyright notice, this list of conditions and the following 
- *      disclaimer in the documentation and/or other materials provided 
+ *   1. Redistributions of source code must retain the above copyright
+ *      notice, this list of conditions and the disclaimer of Article 3,
+ *      below. Redistributions in binary form must reproduce the above
+ *      copyright notice, this list of conditions and the following
+ *      disclaimer in the documentation and/or other materials provided
  *      with the distribution.
- *   2. The end-user documentation included with the redistribution, 
+ *   2. The end-user documentation included with the redistribution,
  *      if any, must include the following acknowledgment:
- *      "This product includes software developed by NGIT and the National 
+ *      "This product includes software developed by NGIT and the National
  *      Cancer Institute."   If no such end-user documentation is to be
  *      included, this acknowledgment shall appear in the software itself,
  *      wherever such third-party acknowledgments normally appear.
- *   3. The names "The National Cancer Institute", "NCI" and "NGIT" must 
+ *   3. The names "The National Cancer Institute", "NCI" and "NGIT" must
  *      not be used to endorse or promote products derived from this software.
  *   4. This license does not authorize the incorporation of this software
- *      into any third party proprietary programs. This license does not 
- *      authorize the recipient to use any trademarks owned by either NCI 
- *      or NGIT 
- *   5. THIS SOFTWARE IS PROVIDED "AS IS," AND ANY EXPRESSED OR IMPLIED 
- *      WARRANTIES, (INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES 
- *      OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE) ARE 
+ *      into any third party proprietary programs. This license does not
+ *      authorize the recipient to use any trademarks owned by either NCI
+ *      or NGIT
+ *   5. THIS SOFTWARE IS PROVIDED "AS IS," AND ANY EXPRESSED OR IMPLIED
+ *      WARRANTIES, (INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
+ *      OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE) ARE
  *      DISCLAIMED. IN NO EVENT SHALL THE NATIONAL CANCER INSTITUTE,
- *      NGIT, OR THEIR AFFILIATES BE LIABLE FOR ANY DIRECT, INDIRECT, 
- *      INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, 
- *      BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; 
- *      LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER 
- *      CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT 
- *      LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN 
- *      ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE 
+ *      NGIT, OR THEIR AFFILIATES BE LIABLE FOR ANY DIRECT, INDIRECT,
+ *      INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING,
+ *      BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
+ *      LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
+ *      CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT
+ *      LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN
+ *      ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  *      POSSIBILITY OF SUCH DAMAGE.
  * <!-- LICENSE_TEXT_END -->
  */
@@ -210,7 +210,7 @@ public class DataUtils {
     public static Boolean validateCodingScheme(String formalname, String version) {
         // Note: To be implemented:
         // _logger.debug("Method: DataUtils.validateCodingScheme");
-        //                                                                                                         
+        //
         // if (csnv2codingSchemeNameMap == null ||
         // csnv2VersionMap == null) {
         // _logger.debug("DataUtils.validateCodingScheme "
@@ -218,7 +218,7 @@ public class DataUtils {
         // setCodingSchemeMap();
         // return validateCodingScheme(formalname, version);
         // }
-        //                                                                                                         
+        //
         // String key = formalname + " (version: " + version + ")";
         // _logger.debug("DataUtils   validateCodingScheme key: " + key);
         // if (csnv2codingSchemeNameMap.get(key) == null ||
@@ -241,7 +241,7 @@ public class DataUtils {
         _csnv2VersionMap = new HashMap<String, String>();
 
         try {
-            EVSApplicationService lbSvc =
+            LexBIGService lbSvc =
                 RemoteServerUtil.createLexBIGService();
             CodingSchemeRenderingList csrl = lbSvc.getSupportedCodingSchemes();
             if (csrl == null)
@@ -281,7 +281,7 @@ public class DataUtils {
                         }
 
                     } catch (Exception e) {
-                        String urn = css.getCodingSchemeURN();
+                        String urn = css.getCodingSchemeURI();
                         try {
                             scheme = lbSvc.resolveCodingScheme(urn, vt);
                             if (scheme != null) {
@@ -352,7 +352,7 @@ public class DataUtils {
 
         CodingScheme scheme = null;
         try {
-            EVSApplicationService lbSvc =
+            LexBIGService lbSvc =
                 RemoteServerUtil.createLexBIGService();
             scheme = lbSvc.resolveCodingScheme(codingSchemeName, vt);
             if (scheme == null) {
@@ -398,7 +398,7 @@ public class DataUtils {
         }
         CodingScheme scheme = null;
         try {
-            EVSApplicationService lbSvc =
+            LexBIGService lbSvc =
                 RemoteServerUtil.createLexBIGService();
             scheme = lbSvc.resolveCodingScheme(codingSchemeName, vt);
             if (scheme == null)
@@ -443,7 +443,7 @@ public class DataUtils {
         }
         CodingScheme scheme = null;
         try {
-            EVSApplicationService lbSvc =
+            LexBIGService lbSvc =
                 RemoteServerUtil.createLexBIGService();
             scheme = lbSvc.resolveCodingScheme(codingSchemeName, vt);
             if (scheme == null)
@@ -493,7 +493,7 @@ public class DataUtils {
         }
         CodingScheme scheme = null;
         try {
-            EVSApplicationService lbSvc =
+            LexBIGService lbSvc =
                 RemoteServerUtil.createLexBIGService();
             scheme = lbSvc.resolveCodingScheme(codingSchemeName, vt);
             if (scheme == null)
@@ -535,7 +535,7 @@ public class DataUtils {
         }
         CodingScheme scheme = null;
         try {
-            EVSApplicationService lbSvc =
+            LexBIGService lbSvc =
                 RemoteServerUtil.createLexBIGService();
             scheme = lbSvc.resolveCodingScheme(codingSchemeName, vt);
             if (scheme == null)
@@ -710,7 +710,7 @@ public class DataUtils {
         try {
             ReportWriterProperties
                     .getProperty(ReportWriterProperties.EVS_SERVICE_URL);
-            EVSApplicationService lbSvc =
+            LexBIGService lbSvc =
                 RemoteServerUtil.createLexBIGService();
             if (lbSvc == null) {
                 _logger.error("lbSvc == null???");
@@ -787,7 +787,7 @@ public class DataUtils {
         ResolvedConceptReferenceList matches = null;
         Vector<Concept> v = new Vector<Concept>();
         try {
-            EVSApplicationService lbSvc =
+            LexBIGService lbSvc =
                 RemoteServerUtil.createLexBIGService();
             if (lbSvc == null) {
                 _logger.error("lbSvc == null???");
@@ -845,7 +845,7 @@ public class DataUtils {
 
     /**
      * Dump_matches to output, for debug purposes
-     * 
+     *
      * @param iterator the iterator
      * @param maxToReturn the max to return
      */
@@ -887,7 +887,7 @@ public class DataUtils {
         ResolvedConceptReferenceList matches = null;
         Vector<Concept> v = new Vector<Concept>();
         try {
-            EVSApplicationService lbSvc =
+            LexBIGService lbSvc =
                 RemoteServerUtil.createLexBIGService();
             CodedNodeGraph cng = lbSvc.getNodeGraph(scheme, csvt, null);
 
@@ -966,7 +966,7 @@ public class DataUtils {
         ResolvedConceptReferenceList matches = null;
         Vector<String> v = new Vector<String>();
         try {
-            EVSApplicationService lbSvc =
+            LexBIGService lbSvc =
                 RemoteServerUtil.createLexBIGService();
             CodedNodeGraph cng = lbSvc.getNodeGraph(scheme, csvt, null);
 
@@ -1001,7 +1001,7 @@ public class DataUtils {
                                     .getAssociatedConcept();
                         for (int j = 0; j < acl.length; j++) {
                             AssociatedConcept ac = acl[j];
-                            v.add(ac.getReferencedEntry().getId());
+                            v.add(ac.getReferencedEntry().getEntityCode());
                         }
                     }
                 }
@@ -1022,7 +1022,8 @@ public class DataUtils {
         ConceptReferenceList list = new ConceptReferenceList();
         for (int i = 0; i < codes.length; i++) {
             ConceptReference cr = new ConceptReference();
-            cr.setCodingScheme(codingSchemeName);
+            //cr.setCodingScheme(codingSchemeName);
+            cr.setCodingSchemeName(codingSchemeName);
             cr.setConceptCode(codes[i]);
             list.addConceptReference(cr);
         }
@@ -1033,7 +1034,7 @@ public class DataUtils {
             String code) { // throws LBException{
         Vector<String> v = new Vector<String>();
         try {
-            EVSApplicationService lbSvc =
+            LexBIGService lbSvc =
                 RemoteServerUtil.createLexBIGService();
             LexBIGServiceConvenienceMethods lbscm =
                 (LexBIGServiceConvenienceMethods) lbSvc
@@ -1090,7 +1091,7 @@ public class DataUtils {
         long ms = System.currentTimeMillis();
         Vector<String> v = new Vector<String>();
         try {
-            EVSApplicationService lbSvc =
+            LexBIGService lbSvc =
                 RemoteServerUtil.createLexBIGService();
             LexBIGServiceConvenienceMethods lbscm =
                 (LexBIGServiceConvenienceMethods) lbSvc
@@ -1139,7 +1140,7 @@ public class DataUtils {
 
         Vector<String> association_vec = new Vector<String>();
         try {
-            EVSApplicationService lbSvc =
+            LexBIGService lbSvc =
                 RemoteServerUtil.createLexBIGService();
 
             // Will handle secured ontologies later.
@@ -1149,7 +1150,8 @@ public class DataUtils {
             CodingScheme cs = lbSvc.resolveCodingScheme(scheme, versionOrTag);
             Mappings mappings = cs.getMappings();
             SupportedHierarchy[] hierarchies = mappings.getSupportedHierarchy();
-            String[] ids = hierarchies[0].getAssociationIds();
+            //String[] ids = hierarchies[0].getAssociationIds();
+            String[] ids = hierarchies[0].getAssociationNames();
 
             for (int i = 0; i < ids.length; i++) {
                 if (!association_vec.contains(ids[i])) {
@@ -1168,7 +1170,7 @@ public class DataUtils {
         if (codingSchemeName == null)
             return null;
         try {
-            EVSApplicationService lbSvc =
+            LexBIGService lbSvc =
                 RemoteServerUtil.createLexBIGService();
             CodingSchemeRenderingList lcsrl = lbSvc.getSupportedCodingSchemes();
             CodingSchemeRendering[] csra = lcsrl.getCodingSchemeRendering();
@@ -1202,7 +1204,7 @@ public class DataUtils {
 
         Vector<String> v = new Vector<String>();
         try {
-            EVSApplicationService lbSvc =
+            LexBIGService lbSvc =
                 RemoteServerUtil.createLexBIGService();
             CodingSchemeRenderingList csrl = lbSvc.getSupportedCodingSchemes();
             if (csrl == null)
@@ -1351,7 +1353,7 @@ public class DataUtils {
                 new CodingSchemeVersionOrTag();
             versionOrTag.setVersion(version);
 
-            EVSApplicationService lbSvc =
+            LexBIGService lbSvc =
                 RemoteServerUtil.createLexBIGService();
 
             cns = lbSvc.getCodingSchemeConcepts(codingSchemeName, versionOrTag);
@@ -1414,7 +1416,7 @@ public class DataUtils {
                 new CodingSchemeVersionOrTag();
             versionOrTag.setVersion(version);
 
-            EVSApplicationService lbSvc =
+            LexBIGService lbSvc =
                 RemoteServerUtil.createLexBIGService();
 
             if (lbSvc == null) {
@@ -1467,7 +1469,7 @@ public class DataUtils {
 
         return toConcept(SortUtils.quickSort(v));
     }
-    
+
     private static Vector<Concept> toConcept(Vector<?> v) {
         Iterator<?> iterator = v.iterator();
         Vector<Concept> newV = new Vector<Concept>();

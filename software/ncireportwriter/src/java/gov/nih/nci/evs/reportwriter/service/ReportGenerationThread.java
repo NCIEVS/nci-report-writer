@@ -14,42 +14,42 @@ import gov.nih.nci.evs.reportwriter.properties.*;
 
 /**
  * <!-- LICENSE_TEXT_START -->
- * Copyright 2008,2009 NGIT. This software was developed in conjunction 
- * with the National Cancer Institute, and so to the extent government 
- * employees are co-authors, any rights in such works shall be subject 
+ * Copyright 2008,2009 NGIT. This software was developed in conjunction
+ * with the National Cancer Institute, and so to the extent government
+ * employees are co-authors, any rights in such works shall be subject
  * to Title 17 of the United States Code, section 105.
- * Redistribution and use in source and binary forms, with or without 
- * modification, are permitted provided that the following conditions 
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions
  * are met:
- *   1. Redistributions of source code must retain the above copyright 
- *      notice, this list of conditions and the disclaimer of Article 3, 
- *      below. Redistributions in binary form must reproduce the above 
- *      copyright notice, this list of conditions and the following 
- *      disclaimer in the documentation and/or other materials provided 
+ *   1. Redistributions of source code must retain the above copyright
+ *      notice, this list of conditions and the disclaimer of Article 3,
+ *      below. Redistributions in binary form must reproduce the above
+ *      copyright notice, this list of conditions and the following
+ *      disclaimer in the documentation and/or other materials provided
  *      with the distribution.
- *   2. The end-user documentation included with the redistribution, 
+ *   2. The end-user documentation included with the redistribution,
  *      if any, must include the following acknowledgment:
- *      "This product includes software developed by NGIT and the National 
+ *      "This product includes software developed by NGIT and the National
  *      Cancer Institute."   If no such end-user documentation is to be
  *      included, this acknowledgment shall appear in the software itself,
  *      wherever such third-party acknowledgments normally appear.
- *   3. The names "The National Cancer Institute", "NCI" and "NGIT" must 
+ *   3. The names "The National Cancer Institute", "NCI" and "NGIT" must
  *      not be used to endorse or promote products derived from this software.
  *   4. This license does not authorize the incorporation of this software
- *      into any third party proprietary programs. This license does not 
- *      authorize the recipient to use any trademarks owned by either NCI 
- *      or NGIT 
- *   5. THIS SOFTWARE IS PROVIDED "AS IS," AND ANY EXPRESSED OR IMPLIED 
- *      WARRANTIES, (INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES 
- *      OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE) ARE 
+ *      into any third party proprietary programs. This license does not
+ *      authorize the recipient to use any trademarks owned by either NCI
+ *      or NGIT
+ *   5. THIS SOFTWARE IS PROVIDED "AS IS," AND ANY EXPRESSED OR IMPLIED
+ *      WARRANTIES, (INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
+ *      OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE) ARE
  *      DISCLAIMED. IN NO EVENT SHALL THE NATIONAL CANCER INSTITUTE,
- *      NGIT, OR THEIR AFFILIATES BE LIABLE FOR ANY DIRECT, INDIRECT, 
- *      INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, 
- *      BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; 
- *      LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER 
- *      CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT 
- *      LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN 
- *      ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE 
+ *      NGIT, OR THEIR AFFILIATES BE LIABLE FOR ANY DIRECT, INDIRECT,
+ *      INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING,
+ *      BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
+ *      LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
+ *      CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT
+ *      LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN
+ *      ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  *      POSSIBILITY OF SUCH DAMAGE.
  * <!-- LICENSE_TEXT_END -->
  */
@@ -440,7 +440,7 @@ public class ReportGenerationThread implements Runnable {
             _logger.warn("Concept with code " + code + " not found.");
             return;
         } else {
-            _logger.debug("Level: " + level + " Subset: " + root.getId());
+            _logger.debug("Level: " + level + " Subset: " + root.getEntityCode());
         }
 
         String delim = "\t";
@@ -449,11 +449,11 @@ public class ReportGenerationThread implements Runnable {
         DataUtils util = new DataUtils();
         if (direction) {
             v =
-                util.getAssociationTargets(scheme, version, root.getId(),
+                util.getAssociationTargets(scheme, version, root.getEntityCode(),
                         associationName);
         } else {
             v =
-                util.getAssociationSources(scheme, version, root.getId(),
+                util.getAssociationSources(scheme, version, root.getEntityCode(),
                         associationName);
         }
 
@@ -469,14 +469,14 @@ public class ReportGenerationThread implements Runnable {
         }
 
         Vector<Concept> subconcept_vec =
-            util.getAssociationTargets(scheme, version, root.getId(),
+            util.getAssociationTargets(scheme, version, root.getEntityCode(),
                     hierarchyAssociationName);
         if (subconcept_vec == null | subconcept_vec.size() == 0)
             return;
         level++;
         for (int k = 0; k < subconcept_vec.size(); k++) {
             Concept concept = (Concept) subconcept_vec.elementAt(k);
-            String subconcep_code = concept.getId();
+            String subconcep_code = concept.getEntityCode();
             traverse(pw, scheme, version, tag, defining_root_concept,
                     subconcep_code, hierarchyAssociationName, associationName,
                     direction, level, maxLevel, cols);
@@ -519,9 +519,9 @@ public class ReportGenerationThread implements Runnable {
             delimiter = null;
 
         if (field_Id.equals("Code"))
-            return node.getId();
+            return node.getEntityCode();
         if (field_Id.equals("Associated Concept Code"))
-            return associated_concept.getId();
+            return associated_concept.getEntityCode();
 
         Concept concept = node;
         if (property_name != null
@@ -544,7 +544,7 @@ public class ReportGenerationThread implements Runnable {
             // version, node.getId());
             Vector<String> superconcept_vec =
                 new DataUtils().getAssociationSourceCodes(scheme, version, node
-                        .getId(), _hierarchicalAssoName);
+                        .getEntityCode(), _hierarchicalAssoName);
             if (superconcept_vec != null && superconcept_vec.size() > 0
                     && field_Id.indexOf("1st Parent") != -1) {
                 String superconceptCode =
@@ -574,11 +574,13 @@ public class ReportGenerationThread implements Runnable {
         org.LexGrid.commonTypes.Property[] properties = null;
 
         if (property_type.compareToIgnoreCase("GENERIC") == 0) {
-            properties = concept.getConceptProperty();
+            properties = concept.getProperty();
         } else if (property_type.compareToIgnoreCase("PRESENTATION") == 0) {
             properties = concept.getPresentation();
+            /*
         } else if (property_type.compareToIgnoreCase("INSTRUCTION") == 0) {
             properties = concept.getInstruction();
+            */
         } else if (property_type.compareToIgnoreCase("COMMENT") == 0) {
             properties = concept.getComment();
         } else if (property_type.compareToIgnoreCase("DEFINITION") == 0) {
@@ -639,8 +641,8 @@ public class ReportGenerationThread implements Runnable {
                                     for (int j = 0; j < qualifiers.length; j++) {
                                         PropertyQualifier q = qualifiers[j];
                                         String name =
-                                            q.getPropertyQualifierId();
-                                        String value = q.getContent();
+                                            q.getPropertyQualifierName();
+                                        String value = q.getValue().getContent();
                                         if (qualifier_name.compareTo(name) == 0) {
                                             match_found = true;
                                             qualifier_value = value;
@@ -735,8 +737,8 @@ public class ReportGenerationThread implements Runnable {
                                     p.getPropertyQualifier();
                                 for (int j = 0; j < qualifiers.length; j++) {
                                     PropertyQualifier q = qualifiers[j];
-                                    String name = q.getPropertyQualifierId();
-                                    String value = q.getContent();
+                                    String name = q.getPropertyQualifierName();
+                                    String value = q.getValue().getContent();
                                     if (qualifier_name.compareTo(name) == 0
                                             && qualifier_value.compareTo(value) == 0) {
                                         match_found = true;
@@ -771,10 +773,10 @@ public class ReportGenerationThread implements Runnable {
                 if (match) {
                     num_matches++;
                     if (num_matches == 1) {
-                        return_str = p.getText().getContent();
+                        return_str = p.getValue().getContent();
                     } else {
                         return_str =
-                            return_str + delimiter + p.getText().getContent();
+                            return_str + delimiter + p.getValue().getContent();
                     }
                 }
             }
