@@ -1,23 +1,11 @@
 package gov.nih.nci.evs.reportwriter.utils;
 
-import gov.nih.nci.system.applicationservice.ApplicationException;
-import gov.nih.nci.system.client.ApplicationServiceProvider;
-import org.LexGrid.LexBIG.DataModel.Collections.CodingSchemeRenderingList;
-import org.LexGrid.LexBIG.DataModel.InterfaceElements.CodingSchemeRendering;
-import org.LexGrid.LexBIG.Exceptions.LBInvocationException;
-import org.LexGrid.LexBIG.caCore.interfaces.LexEVSApplicationService;
-import org.LexGrid.LexBIG.caCore.interfaces.LexEVSDataService;
-import org.LexGrid.LexBIG.caCore.interfaces.LexEVSDistributed;
-import org.LexGrid.LexBIG.caCore.interfaces.LexEVSService;
-import org.LexGrid.codingSchemes.CodingScheme;
-
-import java.util.Hashtable;
-import java.util.Properties;
-
-import org.LexGrid.LexBIG.LexBIGService.LexBIGService;
-import org.LexGrid.LexBIG.Impl.LexBIGServiceImpl;
-
 import gov.nih.nci.evs.reportwriter.properties.*;
+import gov.nih.nci.system.client.*;
+
+import org.LexGrid.LexBIG.caCore.interfaces.*;
+import org.LexGrid.LexBIG.Impl.*;
+import org.LexGrid.LexBIG.LexBIGService.*;
 
 /**
  * <!-- LICENSE_TEXT_START -->
@@ -66,43 +54,30 @@ import gov.nih.nci.evs.reportwriter.properties.*;
  * @version 1.0
  */
 
-
 public class RemoteServerUtil {
-    private static boolean debug = false;
-    private static String _serviceInfo = "EvsServiceInfo";
-    private Properties systemProperties = null;
-    private static String serviceURL = null;
-
-    public RemoteServerUtil() {
-        // Do nothing
-    }
-
-    public static LexBIGService createLexBIGService()
-    {
+    public static LexBIGService createLexBIGService() {
         String serviceUrl = null;
         try {
-           serviceUrl = ReportWriterProperties
-                        .getProperty(ReportWriterProperties.EVS_SERVICE_URL);
+            serviceUrl =
+                ReportWriterProperties
+                    .getProperty(ReportWriterProperties.EVS_SERVICE_URL);
         } catch (Exception ex) {
             // Do nothing
         }
         return createLexBIGService(serviceUrl);
     }
 
-
-    public static LexBIGService createLexBIGService(String serviceUrl)
-    {
+    public static LexBIGService createLexBIGService(String serviceUrl) {
         try {
-            if (serviceUrl == null || serviceUrl.compareTo("") == 0)
-            {
+            if (serviceUrl == null || serviceUrl.compareTo("") == 0) {
                 LexBIGService lbSvc = new LexBIGServiceImpl();
                 return lbSvc;
             }
-            LexEVSApplicationService lexevsService = (LexEVSApplicationService)ApplicationServiceProvider.getApplicationServiceFromUrl(serviceUrl, "EvsServiceInfo");
+            LexEVSApplicationService lexevsService =
+                (LexEVSApplicationService) ApplicationServiceProvider
+                    .getApplicationServiceFromUrl(serviceUrl, "EvsServiceInfo");
             return (LexBIGService) lexevsService;
-        }
-        catch (Exception e)
-        {
+        } catch (Exception e) {
             e.printStackTrace();
         }
         return null;

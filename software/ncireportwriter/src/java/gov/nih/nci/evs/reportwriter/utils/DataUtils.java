@@ -2,7 +2,6 @@ package gov.nih.nci.evs.reportwriter.utils;
 
 import java.io.*;
 import java.util.*;
-import gov.nih.nci.system.applicationservice.*;
 import gov.nih.nci.evs.reportwriter.bean.*;
 
 import javax.faces.model.*;
@@ -1022,7 +1021,6 @@ public class DataUtils {
         ConceptReferenceList list = new ConceptReferenceList();
         for (int i = 0; i < codes.length; i++) {
             ConceptReference cr = new ConceptReference();
-            //cr.setCodingScheme(codingSchemeName);
             cr.setCodingSchemeName(codingSchemeName);
             cr.setConceptCode(codes[i]);
             list.addConceptReference(cr);
@@ -1150,7 +1148,6 @@ public class DataUtils {
             CodingScheme cs = lbSvc.resolveCodingScheme(scheme, versionOrTag);
             Mappings mappings = cs.getMappings();
             SupportedHierarchy[] hierarchies = mappings.getSupportedHierarchy();
-            //String[] ids = hierarchies[0].getAssociationIds();
             String[] ids = hierarchies[0].getAssociationNames();
 
             for (int i = 0; i < ids.length; i++) {
