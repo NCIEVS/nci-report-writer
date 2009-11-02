@@ -577,10 +577,8 @@ public class ReportGenerationThread implements Runnable {
             properties = concept.getProperty();
         } else if (property_type.compareToIgnoreCase("PRESENTATION") == 0) {
             properties = concept.getPresentation();
-            /*
-        } else if (property_type.compareToIgnoreCase("INSTRUCTION") == 0) {
-            properties = concept.getInstruction();
-            */
+//      } else if (property_type.compareToIgnoreCase("INSTRUCTION") == 0) {
+//          properties = concept.getInstruction();
         } else if (property_type.compareToIgnoreCase("COMMENT") == 0) {
             properties = concept.getComment();
         } else if (property_type.compareToIgnoreCase("DEFINITION") == 0) {

@@ -2,25 +2,10 @@ package gov.nih.nci.evs.reportwriter.service;
 
 import java.io.*;
 import java.util.*;
-
 import gov.nih.nci.evs.reportwriter.bean.*;
 import gov.nih.nci.evs.reportwriter.utils.*;
-//import gov.nih.nci.system.applicationservice.*;
-
-import org.LexGrid.LexBIG.caCore.interfaces.LexEVSApplicationService;
-import org.LexGrid.LexBIG.caCore.interfaces.LexEVSDataService;
-import org.LexGrid.LexBIG.caCore.interfaces.LexEVSDistributed;
-import org.LexGrid.LexBIG.caCore.interfaces.LexEVSService;
-
-
-import gov.nih.nci.system.client.*;
-
-import org.LexGrid.LexBIG.Impl.*;
-//import org.LexGrid.LexBIG.LexBIGService.*;
 import org.apache.log4j.*;
-
-import org.LexGrid.LexBIG.LexBIGService.LexBIGService;
-import org.LexGrid.LexBIG.Impl.LexBIGServiceImpl;
+import org.LexGrid.LexBIG.LexBIGService.*;
 
 /**
  * <!-- LICENSE_TEXT_START -->
@@ -72,8 +57,7 @@ import org.LexGrid.LexBIG.Impl.LexBIGServiceImpl;
 public class StandardReportService {
     private static Logger _logger =
         Logger.getLogger(StandardReportService.class);
-//    private EVSApplicationService _appService = null;
-    private LexBIGService _lbSvc;
+    private LexBIGService _lbSvc = null;
 
     public StandardReportService() {
         try {
@@ -85,10 +69,7 @@ public class StandardReportService {
 
     public StandardReportService(String url) {
         try {
-            //Boolean retval = connect(url);
-            //if (retval == Boolean.TRUE) {
             _lbSvc = RemoteServerUtil.createLexBIGService(url);
-            //}
         } catch (Exception ex) {
             ex.printStackTrace();
         }
@@ -98,32 +79,6 @@ public class StandardReportService {
         return _lbSvc;
     }
 
-/*
-    private Boolean connect(String serviceUrl) {
-        if (serviceUrl == null || serviceUrl.compareTo("") == 0) {
-            try {
-                _lbSvc = new LexBIGServiceImpl();
-                return Boolean.TRUE;
-            } catch (Exception ex) {
-                ex.printStackTrace();
-                return Boolean.FALSE;
-            }
-        }
-        try {
-            _logger.debug("URL: " + serviceUrl);
-            _appService =
-                (EVSApplicationService) ApplicationServiceProvider
-                    .getApplicationServiceFromUrl(serviceUrl, "EvsServiceInfo");
-
-            _lbSvc = (LexBIGService) _appService;
-
-            return Boolean.TRUE;
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return Boolean.FALSE;
-    }
-*/
     public PrintWriter openPrintWriter(String outputfile) {
         try {
             PrintWriter pw =
