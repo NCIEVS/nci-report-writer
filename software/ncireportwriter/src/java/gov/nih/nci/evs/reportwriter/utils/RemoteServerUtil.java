@@ -6,6 +6,7 @@ import gov.nih.nci.system.client.*;
 import org.LexGrid.LexBIG.caCore.interfaces.*;
 import org.LexGrid.LexBIG.Impl.*;
 import org.LexGrid.LexBIG.LexBIGService.*;
+import org.apache.log4j.*;
 
 /**
  * <!-- LICENSE_TEXT_START -->
@@ -55,6 +56,9 @@ import org.LexGrid.LexBIG.LexBIGService.*;
  */
 
 public class RemoteServerUtil {
+    private static Logger _logger = Logger
+        .getLogger(RemoteServerUtil.class);
+    
     public static LexBIGService createLexBIGService() {
         String serviceUrl = null;
         try {
@@ -69,6 +73,8 @@ public class RemoteServerUtil {
 
     public static LexBIGService createLexBIGService(String serviceUrl) {
         try {
+            _logger.debug(StringUtils.SEPARATOR);
+            _logger.debug("serviceUrl: " + serviceUrl);
             if (serviceUrl == null || serviceUrl.compareTo("") == 0) {
                 LexBIGService lbSvc = new LexBIGServiceImpl();
                 return lbSvc;
@@ -82,5 +88,4 @@ public class RemoteServerUtil {
         }
         return null;
     }
-
 }
