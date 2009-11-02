@@ -41,7 +41,7 @@
         </div>
       </div>
       <div class="mainbox-bottom"><img src="<%=imagesPath%>/mainbox-bottom.gif"
-        width="745" height="5" alt="Mainbox Bottom" /></div>
+        width="745" height="5" alt="Mainbox Bottom" />
       </div>
     </div>
     <br>
