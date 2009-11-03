@@ -3,7 +3,7 @@
 <beans>
 	
 	<!-- Import the files for each remote service -->
-	<import resource="application-config-client-local.xml"/>
+	<!-- <import resource="application-config-client-local.xml"/> -->
 	<import resource="application-config-client-remote.xml"/>
 	
 	<!-- Make an entry for ServiceInfo for each remote service. The default service bean must be called "ServiceInfo" -->
