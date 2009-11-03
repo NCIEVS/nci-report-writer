@@ -59,33 +59,23 @@ public class RemoteServerUtil {
     private static Logger _logger = Logger
         .getLogger(RemoteServerUtil.class);
     
-    public static LexBIGService createLexBIGService() {
-        String serviceUrl = null;
-        try {
-            serviceUrl =
-                ReportWriterProperties
-                    .getProperty(ReportWriterProperties.EVS_SERVICE_URL);
-        } catch (Exception ex) {
-            // Do nothing
-        }
+    public static LexBIGService createLexBIGService() throws Exception {
+        String serviceUrl = ReportWriterProperties
+            .getProperty(ReportWriterProperties.EVS_SERVICE_URL);
         return createLexBIGService(serviceUrl);
     }
 
-    public static LexBIGService createLexBIGService(String serviceUrl) {
-        try {
-            _logger.debug(StringUtils.SEPARATOR);
-            _logger.debug("serviceUrl: " + serviceUrl);
-            if (serviceUrl == null || serviceUrl.compareTo("") == 0) {
-                LexBIGService lbSvc = new LexBIGServiceImpl();
-                return lbSvc;
-            }
-            LexEVSApplicationService lexevsService =
-                (LexEVSApplicationService) ApplicationServiceProvider
-                    .getApplicationServiceFromUrl(serviceUrl, "EvsServiceInfo");
-            return (LexBIGService) lexevsService;
-        } catch (Exception e) {
-            e.printStackTrace();
+    public static LexBIGService createLexBIGService(String serviceUrl) 
+            throws Exception {
+        _logger.debug(StringUtils.SEPARATOR);
+        _logger.debug("serviceUrl: " + serviceUrl);
+        if (serviceUrl == null || serviceUrl.compareTo("") == 0) {
+            LexBIGService lbSvc = new LexBIGServiceImpl();
+            return lbSvc;
         }
-        return null;
+        LexEVSApplicationService lexevsService =
+            (LexEVSApplicationService) ApplicationServiceProvider
+                .getApplicationServiceFromUrl(serviceUrl, "EvsServiceInfo");
+        return (LexBIGService) lexevsService;
     }
 }
