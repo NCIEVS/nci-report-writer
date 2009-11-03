@@ -13,7 +13,7 @@ setenv CLASSPATH $cp
 
 #----------------------------------------------------------------------------------------
 set java=$JAVA_HOME/bin/java
-set class=gov.nih.nci.evs.reportwriter.test.lexevs.TestRemoteServerUtil
+set class=gov.nih.nci.evs.reportwriter.test.lexevs.RemoteServerUtilTest
 set args=(-propertyFile ~/apps/evs/ncireportwriter-webapp/conf/ncireportwriter.properties)
 #set args=(-propertyFile /local/home/jboss45c/evs/ncireportwriter-webapp/conf/ncireportwriter.properties)
 
