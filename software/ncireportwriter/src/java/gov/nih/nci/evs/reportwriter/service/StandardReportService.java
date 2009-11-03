@@ -67,14 +67,6 @@ public class StandardReportService {
         }
     }
 
-    public StandardReportService(String url) {
-        try {
-            _lbSvc = RemoteServerUtil.createLexBIGService(url);
-        } catch (Exception ex) {
-            ex.printStackTrace();
-        }
-    }
-
     public LexBIGService getLexBIGService() {
         return _lbSvc;
     }
