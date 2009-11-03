@@ -3,20 +3,27 @@ package gov.nih.nci.evs.reportwriter.test.utils;
 import java.util.*;
 
 public class TestEnv {
-    public static final String RW_PROPERTY_FILE = 
+    private static final String RW_PROPERTY_FILE = 
         "gov.nih.nci.cacore.ncireportwriterProperties";
-    public static String _propertyFile =
+    private static String DEFAULT_PROPERTY_FILE =
         "C:/apps/evs/ncireportwriter-webapp/conf/ncireportwriter.properties";
+    private static TestEnv _instance = null;
     
-    public static void setup() {
-        System.setProperty(RW_PROPERTY_FILE, _propertyFile);
+    private TestEnv() {
+        System.setProperty(RW_PROPERTY_FILE, DEFAULT_PROPERTY_FILE);
     }
     
-    public static void setup(String propertyFile) {
+    public static TestEnv getInstance() {
+        if (_instance == null)
+            _instance = new TestEnv();
+        return _instance;
+    }
+    
+    public void setup(String propertyFile) {
         System.setProperty(RW_PROPERTY_FILE, propertyFile);
     }
 
-    public static String[] parse(String[] args) {
+    public String[] parse(String[] args) {
         String prevArg = "";
         ArrayList<String> newArgs = new ArrayList<String>();
         for (int i = 0; i < args.length; ++i) {

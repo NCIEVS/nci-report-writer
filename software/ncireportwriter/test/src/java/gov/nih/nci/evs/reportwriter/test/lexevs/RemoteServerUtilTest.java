@@ -11,14 +11,14 @@ public class RemoteServerUtilTest extends TestCase {
     private static Logger _logger = Logger.getLogger(RemoteServerUtilTest.class);
     
     public static void main(String[] args) {
-        args = TestEnv.parse(args);
+        args = TestEnv.getInstance().parse(args);
         RemoteServerUtilTest test = new RemoteServerUtilTest();
         test.test_createLexBIGService();
     }
     
     protected void setUp() throws Exception {
         super.setUp();
-        TestEnv.setup();
+        TestEnv.getInstance();
     }
     
     public void test_createLexBIGService() {
