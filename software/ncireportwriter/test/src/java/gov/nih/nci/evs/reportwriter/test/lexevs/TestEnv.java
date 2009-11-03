@@ -8,6 +8,10 @@ public class TestEnv {
     public static String _propertyFile =
         "C:/apps/evs/ncireportwriter-webapp/conf/ncireportwriter.properties";
     
+    public static void setup() {
+        System.setProperty(RW_PROPERTY_FILE, _propertyFile);
+    }
+    
     public static void setup(String propertyFile) {
         System.setProperty(RW_PROPERTY_FILE, propertyFile);
     }

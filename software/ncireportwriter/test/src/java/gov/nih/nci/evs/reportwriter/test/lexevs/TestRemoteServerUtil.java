@@ -13,7 +13,12 @@ public class TestRemoteServerUtil extends TestCase {
         TestRemoteServerUtil test = new TestRemoteServerUtil();
         test.test_createLexBIGService();
     }
-
+    
+    protected void setUp() throws Exception {
+        super.setUp();
+        TestEnv.setup();
+    }
+    
     public void test_createLexBIGService() {
         try {
             LexBIGService server =
@@ -23,6 +28,7 @@ public class TestRemoteServerUtil extends TestCase {
         } catch (Exception e) {
             _logger.error(e.getClass().getSimpleName() + 
                 ": " + e.getLocalizedMessage());
+            assertTrue(false);
         }
     }
 }
