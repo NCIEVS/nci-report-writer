@@ -5,7 +5,7 @@ set ocp=%CLASSPATH%
 
 cd ..
 set cp=.
-set cp=%cp%;..\conf
+set cp=%cp%;.\conf;..\conf
 set cp=%cp%;classes
 for %%x in (..\lib\*.jar lib\*.jar) do (
   set cp=!cp!;%%x

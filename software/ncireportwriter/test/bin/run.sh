@@ -3,7 +3,7 @@
 #----------------------------------------------------------------------------------------
 cd ..
 set cp=.
-set cp="$cp":../conf
+set cp="$cp":./conf:../conf
 set cp="$cp":classes
 foreach jar (../lib/*.jar lib/*.jar)
   set cp="$cp":$jar
