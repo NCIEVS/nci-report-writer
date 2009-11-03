@@ -15,7 +15,7 @@ set CLASSPATH=%cp%
 
 set java=%JAVA_HOME%\bin\java
 set class=gov.nih.nci.evs.reportwriter.test.lexevs.TestRemoteServerUtil
-set args
+set args=-propertyFile C:/apps/evs/ncireportwriter-webapp/conf/ncireportwriter.properties
 
 rem -------------------------------------------------------------------------------------
 @echo on
