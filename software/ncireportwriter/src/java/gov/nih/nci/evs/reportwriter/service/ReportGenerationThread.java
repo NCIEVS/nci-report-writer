@@ -433,7 +433,6 @@ public class ReportGenerationThread implements Runnable {
         // _logger.debug("Level: " + level + "\tmaxLevel: " + maxLevel);
         if (maxLevel != -1 && level > maxLevel)
             return;
-        RemoteServerUtil.createLexBIGService();
 
         Concept root = DataUtils.getConceptByCode(scheme, version, tag, code);
         if (root == null) {
