@@ -9,14 +9,13 @@ public class TestRemoteServerUtil extends TestCase {
     private static Logger _logger = Logger.getLogger(TestRemoteServerUtil.class);
     
     public static void main(String[] args) {
+        args = TestEnv.parse(args);
         TestRemoteServerUtil test = new TestRemoteServerUtil();
         test.test_createLexBIGService();
     }
 
     public void test_createLexBIGService() {
         try {
-            TestEnv.setup();
-            
             LexBIGService server =
                 RemoteServerUtil.createLexBIGService();
             _logger.info("server: " + server);
