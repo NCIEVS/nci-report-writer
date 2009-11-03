@@ -2,6 +2,8 @@ package gov.nih.nci.evs.reportwriter.test.lexevs;
 
 import org.LexGrid.LexBIG.LexBIGService.*;
 import org.apache.log4j.*;
+
+import gov.nih.nci.evs.reportwriter.test.utils.*;
 import gov.nih.nci.evs.reportwriter.utils.*;
 import junit.framework.*;
 
