@@ -2,20 +2,20 @@ package gov.nih.nci.evs.reportwriter.test.utils;
 
 import java.util.*;
 
-public class TestEnv {
+public class SetupEnv {
     private static final String RW_PROPERTY_FILE = 
         "gov.nih.nci.cacore.ncireportwriterProperties";
     private static String DEFAULT_PROPERTY_FILE =
         "C:/apps/evs/ncireportwriter-webapp/conf/ncireportwriter.properties";
-    private static TestEnv _instance = null;
+    private static SetupEnv _instance = null;
     
-    private TestEnv() {
+    private SetupEnv() {
         System.setProperty(RW_PROPERTY_FILE, DEFAULT_PROPERTY_FILE);
     }
     
-    public static TestEnv getInstance() {
+    public static SetupEnv getInstance() {
         if (_instance == null)
-            _instance = new TestEnv();
+            _instance = new SetupEnv();
         return _instance;
     }
     
