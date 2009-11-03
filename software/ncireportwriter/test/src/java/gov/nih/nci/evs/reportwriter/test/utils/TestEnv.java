@@ -1,4 +1,4 @@
-package gov.nih.nci.evs.reportwriter.test.lexevs;
+package gov.nih.nci.evs.reportwriter.test.utils;
 
 import java.util.*;
 
