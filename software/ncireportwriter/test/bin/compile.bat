@@ -16,7 +16,7 @@ set javac=%JAVA_HOME%\bin\javac
 rem -------------------------------------------------------------------------------------
 rmdir .\classes /s /q
 mkdir .\classes
-"%javac%" -d .\classes src/java/gov/nih/nci/evs/reportwriter/test/lexevs/*.java
+"%javac%" -d .\classes src/java/gov/nih/nci/evs/reportwriter/test/utils/*.java src/java/gov/nih/nci/evs/reportwriter/test/lexevs/*.java
 
 rem -------------------------------------------------------------------------------------
 set CLASSPATH=%ocp%

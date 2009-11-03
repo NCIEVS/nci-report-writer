@@ -15,4 +15,4 @@ set javac=$JAVA_HOME/bin/javac
 #----------------------------------------------------------------------------------------
 rm -fr classes
 mkdir -p classes
-$javac -d classes src/java/gov/nih/nci/evs/reportwriter/test/lexevs/*.java
+$javac -d classes src/java/gov/nih/nci/evs/reportwriter/test/utils/*.java src/java/gov/nih/nci/evs/reportwriter/test/lexevs/*.java
