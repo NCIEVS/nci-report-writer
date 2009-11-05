@@ -23,7 +23,7 @@
                     width="100%" class="sidebarSection">
                 <% 
                   String queryString = request.getQueryString();
-                  if (queryString != null && queryString.contains("logout=true")) { 
+                  if (queryString != null && queryString.contains("logout")) { 
                 %>
                   <tr>
                     <td class="sidebarTitle" height="20">LOGOUT REPORT WRITER</td>
