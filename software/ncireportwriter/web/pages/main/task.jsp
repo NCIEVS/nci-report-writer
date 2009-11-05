@@ -1,8 +1,4 @@
-<html>
- <body>
-  <jsp:forward page="/pages/templates/template.jsp">
-    <jsp:param name="menu_bar" value="/pages/contents/menu_bar.jsp"/>
-    <jsp:param name="content_page" value="/pages/contents/_task.jsp"/>
-  </jsp:forward>
- </body>
-</html>
+<%@ taglib uri="EVSUIComponents" prefix="ui" %>
+<ui:insert template="/pages/templates/template.jsp">
+  <ui:put name="content_page" url="/pages/contents/_task.jsp"/>
+</ui:insert>
