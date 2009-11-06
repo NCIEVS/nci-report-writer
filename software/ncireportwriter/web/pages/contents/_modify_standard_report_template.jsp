@@ -65,9 +65,10 @@
                               
                               <tr class="dataRowLight">
                                 <td class="dataCellText">Coding Scheme</td>
-                                <td class="dataCellText"><%=codingScheme%></td>
+                                <td class="dataCellText"><%=codingScheme%>
+                                  <input type="hidden" name="codingScheme" value="<%=codingScheme%>">
+                                </td>
                               </tr>
-                              <input type="hidden" name="codingScheme" value="<%=codingScheme%>">
                               
                               <tr class="dataRowDark">
                                 <td class="dataCellText">Version</td>
