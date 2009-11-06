@@ -11,7 +11,7 @@
 <html>
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
-    <title><ui:get name="title" default="Report Writer"/></title>
+    <title><ui:get name="title" default="NCI Report Writer"/></title>
     <link rel="stylesheet" type="text/css" href="<%= FormUtils.getCSSPath(request) %>/styleSheet.css" />
     <link rel="shortcut icon" href="<%= FormUtils.getBasePath(request) %>/favicon.ico" type="image/x-icon" />
   </head>
