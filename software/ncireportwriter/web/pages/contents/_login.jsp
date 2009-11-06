@@ -8,7 +8,7 @@
       <tr>
         <td valign="top">
   
-  <%@ include file="/pages/contents/welcome.jsp" %>
+  <jsp:include page="/pages/contents/welcome.jsp" />
   
         </td>
         <td valign="top">
@@ -85,7 +85,7 @@
             </tr>
             <!-- === Login (End) ============================================= -->
   
-  <%@ include file="/pages/contents/whats_new.jsp" %>
+  <jsp:include page="/pages/contents/whats_new.jsp" />
   
             <!-- === Spacer Cell (Begin): keep for dynamic expanding ========= -->
             <tr>
