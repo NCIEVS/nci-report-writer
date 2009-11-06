@@ -1,9 +1,6 @@
-<html>
- <body>
-  <jsp:forward page="/pages/templates/template.jsp">
-    <jsp:param name="content_title" value="NCI Report Writer: Download"/>
-    <jsp:param name="menu_bar" value="/pages/contents/menu_bar_skip.jsp"/>
-    <jsp:param name="content_page" value="/pages/contents/_download_nologin.jsp"/>
-  </jsp:forward>
- </body>
-</html>
+<%@ taglib uri="EVSUIComponents" prefix="ui" %>
+<ui:insert template="/pages/templates/template.jsp">
+  <ui:put name="title" value="NCI Report Writer: Download"/>
+  <ui:put name="menu_bar" url="/pages/contents/menu_bar_skip.jsp"/>
+  <ui:put name="content_page" url="/pages/contents/_download_nologin.jsp"/>
+</ui:insert>
