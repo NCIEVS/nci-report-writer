@@ -122,16 +122,8 @@ public class DataUtils {
 
         setCodingSchemeMap();
 
-        String max_return_str = null;
-        try {
-            max_return_str =
-                ReportWriterProperties
-                        .getProperty(ReportWriterProperties.MAXIMUM_RETURN);
-            if (max_return_str != null) {
-                _maxReturn = Integer.parseInt(max_return_str);
-            }
-        } catch (Exception ex) {
-        }
+        _maxReturn = ReportWriterProperties.getIntProperty(
+            ReportWriterProperties.MAXIMUM_RETURN, 5000);
     }
 
     public static List<SelectItem> getPropertyTypeList() {
