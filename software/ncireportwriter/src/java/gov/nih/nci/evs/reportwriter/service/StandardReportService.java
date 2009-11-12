@@ -5,7 +5,6 @@ import java.util.*;
 import gov.nih.nci.evs.reportwriter.bean.*;
 import gov.nih.nci.evs.reportwriter.utils.*;
 import org.apache.log4j.*;
-import org.LexGrid.LexBIG.LexBIGService.*;
 
 /**
  * <!-- LICENSE_TEXT_START -->
@@ -57,19 +56,6 @@ import org.LexGrid.LexBIG.LexBIGService.*;
 public class StandardReportService {
     private static Logger _logger =
         Logger.getLogger(StandardReportService.class);
-    private LexBIGService _lbSvc = null;
-
-    public StandardReportService() {
-        try {
-            _lbSvc = RemoteServerUtil.createLexBIGService();
-        } catch (Exception ex) {
-            ex.printStackTrace();
-        }
-    }
-
-    public LexBIGService getLexBIGService() {
-        return _lbSvc;
-    }
 
     public PrintWriter openPrintWriter(String outputfile) {
         try {
