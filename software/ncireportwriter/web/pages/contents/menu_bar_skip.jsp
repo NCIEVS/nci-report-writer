@@ -1,13 +1,7 @@
 <!-- Menu Bar Skip (Begin) -->
-<table summary="" cellpadding="0" cellspacing="0" border="0" height="20">
-  <tr>
-    <td width="1">
-      <!-- anchor to skip main menu -->
-      <a href="#content">
-        <img src="<%= request.getContextPath() %>/images/shim.gif"
-            alt="Skip Menu" width="1" height="1" border="0" />
-      </a>
-    </td>
+<table summary="" cellpadding="0" cellspacing="0" border="0" height="20" width="100%">
+  <tr bgcolor="#5C5C5C">
+    <td width="100%"/>
   </tr>
 </table>
 <!-- Menu Bar Skip (End) -->

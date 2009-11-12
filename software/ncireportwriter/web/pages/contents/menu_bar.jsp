@@ -1,14 +1,6 @@
 <!-- Menu Bar (Begin) -->
 <table summary="" cellpadding="0" cellspacing="0" border="0" height="20">
-  <tr>
-    <td width="1">
-      <!-- anchor to skip main menu -->
-      <a href="#content">
-        <img src="<%= request.getContextPath() %>/images/shim.gif" 
-            alt="Skip Menu" width="1" height="1" border="0" />
-      </a>
-    </td>
-    
+  <tr bgcolor="#5C5C5C">
     <td height="20" class="mainMenuItemOver">
       <a class="mainMenuLink" href="<%= request.getContextPath() %>/pages/main/task.jsf">MAIN</a>
     </td>
@@ -36,6 +28,8 @@
       <img src="<%= request.getContextPath() %>/images/mainMenuSeparator.gif" 
         width="1" height="16" alt="" />
     </td>
+    
+    <td width="100%"/>
   </tr>
 </table>
 <!-- Menu Bar (End) -->
