@@ -110,7 +110,7 @@ public class ReportWriterProperties {
     }
     
     public static int getIntProperty(String key, int defaultValue) {
-        String strValue = getInstance().fetchProperty(key) + "x";
+        String strValue = getInstance().fetchProperty(key);
         try {
             if (strValue == null)
                 return defaultValue;
