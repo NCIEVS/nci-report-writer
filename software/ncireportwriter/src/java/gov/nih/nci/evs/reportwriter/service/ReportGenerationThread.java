@@ -273,23 +273,11 @@ public class ReportGenerationThread implements Runnable {
         level = standardReportTemplate.getLevel();
 
         String tag = null;
-
         int curr_level = 0;
         int max_level = standardReportTemplate.getLevel();
-        if (max_level == -1) {
-            String max_level_str = null;
-            try {
-                max_level_str =
-                    ReportWriterProperties
-                            .getProperty(ReportWriterProperties.MAXIMUM_LEVEL);
-                max_level = 20;
-                if (max_level_str != null) {
-                    max_level = Integer.parseInt(max_level_str);
-                }
-            } catch (Exception ex) {
-
-            }
-        }
+        if (max_level < 0)
+            max_level = ReportWriterProperties.getIntProperty(
+                ReportWriterProperties.MAXIMUM_LEVEL, 20);
 
         // printReportHeading(pw, cols);
         if (_hierarchicalAssoName == null) {

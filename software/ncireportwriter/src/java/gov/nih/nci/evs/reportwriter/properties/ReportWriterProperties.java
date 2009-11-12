@@ -109,6 +109,20 @@ public class ReportWriterProperties {
         return getInstance().fetchProperty(key);
     }
     
+    public static int getIntProperty(String key, int defaultValue) {
+        String strValue = getInstance().fetchProperty(key) + "x";
+        try {
+            if (strValue == null)
+                return defaultValue;
+            return Integer.parseInt(strValue);
+        } catch (Exception e) {
+            _logger.error("Invalid integer property value for: " + key);
+            _logger.error("  Value from the property file: " + strValue);
+            _logger.error("  Defaulting to: " + defaultValue);
+            return defaultValue;
+        }
+    }
+
     private void debugProperties() {
         if (! _logger.isDebugEnabled())
             return;
