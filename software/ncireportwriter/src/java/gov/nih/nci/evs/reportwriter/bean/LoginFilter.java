@@ -1,5 +1,7 @@
 package gov.nih.nci.evs.reportwriter.bean;
 
+import gov.nih.nci.evs.reportwriter.utils.*;
+
 import java.io.*;
 
 import javax.servlet.*;
@@ -103,7 +105,7 @@ public class LoginFilter implements Filter {
                 chain.doFilter(request, response);
             }
         } catch (Exception e) {
-            _logger.error(e.getClass().getSimpleName() + ": " + e.getMessage());
+            MiscUtils.printException(_logger, e);
         }
     }
     

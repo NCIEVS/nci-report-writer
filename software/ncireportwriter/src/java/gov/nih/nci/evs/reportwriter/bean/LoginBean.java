@@ -144,8 +144,8 @@ public class LoginBean extends Object {
                 (gov.nih.nci.evs.reportwriter.bean.User) obj;
             return user;
         } catch (Exception e) {
-            _logger.error(e.getClass().getSimpleName() + ": " + e.getMessage());
-            _logger.error("  * getUser(" + loginName + ") method returns null");
+            MiscUtils.printException(_logger, e,
+                "  * getUser(" + loginName + ") method returns null");
             // e.printStackTrace();
         }
         return null;
@@ -191,8 +191,8 @@ public class LoginBean extends Object {
         } catch (Exception e) {
             String msg = reformatError(e.getMessage());
             _logger.error(StringUtils.SEPARATOR);
-            _logger.error("Error logging in: " + _userid);
-            _logger.error("  * " + e.getClass().getSimpleName() + ": " + msg);
+            MiscUtils.printException(_logger, e,
+                "  * Error logging in: " + _userid);
             SessionUtil.getRequest().setAttribute("loginWarning", msg);
             return "failure";
         }
