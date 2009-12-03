@@ -1,5 +1,7 @@
 package gov.nih.nci.evs.reportwriter.properties;
 
+import gov.nih.nci.evs.reportwriter.utils.*;
+
 import java.io.*;
 import java.util.*;
 
@@ -95,9 +97,7 @@ public class ReportWriterProperties {
             _properties.load(fis);
             debugProperties();
         } catch (Exception e) {
-            _logger.error(e.getClass().getSimpleName() + 
-                "(ReportWriterProperties.loadProperties): " +
-                e.getLocalizedMessage());
+            MiscUtils.printException(_logger, e);
         }
     }
     

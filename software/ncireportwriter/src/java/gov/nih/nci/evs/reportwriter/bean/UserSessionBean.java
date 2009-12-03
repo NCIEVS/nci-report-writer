@@ -401,7 +401,7 @@ public class UserSessionBean extends Object {
             SessionUtil.getRequest().setAttribute("reportColumn", reportColumn);
             return "add_standard_report_column";
         } catch (Exception e) {
-            _logger.error(e.getClass().getSimpleName() + ": " + e.getMessage());
+            MiscUtils.printException(_logger, e);
             SessionUtil.getRequest().setAttribute("warningMsg",
                 e.getMessage());
             return "standard_report_column";
