@@ -3,26 +3,32 @@
 2. comments with the words lighter or darker indicate the colors that do change depending on the color scheme
 For example using the blue color sheme, darker means use the darker blue and lighter means use the lighter blue
 3. ems are used as the unit of measurement to maintain proportional sizing which is important for 508 compliance
+*/
 
 /*########## BLUE COLOR SCHEME ##########
  #475B82 = darker blue
  #6E81A6 = lighter blue
+*/
 
 /*########## GREEN COLOR SCHEME ##########
  #6A8989 = darker green
  #98B7B7 = lighter green
+*/
 
 /*########## PURPLE COLOR SCHEME ##########
  #797C9C = darker purple
  #9FA2BA = lighter purple
+*/
 
 /*########## TAN COLOR SCHEME ##########
  #706C60 = darker tan
  #B3AE9C = lighter tan
+*/
 
 /*########## GRAY COLOR SCHEME ##########
  #838386 = darker gray
  #AAAAAB = lighter gray
+*/
 
 /*########## COMMON AMONG ALL COLOR SCHEMES ##########
  #A90101 = red
@@ -47,7 +53,7 @@ HDR AND FTR BEGINS
   background-color:#A90101; /* constant: red */
 }
 .subhdrBG{ /* for the cell that contains the application header */
-  background-color:#DDE3EC; /* light blue */
+  background-color:#FFFFFF; /* white */
 }
 .ftrTable{ /* for the table that contains the footer */
   padding-top:0.4em;
@@ -296,8 +302,8 @@ SIDEBAR BEGINS
   font-size:1em;
   font-weight:bold;
   padding-left:0.8em;
-  background-color:#5C5C5C; /* constant: dark gray */
-  color:#FFFFFF; /* constant: white */
+  background-color:#CAD9DF; /* constant: light gray */
+  color:#635D5A; /* constant: dark gray */
 }
 .sidebarContent{ /* for the areas under the sidebar titles and requires text */
   font-size:1em;
@@ -435,7 +441,7 @@ p,.p{ /* for paragraphs */
   font-size:0.8em;
   font-weight:bold;
   padding-left:1em;
-  background-color:#CCCCCC; /* constant: medium gray */
+  background-color:#CAD9DF; /* constant: dark gray */
   border-top:1px solid #CCCCCC; /* constant: medium gray */
 }
 .welcomeContent{ /* for the area below the title content of the home page */
