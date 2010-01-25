@@ -142,8 +142,8 @@ public class ReportWriterProperties {
             _buildInfo = getProperty(BUILD_INFO);
             if (_buildInfo == null)
                 _buildInfo = "null";
-        } catch (Exception ex) {
-            _buildInfo = ex.getMessage();
+        } catch (Exception e) {
+            _buildInfo = e.getMessage();
         }
 
         _logger.info("getBuildInfo returns " + _buildInfo);
