@@ -122,8 +122,9 @@ public class DataUtils {
 
         setCodingSchemeMap();
 
-        _maxReturn = ReportWriterProperties.getIntProperty(
-            ReportWriterProperties.MAXIMUM_RETURN, 5000);
+        _maxReturn =
+            ReportWriterProperties.getIntProperty(
+                ReportWriterProperties.MAXIMUM_RETURN, 5000);
     }
 
     public static List<SelectItem> getPropertyTypeList() {
@@ -146,7 +147,7 @@ public class DataUtils {
             if (_adminTaskList == null) {
                 _adminTaskList = new ArrayList<SelectItem>();
                 _adminTaskList
-                        .add(new SelectItem("Administer Standard Reports"));
+                    .add(new SelectItem("Administer Standard Reports"));
                 _adminTaskList.add(new SelectItem("Maintain Report Status"));
                 _adminTaskList.add(new SelectItem("Assign Report Status"));
                 _adminTaskList.add(new SelectItem("Retrieve Standard Reports"));
@@ -232,8 +233,7 @@ public class DataUtils {
         _csnv2VersionMap = new HashMap<String, String>();
 
         try {
-            LexBIGService lbSvc =
-                RemoteServerUtil.createLexBIGService();
+            LexBIGService lbSvc = RemoteServerUtil.createLexBIGService();
             CodingSchemeRenderingList csrl = lbSvc.getSupportedCodingSchemes();
             if (csrl == null)
                 _logger.debug("csrl is NULL");
@@ -243,7 +243,7 @@ public class DataUtils {
                 CodingSchemeRendering csr = csrs[i];
                 Boolean isActive =
                     csr.getRenderingDetail().getVersionStatus().equals(
-                            CodingSchemeVersionStatus.ACTIVE);
+                        CodingSchemeVersionStatus.ACTIVE);
                 if (isActive != null && isActive.equals(Boolean.TRUE)) {
                     CodingSchemeSummary css = csr.getCodingSchemeSummary();
                     String formalname = css.getFormalName();
@@ -263,7 +263,7 @@ public class DataUtils {
 
                             String value =
                                 formalname + " (version: " + representsVersion
-                                        + ")";
+                                    + ")";
                             _ontologies.add(new SelectItem(value, value));
 
                             _csnv2codingSchemeNameMap.put(value, formalname);
@@ -280,11 +280,11 @@ public class DataUtils {
 
                                 String value =
                                     formalname + " (version: "
-                                            + representsVersion + ")";
+                                        + representsVersion + ")";
                                 _ontologies.add(new SelectItem(value, value));
 
                                 _csnv2codingSchemeNameMap
-                                        .put(value, formalname);
+                                    .put(value, formalname);
                                 _csnv2VersionMap.put(value, representsVersion);
                             }
 
@@ -299,14 +299,14 @@ public class DataUtils {
 
                                     String value =
                                         formalname + " (version: "
-                                                + representsVersion + ")";
+                                            + representsVersion + ")";
                                     _ontologies
-                                            .add(new SelectItem(value, value));
+                                        .add(new SelectItem(value, value));
 
                                     _csnv2codingSchemeNameMap.put(value,
-                                            formalname);
+                                        formalname);
                                     _csnv2VersionMap.put(value,
-                                            representsVersion);
+                                        representsVersion);
                                 }
                             } catch (Exception e2) {
                                 e2.printStackTrace();
@@ -335,7 +335,7 @@ public class DataUtils {
     }
 
     public static Vector<String> getSupportedAssociationNames(
-            String codingSchemeName, String version) {
+        String codingSchemeName, String version) {
         CodingSchemeVersionOrTag vt = new CodingSchemeVersionOrTag();
         if (version != null) {
             vt.setVersion(version);
@@ -343,8 +343,7 @@ public class DataUtils {
 
         CodingScheme scheme = null;
         try {
-            LexBIGService lbSvc =
-                RemoteServerUtil.createLexBIGService();
+            LexBIGService lbSvc = RemoteServerUtil.createLexBIGService();
             scheme = lbSvc.resolveCodingScheme(codingSchemeName, vt);
             if (scheme == null) {
                 _logger.debug("scheme is NULL");
@@ -382,15 +381,14 @@ public class DataUtils {
     }
 
     public static Vector<String> getPropertyNameListData(
-            String codingSchemeName, String version) {
+        String codingSchemeName, String version) {
         CodingSchemeVersionOrTag vt = new CodingSchemeVersionOrTag();
         if (version != null) {
             vt.setVersion(version);
         }
         CodingScheme scheme = null;
         try {
-            LexBIGService lbSvc =
-                RemoteServerUtil.createLexBIGService();
+            LexBIGService lbSvc = RemoteServerUtil.createLexBIGService();
             scheme = lbSvc.resolveCodingScheme(codingSchemeName, vt);
             if (scheme == null)
                 return null;
@@ -427,15 +425,14 @@ public class DataUtils {
     }
 
     public static Vector<String> getRepresentationalFormListData(
-            String codingSchemeName, String version) {
+        String codingSchemeName, String version) {
         CodingSchemeVersionOrTag vt = new CodingSchemeVersionOrTag();
         if (version != null) {
             vt.setVersion(version);
         }
         CodingScheme scheme = null;
         try {
-            LexBIGService lbSvc =
-                RemoteServerUtil.createLexBIGService();
+            LexBIGService lbSvc = RemoteServerUtil.createLexBIGService();
             scheme = lbSvc.resolveCodingScheme(codingSchemeName, vt);
             if (scheme == null)
                 return null;
@@ -477,15 +474,14 @@ public class DataUtils {
     }
 
     public static Vector<String> getPropertyQualifierListData(
-            String codingSchemeName, String version) {
+        String codingSchemeName, String version) {
         CodingSchemeVersionOrTag vt = new CodingSchemeVersionOrTag();
         if (version != null) {
             vt.setVersion(version);
         }
         CodingScheme scheme = null;
         try {
-            LexBIGService lbSvc =
-                RemoteServerUtil.createLexBIGService();
+            LexBIGService lbSvc = RemoteServerUtil.createLexBIGService();
             scheme = lbSvc.resolveCodingScheme(codingSchemeName, vt);
             if (scheme == null)
                 return null;
@@ -519,15 +515,14 @@ public class DataUtils {
     }
 
     public static Vector<String> getSourceListData(String codingSchemeName,
-            String version) {
+        String version) {
         CodingSchemeVersionOrTag vt = new CodingSchemeVersionOrTag();
         if (version != null) {
             vt.setVersion(version);
         }
         CodingScheme scheme = null;
         try {
-            LexBIGService lbSvc =
-                RemoteServerUtil.createLexBIGService();
+            LexBIGService lbSvc = RemoteServerUtil.createLexBIGService();
             scheme = lbSvc.resolveCodingScheme(codingSchemeName, vt);
             if (scheme == null)
                 return null;
@@ -613,7 +608,7 @@ public class DataUtils {
                     util.insertReportFormat(description);
                 } catch (Exception ex) {
                     _logger.debug("*** insertReportFormat " + description
-                            + " failed.");
+                        + " failed.");
                 }
 
                 description = "Microsoft Office Excel";
@@ -621,7 +616,7 @@ public class DataUtils {
                     util.insertReportFormat(description);
                 } catch (Exception ex) {
                     _logger.debug("*** insertReportFormat " + description
-                            + " failed.");
+                        + " failed.");
                 }
 
                 objs = util.search(FQName);
@@ -651,7 +646,7 @@ public class DataUtils {
                     util.insertReportFormat(description);
                 } catch (Exception ex) {
                     _logger.debug("*** insertReportFormat " + description
-                            + " failed.");
+                        + " failed.");
                 }
 
                 description = "Microsoft Office Excel";
@@ -659,7 +654,7 @@ public class DataUtils {
                     util.insertReportFormat(description);
                 } catch (Exception ex) {
                     _logger.debug("*** insertReportFormat " + description
-                            + " failed.");
+                        + " failed.");
                 }
 
                 objs = util.search(FQName);
@@ -697,12 +692,11 @@ public class DataUtils {
     // =========================================================================
 
     public static Concept getConceptByCode(String codingSchemeName,
-            String vers, String ltag, String code) {
+        String vers, String ltag, String code) {
         try {
             ReportWriterProperties
-                    .getProperty(ReportWriterProperties.EVS_SERVICE_URL);
-            LexBIGService lbSvc =
-                RemoteServerUtil.createLexBIGService();
+                .getProperty(ReportWriterProperties.EVS_SERVICE_URL);
+            LexBIGService lbSvc = RemoteServerUtil.createLexBIGService();
             if (lbSvc == null) {
                 _logger.error("lbSvc == null???");
                 return null;
@@ -714,19 +708,19 @@ public class DataUtils {
 
             ConceptReferenceList crefs =
                 createConceptReferenceList(new String[] { code },
-                        codingSchemeName);
+                    codingSchemeName);
 
             CodedNodeSet cns = null;
 
             try {
                 _logger.debug("DataUtils calling getCodingSchemeConcepts: "
-                        + code);
+                    + code);
                 cns =
                     lbSvc.getCodingSchemeConcepts(codingSchemeName,
-                            versionOrTag);
+                        versionOrTag);
             } catch (Exception e1) {
                 _logger.error("DataUtils lbSvc.getCodingSchemeConcepts "
-                        + "threw exception??? " + code);
+                    + "threw exception??? " + code);
                 // e1.printStackTrace();
                 return null;
             }
@@ -744,7 +738,7 @@ public class DataUtils {
             if (matches.getResolvedConceptReferenceCount() > 0) {
                 ResolvedConceptReference ref =
                     (ResolvedConceptReference) matches
-                            .enumerateResolvedConceptReference().nextElement();
+                        .enumerateResolvedConceptReference().nextElement();
 
                 Concept entry = ref.getReferencedEntry();
                 return entry;
@@ -757,7 +751,7 @@ public class DataUtils {
     }
 
     public static NameAndValueList createNameAndValueList(String[] names,
-            String[] values) {
+        String[] values) {
         NameAndValueList nvList = new NameAndValueList();
         for (int i = 0; i < names.length; i++) {
             NameAndValue nv = new NameAndValue();
@@ -771,15 +765,14 @@ public class DataUtils {
     }
 
     public Vector<Concept> getAssociationTargets(String scheme, String version,
-            String code, String assocName) {
+        String code, String assocName) {
         CodingSchemeVersionOrTag csvt = new CodingSchemeVersionOrTag();
         if (version != null)
             csvt.setVersion(version);
         ResolvedConceptReferenceList matches = null;
         Vector<Concept> v = new Vector<Concept>();
         try {
-            LexBIGService lbSvc =
-                RemoteServerUtil.createLexBIGService();
+            LexBIGService lbSvc = RemoteServerUtil.createLexBIGService();
             if (lbSvc == null) {
                 _logger.error("lbSvc == null???");
                 return null;
@@ -791,12 +784,12 @@ public class DataUtils {
             NameAndValueList nameAndValueList_qualifier = null;
             cng =
                 cng.restrictToAssociations(nameAndValueList,
-                        nameAndValueList_qualifier);
+                    nameAndValueList_qualifier);
 
             matches =
                 cng.resolveAsList(ConvenienceMethods.createConceptReference(
-                        code, scheme), true, false, 1, 1, new LocalNameList(),
-                        null, null, _maxReturn);
+                    code, scheme), true, false, 1, 1, new LocalNameList(),
+                    null, null, _maxReturn);
 
             if (matches.getResolvedConceptReferenceCount() > 0) {
                 Enumeration<ResolvedConceptReference> refEnum =
@@ -813,7 +806,7 @@ public class DataUtils {
                         assoc = processForAnonomousNodes(assoc);
                         AssociatedConcept[] acl =
                             assoc.getAssociatedConcepts()
-                                    .getAssociatedConcept();
+                                .getAssociatedConcept();
                         for (int j = 0; j < acl.length; j++) {
                             AssociatedConcept ac = acl[j];
                             v.add(ac.getReferencedEntry());
@@ -830,18 +823,20 @@ public class DataUtils {
     }
 
     public ResolvedConceptReferenceList getNext(
-            ResolvedConceptReferencesIterator iterator) {
+        ResolvedConceptReferencesIterator iterator) {
         return iterator.getNext();
     }
 
     /**
      * Dump_matches to output, for debug purposes
-     *
-     * @param iterator the iterator
-     * @param maxToReturn the max to return
+     * 
+     * @param iterator
+     *            the iterator
+     * @param maxToReturn
+     *            the max to return
      */
     public Vector<Concept> resolveIterator(
-            ResolvedConceptReferencesIterator iterator, int maxToReturn) {
+        ResolvedConceptReferencesIterator iterator, int maxToReturn) {
         Vector<Concept> v = new Vector<Concept>();
         if (iterator == null) {
             _logger.debug("No match.");
@@ -871,15 +866,14 @@ public class DataUtils {
     }
 
     public Vector<Concept> getAssociationSources(String scheme, String version,
-            String code, String assocName) {
+        String code, String assocName) {
         CodingSchemeVersionOrTag csvt = new CodingSchemeVersionOrTag();
         if (version != null)
             csvt.setVersion(version);
         ResolvedConceptReferenceList matches = null;
         Vector<Concept> v = new Vector<Concept>();
         try {
-            LexBIGService lbSvc =
-                RemoteServerUtil.createLexBIGService();
+            LexBIGService lbSvc = RemoteServerUtil.createLexBIGService();
             CodedNodeGraph cng = lbSvc.getNodeGraph(scheme, csvt, null);
 
             NameAndValueList nameAndValueList =
@@ -888,12 +882,12 @@ public class DataUtils {
             NameAndValueList nameAndValueList_qualifier = null;
             cng =
                 cng.restrictToAssociations(nameAndValueList,
-                        nameAndValueList_qualifier);
+                    nameAndValueList_qualifier);
 
             matches =
                 cng.resolveAsList(ConvenienceMethods.createConceptReference(
-                        code, scheme), false, true, 1, 1, new LocalNameList(),
-                        null, null, _maxReturn);
+                    code, scheme), false, true, 1, 1, new LocalNameList(),
+                    null, null, _maxReturn);
 
             if (matches.getResolvedConceptReferenceCount() > 0) {
                 Enumeration<ResolvedConceptReference> refEnum =
@@ -910,7 +904,7 @@ public class DataUtils {
                         assoc = processForAnonomousNodes(assoc);
                         AssociatedConcept[] acl =
                             assoc.getAssociatedConcepts()
-                                    .getAssociatedConcept();
+                                .getAssociatedConcept();
                         for (int j = 0; j < acl.length; j++) {
                             AssociatedConcept ac = acl[j];
                             v.add(ac.getReferencedEntry());
@@ -927,11 +921,11 @@ public class DataUtils {
     }
 
     public Vector<String> getParentCodes(String scheme, String version,
-            String code) {
+        String code) {
         Vector<String> hierarchicalAssoName_vec =
             getHierarchyAssociationId(scheme, version);
         if (hierarchicalAssoName_vec == null
-                || hierarchicalAssoName_vec.size() == 0) {
+            || hierarchicalAssoName_vec.size() == 0) {
             return null;
         }
         String hierarchicalAssoName =
@@ -941,7 +935,7 @@ public class DataUtils {
         // version, code, hierarchicalAssoName);
         Vector<String> superconcept_vec =
             getAssociationSourceCodes(scheme, version, code,
-                    hierarchicalAssoName);
+                hierarchicalAssoName);
         if (superconcept_vec == null)
             return null;
         // SortUtils.quickSort(superconcept_vec, SortUtils.SORT_BY_CODE);
@@ -950,15 +944,14 @@ public class DataUtils {
     }
 
     public Vector<String> getAssociationSourceCodes(String scheme,
-            String version, String code, String assocName) {
+        String version, String code, String assocName) {
         CodingSchemeVersionOrTag csvt = new CodingSchemeVersionOrTag();
         if (version != null)
             csvt.setVersion(version);
         ResolvedConceptReferenceList matches = null;
         Vector<String> v = new Vector<String>();
         try {
-            LexBIGService lbSvc =
-                RemoteServerUtil.createLexBIGService();
+            LexBIGService lbSvc = RemoteServerUtil.createLexBIGService();
             CodedNodeGraph cng = lbSvc.getNodeGraph(scheme, csvt, null);
 
             NameAndValueList nameAndValueList =
@@ -967,12 +960,12 @@ public class DataUtils {
             NameAndValueList nameAndValueList_qualifier = null;
             cng =
                 cng.restrictToAssociations(nameAndValueList,
-                        nameAndValueList_qualifier);
+                    nameAndValueList_qualifier);
 
             matches =
                 cng.resolveAsList(ConvenienceMethods.createConceptReference(
-                        code, scheme), false, true, 1, 1, new LocalNameList(),
-                        null, null, _maxReturn);
+                    code, scheme), false, true, 1, 1, new LocalNameList(),
+                    null, null, _maxReturn);
 
             if (matches.getResolvedConceptReferenceCount() > 0) {
                 Enumeration<ResolvedConceptReference> refEnum =
@@ -989,7 +982,7 @@ public class DataUtils {
                         assoc = processForAnonomousNodes(assoc);
                         AssociatedConcept[] acl =
                             assoc.getAssociatedConcepts()
-                                    .getAssociatedConcept();
+                                .getAssociatedConcept();
                         for (int j = 0; j < acl.length; j++) {
                             AssociatedConcept ac = acl[j];
                             v.add(ac.getReferencedEntry().getEntityCode());
@@ -1006,7 +999,7 @@ public class DataUtils {
     }
 
     public static ConceptReferenceList createConceptReferenceList(
-            String[] codes, String codingSchemeName) {
+        String[] codes, String codingSchemeName) {
         if (codes == null) {
             return null;
         }
@@ -1021,23 +1014,22 @@ public class DataUtils {
     }
 
     public Vector<String> getSubconceptCodes(String scheme, String version,
-            String code) { // throws LBException{
+        String code) { // throws LBException{
         Vector<String> v = new Vector<String>();
         try {
-            LexBIGService lbSvc =
-                RemoteServerUtil.createLexBIGService();
+            LexBIGService lbSvc = RemoteServerUtil.createLexBIGService();
             LexBIGServiceConvenienceMethods lbscm =
                 (LexBIGServiceConvenienceMethods) lbSvc
-                        .getGenericExtension("LexBIGServiceConvenienceMethods");
+                    .getGenericExtension("LexBIGServiceConvenienceMethods");
             lbscm.setLexBIGService(lbSvc);
 
             CodingSchemeVersionOrTag csvt = new CodingSchemeVersionOrTag();
             csvt.setVersion(version);
             try {
                 lbscm.createCodeNodeSet(new String[] { code }, scheme, csvt)
-                        .resolveToList(null, null, null, 1)
-                        .getResolvedConceptReference(0).getEntityDescription()
-                        .getContent();
+                    .resolveToList(null, null, null, 1)
+                    .getResolvedConceptReference(0).getEntityDescription()
+                    .getContent();
 
             } catch (Exception e) {
             }
@@ -1051,10 +1043,10 @@ public class DataUtils {
                 try {
                     associations =
                         lbscm.getHierarchyLevelNext(scheme, csvt, hierarchyID,
-                                code, false, null);
+                            code, false, null);
                 } catch (Exception e) {
                     _logger.error("getSubconceptCodes "
-                            + "Exception lbscm.getHierarchyLevelNext");
+                        + "Exception lbscm.getHierarchyLevelNext");
                     return v;
                 }
 
@@ -1077,23 +1069,22 @@ public class DataUtils {
     }
 
     public Vector<String> getSuperconceptCodes(String scheme, String version,
-            String code) { // throws LBException{
+        String code) { // throws LBException{
         long ms = System.currentTimeMillis();
         Vector<String> v = new Vector<String>();
         try {
-            LexBIGService lbSvc =
-                RemoteServerUtil.createLexBIGService();
+            LexBIGService lbSvc = RemoteServerUtil.createLexBIGService();
             LexBIGServiceConvenienceMethods lbscm =
                 (LexBIGServiceConvenienceMethods) lbSvc
-                        .getGenericExtension("LexBIGServiceConvenienceMethods");
+                    .getGenericExtension("LexBIGServiceConvenienceMethods");
             lbscm.setLexBIGService(lbSvc);
             CodingSchemeVersionOrTag csvt = new CodingSchemeVersionOrTag();
             csvt.setVersion(version);
             try {
                 lbscm.createCodeNodeSet(new String[] { code }, scheme, csvt)
-                        .resolveToList(null, null, null, 1)
-                        .getResolvedConceptReference(0).getEntityDescription()
-                        .getContent();
+                    .resolveToList(null, null, null, 1)
+                    .getResolvedConceptReference(0).getEntityDescription()
+                    .getContent();
             } catch (Exception e) {
             }
 
@@ -1103,7 +1094,7 @@ public class DataUtils {
                 String hierarchyID = hierarchyIDs[k];
                 AssociationList associations =
                     lbscm.getHierarchyLevelPrev(scheme, csvt, hierarchyID,
-                            code, false, null);
+                        code, false, null);
                 for (int i = 0; i < associations.getAssociationCount(); i++) {
                     Association assoc = associations.getAssociation(i);
                     AssociatedConceptList concepts =
@@ -1119,19 +1110,18 @@ public class DataUtils {
         } catch (Exception ex) {
             ex.printStackTrace();
         } finally {
-            _logger.debug("Run time (ms): "
-                    + (System.currentTimeMillis() - ms));
+            _logger
+                .debug("Run time (ms): " + (System.currentTimeMillis() - ms));
         }
         return v;
     }
 
     public Vector<String> getHierarchyAssociationId(String scheme,
-            String version) {
+        String version) {
 
         Vector<String> association_vec = new Vector<String>();
         try {
-            LexBIGService lbSvc =
-                RemoteServerUtil.createLexBIGService();
+            LexBIGService lbSvc = RemoteServerUtil.createLexBIGService();
 
             // Will handle secured ontologies later.
             CodingSchemeVersionOrTag versionOrTag =
@@ -1155,19 +1145,18 @@ public class DataUtils {
     }
 
     public static String getVocabularyVersionByTag(String codingSchemeName,
-            String ltag) {
+        String ltag) {
         if (codingSchemeName == null)
             return null;
         try {
-            LexBIGService lbSvc =
-                RemoteServerUtil.createLexBIGService();
+            LexBIGService lbSvc = RemoteServerUtil.createLexBIGService();
             CodingSchemeRenderingList lcsrl = lbSvc.getSupportedCodingSchemes();
             CodingSchemeRendering[] csra = lcsrl.getCodingSchemeRendering();
             for (int i = 0; i < csra.length; i++) {
                 CodingSchemeRendering csr = csra[i];
                 CodingSchemeSummary css = csr.getCodingSchemeSummary();
                 if (css.getFormalName().compareTo(codingSchemeName) == 0
-                        || css.getLocalName().compareTo(codingSchemeName) == 0) {
+                    || css.getLocalName().compareTo(codingSchemeName) == 0) {
                     if (ltag == null)
                         return css.getRepresentsVersion();
                     RenderingDetail rd = csr.getRenderingDetail();
@@ -1185,7 +1174,7 @@ public class DataUtils {
             e.printStackTrace();
         }
         _logger.debug("Version corresponding to tag " + ltag + " is not found "
-                + " in " + codingSchemeName);
+            + " in " + codingSchemeName);
         return null;
     }
 
@@ -1193,8 +1182,7 @@ public class DataUtils {
 
         Vector<String> v = new Vector<String>();
         try {
-            LexBIGService lbSvc =
-                RemoteServerUtil.createLexBIGService();
+            LexBIGService lbSvc = RemoteServerUtil.createLexBIGService();
             CodingSchemeRenderingList csrl = lbSvc.getSupportedCodingSchemes();
             if (csrl == null)
                 _logger.debug("csrl is NULL");
@@ -1204,7 +1192,7 @@ public class DataUtils {
                 CodingSchemeRendering csr = csrs[i];
                 Boolean isActive =
                     csr.getRenderingDetail().getVersionStatus().equals(
-                            CodingSchemeVersionStatus.ACTIVE);
+                        CodingSchemeVersionStatus.ACTIVE);
                 if (isActive != null && isActive.equals(Boolean.TRUE)) {
                     CodingSchemeSummary css = csr.getCodingSchemeSummary();
                     String formalname = css.getFormalName();
@@ -1236,7 +1224,7 @@ public class DataUtils {
         temp.setAssociatedConcepts(new AssociatedConceptList());
 
         for (int i = 0; i < assoc.getAssociatedConcepts()
-                .getAssociatedConceptCount(); i++) {
+            .getAssociatedConceptCount(); i++) {
             // Conditionals to deal with anonymous nodes and UMLS top nodes
             // "V-X"
             // The first three allow UMLS traversal to top node.
@@ -1244,19 +1232,19 @@ public class DataUtils {
             // like false
             // top nodes.
             if (assoc.getAssociatedConcepts().getAssociatedConcept(i)
-                    .getReferencedEntry() != null
-                    && assoc.getAssociatedConcepts().getAssociatedConcept(i)
-                            .getReferencedEntry().getIsAnonymous() != null
-                    && assoc.getAssociatedConcepts().getAssociatedConcept(i)
-                            .getReferencedEntry().getIsAnonymous() != false
-                    && !assoc.getAssociatedConcepts().getAssociatedConcept(i)
-                            .getConceptCode().equals("@")
-                    && !assoc.getAssociatedConcepts().getAssociatedConcept(i)
-                            .getConceptCode().equals("@@")) {
+                .getReferencedEntry() != null
+                && assoc.getAssociatedConcepts().getAssociatedConcept(i)
+                    .getReferencedEntry().getIsAnonymous() != null
+                && assoc.getAssociatedConcepts().getAssociatedConcept(i)
+                    .getReferencedEntry().getIsAnonymous() != false
+                && !assoc.getAssociatedConcepts().getAssociatedConcept(i)
+                    .getConceptCode().equals("@")
+                && !assoc.getAssociatedConcepts().getAssociatedConcept(i)
+                    .getConceptCode().equals("@@")) {
                 // do nothing
             } else {
                 temp.getAssociatedConcepts().addAssociatedConcept(
-                        assoc.getAssociatedConcepts().getAssociatedConcept(i));
+                    assoc.getAssociatedConcepts().getAssociatedConcept(i));
             }
         }
         return temp;
@@ -1275,7 +1263,7 @@ public class DataUtils {
     }
 
     protected static NameAndValueList createNameAndValueList(
-            Vector<String> names, Vector<String> values) {
+        Vector<String> names, Vector<String> values) {
         if (names == null)
             return null;
         NameAndValueList nvList = new NameAndValueList();
@@ -1293,12 +1281,11 @@ public class DataUtils {
     }
 
     public static Vector<org.LexGrid.concepts.Concept> restrictToMatchingProperty(
-            String codingSchemeName, String version,
-            Vector<String> property_vec, Vector<String> source_vec,
-            Vector<String> qualifier_name_vec,
-            Vector<String> qualifier_value_vec, java.lang.String matchText,
-            java.lang.String matchAlgorithm, java.lang.String language,
-            int maxToReturn) {
+        String codingSchemeName, String version, Vector<String> property_vec,
+        Vector<String> source_vec, Vector<String> qualifier_name_vec,
+        Vector<String> qualifier_value_vec, java.lang.String matchText,
+        java.lang.String matchAlgorithm, java.lang.String language,
+        int maxToReturn) {
 
         LocalNameList propertyList = vector2LocalNameList(property_vec);
         CodedNodeSet.PropertyType[] propertyTypes = null;
@@ -1308,15 +1295,14 @@ public class DataUtils {
             createNameAndValueList(qualifier_name_vec, qualifier_value_vec);
 
         return restrictToMatchingProperty(codingSchemeName, version,
-                propertyList, propertyTypes, sourceList, qualifierList,
-                matchText, matchAlgorithm, language, maxToReturn);
+            propertyList, propertyTypes, sourceList, qualifierList, matchText,
+            matchAlgorithm, language, maxToReturn);
     }
 
     public static Vector<org.LexGrid.concepts.Concept> restrictToProperty(
-            String codingSchemeName, String version,
-            Vector<String> property_vec, Vector<String> source_vec,
-            Vector<String> qualifier_name_vec,
-            Vector<String> qualifier_value_vec, int maxToReturn) {
+        String codingSchemeName, String version, Vector<String> property_vec,
+        Vector<String> source_vec, Vector<String> qualifier_name_vec,
+        Vector<String> qualifier_value_vec, int maxToReturn) {
 
         LocalNameList propertyList = vector2LocalNameList(property_vec);
         CodedNodeSet.PropertyType[] propertyTypes = null;
@@ -1324,16 +1310,15 @@ public class DataUtils {
         NameAndValueList qualifierList =
             createNameAndValueList(qualifier_name_vec, qualifier_value_vec);
         return restrictToProperty(codingSchemeName, version, propertyList,
-                propertyTypes, sourceList, qualifierList, maxToReturn);
+            propertyTypes, sourceList, qualifierList, maxToReturn);
     }
 
     public static Vector<org.LexGrid.concepts.Concept> restrictToProperty(
-            String codingSchemeName, String version,
+        String codingSchemeName, String version,
 
-            LocalNameList propertyList,
-            CodedNodeSet.PropertyType[] propertyTypes,
-            LocalNameList sourceList, NameAndValueList qualifierList,
-            int maxToReturn) {
+        LocalNameList propertyList, CodedNodeSet.PropertyType[] propertyTypes,
+        LocalNameList sourceList, NameAndValueList qualifierList,
+        int maxToReturn) {
         CodedNodeSet cns = null;
         Vector<org.LexGrid.concepts.Concept> v =
             new Vector<org.LexGrid.concepts.Concept>();
@@ -1342,8 +1327,7 @@ public class DataUtils {
                 new CodingSchemeVersionOrTag();
             versionOrTag.setVersion(version);
 
-            LexBIGService lbSvc =
-                RemoteServerUtil.createLexBIGService();
+            LexBIGService lbSvc = RemoteServerUtil.createLexBIGService();
 
             cns = lbSvc.getCodingSchemeConcepts(codingSchemeName, versionOrTag);
             if (cns == null)
@@ -1352,18 +1336,18 @@ public class DataUtils {
             LocalNameList contextList = null;
             cns =
                 cns.restrictToProperties(propertyList, propertyTypes,
-                        sourceList, contextList, qualifierList);
+                    sourceList, contextList, qualifierList);
 
             LocalNameList restrictToProperties = new LocalNameList();
             SortOptionList sortCriteria =
                 Constructors.createSortOptionList(new String[] {
-                        "matchToQuery", "code" });
+                    "matchToQuery", "code" });
 
             ResolvedConceptReferenceList list = null;
             try {
                 list =
                     cns.resolveToList(sortCriteria, restrictToProperties, null,
-                            maxToReturn);
+                        maxToReturn);
             } catch (Exception ex) {
                 throw new LBParameterException(ex.getMessage());
             }
@@ -1374,7 +1358,7 @@ public class DataUtils {
                 list.getResolvedConceptReference();
             if (rcrArray == null) {
                 _logger
-                        .warn("DLBWrapper getResolvedConceptReference returns null");
+                    .warn("DLBWrapper getResolvedConceptReference returns null");
             }
 
             for (int i = 0; i < rcrArray.length; i++) {
@@ -1391,12 +1375,11 @@ public class DataUtils {
     }
 
     public static Vector<org.LexGrid.concepts.Concept> restrictToMatchingProperty(
-            String codingSchemeName, String version,
-            LocalNameList propertyList,
-            CodedNodeSet.PropertyType[] propertyTypes,
-            LocalNameList sourceList, NameAndValueList qualifierList,
-            java.lang.String matchText, java.lang.String matchAlgorithm,
-            java.lang.String language, int maxToReturn) {
+        String codingSchemeName, String version, LocalNameList propertyList,
+        CodedNodeSet.PropertyType[] propertyTypes, LocalNameList sourceList,
+        NameAndValueList qualifierList, java.lang.String matchText,
+        java.lang.String matchAlgorithm, java.lang.String language,
+        int maxToReturn) {
         CodedNodeSet cns = null;
         Vector<org.LexGrid.concepts.Concept> v =
             new Vector<org.LexGrid.concepts.Concept>();
@@ -1405,8 +1388,7 @@ public class DataUtils {
                 new CodingSchemeVersionOrTag();
             versionOrTag.setVersion(version);
 
-            LexBIGService lbSvc =
-                RemoteServerUtil.createLexBIGService();
+            LexBIGService lbSvc = RemoteServerUtil.createLexBIGService();
 
             if (lbSvc == null) {
                 _logger.error("lbSvc == null???");
@@ -1420,19 +1402,19 @@ public class DataUtils {
             LocalNameList contextList = null;
             cns =
                 cns.restrictToMatchingProperties(propertyList, propertyTypes,
-                        sourceList, contextList, qualifierList, matchText,
-                        matchAlgorithm, language);
+                    sourceList, contextList, qualifierList, matchText,
+                    matchAlgorithm, language);
 
             LocalNameList restrictToProperties = new LocalNameList();
             SortOptionList sortCriteria =
                 Constructors
-                        .createSortOptionList(new String[] { "matchToQuery" });
+                    .createSortOptionList(new String[] { "matchToQuery" });
 
             ResolvedConceptReferenceList list = null;
             try {
                 list =
                     cns.resolveToList(sortCriteria, restrictToProperties, null,
-                            maxToReturn);
+                        maxToReturn);
             } catch (Exception ex) {
                 throw new LBParameterException(ex.getMessage());
             }
