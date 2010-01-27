@@ -58,6 +58,7 @@ import org.apache.log4j.*;
 public class RemoteServerUtil {
     private static Logger _logger = Logger
         .getLogger(RemoteServerUtil.class);
+    private static boolean _firstTime = true;
     
     public static LexBIGService createLexBIGService() throws Exception {
         String serviceUrl = ReportWriterProperties
@@ -67,8 +68,11 @@ public class RemoteServerUtil {
 
     public static LexBIGService createLexBIGService(String serviceUrl) 
             throws Exception {
-        _logger.debug(StringUtils.SEPARATOR);
-        _logger.debug("serviceUrl: " + serviceUrl);
+        if (_firstTime) {
+            _logger.debug(StringUtils.SEPARATOR);
+            _logger.debug("serviceUrl: " + serviceUrl);
+            _firstTime = false;
+        }
         if (serviceUrl == null || serviceUrl.compareTo("") == 0) {
             LexBIGService lbSvc = new LexBIGServiceImpl();
             return lbSvc;
