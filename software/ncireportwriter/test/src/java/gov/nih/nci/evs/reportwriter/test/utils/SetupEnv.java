@@ -9,14 +9,14 @@ public class SetupEnv {
         "C:/apps/evs/ncireportwriter-webapp/conf/ncireportwriter.properties";
     private static SetupEnv _instance = null;
     
-    private SetupEnv() {
-        System.setProperty(RW_PROPERTY_FILE, DEFAULT_PROPERTY_FILE);
-    }
-    
     public static SetupEnv getInstance() {
         if (_instance == null)
             _instance = new SetupEnv();
         return _instance;
+    }
+    
+    private SetupEnv() {
+        setup(DEFAULT_PROPERTY_FILE);
     }
     
     public void setup(String propertyFile) {
