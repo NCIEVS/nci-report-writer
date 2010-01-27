@@ -764,62 +764,9 @@ public class DataUtils {
         return nvList;
     }
 
-    public Vector<Concept> getAssociationTargets(String scheme, String version,
-        String code, String assocName) {
-        CodingSchemeVersionOrTag csvt = new CodingSchemeVersionOrTag();
-        if (version != null)
-            csvt.setVersion(version);
-        ResolvedConceptReferenceList matches = null;
-        Vector<Concept> v = new Vector<Concept>();
-        try {
-            LexBIGService lbSvc = RemoteServerUtil.createLexBIGService();
-            if (lbSvc == null) {
-                _logger.error("lbSvc == null???");
-                return null;
-            }
-            CodedNodeGraph cng = lbSvc.getNodeGraph(scheme, csvt, null);
-            NameAndValueList nameAndValueList =
-                createNameAndValueList(new String[] { assocName }, null);
-
-            NameAndValueList nameAndValueList_qualifier = null;
-            cng =
-                cng.restrictToAssociations(nameAndValueList,
-                    nameAndValueList_qualifier);
-
-            matches =
-                cng.resolveAsList(ConvenienceMethods.createConceptReference(
-                    code, scheme), true, false, 1, 1, new LocalNameList(),
-                    null, null, _maxReturn);
-
-            if (matches.getResolvedConceptReferenceCount() > 0) {
-                Enumeration<ResolvedConceptReference> refEnum =
-                    matches.enumerateResolvedConceptReference();
-
-                while (refEnum.hasMoreElements()) {
-                    ResolvedConceptReference ref = refEnum.nextElement();
-                    AssociationList sourceof = ref.getSourceOf();
-                    Association[] associations = sourceof.getAssociation();
-
-                    for (int i = 0; i < associations.length; i++) {
-                        Association assoc = associations[i];
-                        // KLO
-                        assoc = processForAnonomousNodes(assoc);
-                        AssociatedConcept[] acl =
-                            assoc.getAssociatedConcepts()
-                                .getAssociatedConcept();
-                        for (int j = 0; j < acl.length; j++) {
-                            AssociatedConcept ac = acl[j];
-                            v.add(ac.getReferencedEntry());
-                        }
-                    }
-                }
-                SortUtils.quickSort(v);
-            }
-
-        } catch (Exception ex) {
-            ex.printStackTrace();
-        }
-        return v;
+    public Vector<Concept> getAssociationTargets(String scheme,
+        String version, String code, String assocName) {
+        return getAssociation(true, scheme, version, code, assocName);
     }
 
     public ResolvedConceptReferenceList getNext(
@@ -867,6 +814,11 @@ public class DataUtils {
 
     public Vector<Concept> getAssociationSources(String scheme, String version,
         String code, String assocName) {
+        return getAssociation(false, scheme, version, code, assocName);
+    }
+    
+    public Vector<Concept> getAssociation(boolean retrieveTargets, 
+        String scheme, String version, String code, String assocName) {
         CodingSchemeVersionOrTag csvt = new CodingSchemeVersionOrTag();
         if (version != null)
             csvt.setVersion(version);
@@ -884,9 +836,11 @@ public class DataUtils {
                 cng.restrictToAssociations(nameAndValueList,
                     nameAndValueList_qualifier);
 
+            boolean resolveForward = retrieveTargets;
+            boolean resolveBackward = ! retrieveTargets;
             matches =
                 cng.resolveAsList(ConvenienceMethods.createConceptReference(
-                    code, scheme), false, true, 1, 1, new LocalNameList(),
+                    code, scheme), resolveForward, resolveBackward, 1, 1, new LocalNameList(),
                     null, null, _maxReturn);
 
             if (matches.getResolvedConceptReferenceCount() > 0) {
@@ -895,8 +849,11 @@ public class DataUtils {
 
                 while (refEnum.hasMoreElements()) {
                     ResolvedConceptReference ref = refEnum.nextElement();
-                    AssociationList targetof = ref.getTargetOf();
-                    Association[] associations = targetof.getAssociation();
+                    AssociationList alist = retrieveTargets ? ref.getSourceOf() :
+                        ref.getTargetOf();
+                    if (alist == null)
+                        continue;
+                    Association[] associations = alist.getAssociation();
 
                     for (int i = 0; i < associations.length; i++) {
                         Association assoc = associations[i];
@@ -919,7 +876,7 @@ public class DataUtils {
         }
         return v;
     }
-
+    
     public Vector<String> getParentCodes(String scheme, String version,
         String code) {
         Vector<String> hierarchicalAssoName_vec =
