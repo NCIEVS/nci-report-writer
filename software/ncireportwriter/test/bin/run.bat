@@ -14,12 +14,13 @@ set cp=%cp%;..\build\web\WEB-INF\classes
 set CLASSPATH=%cp%
 
 set java=%JAVA_HOME%\bin\java
+set javaArgs=-Xms256m -Xmx512m
 set class=gov.nih.nci.evs.reportwriter.test.lexevs.DataUtilsTest
 set args=-propertyFile C:/apps/evs/ncireportwriter-webapp/conf/ncireportwriter.properties
 
 rem -------------------------------------------------------------------------------------
 @echo on
-"%java%" %class% %args%
+"%java%" %javaArgs% %class% %args%
 
 @echo off
 rem -------------------------------------------------------------------------------------

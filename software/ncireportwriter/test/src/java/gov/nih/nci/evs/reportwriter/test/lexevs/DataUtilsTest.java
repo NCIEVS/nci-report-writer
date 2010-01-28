@@ -28,7 +28,7 @@ public class DataUtilsTest {
         code = "C63923"; // FDA Established Names and Unique Ingredient Identifier Codes Terminology
         String assocName = "A8";
         boolean retrieveTargets = false;
-        boolean showAll = true;
+        boolean showAll = false;
 
         _logger.info(StringUtils.SEPARATOR);
         _logger.info("Calling: getAssociations");
