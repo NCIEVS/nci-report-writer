@@ -817,7 +817,7 @@ public class DataUtils {
         return getAssociations(false, scheme, version, code, assocName);
     }
     
-    public Vector<Concept> getAssociations(boolean retrieveTargets, 
+    public Vector<Concept> getAssociationsOrig(boolean retrieveTargets, 
         String scheme, String version, String code, String assocName) {
         CodingSchemeVersionOrTag csvt = new CodingSchemeVersionOrTag();
         if (version != null)
@@ -876,7 +876,115 @@ public class DataUtils {
         }
         return v;
     }
+
+    public Vector<Concept> getAssociations(boolean retrieveTargets, 
+        String scheme, String version,
+        String code, String assocName) {
+        _logger.info("Method: getAssociationsNew");
+        CodingSchemeVersionOrTag csvt = new CodingSchemeVersionOrTag();
+        if (version != null)
+            csvt.setVersion(version);
+        Vector<Concept> v = new Vector<Concept>();
+        try {
+            LexBIGService lbSvc = RemoteServerUtil.createLexBIGService();
+            CodedNodeGraph cng = lbSvc.getNodeGraph(scheme, csvt, null);
+            NameAndValueList nameAndValueList =
+                createNameAndValueList(new String[] { assocName }, null);
+            NameAndValueList nameAndValueList_qualifier = null;
+            cng = cng.restrictToAssociations(nameAndValueList,
+                nameAndValueList_qualifier);
+            
+            ConceptReference graphFocus =
+                ConvenienceMethods.createConceptReference(code, scheme);
+            boolean resolveForward = retrieveTargets;
+            boolean resolveBackward = ! retrieveTargets;
+            int resolveAssociationDepth = 1;
+            int maxToReturn = -1;
+
+            ConceptReferenceList crefs =
+                createConceptReferenceList(new String[] { code }, scheme);
+            CodedNodeSet codesToRemove = lbSvc.getCodingSchemeConcepts(scheme, csvt);
+            codesToRemove = codesToRemove.restrictToCodes(crefs);
+            
+            ResolvedConceptReferencesIterator iterator =
+                codedNodeGraph2CodedNodeSetIterator(cng, graphFocus,
+                    resolveForward, resolveBackward, resolveAssociationDepth,
+                    maxToReturn, codesToRemove);
+
+            v = resolveIterator(iterator, maxToReturn, null);
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+        return v;
+    }
     
+    public ResolvedConceptReferencesIterator codedNodeGraph2CodedNodeSetIterator(
+        CodedNodeGraph cng, ConceptReference graphFocus,
+        boolean resolveForward, boolean resolveBackward,
+        int resolveAssociationDepth, int maxToReturn, CodedNodeSet codesToRemove) {
+        
+        try {
+            CodedNodeSet cns =
+                cng.toNodeList(graphFocus, resolveForward, resolveBackward,
+                    resolveAssociationDepth, maxToReturn);
+
+            if (cns == null) {
+                _logger.warn("cng.toNodeList returns null???");
+                return null;
+            }
+            
+            if (codesToRemove != null)
+                cns = cns.difference(codesToRemove);
+
+            SortOptionList sortCriteria = null;
+            // Constructors.createSortOptionList(new String[]{"matchToQuery", "code"});
+            LocalNameList propertyNames = null;
+            CodedNodeSet.PropertyType[] propertyTypes = null;
+
+            ResolvedConceptReferencesIterator iterator =
+                cns.resolve(sortCriteria, propertyNames, propertyTypes);
+            if (iterator == null)
+                _logger.warn("cns.resolve returns null???");
+            return iterator;
+
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            return null;
+        }
+    }
+    
+    public Vector<Concept> resolveIterator(ResolvedConceptReferencesIterator iterator,
+        int maxToReturn, String code) {
+        Vector<Concept> v = new Vector<Concept>();
+        if (iterator == null) {
+            _logger.info("No match.");
+            return v;
+        }
+
+        try {
+            int iteration = 0;
+            while (iterator.hasNext()) {
+                iteration++;
+                iterator = iterator.scroll(maxToReturn);
+                ResolvedConceptReferenceList rcrl = iterator.getNext();
+                ResolvedConceptReference[] rcra =
+                    rcrl.getResolvedConceptReference();
+                for (int i = 0; i < rcra.length; i++) {
+                    ResolvedConceptReference rcr = rcra[i];
+                    org.LexGrid.concepts.Concept ce = rcr.getReferencedEntry();
+                    if (code == null) {
+                        v.add(ce);
+                    } else if (ce.getEntityCode().compareTo(code) != 0) {
+                        v.add(ce);
+                    }
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return v;
+    }
+
     public Vector<String> getParentCodes(String scheme, String version,
         String code) {
         Vector<String> hierarchicalAssoName_vec =
