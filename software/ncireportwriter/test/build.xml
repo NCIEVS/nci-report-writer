@@ -12,6 +12,7 @@
   <property name="target.dir" value="target"/>
   <property name="script_list" value="**/*.sh,**/*.conf,**/*.properties"/>
   <property name="properties.file" value="build.properties"/>
+  <property name="project.jar" value="${lib2.dir}/ncireportwriter.jar"/>
 
   <!-- ================================================================== -->
   <!-- Get run time                                                       -->
@@ -73,17 +74,7 @@ ${ant.version}
   <!-- ================================================================== -->
   <!-- build: assemble components                                         -->
   <!-- ================================================================== -->
-  <target name="build" description="Assemble components.">
-    <!-- Jar up as a lib -->
-    <jar destfile="${lib2.dir}/ncireportwriter.jar"
-        basedir="../build/web/WEB-INF/classes">
-      <include name="org/**"/>
-      <include name="gov/**"/>
-      <manifest>
-        <attribute name="Built-By" value="NCI"/>
-      </manifest>
-    </jar>
-
+  <target name="build" depends="pre-build" description="Assemble components.">
     <antcall target="-mk.bin.dir"/>
     <javac srcdir="${source.dir}"
         destdir="${bin.dir}"
@@ -100,6 +91,17 @@ ${ant.version}
         <include name="**/*.properties"/>
       </fileset>
     </copy>
+  </target>
+	
+  <target name="pre-build">
+    <jar destfile="${project.jar}"
+        basedir="../build/web/WEB-INF/classes">
+      <include name="org/**"/>
+      <include name="gov/**"/>
+      <manifest>
+        <attribute name="Built-By" value="NCI"/>
+      </manifest>
+    </jar>
   </target>
 
   <target name="-mk.bin.dir" description="Create target folder subtask.">
@@ -127,7 +129,7 @@ ${ant.version}
   <target name="clean" description="Clean all build products.">
     <delete dir="${bin.dir}" quiet="true" />
     <delete dir="${target.dir}" quiet="true" />
-    <delete file="${lib2.dir}/ncireportwriter.jar" quiet="true" />
+    <delete file="${project.jar}" quiet="true" />
   </target>
 
   <!-- ================================================================== -->
