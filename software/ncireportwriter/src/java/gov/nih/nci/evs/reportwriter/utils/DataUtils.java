@@ -2,6 +2,7 @@ package gov.nih.nci.evs.reportwriter.utils;
 
 import java.io.*;
 import java.util.*;
+
 import gov.nih.nci.evs.reportwriter.bean.*;
 
 import javax.faces.model.*;
@@ -912,6 +913,8 @@ public class DataUtils {
                     maxToReturn, codesToRemove);
 
             v = resolveIterator(iterator, maxToReturn, null);
+            //v = resolveIteratorNew(iterator);
+            SortUtils.quickSort(v);
         } catch (Exception ex) {
             ex.printStackTrace();
         }
@@ -971,7 +974,7 @@ public class DataUtils {
                     rcrl.getResolvedConceptReference();
                 for (int i = 0; i < rcra.length; i++) {
                     ResolvedConceptReference rcr = rcra[i];
-                    org.LexGrid.concepts.Concept ce = rcr.getReferencedEntry();
+                    Concept ce = rcr.getReferencedEntry();
                     if (code == null) {
                         v.add(ce);
                     } else if (ce.getEntityCode().compareTo(code) != 0) {
@@ -983,6 +986,40 @@ public class DataUtils {
             e.printStackTrace();
         }
         return v;
+    }
+    
+    private final int GET_DATA_MAX_RETURN = 100;
+    private final int PAGINATION_TIME_OUT = 4 * 60 * 1000;
+    public Vector<Concept> resolveIteratorNew(ResolvedConceptReferencesIterator iterator)
+            throws Exception {
+        Vector<Concept> list = new Vector<Concept>();
+        if (iterator == null)
+            return list;
+        
+        int lastResolved = 0;
+        long ms = System.currentTimeMillis();
+        long dt = 0;
+        long total_delay = 0;
+        while(iterator.hasNext()) {
+            ResolvedConceptReference[] refs = 
+                iterator.next(GET_DATA_MAX_RETURN).getResolvedConceptReference();
+            for(ResolvedConceptReference ref : refs) {
+                Concept ce = ref.getReferencedEntry();
+                list.add(ce);
+                ++lastResolved;
+            }
+            _logger.debug("Advancing iterator: " + lastResolved);
+
+            dt = System.currentTimeMillis() - ms;
+            ms = System.currentTimeMillis();
+            total_delay = total_delay + dt;
+            if (total_delay > PAGINATION_TIME_OUT) {
+                _logger.debug("Time out at: " + lastResolved);
+                break;
+            }
+        }
+        _logger.debug("getData Run time (ms): " + (System.currentTimeMillis() - ms));
+        return list;
     }
 
     public Vector<String> getParentCodes(String scheme, String version,
