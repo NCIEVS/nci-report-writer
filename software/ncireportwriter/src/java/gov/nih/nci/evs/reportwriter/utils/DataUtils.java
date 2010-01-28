@@ -766,7 +766,7 @@ public class DataUtils {
 
     public Vector<Concept> getAssociationTargets(String scheme,
         String version, String code, String assocName) {
-        return getAssociation(true, scheme, version, code, assocName);
+        return getAssociations(true, scheme, version, code, assocName);
     }
 
     public ResolvedConceptReferenceList getNext(
@@ -814,10 +814,10 @@ public class DataUtils {
 
     public Vector<Concept> getAssociationSources(String scheme, String version,
         String code, String assocName) {
-        return getAssociation(false, scheme, version, code, assocName);
+        return getAssociations(false, scheme, version, code, assocName);
     }
     
-    public Vector<Concept> getAssociation(boolean retrieveTargets, 
+    public Vector<Concept> getAssociations(boolean retrieveTargets, 
         String scheme, String version, String code, String assocName) {
         CodingSchemeVersionOrTag csvt = new CodingSchemeVersionOrTag();
         if (version != null)
