@@ -818,7 +818,7 @@ public class DataUtils {
         return getAssociations(false, scheme, version, code, assocName);
     }
     
-    public Vector<Concept> getAssociationsOrig(boolean retrieveTargets, 
+    public Vector<Concept> getAssociations(boolean retrieveTargets, 
         String scheme, String version, String code, String assocName) {
         CodingSchemeVersionOrTag csvt = new CodingSchemeVersionOrTag();
         if (version != null)
@@ -878,7 +878,7 @@ public class DataUtils {
         return v;
     }
 
-    public Vector<Concept> getAssociations(boolean retrieveTargets, 
+    public Vector<Concept> getAssociationsNew(boolean retrieveTargets, 
         String scheme, String version,
         String code, String assocName) {
         _logger.info("Method: getAssociationsNew");
@@ -988,37 +988,26 @@ public class DataUtils {
         return v;
     }
     
-    private final int GET_DATA_MAX_RETURN = 100;
-    private final int PAGINATION_TIME_OUT = 4 * 60 * 1000;
-    public Vector<Concept> resolveIteratorNew(ResolvedConceptReferencesIterator iterator)
-            throws Exception {
+    private final int RESOLVE_ITERATOR_MAX_RETURN = 100;
+    public Vector<Concept> resolveIteratorNew(
+        ResolvedConceptReferencesIterator iterator)
+        throws Exception {
         Vector<Concept> list = new Vector<Concept>();
         if (iterator == null)
             return list;
         
         int lastResolved = 0;
-        long ms = System.currentTimeMillis();
-        long dt = 0;
-        long total_delay = 0;
         while(iterator.hasNext()) {
             ResolvedConceptReference[] refs = 
-                iterator.next(GET_DATA_MAX_RETURN).getResolvedConceptReference();
+                iterator.next(RESOLVE_ITERATOR_MAX_RETURN).
+                getResolvedConceptReference();
             for(ResolvedConceptReference ref : refs) {
                 Concept ce = ref.getReferencedEntry();
                 list.add(ce);
                 ++lastResolved;
             }
-            _logger.debug("Advancing iterator: " + lastResolved);
-
-            dt = System.currentTimeMillis() - ms;
-            ms = System.currentTimeMillis();
-            total_delay = total_delay + dt;
-            if (total_delay > PAGINATION_TIME_OUT) {
-                _logger.debug("Time out at: " + lastResolved);
-                break;
-            }
+            _logger.debug("resolveIterator: Advancing iterator: " + lastResolved);
         }
-        _logger.debug("getData Run time (ms): " + (System.currentTimeMillis() - ms));
         return list;
     }
 
