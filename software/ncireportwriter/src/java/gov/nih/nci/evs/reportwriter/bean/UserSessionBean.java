@@ -1153,10 +1153,10 @@ public class UserSessionBean extends Object {
                     String associationName =
                         standardReportTemplate.getAssociationName();
                     key = codingscheme + " (version: " + version + ")";
-                    Vector<String> associationcode_vec =
+                    Vector<String> associationname_vec =
                         DataUtils.getSupportedAssociations(
-                            DataUtils.AssociationType.Codes, key);
-                    if (!associationcode_vec.contains(associationName)) {
+                            DataUtils.AssociationType.Names, key);
+                    if (!associationname_vec.contains(associationName)) {
                         String message =
                             "Invalid association name "
                                 + associationName
