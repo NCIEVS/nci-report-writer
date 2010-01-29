@@ -321,11 +321,14 @@ public class DataUtils {
         }
     }
 
-    public static Vector<String> getSupportedAssociationCodes(String key)
+    public enum AssociationType { Codes, Names };
+
+    public static Vector<String> getSupportedAssociations(
+        AssociationType associationType, String key)
         throws Exception {
         if (_csnv2codingSchemeNameMap == null) {
             setCodingSchemeMap();
-            return getSupportedAssociationCodes(key);
+            return getSupportedAssociations(associationType, key);
         }
         String codingSchemeName = _csnv2codingSchemeNameMap.get(key);
         if (codingSchemeName == null)
@@ -333,14 +336,7 @@ public class DataUtils {
         String version = _csnv2VersionMap.get(key);
         if (version == null)
             return null;
-        return getSupportedAssociationCodes(codingSchemeName, version);
-    }
-    
-    private enum AssociationType { CODES, NAMES };
-
-    public static Vector<String> getSupportedAssociationCodes(
-        String codingSchemeName, String version) throws Exception {
-        return getSupportedAssociations(AssociationType.CODES,
+        return getSupportedAssociations(associationType, 
             codingSchemeName, version);
     }
 
@@ -362,7 +358,7 @@ public class DataUtils {
         for (int i = 0; i < assos.length; i++) {
             SupportedAssociation sa = (SupportedAssociation) assos[i];
             switch (associationType) {
-                case NAMES: v.add(sa.getContent()); break;
+                case Names: v.add(sa.getContent()); break;
                 default: v.add(sa.getLocalId()); break;
             }
         }
