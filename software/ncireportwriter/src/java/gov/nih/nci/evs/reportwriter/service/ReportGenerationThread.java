@@ -290,8 +290,18 @@ public class ReportGenerationThread implements Runnable {
             _hierarchicalAssoName =
                 (String) hierarchicalAssoName_vec.elementAt(0);
         }
+
+        String associationCode = "";
+        try {
+            associationCode = DataUtils.getAssociationCode(
+                codingSchemeName, codingSchemeVersion, associationName);
+        } catch (Exception e) {
+            _logger.error("Unable to create output file " + pathname
+                + " - could not map association name to its corresponding code.");
+            return Boolean.FALSE;
+        }
         traverse(pw, scheme, version, tag, defining_root_concept, code,
-                _hierarchicalAssoName, associationName, direction, curr_level,
+                _hierarchicalAssoName, associationCode, direction, curr_level,
                 max_level, cols);
         closePrintWriter(pw);
 

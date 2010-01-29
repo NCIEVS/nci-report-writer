@@ -69,6 +69,7 @@ import org.apache.log4j.*;
  */
 
 public class DataUtils {
+    public enum AssociationType { Codes, Names };
     private static Logger _logger = Logger.getLogger(DataUtils.class);
     private int _maxReturn = 5000;
 
@@ -321,8 +322,6 @@ public class DataUtils {
         }
     }
 
-    public enum AssociationType { Codes, Names };
-
     public static Vector<String> getSupportedAssociations(
         AssociationType associationType, String key)
         throws Exception {
@@ -344,9 +343,8 @@ public class DataUtils {
         AssociationType associationType, String codingSchemeName, 
         String version) throws Exception {
         CodingSchemeVersionOrTag vt = new CodingSchemeVersionOrTag();
-        if (version != null) {
+        if (version != null)
             vt.setVersion(version);
-        }
 
         CodingScheme scheme = null;
         LexBIGService lbSvc = RemoteServerUtil.createLexBIGService();
@@ -364,7 +362,28 @@ public class DataUtils {
         }
         return v;
     }
+    
+    public static String getAssociationCode(String codingSchemeName, 
+        String version, String name) throws Exception {
+        CodingSchemeVersionOrTag vt = new CodingSchemeVersionOrTag();
+        if (version != null)
+            vt.setVersion(version);
 
+        CodingScheme scheme = null;
+        LexBIGService lbSvc = RemoteServerUtil.createLexBIGService();
+        scheme = lbSvc.resolveCodingScheme(codingSchemeName, vt);
+
+        SupportedAssociation[] assos =
+            scheme.getMappings().getSupportedAssociation();
+        for (int i = 0; i < assos.length; i++) {
+            SupportedAssociation sa = (SupportedAssociation) assos[i];
+            String aName = sa.getContent();
+            if (aName.equals(name))
+                return sa.getLocalId();
+        }
+        return "";
+    }
+    
     public static Vector<String> getPropertyNameListData(String key) {
         if (_csnv2codingSchemeNameMap == null) {
             setCodingSchemeMap();

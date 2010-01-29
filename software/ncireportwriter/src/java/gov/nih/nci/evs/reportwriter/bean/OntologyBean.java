@@ -163,13 +163,13 @@ public class OntologyBean // extends BaseBean
         try {
             if (_associationList == null) {
                 _associationList = new ArrayList<SelectItem>();
-                Vector<String> associationCodes =
+                Vector<String> associationNames =
                     DataUtils.getSupportedAssociations(
-                        DataUtils.AssociationType.Codes, _selectedOntology);
-                if (associationCodes != null) {
+                        DataUtils.AssociationType.Names, _selectedOntology);
+                if (associationNames != null) {
                     _associationList.add(new SelectItem(""));
-                    for (int i = 0; i < associationCodes.size(); i++) {
-                        String name = (String) associationCodes.elementAt(i);
+                    for (int i = 0; i < associationNames.size(); i++) {
+                        String name = (String) associationNames.elementAt(i);
                         _associationList.add(new SelectItem(name));
                     }
     
