@@ -160,32 +160,37 @@ public class OntologyBean // extends BaseBean
             _ontologies = getOntologyList();
         }
 
-        if (_associationList == null) {
-            _associationList = new ArrayList<SelectItem>();
-            Vector<String> associationNames =
-                DataUtils.getSupportedAssociationNames(_selectedOntology);
-            if (associationNames != null) {
-                _associationList.add(new SelectItem(""));
-                for (int i = 0; i < associationNames.size(); i++) {
-                    String name = (String) associationNames.elementAt(i);
-                    _associationList.add(new SelectItem(name));
-                }
-
-                if ((_selectedAssociation == null || _selectedAssociation
-                    .length() <= 0)
-                    && _associationList != null && _associationList.size() > 0) {
-                    for (int j = 0; j < _associationList.size(); j++) {
-                        SelectItem item = (SelectItem) _associationList.get(j);
-                        if (item.getLabel().compareTo(DEFAULT_ASSOCIATION) == 0) {
-                            setSelectedAssociation(item.getLabel());
-                            break;
+        try {
+            if (_associationList == null) {
+                _associationList = new ArrayList<SelectItem>();
+                Vector<String> associationCodes =
+                    DataUtils.getSupportedAssociationCodes(_selectedOntology);
+                if (associationCodes != null) {
+                    _associationList.add(new SelectItem(""));
+                    for (int i = 0; i < associationCodes.size(); i++) {
+                        String name = (String) associationCodes.elementAt(i);
+                        _associationList.add(new SelectItem(name));
+                    }
+    
+                    if ((_selectedAssociation == null || _selectedAssociation
+                        .length() <= 0)
+                        && _associationList != null && _associationList.size() > 0) {
+                        for (int j = 0; j < _associationList.size(); j++) {
+                            SelectItem item = (SelectItem) _associationList.get(j);
+                            if (item.getLabel().compareTo(DEFAULT_ASSOCIATION) == 0) {
+                                setSelectedAssociation(item.getLabel());
+                                break;
+                            }
+    
                         }
-
                     }
                 }
             }
+            return _associationList;
+        } catch (Exception e) {
+            _associationList = null;
+            return new ArrayList<SelectItem>();
         }
-        return _associationList;
     }
 
     private String _selectedLevel = null;
