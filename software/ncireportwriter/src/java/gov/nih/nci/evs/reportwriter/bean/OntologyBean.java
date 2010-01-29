@@ -164,7 +164,8 @@ public class OntologyBean // extends BaseBean
             if (_associationList == null) {
                 _associationList = new ArrayList<SelectItem>();
                 Vector<String> associationCodes =
-                    DataUtils.getSupportedAssociationCodes(_selectedOntology);
+                    DataUtils.getSupportedAssociations(
+                        DataUtils.AssociationType.Codes, _selectedOntology);
                 if (associationCodes != null) {
                     _associationList.add(new SelectItem(""));
                     for (int i = 0; i < associationCodes.size(); i++) {
