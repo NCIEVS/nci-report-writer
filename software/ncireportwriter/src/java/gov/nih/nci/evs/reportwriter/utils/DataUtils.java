@@ -321,10 +321,11 @@ public class DataUtils {
         }
     }
 
-    public static Vector<String> getSupportedAssociationNames(String key) {
+    public static Vector<String> getSupportedAssociationCodes(String key)
+        throws Exception {
         if (_csnv2codingSchemeNameMap == null) {
             setCodingSchemeMap();
-            return getSupportedAssociationNames(key);
+            return getSupportedAssociationCodes(key);
         }
         String codingSchemeName = _csnv2codingSchemeNameMap.get(key);
         if (codingSchemeName == null)
@@ -332,37 +333,40 @@ public class DataUtils {
         String version = _csnv2VersionMap.get(key);
         if (version == null)
             return null;
-        return getSupportedAssociationNames(codingSchemeName, version);
+        return getSupportedAssociationCodes(codingSchemeName, version);
+    }
+    
+    private enum AssociationType { CODES, NAMES };
+
+    public static Vector<String> getSupportedAssociationCodes(
+        String codingSchemeName, String version) throws Exception {
+        return getSupportedAssociations(AssociationType.CODES,
+            codingSchemeName, version);
     }
 
-    public static Vector<String> getSupportedAssociationNames(
-        String codingSchemeName, String version) {
+    public static Vector<String> getSupportedAssociations(
+        AssociationType associationType, String codingSchemeName, 
+        String version) throws Exception {
         CodingSchemeVersionOrTag vt = new CodingSchemeVersionOrTag();
         if (version != null) {
             vt.setVersion(version);
         }
 
         CodingScheme scheme = null;
-        try {
-            LexBIGService lbSvc = RemoteServerUtil.createLexBIGService();
-            scheme = lbSvc.resolveCodingScheme(codingSchemeName, vt);
-            if (scheme == null) {
-                _logger.debug("scheme is NULL");
-                return null;
-            }
+        LexBIGService lbSvc = RemoteServerUtil.createLexBIGService();
+        scheme = lbSvc.resolveCodingScheme(codingSchemeName, vt);
 
-            Vector<String> v = new Vector<String>();
-            SupportedAssociation[] assos =
-                scheme.getMappings().getSupportedAssociation();
-            for (int i = 0; i < assos.length; i++) {
-                SupportedAssociation sa = (SupportedAssociation) assos[i];
-                v.add(sa.getLocalId());
+        Vector<String> v = new Vector<String>();
+        SupportedAssociation[] assos =
+            scheme.getMappings().getSupportedAssociation();
+        for (int i = 0; i < assos.length; i++) {
+            SupportedAssociation sa = (SupportedAssociation) assos[i];
+            switch (associationType) {
+                case NAMES: v.add(sa.getContent()); break;
+                default: v.add(sa.getLocalId()); break;
             }
-            return v;
-        } catch (Exception ex) {
-            ex.printStackTrace();
         }
-        return null;
+        return v;
     }
 
     public static Vector<String> getPropertyNameListData(String key) {
