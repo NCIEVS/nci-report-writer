@@ -71,7 +71,7 @@ import org.apache.log4j.*;
 public class DataUtils {
     public enum AssociationType { Codes, Names };
     private static Logger _logger = Logger.getLogger(DataUtils.class);
-    private int _maxReturn = 5000;
+    private int _maxReturn = 10000;
 
     private static List<SelectItem> _standardReportTemplateList = null;
     private static List<SelectItem> _adminTaskList = null;
@@ -126,7 +126,7 @@ public class DataUtils {
 
         _maxReturn =
             ReportWriterProperties.getIntProperty(
-                ReportWriterProperties.MAXIMUM_RETURN, 5000);
+                ReportWriterProperties.MAXIMUM_RETURN, _maxReturn);
     }
 
     public static List<SelectItem> getPropertyTypeList() {
