@@ -426,7 +426,7 @@ public class ReportGenerationThread implements Runnable {
 
     private void traverse(PrintWriter pw, String scheme, String version,
             String tag, Concept defining_root_concept, String code,
-            String hierarchyAssociationName, String associationName,
+            String hierarchyAssociationName, String associationCode,
             boolean direction, int level, int maxLevel, ReportColumn[] cols) {
         // _logger.debug("Level: " + level + "\tmaxLevel: " + maxLevel);
         if (maxLevel != -1 && level > maxLevel)
@@ -447,11 +447,11 @@ public class ReportGenerationThread implements Runnable {
         if (direction) {
             v =
                 util.getAssociationTargets(scheme, version, root.getEntityCode(),
-                        associationName);
+                        associationCode);
         } else {
             v =
                 util.getAssociationSources(scheme, version, root.getEntityCode(),
-                        associationName);
+                        associationCode);
         }
 
         // associated concepts (i.e., concepts in subset)
@@ -475,7 +475,7 @@ public class ReportGenerationThread implements Runnable {
             Concept concept = (Concept) subconcept_vec.elementAt(k);
             String subconcep_code = concept.getEntityCode();
             traverse(pw, scheme, version, tag, defining_root_concept,
-                    subconcep_code, hierarchyAssociationName, associationName,
+                    subconcep_code, hierarchyAssociationName, associationCode,
                     direction, level, maxLevel, cols);
         }
     }
