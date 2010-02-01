@@ -785,8 +785,8 @@ public class DataUtils {
     }
 
     public Vector<Concept> getAssociationTargets(String scheme,
-        String version, String code, String assocName) {
-        return getAssociations(true, scheme, version, code, assocName);
+        String version, String code, String assocCode) {
+        return getAssociations(true, scheme, version, code, assocCode);
     }
 
     public ResolvedConceptReferenceList getNext(
@@ -833,12 +833,12 @@ public class DataUtils {
     }
 
     public Vector<Concept> getAssociationSources(String scheme, String version,
-        String code, String assocName) {
-        return getAssociations(false, scheme, version, code, assocName);
+        String code, String assocCode) {
+        return getAssociations(false, scheme, version, code, assocCode);
     }
     
     public Vector<Concept> getAssociations(boolean retrieveTargets, 
-        String scheme, String version, String code, String assocName) {
+        String scheme, String version, String code, String assocCode) {
         CodingSchemeVersionOrTag csvt = new CodingSchemeVersionOrTag();
         if (version != null)
             csvt.setVersion(version);
@@ -849,7 +849,7 @@ public class DataUtils {
             CodedNodeGraph cng = lbSvc.getNodeGraph(scheme, csvt, null);
 
             NameAndValueList nameAndValueList =
-                createNameAndValueList(new String[] { assocName }, null);
+                createNameAndValueList(new String[] { assocCode }, null);
 
             NameAndValueList nameAndValueList_qualifier = null;
             cng =
@@ -899,7 +899,7 @@ public class DataUtils {
 
     public Vector<Concept> getAssociationsNew(boolean retrieveTargets, 
         String scheme, String version,
-        String code, String assocName) {
+        String code, String assocCode) {
         _logger.info("Method: getAssociationsNew");
         CodingSchemeVersionOrTag csvt = new CodingSchemeVersionOrTag();
         if (version != null)
@@ -909,7 +909,7 @@ public class DataUtils {
             LexBIGService lbSvc = RemoteServerUtil.createLexBIGService();
             CodedNodeGraph cng = lbSvc.getNodeGraph(scheme, csvt, null);
             NameAndValueList nameAndValueList =
-                createNameAndValueList(new String[] { assocName }, null);
+                createNameAndValueList(new String[] { assocCode }, null);
             NameAndValueList nameAndValueList_qualifier = null;
             cng = cng.restrictToAssociations(nameAndValueList,
                 nameAndValueList_qualifier);
@@ -1054,7 +1054,7 @@ public class DataUtils {
     }
 
     public Vector<String> getAssociationSourceCodes(String scheme,
-        String version, String code, String assocName) {
+        String version, String code, String assocCode) {
         CodingSchemeVersionOrTag csvt = new CodingSchemeVersionOrTag();
         if (version != null)
             csvt.setVersion(version);
@@ -1065,7 +1065,7 @@ public class DataUtils {
             CodedNodeGraph cng = lbSvc.getNodeGraph(scheme, csvt, null);
 
             NameAndValueList nameAndValueList =
-                createNameAndValueList(new String[] { assocName }, null);
+                createNameAndValueList(new String[] { assocCode }, null);
 
             NameAndValueList nameAndValueList_qualifier = null;
             cng =
