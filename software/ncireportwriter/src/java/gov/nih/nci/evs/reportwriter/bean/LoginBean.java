@@ -150,11 +150,9 @@ public class LoginBean extends Object {
         }
         return null;
     }
-
+    
     public String loginAction() {
-        //DYEE
-        if (_userid.length() <= 0) _userid = "rwadmin";
-        if (_password.length() <= 0) _password = "x";
+        useDebugUserid();
         try {
             _isAdmin = false;
             if (_userid.length() <= 0)
@@ -196,6 +194,14 @@ public class LoginBean extends Object {
             SessionUtil.getRequest().setAttribute("loginWarning", msg);
             return "failure";
         }
+    }
+
+    private void useDebugUserid() {
+        if (! ReportWriterProperties.getBoolProperty(
+            ReportWriterProperties.DEBUG_ON, false))
+            return;
+        if (_userid.length() <= 0) _userid = "rwadmin";
+        if (_password.length() <= 0) _password = "x";
     }
 
     private String reformatError(String text) {
