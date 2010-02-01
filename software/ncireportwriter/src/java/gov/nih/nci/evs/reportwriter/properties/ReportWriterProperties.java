@@ -57,6 +57,7 @@ import org.apache.log4j.*;
 public class ReportWriterProperties {
     public static final String BUILD_INFO = "BUILD_INFO";
     public static final String EVS_SERVICE_URL = "EVS_SERVICE_URL";
+    public static final String DEBUG_ON = "DEBUG_ON";
     public static final String REPORT_DOWNLOAD_DIRECTORY = "REPORT_DOWNLOAD_DIRECTORY";
     public static final String MAXIMUM_LEVEL = "MAXIMUM_LEVEL";
     public static final String MAXIMUM_RETURN = "MAXIMUM_RETURN";
@@ -117,6 +118,20 @@ public class ReportWriterProperties {
             return Integer.parseInt(strValue);
         } catch (Exception e) {
             _logger.error("Invalid integer property value for: " + key);
+            _logger.error("  Value from the property file: " + strValue);
+            _logger.error("  Defaulting to: " + defaultValue);
+            return defaultValue;
+        }
+    }
+
+    public static boolean getBoolProperty(String key, boolean defaultValue) {
+        String strValue = getInstance().fetchProperty(key);
+        try {
+            if (strValue == null)
+                return defaultValue;
+            return Boolean.parseBoolean(strValue);
+        } catch (Exception e) {
+            _logger.error("Invalid boolean property value for: " + key);
             _logger.error("  Value from the property file: " + strValue);
             _logger.error("  Defaulting to: " + defaultValue);
             return defaultValue;
