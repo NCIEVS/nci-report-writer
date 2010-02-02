@@ -86,29 +86,6 @@ public class DataUtils {
     private static HashMap<String, String> _csnv2codingSchemeNameMap = null;
     private static HashMap<String, String> _csnv2VersionMap = null;
 
-    // =========================================================================
-    // For customized query use
-    // =========================================================================
-//    public static int ALL = 0;
-//    public static int PREFERRED_ONLY = 1;
-//    public static int NON_PREFERRED_ONLY = 2;
-
-    // private static int RESOLVE_SOURCE = 1;
-    // private static int RESOLVE_TARGET = -1;
-    // private static int RESTRICT_SOURCE = -1;
-    // private static int RESTRICT_TARGET = 1;
-
-//    public static final int SEARCH_NAME_CODE = 1;
-//    public static final int SEARCH_DEFINITION = 2;
-
-//    public static final int SEARCH_PROPERTY_VALUE = 3;
-//    public static final int SEARCH_ROLE_VALUE = 6;
-//    public static final int SEARCH_ASSOCIATION_VALUE = 7;
-
-    // private static final List<String> STOP_WORDS =
-    // Arrays.asList(new String[] { "a", "an", "and", "by", "for", "of", "on",
-    // "in", "nos", "the", "to", "with" });
-
     // ==========================================================================
     public DataUtils() {
         _adminTaskList = new ArrayList<SelectItem>();
