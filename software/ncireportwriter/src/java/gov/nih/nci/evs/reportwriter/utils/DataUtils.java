@@ -1226,7 +1226,7 @@ public class DataUtils {
                 }
             }
         } catch (Exception e) {
-            MiscUtils.printException(_logger, e);
+            ExceptionUtils.printException(_logger, e);
         }
         return v;
     }

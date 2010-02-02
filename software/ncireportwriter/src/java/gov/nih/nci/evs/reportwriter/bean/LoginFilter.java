@@ -105,7 +105,7 @@ public class LoginFilter implements Filter {
                 chain.doFilter(request, response);
             }
         } catch (Exception e) {
-            MiscUtils.printException(_logger, e);
+            ExceptionUtils.printException(_logger, e);
         }
     }
     
