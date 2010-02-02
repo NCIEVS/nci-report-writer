@@ -1,6 +1,7 @@
 <%@ taglib uri="http://java.sun.com/jsf/html" prefix="h" %>
 <%@ taglib uri="http://java.sun.com/jsf/core" prefix="f" %> 
 <%@ page import="gov.nih.nci.evs.reportwriter.bean.*" %>
+<%@ page import="gov.nih.nci.evs.reportwriter.utils.*" %>
 
 <%
   OntologyBean ontologyBean = BeanUtils.getOntologyBean();
@@ -30,6 +31,7 @@
     ontologyBean.setSelectedDelimiter(reportColumn.getDelimiter().toString());
     dependentfield = reportColumn.getConditionalColumnId().toString();
   }
+  String warning = (String) request.getAttribute("warningMsg");
 %>
 
 <f:view>
@@ -41,6 +43,13 @@
           <br>
           <table summary="" cellpadding="0" cellspacing="0" border="0" 
               width="725" class="contentPage"> <!-- Table 2 (Begin) -->
+            <% if (warning != null) { %>
+              <tr><td class="warningMsgColor">
+                Warning:<br/>
+                <%=StringUtils.toHtml(warning)%><br/>
+                <br/>
+              </td></tr>
+            <% } %>
             <tr>
               <td>
                 <table summary="" cellpadding="0" cellspacing="0" border="0"> <!-- Table 3 (Begin) -->

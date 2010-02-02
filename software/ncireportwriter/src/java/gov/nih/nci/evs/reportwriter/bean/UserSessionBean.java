@@ -749,6 +749,12 @@ public class UserSessionBean extends Object {
         }
         return null;
     }
+    
+    private String warningMsg(String msg) {
+        HttpServletRequest request = SessionUtil.getRequest();
+        request.setAttribute("warningMsg", msg);
+        return "warningMsg";
+    }
 
     // public String addReportColumnAction() {
     public String saveReportColumnAction() {
@@ -757,11 +763,8 @@ public class UserSessionBean extends Object {
         standardReportTemplate =
             getStandardReportTemplate(_selectedStandardReportTemplate);
         if (standardReportTemplate == null) {
-            String message =
-                "ERROR saving ReportColumn -- Unable to identify report template "
-                    + _selectedStandardReportTemplate;
-            request.getSession().setAttribute("message", message);
-            return "message";
+            return warningMsg("Unable to identify report template "
+                    + _selectedStandardReportTemplate);
         }
 
         String fieldlabel = (String) request.getParameter("fieldlabel");
@@ -785,20 +788,12 @@ public class UserSessionBean extends Object {
         String conditionalColumnId =
             (String) request.getParameter("dependentfield");
 
-        if (columnNumber_str == null || fieldlabel == null) {
-            String message =
-                "Unable to save ReportColumn -- please complete data entry.";
-            request.getSession().setAttribute("message", message);
-            return "message";
-        }
+        if (columnNumber_str == null || fieldlabel == null)
+            return warningMsg("Please complete data entry.");
         columnNumber_str = columnNumber_str.trim();
         fieldlabel = fieldlabel.trim();
-        if (columnNumber_str.length() == 0 || fieldlabel.length() == 0) {
-            String message =
-                "Unable to save ReportColumn -- please complete data entry.";
-            request.getSession().setAttribute("message", message);
-            return "message";
-        }
+        if (columnNumber_str.length() == 0 || fieldlabel.length() == 0)
+            return warningMsg("Please complete data entry.");
 
         int columnNumber = Integer.parseInt(columnNumber_str);
         int ccid = -1;
@@ -850,21 +845,11 @@ public class UserSessionBean extends Object {
                         gov.nih.nci.evs.reportwriter.bean.ReportColumn c =
                             (gov.nih.nci.evs.reportwriter.bean.ReportColumn) objs[i];
                         String col_label = c.getLabel();
-                        if (col_label.compareToIgnoreCase(fieldlabel) == 0) {
-                            String message =
-                                "Unable to save ReportColumn -- the column label already exists.";
-                            request.getSession().setAttribute("message",
-                                message);
-                            return "message";
-                        }
+                        if (col_label.compareToIgnoreCase(fieldlabel) == 0)
+                            return warningMsg("The column label already exists.");
                         Integer col_num = c.getColumnNumber();
-                        if (col_num.intValue() == columnNumber) {
-                            String message =
-                                "Unable to save ReportColumn -- the column number already exists.";
-                            request.getSession().setAttribute("message",
-                                message);
-                            return "message";
-                        }
+                        if (col_num.intValue() == columnNumber)
+                            return warningMsg("The column number already exists.");
                     }
                 }
             }
@@ -883,6 +868,7 @@ public class UserSessionBean extends Object {
 
         } catch (Exception e) {
             e.printStackTrace();
+            return warningMsg(e.getMessage());
         }
         return "standard_report_column";
     }
