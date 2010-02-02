@@ -2,7 +2,7 @@ package gov.nih.nci.evs.reportwriter.utils;
 
 import org.apache.log4j.*;
 
-public class MiscUtils {
+public class ExceptionUtils {
     private static String getMessage(Throwable exception) {
         return exception.getClass().getSimpleName() + ": "
             + exception.getMessage();

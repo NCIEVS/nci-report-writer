@@ -28,7 +28,7 @@ public class RemoteServerUtilTest extends TestCase {
             _logger.info("server: " + server);
             assertTrue(server != null);
         } catch (Exception e) {
-            MiscUtils.printException(_logger, e);
+            ExceptionUtils.printException(_logger, e);
             assertTrue(false);
         }
     }
