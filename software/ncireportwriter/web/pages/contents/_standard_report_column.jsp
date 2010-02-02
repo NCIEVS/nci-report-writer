@@ -27,7 +27,7 @@
           <br>
           <table summary="" cellpadding="0" cellspacing="0" border="0" 
               width="725" class="contentPageWithoutPadding"> <!-- Table 2 (Begin) -->
-            <% if (request.getAttribute("warningMsg") != null) { %>
+            <% if (warningMsg != null) { %>
               <tr><td class="warningMsgColor">
                 Warning:<br/>
                 <%=StringUtils.toHtml(warningMsg)%><br/>

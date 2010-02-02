@@ -259,8 +259,8 @@
 
     <navigation-case>
       <from-action>#{userSessionBean.saveReportColumnAction}</from-action> 
-      <from-outcome>message</from-outcome>
-      <to-view-id>/pages/main/message.jsp</to-view-id>
+      <from-outcome>warningMsg</from-outcome>
+      <to-view-id>/pages/main/add_standard_report_column.jsp</to-view-id>
     </navigation-case>
   </navigation-rule>
 
