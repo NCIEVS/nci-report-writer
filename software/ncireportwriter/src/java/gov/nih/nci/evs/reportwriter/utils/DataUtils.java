@@ -163,8 +163,6 @@ public class DataUtils {
     }
 
     public static List<SelectItem> getOntologyList() {
-        if (_ontologies == null)
-            setCodingSchemeMap();
         return _ontologies;
     }
 
@@ -292,10 +290,6 @@ public class DataUtils {
     public static Vector<String> getSupportedAssociations(
         AssociationType associationType, String key)
         throws Exception {
-        if (_csnv2codingSchemeNameMap == null) {
-            setCodingSchemeMap();
-            return getSupportedAssociations(associationType, key);
-        }
         String codingSchemeName = _csnv2codingSchemeNameMap.get(key);
         if (codingSchemeName == null)
             return null;
@@ -352,10 +346,6 @@ public class DataUtils {
     }
     
     public static Vector<String> getPropertyNameListData(String key) {
-        if (_csnv2codingSchemeNameMap == null) {
-            setCodingSchemeMap();
-        }
-
         String codingSchemeName = _csnv2codingSchemeNameMap.get(key);
         if (codingSchemeName == null) {
             return null;
@@ -488,10 +478,6 @@ public class DataUtils {
     }
 
     public static Vector<String> getSourceListData(String key) {
-        if (_csnv2codingSchemeNameMap == null) {
-            setCodingSchemeMap();
-            return getSourceListData(key);
-        }
         String codingSchemeName = _csnv2codingSchemeNameMap.get(key);
         if (codingSchemeName == null)
             return null;
