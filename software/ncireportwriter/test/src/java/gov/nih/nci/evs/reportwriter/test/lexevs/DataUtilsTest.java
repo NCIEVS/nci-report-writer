@@ -20,8 +20,6 @@ public class DataUtilsTest {
     }
     
     public void getAssociations() {
-        DataUtils utils = new DataUtils();
-        
         String scheme = "NCI Thesaurus";
         String version = "09.12d";
         String code = "C74456";  // CDISC SDTM Anatomical Location Terminology
@@ -37,7 +35,7 @@ public class DataUtilsTest {
         _logger.info("  * version: " + version);
         _logger.info("  * code: " + code);
         _logger.info("  * assocName: " + assocName);
-        Vector<Concept> v = utils.getAssociations(
+        Vector<Concept> v = DataUtils.getAssociations(
             retrieveTargets, scheme, version, code, assocName);
         int i=0, n=v.size();
         Iterator<Concept> iterator = v.iterator();
