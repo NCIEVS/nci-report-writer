@@ -144,7 +144,7 @@ public class LoginBean extends Object {
                 (gov.nih.nci.evs.reportwriter.bean.User) obj;
             return user;
         } catch (Exception e) {
-            ExceptionUtils.printException(_logger, e,
+            ExceptionUtils.print(_logger, e,
                 "  * getUser(" + loginName + ") method returns null");
             // e.printStackTrace();
         }
@@ -189,7 +189,7 @@ public class LoginBean extends Object {
         } catch (Exception e) {
             String msg = reformatError(e.getMessage());
             _logger.error(StringUtils.SEPARATOR);
-            ExceptionUtils.printException(_logger, e,
+            ExceptionUtils.print(_logger, e,
                 "  * Error logging in: " + _userid);
             SessionUtil.getRequest().setAttribute("loginWarning", msg);
             return "failure";

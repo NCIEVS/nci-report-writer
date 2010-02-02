@@ -283,7 +283,7 @@ public class OntologyBean // extends BaseBean
                 }
             }
         } catch (Exception e) {
-            ExceptionUtils.printException(_logger, e, new String[] { 
+            ExceptionUtils.print(_logger, e, new String[] { 
                 "  * Method: getPropertyNameList",
                 "  * selectedOntology: " +  selectedOntology,
             });
@@ -511,7 +511,7 @@ public class OntologyBean // extends BaseBean
                         ontologyNameAndVersion);
                 }
             } catch (Exception e) {
-                ExceptionUtils.printException(_logger, e);
+                ExceptionUtils.print(_logger, e);
             }
         }
 

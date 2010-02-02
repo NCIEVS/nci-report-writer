@@ -98,7 +98,7 @@ public class ReportWriterProperties {
             _properties.load(fis);
             debugProperties();
         } catch (Exception e) {
-            ExceptionUtils.printException(_logger, e);
+            ExceptionUtils.print(_logger, e);
         }
     }
     

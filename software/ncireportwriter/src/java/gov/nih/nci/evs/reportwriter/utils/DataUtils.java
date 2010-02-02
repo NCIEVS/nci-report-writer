@@ -232,7 +232,7 @@ public class DataUtils {
                         }
                         break;
                     } catch (Exception e) {
-                        // MiscUtils.printException(_logger, e);
+                        // ExceptionUtils.print(_logger, e);
                     }
                     j++;
                 }
@@ -1226,7 +1226,7 @@ public class DataUtils {
                 }
             }
         } catch (Exception e) {
-            ExceptionUtils.printException(_logger, e);
+            ExceptionUtils.print(_logger, e);
         }
         return v;
     }
