@@ -357,7 +357,10 @@ public class OntologyBean // extends BaseBean
 
     public List<SelectItem> getDelimiterList() {
         _delimiterList = new ArrayList<SelectItem>();
-        _delimiterList.add(new SelectItem(" "));
+
+        //Note: " " causes problem when redisplaying the report columns.
+        //  However, saving is not a problem.
+        //_delimiterList.add(new SelectItem(" "));
         _delimiterList.add(new SelectItem("|"));
         _delimiterList.add(new SelectItem("$"));
         // _delimiterList.add(new SelectItem("tab"));
