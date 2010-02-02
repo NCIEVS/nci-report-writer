@@ -193,7 +193,6 @@ public class DataUtils {
     }
 
     private static void setCodingSchemeMap() {
-        // if (_ontologies != null) return;
         _ontologies = new ArrayList<SelectItem>();
         _codingSchemeMap = new HashMap<String, CodingScheme>();
         _csnv2codingSchemeNameMap = new HashMap<String, String>();
@@ -202,85 +201,47 @@ public class DataUtils {
         try {
             LexBIGService lbSvc = RemoteServerUtil.createLexBIGService();
             CodingSchemeRenderingList csrl = lbSvc.getSupportedCodingSchemes();
-            if (csrl == null)
-                _logger.debug("csrl is NULL");
-
             CodingSchemeRendering[] csrs = csrl.getCodingSchemeRendering();
             for (int i = 0; i < csrs.length; i++) {
                 CodingSchemeRendering csr = csrs[i];
                 Boolean isActive =
                     csr.getRenderingDetail().getVersionStatus().equals(
                         CodingSchemeVersionStatus.ACTIVE);
-                if (isActive != null && isActive.equals(Boolean.TRUE)) {
-                    CodingSchemeSummary css = csr.getCodingSchemeSummary();
-                    String formalname = css.getFormalName();
-                    String representsVersion = css.getRepresentsVersion();
-                    CodingSchemeVersionOrTag vt =
-                        new CodingSchemeVersionOrTag();
-                    vt.setVersion(representsVersion);
+                if (isActive == null || isActive.equals(Boolean.FALSE))
+                    continue;
+                CodingSchemeSummary css = csr.getCodingSchemeSummary();
+                String formalName = css.getFormalName();
+                String representsVersion = css.getRepresentsVersion();
+                CodingSchemeVersionOrTag vt = new CodingSchemeVersionOrTag();
+                vt.setVersion(representsVersion);
 
-                    CodingScheme scheme = null;
+                CodingScheme scheme = null;
+                int j=0;
+                while (true) {
                     try {
-                        try {
-                            scheme = lbSvc.resolveCodingScheme(formalname, vt);
-                        } catch (Exception ex) {
-                        }
-                        if (scheme != null) {
-                            _codingSchemeMap.put(formalname, scheme);
-
-                            String value =
-                                formalname + " (version: " + representsVersion
-                                    + ")";
-                            _ontologies.add(new SelectItem(value, value));
-
-                            _csnv2codingSchemeNameMap.put(value, formalname);
-                            _csnv2VersionMap.put(value, representsVersion);
-
-                        }
-
-                    } catch (Exception e) {
-                        String urn = css.getCodingSchemeURI();
-                        try {
-                            scheme = lbSvc.resolveCodingScheme(urn, vt);
-                            if (scheme != null) {
-                                _codingSchemeMap.put(formalname, scheme);
-
-                                String value =
-                                    formalname + " (version: "
-                                        + representsVersion + ")";
-                                _ontologies.add(new SelectItem(value, value));
-
-                                _csnv2codingSchemeNameMap
-                                    .put(value, formalname);
-                                _csnv2VersionMap.put(value, representsVersion);
-                            }
-
-                        } catch (Exception ex) {
-
+                        switch (j) {
+                        case 0: 
+                            scheme = lbSvc.resolveCodingScheme(formalName, vt); break;
+                        case 1: 
+                            String urn = css.getCodingSchemeURI();
+                            scheme = lbSvc.resolveCodingScheme(urn, vt); break;
+                        case 2: 
                             String localname = css.getLocalName();
-                            try {
-                                scheme =
-                                    lbSvc.resolveCodingScheme(localname, vt);
-                                if (scheme != null) {
-                                    _codingSchemeMap.put(formalname, scheme);
-
-                                    String value =
-                                        formalname + " (version: "
-                                            + representsVersion + ")";
-                                    _ontologies
-                                        .add(new SelectItem(value, value));
-
-                                    _csnv2codingSchemeNameMap.put(value,
-                                        formalname);
-                                    _csnv2VersionMap.put(value,
-                                        representsVersion);
-                                }
-                            } catch (Exception e2) {
-                                e2.printStackTrace();
-                            }
+                            scheme = lbSvc.resolveCodingScheme(localname, vt);
+                            break;
                         }
+                        break;
+                    } catch (Exception e) {
+                        // MiscUtils.printException(_logger, e);
                     }
+                    j++;
                 }
+
+                _codingSchemeMap.put(formalName, scheme);
+                String value = formalName + " (version: " + representsVersion + ")";
+                _ontologies.add(new SelectItem(value, value));
+                _csnv2codingSchemeNameMap.put(value, formalName);
+                _csnv2VersionMap.put(value, representsVersion);
             }
         } catch (Exception e) {
             e.printStackTrace();
