@@ -81,7 +81,7 @@ public class DataUtils {
 
     private static List<SelectItem> _ontologies = null;
     private static HashMap<String, CodingScheme> _codingSchemeMap = null;
-    private static HashMap<String, CSNVInfo> _csnv2Info = null;
+    private static HashMap<String, CSNVInfo> _csnv2InfoMap = null;
 
     static {
         _adminTaskList = new ArrayList<SelectItem>();
@@ -194,7 +194,7 @@ public class DataUtils {
     private static void setCodingSchemeMap() {
         _ontologies = new ArrayList<SelectItem>();
         _codingSchemeMap = new HashMap<String, CodingScheme>();
-        _csnv2Info = new HashMap<String, CSNVInfo>(); 
+        _csnv2InfoMap = new HashMap<String, CSNVInfo>(); 
 
         try {
             LexBIGService lbSvc = RemoteServerUtil.createLexBIGService();
@@ -241,7 +241,7 @@ public class DataUtils {
                 CSNVInfo info = new CSNVInfo();
                 info.codingSchemeName = formalName;
                 info.version = representsVersion;
-                _csnv2Info.put(value, info);
+                _csnv2InfoMap.put(value, info);
                 
             }
         } catch (Exception e) {
@@ -257,7 +257,7 @@ public class DataUtils {
     public static Vector<String> getSupportedAssociations(
         AssociationType associationType, String key)
         throws Exception {
-        CSNVInfo info = _csnv2Info.get(key);
+        CSNVInfo info = _csnv2InfoMap.get(key);
         if (info == null)
             return null;
         return getSupportedAssociations(associationType, 
@@ -310,7 +310,7 @@ public class DataUtils {
     }
     
     public static Vector<String> getPropertyNameListData(String key) {
-        CSNVInfo info = _csnv2Info.get(key);
+        CSNVInfo info = _csnv2InfoMap.get(key);
         if (info == null)
             return null;
         return getPropertyNameListData(info.codingSchemeName, info.version);
@@ -343,15 +343,15 @@ public class DataUtils {
     }
 
     public static String getCodingSchemeName(String key) {
-        return _csnv2Info.get(key).codingSchemeName;
+        return _csnv2InfoMap.get(key).codingSchemeName;
     }
 
     public static String getCodingSchemeVersion(String key) {
-        return _csnv2Info.get(key).version;
+        return _csnv2InfoMap.get(key).version;
     }
 
     public static Vector<String> getRepresentationalFormListData(String key) {
-        CSNVInfo info = _csnv2Info.get(key);
+        CSNVInfo info = _csnv2InfoMap.get(key);
         if (info == null)
             return null;
         return getRepresentationalFormListData(info.codingSchemeName, info.version);
@@ -397,7 +397,7 @@ public class DataUtils {
     }
 
     public static Vector<String> getPropertyQualifierListData(String key) {
-        CSNVInfo info = _csnv2Info.get(key);
+        CSNVInfo info = _csnv2InfoMap.get(key);
         if (info == null)
             return null;
         return getPropertyQualifierListData(info.codingSchemeName, info.version);
@@ -431,7 +431,7 @@ public class DataUtils {
     }
 
     public static Vector<String> getSourceListData(String key) {
-        CSNVInfo info = _csnv2Info.get(key);
+        CSNVInfo info = _csnv2InfoMap.get(key);
         if (info == null)
             return null;
         return getSourceListData(info.codingSchemeName, info.version);
