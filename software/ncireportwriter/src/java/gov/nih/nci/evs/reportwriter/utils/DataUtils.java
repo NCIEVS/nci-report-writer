@@ -69,25 +69,22 @@ import org.apache.log4j.*;
  */
 
 public class DataUtils {
-    public enum AssociationType { Codes, Names };
+    public static enum AssociationType { Codes, Names };
     private static Logger _logger = Logger.getLogger(DataUtils.class);
-    private int _maxReturn = 10000;
+    private static int _maxReturn = ReportWriterProperties.getIntProperty(
+        ReportWriterProperties.MAXIMUM_RETURN, 10000);
 
     private static List<SelectItem> _standardReportTemplateList = null;
     private static List<SelectItem> _adminTaskList = null;
     private static List<SelectItem> _userTaskList = null;
     private static List<SelectItem> _propertyTypeList = null;
+
     private static List<SelectItem> _ontologies = null;
-
-    public org.LexGrid.LexBIG.Utility.ConvenienceMethods _lbConvMethods = null;
-    public CodingSchemeRenderingList _csrl = null;
     private static HashMap<String, CodingScheme> _codingSchemeMap = null;
-
     private static HashMap<String, String> _csnv2codingSchemeNameMap = null;
     private static HashMap<String, String> _csnv2VersionMap = null;
 
-    // ==========================================================================
-    public DataUtils() {
+    static {
         _adminTaskList = new ArrayList<SelectItem>();
         _adminTaskList.add(new SelectItem("Administer Standard Reports"));
         _adminTaskList.add(new SelectItem("Maintain Report Status"));
@@ -100,10 +97,6 @@ public class DataUtils {
         _standardReportTemplateList = new ArrayList<SelectItem>();
 
         setCodingSchemeMap();
-
-        _maxReturn =
-            ReportWriterProperties.getIntProperty(
-                ReportWriterProperties.MAXIMUM_RETURN, _maxReturn);
     }
 
     public static List<SelectItem> getPropertyTypeList() {
@@ -141,10 +134,7 @@ public class DataUtils {
         }
     }
 
-    // public static List getStandardReportTemplateList(Boolean isAdmin) {
     public static List<SelectItem> getStandardReportTemplateList() {
-        // if (isAdmin == null || isAdmin == Boolean.FALSE) return null;
-
         _standardReportTemplateList = new ArrayList<SelectItem>();
         try {
             SDKClientUtil util = new SDKClientUtil();
@@ -687,7 +677,6 @@ public class DataUtils {
     }
 
     // =========================================================================
-
     public static Concept getConceptByCode(String codingSchemeName,
         String vers, String ltag, String code) {
         try {
@@ -761,12 +750,12 @@ public class DataUtils {
         return nvList;
     }
 
-    public Vector<Concept> getAssociationTargets(String scheme,
+    public static Vector<Concept> getAssociationTargets(String scheme,
         String version, String code, String assocCode) {
         return getAssociations(true, scheme, version, code, assocCode);
     }
 
-    public ResolvedConceptReferenceList getNext(
+    public static ResolvedConceptReferenceList getNext(
         ResolvedConceptReferencesIterator iterator) {
         return iterator.getNext();
     }
@@ -779,7 +768,7 @@ public class DataUtils {
      * @param maxToReturn
      *            the max to return
      */
-    public Vector<Concept> resolveIterator(
+    public static Vector<Concept> resolveIterator(
         ResolvedConceptReferencesIterator iterator, int maxToReturn) {
         Vector<Concept> v = new Vector<Concept>();
         if (iterator == null) {
@@ -809,12 +798,12 @@ public class DataUtils {
         return v;
     }
 
-    public Vector<Concept> getAssociationSources(String scheme, String version,
+    public static Vector<Concept> getAssociationSources(String scheme, String version,
         String code, String assocCode) {
         return getAssociations(false, scheme, version, code, assocCode);
     }
     
-    public Vector<Concept> getAssociations(boolean retrieveTargets, 
+    public static Vector<Concept> getAssociations(boolean retrieveTargets, 
         String scheme, String version, String code, String assocCode) {
         CodingSchemeVersionOrTag csvt = new CodingSchemeVersionOrTag();
         if (version != null)
@@ -874,7 +863,7 @@ public class DataUtils {
         return v;
     }
 
-    public Vector<Concept> getAssociationsNew(boolean retrieveTargets, 
+    public static Vector<Concept> getAssociationsNew(boolean retrieveTargets, 
         String scheme, String version,
         String code, String assocCode) {
         _logger.info("Method: getAssociationsNew");
@@ -917,7 +906,7 @@ public class DataUtils {
         return v;
     }
     
-    public ResolvedConceptReferencesIterator codedNodeGraph2CodedNodeSetIterator(
+    public static ResolvedConceptReferencesIterator codedNodeGraph2CodedNodeSetIterator(
         CodedNodeGraph cng, ConceptReference graphFocus,
         boolean resolveForward, boolean resolveBackward,
         int resolveAssociationDepth, int maxToReturn, CodedNodeSet codesToRemove) {
@@ -952,7 +941,7 @@ public class DataUtils {
         }
     }
     
-    public Vector<Concept> resolveIterator(ResolvedConceptReferencesIterator iterator,
+    public static Vector<Concept> resolveIterator(ResolvedConceptReferencesIterator iterator,
         int maxToReturn, String code) {
         Vector<Concept> v = new Vector<Concept>();
         if (iterator == null) {
@@ -984,8 +973,8 @@ public class DataUtils {
         return v;
     }
     
-    private final int RESOLVE_ITERATOR_MAX_RETURN = 100;
-    public Vector<Concept> resolveIteratorNew(
+    private static final int RESOLVE_ITERATOR_MAX_RETURN = 100;
+    public static Vector<Concept> resolveIteratorNew(
         ResolvedConceptReferencesIterator iterator)
         throws Exception {
         Vector<Concept> list = new Vector<Concept>();
@@ -1007,7 +996,7 @@ public class DataUtils {
         return list;
     }
 
-    public Vector<String> getParentCodes(String scheme, String version,
+    public static Vector<String> getParentCodes(String scheme, String version,
         String code) {
         Vector<String> hierarchicalAssoName_vec =
             getHierarchyAssociationId(scheme, version);
@@ -1030,7 +1019,7 @@ public class DataUtils {
 
     }
 
-    public Vector<String> getAssociationSourceCodes(String scheme,
+    public static Vector<String> getAssociationSourceCodes(String scheme,
         String version, String code, String assocCode) {
         CodingSchemeVersionOrTag csvt = new CodingSchemeVersionOrTag();
         if (version != null)
@@ -1100,7 +1089,7 @@ public class DataUtils {
         return list;
     }
 
-    public Vector<String> getSubconceptCodes(String scheme, String version,
+    public static Vector<String> getSubconceptCodes(String scheme, String version,
         String code) { // throws LBException{
         Vector<String> v = new Vector<String>();
         try {
@@ -1155,7 +1144,7 @@ public class DataUtils {
         return v;
     }
 
-    public Vector<String> getSuperconceptCodes(String scheme, String version,
+    public static Vector<String> getSuperconceptCodes(String scheme, String version,
         String code) { // throws LBException{
         long ms = System.currentTimeMillis();
         Vector<String> v = new Vector<String>();
@@ -1203,7 +1192,7 @@ public class DataUtils {
         return v;
     }
 
-    public Vector<String> getHierarchyAssociationId(String scheme,
+    public static Vector<String> getHierarchyAssociationId(String scheme,
         String version) {
 
         Vector<String> association_vec = new Vector<String>();

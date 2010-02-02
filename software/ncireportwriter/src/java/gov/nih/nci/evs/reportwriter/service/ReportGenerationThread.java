@@ -282,7 +282,7 @@ public class ReportGenerationThread implements Runnable {
         // printReportHeading(pw, cols);
         if (_hierarchicalAssoName == null) {
             Vector<String> hierarchicalAssoName_vec =
-                new DataUtils().getHierarchyAssociationId(scheme, version);
+                DataUtils.getHierarchyAssociationId(scheme, version);
             if (hierarchicalAssoName_vec == null
                     || hierarchicalAssoName_vec.size() == 0) {
                 return Boolean.FALSE;
@@ -443,14 +443,13 @@ public class ReportGenerationThread implements Runnable {
         String delim = "\t";
 
         Vector<Concept> v = new Vector<Concept>();
-        DataUtils util = new DataUtils();
         if (direction) {
             v =
-                util.getAssociationTargets(scheme, version, root.getEntityCode(),
+                DataUtils.getAssociationTargets(scheme, version, root.getEntityCode(),
                         associationCode);
         } else {
             v =
-                util.getAssociationSources(scheme, version, root.getEntityCode(),
+                DataUtils.getAssociationSources(scheme, version, root.getEntityCode(),
                         associationCode);
         }
 
@@ -466,7 +465,7 @@ public class ReportGenerationThread implements Runnable {
         }
 
         Vector<Concept> subconcept_vec =
-            util.getAssociationTargets(scheme, version, root.getEntityCode(),
+            DataUtils.getAssociationTargets(scheme, version, root.getEntityCode(),
                     hierarchyAssociationName);
         if (subconcept_vec == null | subconcept_vec.size() == 0)
             return;
@@ -529,7 +528,7 @@ public class ReportGenerationThread implements Runnable {
         } else if (field_Id.indexOf("Parent") != -1) {
             if (_hierarchicalAssoName == null) {
                 Vector<String> hierarchicalAssoName_vec =
-                    new DataUtils().getHierarchyAssociationId(scheme, version);
+                    DataUtils.getHierarchyAssociationId(scheme, version);
                 if (hierarchicalAssoName_vec == null
                         || hierarchicalAssoName_vec.size() == 0) {
                     return null;
@@ -540,7 +539,7 @@ public class ReportGenerationThread implements Runnable {
             // Vector superconcept_vec = new DataUtils().getParentCodes(scheme,
             // version, node.getId());
             Vector<String> superconcept_vec =
-                new DataUtils().getAssociationSourceCodes(scheme, version, node
+                DataUtils.getAssociationSourceCodes(scheme, version, node
                         .getEntityCode(), _hierarchicalAssoName);
             if (superconcept_vec != null && superconcept_vec.size() > 0
                     && field_Id.indexOf("1st Parent") != -1) {
