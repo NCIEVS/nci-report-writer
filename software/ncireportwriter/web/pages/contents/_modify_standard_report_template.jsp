@@ -3,6 +3,40 @@
 <%@ page import="gov.nih.nci.evs.reportwriter.bean.*" %>
 <%@ page import="gov.nih.nci.evs.reportwriter.utils.*" %>
 
+<%
+  StandardReportTemplate standardReportTemplate = null;
+  String label = null;
+  String codingScheme = null;
+  String version = null;
+  String rootcode = null;
+  String associationname = null;
+  Boolean direction = null;
+  String level = null; 
+  Object obj = null;
+  
+  try {
+    String templateLabel = (String) request.getSession().getAttribute("selectedStandardReportTemplate");
+    SDKClientUtil sdkclientutil = new SDKClientUtil();
+
+    String FQName = "gov.nih.nci.evs.reportwriter.bean.StandardReportTemplate";
+    String methodName = "setLabel";
+    String key = templateLabel;
+
+    obj = sdkclientutil.search(FQName, methodName, key);
+
+    if (obj != null) {
+      standardReportTemplate = (StandardReportTemplate) obj;
+      label = standardReportTemplate.getLabel();
+      codingScheme = standardReportTemplate.getCodingSchemeName();
+      version = standardReportTemplate.getCodingSchemeVersion();
+      rootcode = standardReportTemplate.getRootConceptCode();
+      associationname = standardReportTemplate.getAssociationName();
+      direction = standardReportTemplate.getDirection();
+      Integer level_obj = standardReportTemplate.getLevel();
+      level = level_obj.toString();
+    }
+%>        
+
 <f:view>
   <h:form id="MODIFY_STANDARD_REPORT_TEMPLATEForm">
     <table summary="" cellpadding="0" cellspacing="0" border="0" 
@@ -23,41 +57,6 @@
                       <table summary="Enter summary of data here" cellpadding="3" 
                           cellspacing="0" border="0" class="dataTable" width="100%">
                           <!-- Table 4 (Begin) -->
-      
-      <%
-      StandardReportTemplate standardReportTemplate = null;
-      String label = null;
-      String codingScheme = null;
-      String version = null;
-      String rootcode = null;
-      String associationname = null;
-      Boolean direction = null;
-      String level = null; 
-      Object obj = null;
-      
-      try {
-          String templateLabel = (String) request.getSession().getAttribute("selectedStandardReportTemplate");
-          SDKClientUtil sdkclientutil = new SDKClientUtil();
-      
-          String FQName = "gov.nih.nci.evs.reportwriter.bean.StandardReportTemplate";
-          String methodName = "setLabel";
-          String key = templateLabel;
-      
-          obj = sdkclientutil.search(FQName, methodName, key);
-      
-          if (obj != null) {
-              standardReportTemplate = (StandardReportTemplate) obj;
-              label = standardReportTemplate.getLabel();
-              codingScheme = standardReportTemplate.getCodingSchemeName();
-              version = standardReportTemplate.getCodingSchemeVersion();
-              rootcode = standardReportTemplate.getRootConceptCode();
-              associationname = standardReportTemplate.getAssociationName();
-              direction = standardReportTemplate.getDirection();
-              Integer level_obj = standardReportTemplate.getLevel();
-              level = level_obj.toString();
-          }
-      %>        
-      
                               <tr class="dataRowDark">
                                 <td class="dataCellText">Label</td>
                                 <td class="dataCellText"><%=label%></td>
@@ -123,12 +122,6 @@
                                   </h:selectOneMenu>
                                 </td>
                               </tr>
-      
-      <%
-      } catch (Exception ex) {    
-      }
-      %>
-      
                         </table> <!-- Table 4 (End) -->
                       </td>
                     </tr>
@@ -152,3 +145,7 @@
     </table> <!-- Table 1 (End) -->
   </h:form>
 </f:view>
+<%
+  } catch (Exception ex) {    
+  }
+%>
