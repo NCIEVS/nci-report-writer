@@ -14,6 +14,7 @@ import javax.servlet.http.*;
 
 import org.apache.log4j.*;
 
+import org.LexGrid.codingSchemes.*;
 import org.LexGrid.concepts.*;
 
 /**
@@ -1066,13 +1067,41 @@ public class UserSessionBean extends Object {
 
         StandardReportTemplate standardReportTemplate =
             getStandardReportTemplate(_selectedStandardReportTemplate);
-        String ontologyNameAndVersion =
-            standardReportTemplate.getCodingSchemeName() + " (version: "
-                + standardReportTemplate.getCodingSchemeVersion() + ")";
-        request.getSession().setAttribute("selectedOntology",
-            ontologyNameAndVersion);
+        String csn = standardReportTemplate.getCodingSchemeName();
+        String version = standardReportTemplate.getCodingSchemeVersion();
+        String csnv = DataUtils.getCodingSchemeVersion(csn, version);
+        request.getSession().setAttribute("selectedOntology", csnv);
 
-        return "standard_report_column";
+        String warningMsg = displayCodingSchemeWarning(request);
+        return warningMsg == null ? "standard_report_column" : warningMsg;
+    }
+    
+    public String displayCodingSchemeWarning(HttpServletRequest request) {
+        StandardReportTemplate standardReportTemplate =
+            getStandardReportTemplate(_selectedStandardReportTemplate);
+        String csn = standardReportTemplate.getCodingSchemeName();
+        String version = standardReportTemplate.getCodingSchemeVersion();
+        String csnv = DataUtils.getCodingSchemeVersion(csn, version);
+        
+        String versionTmp = DataUtils.getCodingSchemeVersion(csnv);
+        if (versionTmp != null)
+            return null;
+
+        CodingScheme cs = DataUtils.getCodingScheme(csn);
+        if (cs == null)
+            return warningMsg(request, 
+                "The following vocabulary is not loaded:\n" + 
+                "    * " + csnv);
+
+        versionTmp = cs.getRepresentsVersion();
+        String csnvLatest = DataUtils.getCodingSchemeVersion(csn, versionTmp);
+        String msg = "";
+        msg += "The selected report template is referencing an older version of the coding scheme:\n";
+        msg += "    * Current version: " + csnv + "\n";
+        msg += "    * Latest version: " + csnvLatest + "\n";
+        msg += "\n";
+        msg += "Please update the version number of the coding scheme by selecting the Modify button.";
+        return warningMsg(request, msg);
     }
 
     public String generateStandardReportAction() {
