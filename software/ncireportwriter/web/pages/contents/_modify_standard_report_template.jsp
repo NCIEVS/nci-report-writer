@@ -2,11 +2,12 @@
 <%@ taglib uri="http://java.sun.com/jsf/core" prefix="f" %> 
 <%@ page import="gov.nih.nci.evs.reportwriter.bean.*" %>
 <%@ page import="gov.nih.nci.evs.reportwriter.utils.*" %>
+<%@ page import="org.LexGrid.codingSchemes.*" %>
 
 <%
   StandardReportTemplate standardReportTemplate = null;
   String label = null;
-  String codingScheme = null;
+  String codingSchemeName = null;
   String version = null;
   String rootcode = null;
   String associationname = null;
@@ -27,13 +28,29 @@
     if (obj != null) {
       standardReportTemplate = (StandardReportTemplate) obj;
       label = standardReportTemplate.getLabel();
-      codingScheme = standardReportTemplate.getCodingSchemeName();
+      codingSchemeName = standardReportTemplate.getCodingSchemeName();
       version = standardReportTemplate.getCodingSchemeVersion();
       rootcode = standardReportTemplate.getRootConceptCode();
       associationname = standardReportTemplate.getAssociationName();
       direction = standardReportTemplate.getDirection();
       Integer level_obj = standardReportTemplate.getLevel();
       level = level_obj.toString();
+    }
+    
+    String warning = null;
+    String csnv = DataUtils.getCodingSchemeVersion(codingSchemeName, version);
+    String versionTmp = DataUtils.getCodingSchemeVersion(csnv);
+    if (versionTmp == null) {
+      CodingScheme cs = DataUtils.getCodingScheme(codingSchemeName);
+      if (cs != null) {
+        versionTmp = cs.getRepresentsVersion();
+        String csnvLatest = DataUtils.getCodingSchemeVersion(codingSchemeName, versionTmp);
+        String msg = "";
+        msg += "This report template is referencing an older or invalid version of the coding scheme:\n";
+        msg += "Please update the version number to:\n";
+        msg += "    * " + versionTmp;
+        warning = msg;
+      }
     }
 %>        
 
@@ -46,6 +63,13 @@
           <br>
           <table summary="" cellpadding="0" cellspacing="0" border="0" 
               width="725" class="contentPage"> <!-- Table 2 (Begin) -->
+            <% if (warning != null) { %>
+              <tr><td class="warningMsgColor">
+                Warning:<br/>
+                <%=StringUtils.toHtml(warning)%><br/>
+                <br/>
+              </td></tr>
+            <% } %>
             <tr>
               <td>
                 <table summary="" cellpadding="0" cellspacing="0" border="0"> <!-- Table 3 (Begin) -->
@@ -64,8 +88,8 @@
                               
                               <tr class="dataRowLight">
                                 <td class="dataCellText">Coding Scheme</td>
-                                <td class="dataCellText"><%=codingScheme%>
-                                  <input type="hidden" name="codingScheme" value="<%=codingScheme%>">
+                                <td class="dataCellText"><%=codingSchemeName%>
+                                  <input type="hidden" name="codingScheme" value="<%=codingSchemeName%>">
                                 </td>
                               </tr>
                               
