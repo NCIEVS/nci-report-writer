@@ -18,6 +18,7 @@
   String qualifiervalue = "";
   ontologyBean.setSelectedDelimiter(null);
   String dependentfield = "";
+  String warning = (String) request.getAttribute("warningMsg");
   if (reportColumn != null) {
     columnNumber = reportColumn.getColumnNumber().toString();
     fieldlabel = reportColumn.getLabel();
@@ -30,8 +31,21 @@
     qualifiervalue = reportColumn.getQualifierValue();
     ontologyBean.setSelectedDelimiter(reportColumn.getDelimiter().toString());
     dependentfield = reportColumn.getConditionalColumnId().toString();
+  } else if (warning != null) {
+    HTTPUtils.printAttributes(); //DYEE
+    columnNumber = (String) request.getParameter("columnNumber");
+    fieldlabel = (String) request.getParameter("fieldlabel");
+    String value = (String) request.getAttribute("selectedDataCategory");
+    ontologyBean.setSelectedDataCategory(value);
+    userSessionBean.setSelectedPropertyType((String) request.getAttribute("selectedPropertyType"));
+    ontologyBean.setSelectedPropertyName((String) request.getAttribute("selectedPropertyName"));
+    ontologyBean.setSelectedRepresentationalForm((String) request.getAttribute("selectedRepresentationalForm"));
+    ontologyBean.setSelectedSource((String) request.getAttribute("selectedSource"));
+    ontologyBean.setSelectedPropertyQualifier((String) request.getAttribute("selectedPropertyQualifier"));
+    qualifiervalue = (String) request.getParameter("qualifiervalue");
+    ontologyBean.setSelectedDelimiter((String) request.getAttribute("selectedDelimiter"));
+    dependentfield = (String) request.getParameter("dependentfield");
   }
-  String warning = (String) request.getAttribute("warningMsg");
 %>
 
 <f:view>
