@@ -1096,7 +1096,7 @@ public class UserSessionBean extends Object {
         versionTmp = cs.getRepresentsVersion();
         String csnvLatest = DataUtils.getCodingSchemeVersion(csn, versionTmp);
         String msg = "";
-        msg += "The selected report template is referencing an older version of the coding scheme:\n";
+        msg += "The selected report template is referencing an older or invalid version of the coding scheme:\n";
         msg += "    * Current version: " + csnv + "\n";
         msg += "    * Latest version: " + csnvLatest + "\n";
         msg += "\n";
@@ -1106,6 +1106,11 @@ public class UserSessionBean extends Object {
 
     public String generateStandardReportAction() {
         HttpServletRequest request = SessionUtil.getRequest();
+        
+        String warningMsg = displayCodingSchemeWarning(request);
+        if (warningMsg != null)
+            return warningMsg;
+        
         String templateId =
             (String) request.getSession().getAttribute(
                 "selectedStandardReportTemplate");
