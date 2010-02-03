@@ -236,7 +236,7 @@ public class DataUtils {
                 }
 
                 _codingSchemeMap.put(formalName, scheme);
-                String value = formalName + " (version: " + representsVersion + ")";
+                String value = getCodingSchemeVersion(formalName, representsVersion);
                 _ontologies.add(new SelectItem(value, value));
                 CSNVInfo info = new CSNVInfo();
                 info.codingSchemeName = formalName;
@@ -249,9 +249,28 @@ public class DataUtils {
         }
     }
     
+    public static String getCodingSchemeVersion(String codingSchemeName, String version) {
+        String value = codingSchemeName + " (version: " + version + ")";
+        return value;
+    }
+    
+    public static String getCodingSchemeName(String key) {
+        CSNVInfo info = _csnv2InfoMap.get(key);
+        return info != null ? info.codingSchemeName : null;
+    }
+
+    public static String getCodingSchemeVersion(String key) {
+        CSNVInfo info = _csnv2InfoMap.get(key);
+        return info != null ? info.version : null;
+    }
+    
     public static class CSNVInfo {
         public String codingSchemeName = "";
         public String version = "";
+    }
+    
+    public static CodingScheme getCodingScheme(String codingSchemeName) {
+        return _codingSchemeMap.get(codingSchemeName);
     }
 
     public static Vector<String> getSupportedAssociations(
@@ -340,14 +359,6 @@ public class DataUtils {
             ex.printStackTrace();
         }
         return null;
-    }
-
-    public static String getCodingSchemeName(String key) {
-        return _csnv2InfoMap.get(key).codingSchemeName;
-    }
-
-    public static String getCodingSchemeVersion(String key) {
-        return _csnv2InfoMap.get(key).version;
     }
 
     public static Vector<String> getRepresentationalFormListData(String key) {
