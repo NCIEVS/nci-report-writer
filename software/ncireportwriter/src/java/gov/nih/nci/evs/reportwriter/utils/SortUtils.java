@@ -110,4 +110,15 @@ public class SortUtils {
     public static Vector<?> quickSort(Vector<?> vector) {
         return quickSort(vector, SORT_BY_NAME);
     }
+    
+    @SuppressWarnings("unchecked")
+    public static Enumeration<?> sort(Enumeration<?> enumeration) {
+        if (enumeration == null)
+            return enumeration;
+        
+        List keyList = Collections.list(enumeration);
+        Collections.sort(keyList);
+        enumeration = Collections.enumeration(keyList);
+        return enumeration;
+    }
 }

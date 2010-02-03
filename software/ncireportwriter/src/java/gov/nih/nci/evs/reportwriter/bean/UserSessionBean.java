@@ -750,51 +750,54 @@ public class UserSessionBean extends Object {
         return null;
     }
     
-    private String warningMsg(String msg) {
-        HttpServletRequest request = SessionUtil.getRequest();
+    private String warningMsg(HttpServletRequest request, String msg) { //DYEE
         request.setAttribute("warningMsg", msg);
         return "warningMsg";
+    }
+    
+    private String getSessionAttributeStr(HttpServletRequest request, //DYEE
+        String attributeName) {
+        String value =
+            (String) request.getSession().getAttribute(attributeName);
+        request.setAttribute(attributeName, value);
+        return value;
     }
 
     // public String addReportColumnAction() {
     public String saveReportColumnAction() {
         HttpServletRequest request = SessionUtil.getRequest();
+        request.removeAttribute("warningMsg");
         StandardReportTemplate standardReportTemplate = null;
         standardReportTemplate =
             getStandardReportTemplate(_selectedStandardReportTemplate);
         if (standardReportTemplate == null) {
-            return warningMsg("Unable to identify report template "
-                    + _selectedStandardReportTemplate);
+            return warningMsg(request, "Unable to identify report template "
+                + _selectedStandardReportTemplate);
         }
 
+        HTTPUtils.printAttributes();
         String fieldlabel = (String) request.getParameter("fieldlabel");
         String columnNumber_str = (String) request.getParameter("columnNumber");
-
-        String fieldType =
-            (String) request.getSession().getAttribute("selectedDataCategory");
-        String propertyType =
-            (String) request.getSession().getAttribute("selectedPropertyType");
-        String propertyName =
-            (String) request.getSession().getAttribute("selectedPropertyName");
-        String representationalForm =
-            (String) request.getSession().getAttribute(
-                "selectedRepresentationalForm");
-        String source =
-            (String) request.getSession().getAttribute("selectedSource");
-        String propertyQualifier =
-            (String) request.getSession().getAttribute(
-                "selectedPropertyQualifier");
+        String fieldType = getSessionAttributeStr(request, "selectedDataCategory");
+        String propertyType = getSessionAttributeStr(request, "selectedPropertyType");
+        String propertyName = getSessionAttributeStr(request, "selectedPropertyName");
+        String representationalForm =getSessionAttributeStr(request, "selectedRepresentationalForm");
+        String source = getSessionAttributeStr(request, "selectedSource");
+        String propertyQualifier = getSessionAttributeStr(request, "selectedPropertyQualifier");
         String qualifierValue = (String) request.getParameter("qualifiervalue");
-        String conditionalColumnId =
-            (String) request.getParameter("dependentfield");
+        String conditionalColumnId = (String) request.getParameter("dependentfield");
 
-        if (columnNumber_str == null || fieldlabel == null)
-            return warningMsg("Please complete data entry.");
+        String enterMsg = "";
+        if (columnNumber_str == null || columnNumber_str.trim().length() <= 0)
+            enterMsg += "\n    * Column Number";
+        if (fieldlabel == null || fieldlabel.trim().length() <= 0)
+            enterMsg += "\n    * Field Label";
+        if (enterMsg.length() > 0) {
+            return warningMsg(request, "Please enter:" + enterMsg);
+        }
+        
         columnNumber_str = columnNumber_str.trim();
         fieldlabel = fieldlabel.trim();
-        if (columnNumber_str.length() == 0 || fieldlabel.length() == 0)
-            return warningMsg("Please complete data entry.");
-
         int columnNumber = Integer.parseInt(columnNumber_str);
         int ccid = -1;
         if (conditionalColumnId != null && conditionalColumnId != "") {
@@ -810,8 +813,7 @@ public class UserSessionBean extends Object {
                 isPreferred = Boolean.FALSE;
         }
 
-        String delim =
-            (String) request.getSession().getAttribute("selectedDelimiter");
+        String delim =getSessionAttributeStr(request, "selectedDelimiter");
         char delimiter = ' ';
         if (delim != null) {
             if (delim.length() > 0) {
@@ -846,10 +848,10 @@ public class UserSessionBean extends Object {
                             (gov.nih.nci.evs.reportwriter.bean.ReportColumn) objs[i];
                         String col_label = c.getLabel();
                         if (col_label.compareToIgnoreCase(fieldlabel) == 0)
-                            return warningMsg("The column label already exists.");
+                            return warningMsg(request, "This field label already exists.");
                         Integer col_num = c.getColumnNumber();
                         if (col_num.intValue() == columnNumber)
-                            return warningMsg("The column number already exists.");
+                            return warningMsg(request, "This column number already exists.");
                     }
                 }
             }
@@ -868,7 +870,7 @@ public class UserSessionBean extends Object {
 
         } catch (Exception e) {
             e.printStackTrace();
-            return warningMsg(e.getMessage());
+            return warningMsg(request, e.getMessage());
         }
         return "standard_report_column";
     }
