@@ -570,42 +570,36 @@ public class UserSessionBean extends Object {
         String codingScheme = (String) request.getParameter("codingScheme");
         String version = (String) request.getParameter("version");
 
-        _logger
-            .debug("saveModifiedTemplateAction: codingScheme " + codingScheme);
-        _logger.debug("saveModifiedTemplateAction: version " + version);
-
-        if (codingScheme == null || version == null) {
-            String message =
-                "Software Error: codingScheme and version can not be null:"
-                    + "\n  * Coding scheme: " + codingScheme
-                    + "\n  * version: " + version
-                    + "\nPlease report this issue.";
-            request.getSession().setAttribute("message", message);
-            return "message";
-        }
-
-        Boolean csnv_valid =
-            DataUtils.validateCodingScheme(codingScheme, version);
-        if (csnv_valid == null || csnv_valid.equals(Boolean.FALSE)) {
-            String message =
-                "Invalid coding scheme name "
-                    + codingScheme
-                    + " or version "
-                    + version
-                    + " -- The report template may be out of date. Please modify it and resubmit.";
-            request.getSession().setAttribute("message", message);
-            return "message";
-        }
+        String warningMsg = "";
+        if (codingScheme == null || codingScheme.trim().length() <= 0)
+            warningMsg += "\n    * Coding Scheme";
+        if (version == null || version.trim().length() <= 0)
+            warningMsg += "\n    * Version";
 
         String rootConceptCode =
             (String) request.getParameter("rootConceptCode");
-        if (rootConceptCode == null || rootConceptCode.trim().length() == 0) {
-            String message =
-                "Invalid root concept code " + rootConceptCode
-                    + " -- Please complete data entry.";
-            request.getSession().setAttribute("message", message);
-            return "message";
+        if (rootConceptCode == null || rootConceptCode.trim().length() <= 0)
+            warningMsg += "\n    * Concept Code\n";
+
+        if (warningMsg.length() > 0) {
+            warningMsg = "Please enter the following value(s):" + warningMsg;
+            return warningMsg(request, warningMsg);
         }
+
+        codingScheme = codingScheme.trim();
+        _logger.debug("saveModifiedTemplateAction: codingScheme: " + codingScheme);
+        version = version.trim();
+        _logger.debug("saveModifiedTemplateAction: version: " + version);
+        
+        if (! DataUtils.isValidCodingScheme(codingScheme, version)) {
+            CodingScheme cs = DataUtils.getCodingScheme(codingScheme);
+            String versionTmp = cs != null ? cs.getRepresentsVersion() : null;
+            warningMsg = "Invalid coding scheme and version combination.";
+            if (versionTmp != null)
+                warningMsg += "\nTry version: " + versionTmp;
+            return warningMsg(request, warningMsg);
+        }
+
         rootConceptCode = rootConceptCode.trim();
         _logger.debug("saveModifiedTemplateAction: rootConceptCode: "
             + rootConceptCode);
@@ -615,48 +609,29 @@ public class UserSessionBean extends Object {
         _logger.debug("saveModifiedTemplateAction: associationName: "
             + associationName);
 
-        if (associationName == null) {
-            String message =
-                "Software Error: associationName can not be null:"
-                    + "\nPlease report this issue.";
-            request.getSession().setAttribute("message", message);
-            return "message";
-        }
+        if (associationName == null || associationName.length() <= 0)
+            warningMsg += "\n    * Association name";
 
         String direction_str = (String) request.getParameter("direction");
-        Boolean direction = null;
-        if (direction_str.compareTo("source") == 0)
-            direction = Boolean.FALSE;
-        else
-            direction = Boolean.TRUE;
+        Boolean direction = new Boolean(direction_str.compareTo("source") != 0);
+
+        if (label == null || label.length() <= 0)
+            warningMsg += "\n    * Label";
+        if (rootConceptCode == null || rootConceptCode.length() <= 0)
+            warningMsg += "\n    * Root Concept Code";
 
         String level_str = ontologyBean.getSelectedLevel();
-
-        // return to error page
-        if (label == null || label.compareTo("") == 0) {
-            _logger.warn("Incomplete data entry -- form not saved.");
-            return "modify_standard_report_template";
-        }
-        if (rootConceptCode == null || rootConceptCode.compareTo("") == 0) {
-            _logger.warn("Incomplete data entry -- form not saved.");
-            return "modify_standard_report_template";
-        }
-        if (level_str == null || level_str.compareTo("") == 0) {
-            _logger.warn("Incomplete data entry -- form not saved.");
-            return "modify_standard_report_template";
-        }
+        if (level_str == null || level_str.length() <= 0)
+            warningMsg += "\n    * Level";
+        if (warningMsg.length() > 0)
+            return warningMsg(request,
+                "Missing the following value(s):" + warningMsg);
 
         Integer level = OntologyBean.levelToInt(level_str);
-        if (level < -1) {
-            String message =
-                "Invalid level " + level
-                    + " -- Please modify the report template and resubmit.";
-            request.getSession().setAttribute("message", message);
-            return "message";
-        }
+        if (level < -1)
+            return warningMsg(request, "Invalid level " + level);
 
         // char delimiter = '$';
-
         try {
             SDKClientUtil sdkclientutil = new SDKClientUtil();
 
@@ -668,13 +643,10 @@ public class UserSessionBean extends Object {
 
             Object standardReportTemplate_obj =
                 sdkclientutil.search(FQName, methodName, key);
-            if (standardReportTemplate_obj == null) {
-                String message =
-                    "Unable to update template -- the report template with the specified label, "
-                        + label + " is not found. ";
-                request.getSession().setAttribute("message", message);
-                return "message";
-            }
+            if (standardReportTemplate_obj == null)
+                return warningMsg(request, 
+                    "Unable to update template because this"
+                    + " report template can not be found.");
 
             standardReportTemplate =
                 (StandardReportTemplate) standardReportTemplate_obj;
@@ -692,6 +664,7 @@ public class UserSessionBean extends Object {
 
         } catch (Exception e) {
             e.printStackTrace();
+            warningMsg(request, e.getMessage());
         }
 
         return "standard_report_template";
@@ -788,13 +761,13 @@ public class UserSessionBean extends Object {
         String qualifierValue = (String) request.getParameter("qualifiervalue");
         String conditionalColumnId = (String) request.getParameter("dependentfield");
 
-        String enterMsg = "";
+        String warningMsg = "";
         if (columnNumber_str == null || columnNumber_str.trim().length() <= 0)
-            enterMsg += "\n    * Column Number";
+            warningMsg += "\n    * Column Number";
         if (fieldlabel == null || fieldlabel.trim().length() <= 0)
-            enterMsg += "\n    * Field Label";
-        if (enterMsg.length() > 0) {
-            return warningMsg(request, "Please enter:" + enterMsg);
+            warningMsg += "\n    * Field Label";
+        if (warningMsg.length() > 0) {
+            return warningMsg(request, "Please enter the following value(s):" + warningMsg);
         }
         
         columnNumber_str = columnNumber_str.trim();
@@ -1142,9 +1115,7 @@ public class UserSessionBean extends Object {
                 _logger
                     .debug("generateStandardReportAction: version " + version);
 
-                Boolean csnv_valid =
-                    DataUtils.validateCodingScheme(codingscheme, version);
-                if (csnv_valid == null || csnv_valid.equals(Boolean.FALSE)) {
+                if (! DataUtils.isValidCodingScheme(codingscheme, version)) {
                     String message =
                         "Invalid coding scheme name "
                             + codingscheme

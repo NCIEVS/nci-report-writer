@@ -165,30 +165,9 @@ public class DataUtils {
         return _ontologies;
     }
 
-    public static Boolean validateCodingScheme(String formalname, String version) {
-        // Note: To be implemented:
-        // _logger.debug("Method: DataUtils.validateCodingScheme");
-        //
-        // if (csnv2codingSchemeNameMap == null ||
-        // csnv2VersionMap == null) {
-        // _logger.debug("DataUtils.validateCodingScheme "
-        // + "calling setCodingSchemeMap");
-        // setCodingSchemeMap();
-        // return validateCodingScheme(formalname, version);
-        // }
-        //
-        // String key = formalname + " (version: " + version + ")";
-        // _logger.debug("DataUtils   validateCodingScheme key: " + key);
-        // if (csnv2codingSchemeNameMap.get(key) == null ||
-        // csnv2VersionMap.get(key) == null ) {
-        // _logger.debug("DataUtils.validateCodingScheme "
-        // + "csnv2codingSchemeNameMap.get(key) == null "
-        // + "|| csnv2VersionMap.get(key) == null :??? ");
-        // _logger.debug("* return Boolean.FALSE ");
-        // return Boolean.FALSE;
-        // }
-        // _logger.debug("* return Boolean.TRUE ");
-        return Boolean.TRUE;
+    public static boolean isValidCodingScheme(String codingSchemeName, String version) {
+        String csnv = getCodingSchemeVersion(codingSchemeName, version);
+        return getCodingSchemeVersion(csnv) != null;
     }
 
     private static void setCodingSchemeMap() {
