@@ -472,8 +472,8 @@ public class UserSessionBean extends Object {
     public String saveTemplateAction() {
         HttpServletRequest request = SessionUtil.getRequest();
         String warningMsg = "";
-        String codingSchemeNameAndVersion =
-            (String) request.getSession().getAttribute("selectedOntology");
+        String codingSchemeNameAndVersion = 
+            getSessionAttributeStr(request, "selectedOntology");
 
         _logger.warn(StringUtils.SEPARATOR);
         String label = getParameter(request, "label");
@@ -520,7 +520,7 @@ public class UserSessionBean extends Object {
                 null, rootConceptCode);
         if (rootConcept == null)
             return warningMsg(request, "The following value(s) are invalid:"
-                + "\n    * Root Concept Code");
+                + "\n    * Root Concept Code (check case sensitivity)");
         
         try {
             // Save results using SDK writable API.
@@ -586,7 +586,7 @@ public class UserSessionBean extends Object {
         _logger.debug("saveModifiedTemplateAction: rootConceptCode: "
             + rootConceptCode);
         if (rootConceptCode == null || rootConceptCode.trim().length() <= 0)
-            warningMsg += "\n    * Concept Code";
+            warningMsg += "\n    * Root Concept Code";
 
         String associationName = ontologyBean.getSelectedAssociation();
         _logger.debug("saveModifiedTemplateAction: associationName: "
@@ -626,7 +626,7 @@ public class UserSessionBean extends Object {
         Concept rootConcept =
             DataUtils.getConceptByCode(codingScheme, version, null, rootConceptCode);
         if (rootConcept == null)
-            warningMsg += "\n    * Root Concept Code";
+            warningMsg += "\n    * Root Concept Code (check case sensitivity)";
 
         Integer level = OntologyBean.levelToInt(level_str);
         if (level < -1)
