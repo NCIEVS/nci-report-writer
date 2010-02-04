@@ -86,6 +86,9 @@ public class OntologyBean // extends BaseBean
     }
 
     public List<SelectItem> getOntologyList() {
+        if (_ontologies != null)
+            return _ontologies;
+        
         _ontologies = DataUtils.getOntologyList();
         if (_ontologies != null && _ontologies.size() > 0) {
             for (int i = 0; i < _ontologies.size(); i++) {
