@@ -560,29 +560,34 @@ public class UserSessionBean extends Object {
         // return "generate_standard_report";
         return "standard_report_template";
     }
+    
+    private String getParameter(HttpServletRequest request, String parameterName) {
+        String value = request.getParameter(parameterName);
+        request.setAttribute(parameterName, value);
+        return value;
+    }
 
     public String saveModifiedTemplateAction() {
         HttpServletRequest request = SessionUtil.getRequest();
         OntologyBean ontologyBean = BeanUtils.getOntologyBean();
         String warningMsg = "";
 
-        String label = (String) request.getSession().getAttribute(
-            "selectedStandardReportTemplate");
+        String label = getSessionAttributeStr(request, "selectedStandardReportTemplate");
         _logger.debug("saveModifiedTemplateAction: label: " + label);
         if (label == null || label.length() <= 0)
             warningMsg += "\n    * Label";
         
-        String codingScheme = (String) request.getParameter("codingScheme");
+        String codingScheme = getParameter(request, "codingScheme");
         _logger.debug("saveModifiedTemplateAction: codingScheme: " + codingScheme);
         if (codingScheme == null || codingScheme.trim().length() <= 0)
             warningMsg += "\n    * Coding Scheme";
 
-        String version = (String) request.getParameter("version");
+        String version = (String) getParameter(request, "version");
         _logger.debug("saveModifiedTemplateAction: version: " + version);
         if (version == null || version.trim().length() <= 0)
             warningMsg += "\n    * Version";
 
-        String rootConceptCode = (String) request.getParameter("rootConceptCode");
+        String rootConceptCode = getParameter(request, "rootConceptCode");
         _logger.debug("saveModifiedTemplateAction: rootConceptCode: "
             + rootConceptCode);
         if (rootConceptCode == null || rootConceptCode.trim().length() <= 0)
@@ -594,10 +599,11 @@ public class UserSessionBean extends Object {
         if (associationName == null || associationName.length() <= 0)
             warningMsg += "\n    * Association name";
 
-        String direction_str = (String) request.getParameter("direction");
+        String direction_str = getParameter(request, "direction");
         _logger.debug("saveModifiedTemplateAction: direction_str: "
             + direction_str);
         Boolean direction = new Boolean(direction_str.compareTo("source") != 0);
+        request.setAttribute("direction", direction);
 
         String level_str = ontologyBean.getSelectedLevel();
         _logger.debug("saveModifiedTemplateAction: level_str: " + level_str);
@@ -620,10 +626,20 @@ public class UserSessionBean extends Object {
             return warningMsg(request, warningMsg);
         }
         rootConceptCode = rootConceptCode.trim();
+        
+        warningMsg = "";
+        Concept rootConcept =
+            DataUtils.getConceptByCode(codingScheme, version, null, rootConceptCode);
+        if (rootConcept == null)
+            warningMsg += "\n    * Root Concept Code";
 
         Integer level = OntologyBean.levelToInt(level_str);
         if (level < -1)
-            return warningMsg(request, "Invalid level " + level);
+            return warningMsg(request, "\n    * Level");
+        
+        if (warningMsg.length() > 0)
+            return warningMsg(request, "The following value(s) are invalid:" + 
+                warningMsg);
 
         // char delimiter = '$';
         try {

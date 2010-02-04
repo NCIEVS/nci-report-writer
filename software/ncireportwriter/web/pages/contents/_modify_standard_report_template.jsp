@@ -38,7 +38,12 @@
     }
     
     String warning = (String) request.getAttribute("warningMsg");
-    if (warning == null || warning.length() <= 0) {
+    if (warning != null && warning.length() > 0) {
+      // Note: This was caused by errors in validation.
+      version = (String) request.getAttribute("version");
+      rootcode = (String) request.getAttribute("rootConceptCode");
+      direction = (Boolean) request.getAttribute("direction");
+    } else {
      String csnv = DataUtils.getCodingSchemeVersion(codingSchemeName, version);
      String versionTmp = DataUtils.getCodingSchemeVersion(csnv);
      if (versionTmp == null) {
@@ -172,6 +177,10 @@
   </h:form>
 </f:view>
 <%
-  } catch (Exception ex) {    
+  } catch (Exception e) {
+%>
+    <%= e.getMessage() %>
+<%
+    e.printStackTrace();
   }
 %>
