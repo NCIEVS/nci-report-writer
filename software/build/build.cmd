@@ -1,9 +1,13 @@
 @echo off
-@rem ******************************************
-@rem **** Command file to invoke build.xml ****
-@rem ******************************************
-setlocal
 cls
+echo.
+echo ******************************************
+echo **** Command file to invoke build.xml ****
+echo ******************************************
+echo.
+setlocal
+set DEVPROPFILE=C:\SVN-Projects\ncireportwriter-properties\properties\dev-upgrade.properties
+set QAPROPFILE=C:\SVN-Projects\ncireportwriter-properties\properties\qa-upgrade.properties
 if "%1" == "" (
     echo.
     echo Available targets are:
@@ -41,25 +45,43 @@ if "%1" == "deploy" (
     goto DONE
 )
 if "%1" == "upgradewdb" (
-    ant -Dupgrade.target=upgrade-ncm:with-dbinstall -Denable.install.debug=true deploy:local:upgrade
-    goto DONE
-)
-if "%1" == "devwdb" (
-    ant -Dproperties.file=C:\SVN-Projects\ncireportwriter-properties\properties\dev-upgrade.properties -Dupgrade.target=upgrade-ncm:with-dbinstall deploy:remote:upgrade
+    ant -Dupgrade.target=upgrade-ncm:with-dbinstall -Denable.install.debug=true -Ddatabase.re-create deploy:local:upgrade
     goto DONE
 )
 if "%1" == "dev" (
-    ant -Dproperties.file=C:\SVN-Projects\ncireportwriter-properties\properties\dev-upgrade.properties deploy:remote:upgrade
+    ant -Dproperties.file=%DEVPROPFILE% deploy:remote:upgrade
     goto DONE
 )
-if "%1" == "qawdb" (
-    ant -Dproperties.file=C:\SVN-Projects\ncireportwriter-properties\properties\qa-upgrade.properties -Dupgrade.target=upgrade-ncm:with-dbinstall deploy:remote:upgrade
+if not "%1" == "devwdb" goto d1
+    @rem *** Remember to set database.drop-schema=true in dev-upgrade.properties file ***
+    type %DEVPROPFILE% | findstr "database.drop-schema=true" >nul
+    if "%errorlevel%" == "0" goto d2
+        echo Error 1:
+        echo   Please set 'database.drop-schema=true' in 'dev-upgrade.properties' file
+        echo   before running this command.
+        echo.
+        goto DONE
+    :d2
+    ant -Dproperties.file=%DEVPROPFILE% -Dupgrade.target=upgrade-ncm:with-dbinstall -Ddatabase.re-create=true deploy:remote:upgrade
     goto DONE
-)
+:d1
 if "%1" == "qa" (
-    ant -Dproperties.file=C:\SVN-Projects\ncireportwriter-properties\properties\qa-upgrade.properties deploy:remote:upgrade
+    ant -Dproperties.file=%QAPROPFILE% deploy:remote:upgrade
     goto DONE
 )
+if not "%1" == "qawdb" goto q1
+    @rem *** Remember to set database.drop-schema=true in qa-upgrade.properties file ***
+    type %QAPROPFILE% | findstr "database.drop-schema=true" >nul
+    if "%errorlevel%" == "0" goto q2
+        echo Error 1:
+        echo   Please set 'database.drop-schema=true' in 'qa-upgrade.properties' file
+        echo   before running this command.
+        echo.
+        goto DONE
+    :q2
+    ant -Dproperties.file=%QAPROPFILE% -Dupgrade.target=upgrade-ncm:with-dbinstall -Ddatabase.re-create=true deploy:remote:upgrade
+    goto DONE
+:q1
 if "%1" == "clean" (
     ant clean
     if exist ..\target\*.* (
