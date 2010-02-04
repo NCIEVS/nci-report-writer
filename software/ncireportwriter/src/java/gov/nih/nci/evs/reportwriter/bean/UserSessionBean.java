@@ -563,23 +563,46 @@ public class UserSessionBean extends Object {
 
     public String saveModifiedTemplateAction() {
         HttpServletRequest request = SessionUtil.getRequest();
-        String label =
-            (String) request.getSession().getAttribute(
-                "selectedStandardReportTemplate");
-
-        String codingScheme = (String) request.getParameter("codingScheme");
-        String version = (String) request.getParameter("version");
-
+        OntologyBean ontologyBean = BeanUtils.getOntologyBean();
         String warningMsg = "";
+
+        String label = (String) request.getSession().getAttribute(
+            "selectedStandardReportTemplate");
+        _logger.debug("saveModifiedTemplateAction: label: " + label);
+        if (label == null || label.length() <= 0)
+            warningMsg += "\n    * Label";
+        
+        String codingScheme = (String) request.getParameter("codingScheme");
+        _logger.debug("saveModifiedTemplateAction: codingScheme: " + codingScheme);
         if (codingScheme == null || codingScheme.trim().length() <= 0)
             warningMsg += "\n    * Coding Scheme";
+
+        String version = (String) request.getParameter("version");
+        _logger.debug("saveModifiedTemplateAction: version: " + version);
         if (version == null || version.trim().length() <= 0)
             warningMsg += "\n    * Version";
 
-        String rootConceptCode =
-            (String) request.getParameter("rootConceptCode");
+        String rootConceptCode = (String) request.getParameter("rootConceptCode");
+        _logger.debug("saveModifiedTemplateAction: rootConceptCode: "
+            + rootConceptCode);
         if (rootConceptCode == null || rootConceptCode.trim().length() <= 0)
-            warningMsg += "\n    * Concept Code\n";
+            warningMsg += "\n    * Concept Code";
+
+        String associationName = ontologyBean.getSelectedAssociation();
+        _logger.debug("saveModifiedTemplateAction: associationName: "
+            + associationName);
+        if (associationName == null || associationName.length() <= 0)
+            warningMsg += "\n    * Association name";
+
+        String direction_str = (String) request.getParameter("direction");
+        _logger.debug("saveModifiedTemplateAction: direction_str: "
+            + direction_str);
+        Boolean direction = new Boolean(direction_str.compareTo("source") != 0);
+
+        String level_str = ontologyBean.getSelectedLevel();
+        _logger.debug("saveModifiedTemplateAction: level_str: " + level_str);
+        if (level_str == null || level_str.length() <= 0)
+            warningMsg += "\n    * Level";
 
         if (warningMsg.length() > 0) {
             warningMsg = "Please enter the following value(s):" + warningMsg;
@@ -587,10 +610,7 @@ public class UserSessionBean extends Object {
         }
 
         codingScheme = codingScheme.trim();
-        _logger.debug("saveModifiedTemplateAction: codingScheme: " + codingScheme);
         version = version.trim();
-        _logger.debug("saveModifiedTemplateAction: version: " + version);
-        
         if (! DataUtils.isValidCodingScheme(codingScheme, version)) {
             CodingScheme cs = DataUtils.getCodingScheme(codingScheme);
             String versionTmp = cs != null ? cs.getRepresentsVersion() : null;
@@ -599,33 +619,7 @@ public class UserSessionBean extends Object {
                 warningMsg += "\nTry version: " + versionTmp;
             return warningMsg(request, warningMsg);
         }
-
         rootConceptCode = rootConceptCode.trim();
-        _logger.debug("saveModifiedTemplateAction: rootConceptCode: "
-            + rootConceptCode);
-
-        OntologyBean ontologyBean = BeanUtils.getOntologyBean();
-        String associationName = ontologyBean.getSelectedAssociation();
-        _logger.debug("saveModifiedTemplateAction: associationName: "
-            + associationName);
-
-        if (associationName == null || associationName.length() <= 0)
-            warningMsg += "\n    * Association name";
-
-        String direction_str = (String) request.getParameter("direction");
-        Boolean direction = new Boolean(direction_str.compareTo("source") != 0);
-
-        if (label == null || label.length() <= 0)
-            warningMsg += "\n    * Label";
-        if (rootConceptCode == null || rootConceptCode.length() <= 0)
-            warningMsg += "\n    * Root Concept Code";
-
-        String level_str = ontologyBean.getSelectedLevel();
-        if (level_str == null || level_str.length() <= 0)
-            warningMsg += "\n    * Level";
-        if (warningMsg.length() > 0)
-            return warningMsg(request,
-                "Missing the following value(s):" + warningMsg);
 
         Integer level = OntologyBean.levelToInt(level_str);
         if (level < -1)
@@ -648,8 +642,7 @@ public class UserSessionBean extends Object {
                     "Unable to update template because this"
                     + " report template can not be found.");
 
-            standardReportTemplate =
-                (StandardReportTemplate) standardReportTemplate_obj;
+            standardReportTemplate = (StandardReportTemplate) standardReportTemplate_obj;
             standardReportTemplate.setLabel(label);
             standardReportTemplate.setCodingSchemeName(codingScheme);
             standardReportTemplate.setCodingSchemeVersion(version);
