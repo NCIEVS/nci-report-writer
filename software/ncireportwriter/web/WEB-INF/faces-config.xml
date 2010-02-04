@@ -244,8 +244,8 @@
     </navigation-case>
  
     <navigation-case>
-      <from-outcome>message</from-outcome>
-      <to-view-id>/pages/main/message.jsp</to-view-id>
+      <from-outcome>warningMsg</from-outcome>
+      <to-view-id>/pages/main/add_standard_report_template.jsp</to-view-id>
     </navigation-case>
   </navigation-rule>
 

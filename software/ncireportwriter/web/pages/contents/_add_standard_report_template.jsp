@@ -1,5 +1,21 @@
 <%@ taglib uri="http://java.sun.com/jsf/html" prefix="h" %>
 <%@ taglib uri="http://java.sun.com/jsf/core" prefix="f" %> 
+<%@ page import="gov.nih.nci.evs.reportwriter.bean.*" %>
+<%@ page import="gov.nih.nci.evs.reportwriter.utils.*" %>
+
+<%
+  String label = "";
+  String rootConceptCode = "";
+  Boolean direction = Boolean.FALSE;
+  String warning = (String) request.getAttribute("warningMsg");
+  if (warning != null && warning.length() > 0) {
+    label = (String) request.getAttribute("label");
+    OntologyBean ontologyBean = BeanUtils.getOntologyBean();
+    ontologyBean.setSelectedOntology((String) request.getAttribute("selectedOntology"));
+    rootConceptCode = (String) request.getAttribute("rootConceptCode");
+    direction = (Boolean) request.getAttribute("direction");
+  }
+%>
 
 <f:view>
   <h:form id="SELECT_TASKForm">
@@ -10,6 +26,13 @@
           <br>
           <table summary="" cellpadding="0" cellspacing="0" border="0" 
               width="725" class="contentPage"> <!-- Table 2 (Begin) -->
+            <% if (warning != null) { %>
+              <tr><td class="warningMsgColor">
+                Warning:<br/>
+                <%=StringUtils.toHtml(warning)%><br/>
+                <br/>
+              </td></tr>
+            <% } %>
             <tr>
               <td>
                 <table summary="" cellpadding="0" cellspacing="0" border="0"> <!-- Table 3 (Begin) -->
@@ -24,7 +47,7 @@
 
                         <tr class="dataRowDark">
                           <td class="dataCellText">Label</td>
-                          <td class="dataCellText"><input type="text" name="label"></td>
+                          <td class="dataCellText"><input type="text" name="label" value="<%=label%>"></td>
                         </tr>
                         
                         <tr class="dataRowLight">
@@ -42,7 +65,7 @@
                         
                         <tr class="dataRowDark">
                           <td class="dataCellText">Root Concept Code</td>
-                          <td class="dataCellText"><input type="text" name="rootConceptCode"></td>
+                          <td class="dataCellText"><input type="text" name="rootConceptCode" value="<%=rootConceptCode%>"></td>
                         </tr>
 
                         <tr class="dataRowLight">
@@ -58,25 +81,18 @@
                           </td>                                           
                         </tr>
                         
-                        <!--
-                        <tr class="dataRowDark">
-                          <td class="dataCellText">Direction</td>
-                          <td class="dataCellText">                                           
-                            <h:selectOneRadio id="direction"
-                                value="#{ontologyBean.selectedDirection}">
-                              <f:selectItems value="#{ontologyBean.directionList}"/>
-                            </h:selectOneRadio>
-                          </td>
-                        </tr>
-                        -->
-                        
                         <tr class="dataRowDark">
                           <td class="dataCellText">Direction</td>
                           <td class="dataCellText">
-                            <input type="radio" name="direction" value="source" checked>Source&nbsp;
+                          <% if (direction.equals(Boolean.FALSE)) { %>
+                            <input type="radio" name="direction" value="source" checked="checked">Source&nbsp;
                             <input type="radio" name="direction" value="target">Target
-                          </td>
-                        </tr>                                       
+                          <% } else { %>
+                            <input type="radio" name="direction" value="source" >Source&nbsp;
+                            <input type="radio" name="direction" value="target" checked="checked">Target
+                          <% } %>
+                         </td>
+                        </tr>             
                         
                         <tr class="dataRowLight">
                           <td class="dataCellText">

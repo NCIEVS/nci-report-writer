@@ -471,61 +471,59 @@ public class UserSessionBean extends Object {
     // public String addReportAction() {
     public String saveTemplateAction() {
         HttpServletRequest request = SessionUtil.getRequest();
+        String warningMsg = "";
         String codingSchemeNameAndVersion =
             (String) request.getSession().getAttribute("selectedOntology");
+
+        _logger.warn(StringUtils.SEPARATOR);
+        String label = getParameter(request, "label");
+        if (label == null || label.length() <= 0)
+            warningMsg += "\n    * Label";
+        _logger.warn("label: " + label);
+
         String codingSchemeName =
             DataUtils.getCodingSchemeName(codingSchemeNameAndVersion);
         String codingSchemeVersion =
             DataUtils.getCodingSchemeVersion(codingSchemeNameAndVersion);
-        String label = (String) request.getParameter("label");
-
-        String rootConceptCode =
-            (String) request.getParameter("rootConceptCode");
-        String selectedAssociation =
-            (String) request.getSession().getAttribute("selectedAssociation");
-        String selectedLevel =
-            (String) request.getSession().getAttribute("selectedLevel");
-        // String selectedDirection = (String)
-        // request.getSession().getAttribute("selectedDirection");
-
-        String direction_str = (String) request.getParameter("direction");
-
-        Boolean direction = null;
-
-        // return to error page
-        if (label == null || label.compareTo("") == 0) {
-            _logger.warn("Incomplete data entry -- form not saved.");
-            return "add_standard_report_template";
-        }
-        if (rootConceptCode == null || rootConceptCode.compareTo("") == 0) {
-            _logger.warn("Incomplete data entry -- form not saved.");
-            return "add_standard_report_template";
-        }
-        if (selectedLevel == null || selectedLevel.compareTo("") == 0) {
-            _logger.warn("Incomplete data entry -- form not saved.");
-            return "add_standard_report_template";
-        }
-
-        if (direction_str.compareToIgnoreCase("source") == 0)
-            direction = Boolean.FALSE;
-        else
-            direction = Boolean.TRUE;
-
-        char delimiter = '$';
-
-        _logger.warn("==========");
-        _logger.warn("label: " + label);
         _logger.warn("codingSchemeName: " + codingSchemeName);
         _logger.warn("codingSchemeVersion: " + codingSchemeVersion);
+
+        String rootConceptCode = getParameter(request, "rootConceptCode");
+        if (rootConceptCode == null || rootConceptCode.length() <= 0)
+            warningMsg += "\n    * Root Concept Code";
         _logger.warn("rootConceptCode: " + rootConceptCode);
+
+        String selectedAssociation = getSessionAttributeStr(request, "selectedAssociation");
+        if (selectedAssociation == null || selectedAssociation.length() <= 0)
+            warningMsg += "\n    * Association Name";
         _logger.warn("associationname: " + selectedAssociation);
+
+        String direction_str = getParameter(request, "direction");
+        Boolean direction = new Boolean(direction_str.compareToIgnoreCase("source") != 0);
+        request.setAttribute("direction", direction);
         _logger.warn("direction: " + direction);
+
+        String selectedLevel = getSessionAttributeStr(request, "selectedLevel");
+        if (selectedLevel == null || selectedLevel.length() <= 0)
+            warningMsg += "\n    * Level";
         _logger.warn("level: " + selectedLevel);
+        
+        char delimiter = '$';
         _logger.warn("delimiter: " + delimiter);
 
-        // Save results using SDK writable API.
+        if (warningMsg.length() > 0)
+            return warningMsg(request, "Please enter the following value(s):" 
+                + warningMsg);
 
+        Concept rootConcept =
+            DataUtils.getConceptByCode(codingSchemeName, codingSchemeVersion, 
+                null, rootConceptCode);
+        if (rootConcept == null)
+            return warningMsg(request, "The following value(s) are invalid:"
+                + "\n    * Root Concept Code");
+        
         try {
+            // Save results using SDK writable API.
             SDKClientUtil sdkclientutil = new SDKClientUtil();
 
             String FQName =
@@ -538,13 +536,10 @@ public class UserSessionBean extends Object {
             standardReportTemplate_obj =
                 sdkclientutil.search(FQName, methodName, key);
 
-            if (standardReportTemplate_obj != null) {
-                String message =
-                    "Unable to save -- the report template with the specified label, "
-                        + label + ", already exists. ";
-                request.getSession().setAttribute("message", message);
-                return "message";
-            }
+            if (standardReportTemplate_obj != null)
+                return warningMsg(request,
+                    "A report template with the specified label, "
+                        + label + ", already exists. ");
 
             if (selectedLevel.equalsIgnoreCase(OntologyBean.LEVEL_ALL)) {
                 selectedLevel = "-1";
@@ -555,9 +550,9 @@ public class UserSessionBean extends Object {
             setSelectedStandardReportTemplate(label);
         } catch (Exception e) {
             e.printStackTrace();
+            return warningMsg(request, e.getMessage());
         }
 
-        // return "generate_standard_report";
         return "standard_report_template";
     }
     
