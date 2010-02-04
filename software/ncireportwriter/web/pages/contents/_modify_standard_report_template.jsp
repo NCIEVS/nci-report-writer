@@ -37,21 +37,23 @@
       level = level_obj.toString();
     }
     
-    String warning = null;
-    String csnv = DataUtils.getCodingSchemeVersion(codingSchemeName, version);
-    String versionTmp = DataUtils.getCodingSchemeVersion(csnv);
-    if (versionTmp == null) {
-      CodingScheme cs = DataUtils.getCodingScheme(codingSchemeName);
-      if (cs != null) {
-        versionTmp = cs.getRepresentsVersion();
-        String csnvLatest = DataUtils.getCodingSchemeVersion(codingSchemeName, versionTmp);
-        String msg = "";
-        msg += "This report template is referencing an older or invalid version of the coding scheme:\n";
-        msg += "Please update the version number to:\n";
-        msg += "    * " + versionTmp;
-        warning = msg;
-      }
-    }
+    String warning = (String) request.getAttribute("warningMsg");
+    if (warning == null || warning.length() <= 0) {
+     String csnv = DataUtils.getCodingSchemeVersion(codingSchemeName, version);
+     String versionTmp = DataUtils.getCodingSchemeVersion(csnv);
+     if (versionTmp == null) {
+       CodingScheme cs = DataUtils.getCodingScheme(codingSchemeName);
+       if (cs != null) {
+         versionTmp = cs.getRepresentsVersion();
+         String csnvLatest = DataUtils.getCodingSchemeVersion(codingSchemeName, versionTmp);
+         String msg = "";
+         msg += "This report template is referencing an older or invalid version of the coding scheme:\n";
+         msg += "Please update the version number to:\n";
+         msg += "    * " + versionTmp;
+         warning = msg;
+       }
+     }
+   }
 %>        
 
 <f:view>
