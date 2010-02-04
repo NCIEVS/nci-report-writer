@@ -518,7 +518,7 @@ public class UserSessionBean extends Object {
         Concept rootConcept =
             DataUtils.getConceptByCode(codingSchemeName, codingSchemeVersion, 
                 null, rootConceptCode);
-        if (rootConcept == null)
+        if (rootConcept == null && ! rootConceptCode.contains("|"))
             return warningMsg(request, "The following value(s) are invalid:"
                 + "\n    * Root Concept Code (check case sensitivity)");
         
@@ -538,8 +538,7 @@ public class UserSessionBean extends Object {
 
             if (standardReportTemplate_obj != null)
                 return warningMsg(request,
-                    "A report template with the specified label, "
-                        + label + ", already exists. ");
+                    "A report template with the same label already exists.");
 
             if (selectedLevel.equalsIgnoreCase(OntologyBean.LEVEL_ALL)) {
                 selectedLevel = "-1";
@@ -625,7 +624,7 @@ public class UserSessionBean extends Object {
         warningMsg = "";
         Concept rootConcept =
             DataUtils.getConceptByCode(codingScheme, version, null, rootConceptCode);
-        if (rootConcept == null)
+        if (rootConcept == null && ! rootConceptCode.contains("|"))
             warningMsg += "\n    * Root Concept Code (check case sensitivity)";
 
         Integer level = OntologyBean.levelToInt(level_str);

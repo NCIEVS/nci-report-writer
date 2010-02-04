@@ -52,7 +52,7 @@
          versionTmp = cs.getRepresentsVersion();
          String csnvLatest = DataUtils.getCodingSchemeVersion(codingSchemeName, versionTmp);
          String msg = "";
-         msg += "This report template is referencing an older or invalid version of the coding scheme:\n";
+         msg += "This report template is referencing an older or invalid version of the coding scheme.\n";
          msg += "Please update the version number to:\n";
          msg += "    * " + versionTmp;
          warning = msg;
