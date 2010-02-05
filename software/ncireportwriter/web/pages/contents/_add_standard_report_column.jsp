@@ -12,6 +12,7 @@
   ontologyBean.setSelectedDataCategory(null);
   userSessionBean.setSelectedPropertyType(null);
   ontologyBean.setSelectedPropertyName(null);
+  Boolean isPreferred = null;
   ontologyBean.setSelectedRepresentationalForm(null);
   ontologyBean.setSelectedSource(null);
   ontologyBean.setSelectedPropertyQualifier(null);
@@ -25,6 +26,7 @@
     ontologyBean.setSelectedDataCategory(reportColumn.getFieldId());
     userSessionBean.setSelectedPropertyType(reportColumn.getPropertyType());
     ontologyBean.setSelectedPropertyName(reportColumn.getPropertyName());
+    isPreferred = null;
     ontologyBean.setSelectedRepresentationalForm(reportColumn.getRepresentationalForm());
     ontologyBean.setSelectedSource(reportColumn.getSource());
     ontologyBean.setSelectedPropertyQualifier(reportColumn.getQualifierName());
@@ -32,13 +34,13 @@
     ontologyBean.setSelectedDelimiter(reportColumn.getDelimiter().toString());
     dependentfield = reportColumn.getConditionalColumnId().toString();
   } else if (warning != null) {
-    HTTPUtils.printAttributes(); //DYEE
     columnNumber = (String) request.getParameter("columnNumber");
     fieldlabel = (String) request.getParameter("fieldlabel");
     String value = (String) request.getAttribute("selectedDataCategory");
     ontologyBean.setSelectedDataCategory(value);
     userSessionBean.setSelectedPropertyType((String) request.getAttribute("selectedPropertyType"));
     ontologyBean.setSelectedPropertyName((String) request.getAttribute("selectedPropertyName"));
+    isPreferred = (Boolean) request.getAttribute("isPreferred");
     ontologyBean.setSelectedRepresentationalForm((String) request.getAttribute("selectedRepresentationalForm"));
     ontologyBean.setSelectedSource((String) request.getAttribute("selectedSource"));
     ontologyBean.setSelectedPropertyQualifier((String) request.getAttribute("selectedPropertyQualifier"));
@@ -121,12 +123,17 @@
                           </td>                                               
                         </tr>
 
+                        <%
+                          String checkYes = isPreferred != null && isPreferred == Boolean.TRUE  ? "checked=\"checked\"": "";
+                          String checkNo  = isPreferred != null && isPreferred == Boolean.FALSE ? "checked=\"checked\"": "";
+                          String checkNA  = isPreferred == null ? "checked=\"checked\"": "";
+                        %>
                         <tr class="dataRowDark">
                           <td class="dataCellText">Is Preferred?</td>
                           <td class="dataCellText">
-                            <input type="radio" name="preferred" value="yes" >Yes&nbsp;
-                            <input type="radio" name="preferred" value="no">No&nbsp;
-                            <input type="radio" name="preferred" value="na" checked="checked">NA
+                            <input type="radio" name="preferred" value="yes" <%=checkYes%>>Yes&nbsp;
+                            <input type="radio" name="preferred" value="no" <%=checkNo%>>No&nbsp;
+                            <input type="radio" name="preferred" value="na" <%=checkNA%>>NA
                           </td>
                         </tr>
 
