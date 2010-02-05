@@ -56,6 +56,8 @@
          msg += "Please update the version number to:\n";
          msg += "    * " + versionTmp;
          warning = msg;
+       } else {
+         warning = codingSchemeName + " " + "coding scheme is currently not loaded.";
        }
      }
    }

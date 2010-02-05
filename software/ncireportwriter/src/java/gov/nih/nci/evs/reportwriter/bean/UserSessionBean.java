@@ -471,14 +471,14 @@ public class UserSessionBean extends Object {
     // public String addReportAction() {
     public String saveTemplateAction() {
         HttpServletRequest request = SessionUtil.getRequest();
-        String warningMsg = "";
+        StringBuffer warningMsg = new StringBuffer();
         String codingSchemeNameAndVersion = 
             getSessionAttributeStr(request, "selectedOntology");
 
         _logger.warn(StringUtils.SEPARATOR);
         String label = getParameter(request, "label");
         if (label == null || label.length() <= 0)
-            warningMsg += "\n    * Label";
+            warningMsg.append("\n    * Label");
         _logger.warn("label: " + label);
 
         String codingSchemeName =
@@ -490,12 +490,12 @@ public class UserSessionBean extends Object {
 
         String rootConceptCode = getParameter(request, "rootConceptCode");
         if (rootConceptCode == null || rootConceptCode.length() <= 0)
-            warningMsg += "\n    * Root Concept Code";
+            warningMsg.append("\n    * Root Concept Code");
         _logger.warn("rootConceptCode: " + rootConceptCode);
 
         String selectedAssociation = getSessionAttributeStr(request, "selectedAssociation");
         if (selectedAssociation == null || selectedAssociation.length() <= 0)
-            warningMsg += "\n    * Association Name";
+            warningMsg.append("\n    * Association Name");
         _logger.warn("associationname: " + selectedAssociation);
 
         String direction_str = getParameter(request, "direction");
@@ -505,7 +505,7 @@ public class UserSessionBean extends Object {
 
         String selectedLevel = getSessionAttributeStr(request, "selectedLevel");
         if (selectedLevel == null || selectedLevel.length() <= 0)
-            warningMsg += "\n    * Level";
+            warningMsg.append("\n    * Level");
         _logger.warn("level: " + selectedLevel);
         
         char delimiter = '$';
@@ -560,38 +560,57 @@ public class UserSessionBean extends Object {
         request.setAttribute(parameterName, value);
         return value;
     }
-
+    
+    private boolean isValidCodingScheme(StringBuffer warningMsg, 
+        String codingSchemeName, String codingSchemeVersion) {
+        if (DataUtils.getCodingScheme(codingSchemeName) == null) {
+            warningMsg.append(codingSchemeName + " " +
+                "coding scheme is currently not loaded.");
+            return false;
+        }
+            
+        if (! DataUtils.isValidCodingScheme(codingSchemeName, codingSchemeVersion)) {
+            CodingScheme cs = DataUtils.getCodingScheme(codingSchemeName);
+            String version = cs != null ? cs.getRepresentsVersion() : null;
+            warningMsg.append("Invalid coding scheme and version combination.");
+            if (version != null)
+                warningMsg.append("\nTry version: " + version);
+            return false;
+        }
+        return true;
+    }
+    
     public String saveModifiedTemplateAction() {
         HttpServletRequest request = SessionUtil.getRequest();
         OntologyBean ontologyBean = BeanUtils.getOntologyBean();
-        String warningMsg = "";
+        StringBuffer warningMsg = new StringBuffer();
 
         String label = getSessionAttributeStr(request, "selectedStandardReportTemplate");
         _logger.debug("saveModifiedTemplateAction: label: " + label);
         if (label == null || label.length() <= 0)
-            warningMsg += "\n    * Label";
+            warningMsg.append("\n    * Label");
         
-        String codingScheme = getParameter(request, "codingScheme");
-        _logger.debug("saveModifiedTemplateAction: codingScheme: " + codingScheme);
-        if (codingScheme == null || codingScheme.trim().length() <= 0)
-            warningMsg += "\n    * Coding Scheme";
+        String codingSchemeName = getParameter(request, "codingScheme");
+        _logger.debug("saveModifiedTemplateAction: codingScheme: " + codingSchemeName);
+        if (codingSchemeName == null || codingSchemeName.trim().length() <= 0)
+            warningMsg.append("\n    * Coding Scheme");
 
         String version = (String) getParameter(request, "version");
         _logger.debug("saveModifiedTemplateAction: version: " + version);
         if (version == null || version.trim().length() <= 0)
-            warningMsg += "\n    * Version";
+            warningMsg.append("\n    * Version");
 
         String rootConceptCode = getParameter(request, "rootConceptCode");
         _logger.debug("saveModifiedTemplateAction: rootConceptCode: "
             + rootConceptCode);
         if (rootConceptCode == null || rootConceptCode.trim().length() <= 0)
-            warningMsg += "\n    * Root Concept Code";
+            warningMsg.append("\n    * Root Concept Code");
 
         String associationName = ontologyBean.getSelectedAssociation();
         _logger.debug("saveModifiedTemplateAction: associationName: "
             + associationName);
         if (associationName == null || associationName.length() <= 0)
-            warningMsg += "\n    * Association name";
+            warningMsg.append("\n    * Association name");
 
         String direction_str = getParameter(request, "direction");
         _logger.debug("saveModifiedTemplateAction: direction_str: "
@@ -602,38 +621,32 @@ public class UserSessionBean extends Object {
         String level_str = ontologyBean.getSelectedLevel();
         _logger.debug("saveModifiedTemplateAction: level_str: " + level_str);
         if (level_str == null || level_str.length() <= 0)
-            warningMsg += "\n    * Level";
+            warningMsg.append("\n    * Level");
 
         if (warningMsg.length() > 0) {
-            warningMsg = "Please enter the following value(s):" + warningMsg;
-            return warningMsg(request, warningMsg);
+            warningMsg.insert(0, "Please enter the following value(s):");
+            return warningMsg(request, warningMsg.toString());
         }
 
-        codingScheme = codingScheme.trim();
+        codingSchemeName = codingSchemeName.trim();
         version = version.trim();
-        if (! DataUtils.isValidCodingScheme(codingScheme, version)) {
-            CodingScheme cs = DataUtils.getCodingScheme(codingScheme);
-            String versionTmp = cs != null ? cs.getRepresentsVersion() : null;
-            warningMsg = "Invalid coding scheme and version combination.";
-            if (versionTmp != null)
-                warningMsg += "\nTry version: " + versionTmp;
-            return warningMsg(request, warningMsg);
-        }
+        if (! isValidCodingScheme(warningMsg, codingSchemeName, version))
+            return warningMsg(request, warningMsg.toString());
+
         rootConceptCode = rootConceptCode.trim();
-        
-        warningMsg = "";
         Concept rootConcept =
-            DataUtils.getConceptByCode(codingScheme, version, null, rootConceptCode);
+            DataUtils.getConceptByCode(codingSchemeName, version, null, rootConceptCode);
         if (rootConcept == null && ! rootConceptCode.contains("|"))
-            warningMsg += "\n    * Root Concept Code (check case sensitivity)";
+            warningMsg.append("\n    * Root Concept Code (check case sensitivity)");
 
         Integer level = OntologyBean.levelToInt(level_str);
         if (level < -1)
             return warningMsg(request, "\n    * Level");
         
-        if (warningMsg.length() > 0)
-            return warningMsg(request, "The following value(s) are invalid:" + 
-                warningMsg);
+        if (warningMsg.length() > 0) {
+            warningMsg.insert(0, "The following value(s) are invalid:");
+            return warningMsg(request, warningMsg.toString());
+        }
 
         // char delimiter = '$';
         try {
@@ -654,7 +667,7 @@ public class UserSessionBean extends Object {
 
             standardReportTemplate = (StandardReportTemplate) standardReportTemplate_obj;
             standardReportTemplate.setLabel(label);
-            standardReportTemplate.setCodingSchemeName(codingScheme);
+            standardReportTemplate.setCodingSchemeName(codingSchemeName);
             standardReportTemplate.setCodingSchemeVersion(version);
             standardReportTemplate.setRootConceptCode(rootConceptCode);
             standardReportTemplate.setAssociationName(associationName);
@@ -662,7 +675,7 @@ public class UserSessionBean extends Object {
             standardReportTemplate.setLevel(level);
             sdkclientutil.updateStandardReportTemplate(standardReportTemplate);
 
-            key = codingScheme + " (version: " + version + ")";
+            key = codingSchemeName + " (version: " + version + ")";
             request.getSession().setAttribute("selectedOntology", key);
 
         } catch (Exception e) {
