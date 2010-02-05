@@ -69,10 +69,14 @@ import org.apache.log4j.*;
  */
 
 public class DataUtils {
-    public static enum AssociationType { Codes, Names };
+    public static enum AssociationType {
+        Codes, Names
+    };
+
     private static Logger _logger = Logger.getLogger(DataUtils.class);
-    private static int _maxReturn = ReportWriterProperties.getIntProperty(
-        ReportWriterProperties.MAXIMUM_RETURN, 10000);
+    private static int _maxReturn =
+        ReportWriterProperties.getIntProperty(
+            ReportWriterProperties.MAXIMUM_RETURN, 10000);
 
     private static List<SelectItem> _standardReportTemplateList = null;
     private static List<SelectItem> _adminTaskList = null;
@@ -165,7 +169,8 @@ public class DataUtils {
         return _ontologies;
     }
 
-    public static boolean isValidCodingScheme(String codingSchemeName, String version) {
+    public static boolean isValidCodingScheme(String codingSchemeName,
+        String version) {
         String csnv = getCodingSchemeVersion(codingSchemeName, version);
         return getCodingSchemeVersion(csnv) != null;
     }
@@ -173,7 +178,7 @@ public class DataUtils {
     private static void setCodingSchemeMap() {
         _ontologies = new ArrayList<SelectItem>();
         _codingSchemeMap = new HashMap<String, CodingScheme>();
-        _csnv2InfoMap = new HashMap<String, CSNVInfo>(); 
+        _csnv2InfoMap = new HashMap<String, CSNVInfo>();
 
         try {
             LexBIGService lbSvc = RemoteServerUtil.createLexBIGService();
@@ -193,16 +198,18 @@ public class DataUtils {
                 vt.setVersion(representsVersion);
 
                 CodingScheme scheme = null;
-                int j=0;
+                int j = 0;
                 while (true) {
                     try {
                         switch (j) {
-                        case 0: 
-                            scheme = lbSvc.resolveCodingScheme(formalName, vt); break;
-                        case 1: 
+                        case 0:
+                            scheme = lbSvc.resolveCodingScheme(formalName, vt);
+                            break;
+                        case 1:
                             String urn = css.getCodingSchemeURI();
-                            scheme = lbSvc.resolveCodingScheme(urn, vt); break;
-                        case 2: 
+                            scheme = lbSvc.resolveCodingScheme(urn, vt);
+                            break;
+                        case 2:
                             String localname = css.getLocalName();
                             scheme = lbSvc.resolveCodingScheme(localname, vt);
                             break;
@@ -215,24 +222,26 @@ public class DataUtils {
                 }
 
                 _codingSchemeMap.put(formalName, scheme);
-                String value = getCodingSchemeVersion(formalName, representsVersion);
+                String value =
+                    getCodingSchemeVersion(formalName, representsVersion);
                 _ontologies.add(new SelectItem(value, value));
                 CSNVInfo info = new CSNVInfo();
                 info.codingSchemeName = formalName;
                 info.version = representsVersion;
                 _csnv2InfoMap.put(value, info);
-                
+
             }
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
-    
-    public static String getCodingSchemeVersion(String codingSchemeName, String version) {
+
+    public static String getCodingSchemeVersion(String codingSchemeName,
+        String version) {
         String value = codingSchemeName + " (version: " + version + ")";
         return value;
     }
-    
+
     public static String getCodingSchemeName(String key) {
         CSNVInfo info = _csnv2InfoMap.get(key);
         return info != null ? info.codingSchemeName : null;
@@ -242,29 +251,28 @@ public class DataUtils {
         CSNVInfo info = _csnv2InfoMap.get(key);
         return info != null ? info.version : null;
     }
-    
+
     public static class CSNVInfo {
         public String codingSchemeName = "";
         public String version = "";
     }
-    
+
     public static CodingScheme getCodingScheme(String codingSchemeName) {
         return _codingSchemeMap.get(codingSchemeName);
     }
 
     public static Vector<String> getSupportedAssociations(
-        AssociationType associationType, String key)
-        throws Exception {
+        AssociationType associationType, String key) throws Exception {
         CSNVInfo info = _csnv2InfoMap.get(key);
         if (info == null)
             return null;
-        return getSupportedAssociations(associationType, 
-            info.codingSchemeName, info.version);
+        return getSupportedAssociations(associationType, info.codingSchemeName,
+            info.version);
     }
 
     public static Vector<String> getSupportedAssociations(
-        AssociationType associationType, String codingSchemeName, 
-        String version) throws Exception {
+        AssociationType associationType, String codingSchemeName, String version)
+            throws Exception {
         CodingSchemeVersionOrTag vt = new CodingSchemeVersionOrTag();
         if (version != null)
             vt.setVersion(version);
@@ -279,14 +287,18 @@ public class DataUtils {
         for (int i = 0; i < assos.length; i++) {
             SupportedAssociation sa = (SupportedAssociation) assos[i];
             switch (associationType) {
-                case Names: v.add(sa.getContent()); break;
-                default: v.add(sa.getLocalId()); break;
+            case Names:
+                v.add(sa.getContent());
+                break;
+            default:
+                v.add(sa.getLocalId());
+                break;
             }
         }
         return v;
     }
-    
-    public static String getAssociationCode(String codingSchemeName, 
+
+    public static String getAssociationCode(String codingSchemeName,
         String version, String name) throws Exception {
         CodingSchemeVersionOrTag vt = new CodingSchemeVersionOrTag();
         if (version != null)
@@ -306,7 +318,7 @@ public class DataUtils {
         }
         return "";
     }
-    
+
     public static Vector<String> getPropertyNameListData(String key) {
         CSNVInfo info = _csnv2InfoMap.get(key);
         if (info == null)
@@ -344,7 +356,8 @@ public class DataUtils {
         CSNVInfo info = _csnv2InfoMap.get(key);
         if (info == null)
             return null;
-        return getRepresentationalFormListData(info.codingSchemeName, info.version);
+        return getRepresentationalFormListData(info.codingSchemeName,
+            info.version);
     }
 
     public static Vector<String> getRepresentationalFormListData(
@@ -724,12 +737,12 @@ public class DataUtils {
         return v;
     }
 
-    public static Vector<Concept> getAssociationSources(String scheme, String version,
-        String code, String assocCode) {
+    public static Vector<Concept> getAssociationSources(String scheme,
+        String version, String code, String assocCode) {
         return getAssociations(false, scheme, version, code, assocCode);
     }
-    
-    public static Vector<Concept> getAssociations(boolean retrieveTargets, 
+
+    public static Vector<Concept> getAssociations(boolean retrieveTargets,
         String scheme, String version, String code, String assocCode) {
         CodingSchemeVersionOrTag csvt = new CodingSchemeVersionOrTag();
         if (version != null)
@@ -749,11 +762,11 @@ public class DataUtils {
                     nameAndValueList_qualifier);
 
             boolean resolveForward = retrieveTargets;
-            boolean resolveBackward = ! retrieveTargets;
+            boolean resolveBackward = !retrieveTargets;
             matches =
                 cng.resolveAsList(ConvenienceMethods.createConceptReference(
-                    code, scheme), resolveForward, resolveBackward, 1, 1, new LocalNameList(),
-                    null, null, _maxReturn);
+                    code, scheme), resolveForward, resolveBackward, 1, 1,
+                    new LocalNameList(), null, null, _maxReturn);
 
             if (matches.getResolvedConceptReferenceCount() > 0) {
                 Enumeration<ResolvedConceptReference> refEnum =
@@ -761,8 +774,8 @@ public class DataUtils {
 
                 while (refEnum.hasMoreElements()) {
                     ResolvedConceptReference ref = refEnum.nextElement();
-                    AssociationList alist = retrieveTargets ? ref.getSourceOf() :
-                        ref.getTargetOf();
+                    AssociationList alist =
+                        retrieveTargets ? ref.getSourceOf() : ref.getTargetOf();
                     if (alist == null)
                         continue;
                     Association[] associations = alist.getAssociation();
@@ -789,9 +802,8 @@ public class DataUtils {
         return v;
     }
 
-    public static Vector<Concept> getAssociationsNew(boolean retrieveTargets, 
-        String scheme, String version,
-        String code, String assocCode) {
+    public static Vector<Concept> getAssociationsNew(boolean retrieveTargets,
+        String scheme, String version, String code, String assocCode) {
         _logger.info("Method: getAssociationsNew");
         CodingSchemeVersionOrTag csvt = new CodingSchemeVersionOrTag();
         if (version != null)
@@ -803,40 +815,42 @@ public class DataUtils {
             NameAndValueList nameAndValueList =
                 createNameAndValueList(new String[] { assocCode }, null);
             NameAndValueList nameAndValueList_qualifier = null;
-            cng = cng.restrictToAssociations(nameAndValueList,
-                nameAndValueList_qualifier);
-            
+            cng =
+                cng.restrictToAssociations(nameAndValueList,
+                    nameAndValueList_qualifier);
+
             ConceptReference graphFocus =
                 ConvenienceMethods.createConceptReference(code, scheme);
             boolean resolveForward = retrieveTargets;
-            boolean resolveBackward = ! retrieveTargets;
+            boolean resolveBackward = !retrieveTargets;
             int resolveAssociationDepth = 1;
             int maxToReturn = -1;
 
             ConceptReferenceList crefs =
                 createConceptReferenceList(new String[] { code }, scheme);
-            CodedNodeSet codesToRemove = lbSvc.getCodingSchemeConcepts(scheme, csvt);
+            CodedNodeSet codesToRemove =
+                lbSvc.getCodingSchemeConcepts(scheme, csvt);
             codesToRemove = codesToRemove.restrictToCodes(crefs);
-            
+
             ResolvedConceptReferencesIterator iterator =
                 codedNodeGraph2CodedNodeSetIterator(cng, graphFocus,
                     resolveForward, resolveBackward, resolveAssociationDepth,
                     maxToReturn, codesToRemove);
 
             v = resolveIterator(iterator, maxToReturn, null);
-            //v = resolveIteratorNew(iterator);
+            // v = resolveIteratorNew(iterator);
             SortUtils.quickSort(v);
         } catch (Exception ex) {
             ex.printStackTrace();
         }
         return v;
     }
-    
+
     public static ResolvedConceptReferencesIterator codedNodeGraph2CodedNodeSetIterator(
         CodedNodeGraph cng, ConceptReference graphFocus,
         boolean resolveForward, boolean resolveBackward,
         int resolveAssociationDepth, int maxToReturn, CodedNodeSet codesToRemove) {
-        
+
         try {
             CodedNodeSet cns =
                 cng.toNodeList(graphFocus, resolveForward, resolveBackward,
@@ -846,12 +860,13 @@ public class DataUtils {
                 _logger.warn("cng.toNodeList returns null???");
                 return null;
             }
-            
+
             if (codesToRemove != null)
                 cns = cns.difference(codesToRemove);
 
             SortOptionList sortCriteria = null;
-            // Constructors.createSortOptionList(new String[]{"matchToQuery", "code"});
+            // Constructors.createSortOptionList(new String[]{"matchToQuery",
+            // "code"});
             LocalNameList propertyNames = null;
             CodedNodeSet.PropertyType[] propertyTypes = null;
 
@@ -866,9 +881,9 @@ public class DataUtils {
             return null;
         }
     }
-    
-    public static Vector<Concept> resolveIterator(ResolvedConceptReferencesIterator iterator,
-        int maxToReturn, String code) {
+
+    public static Vector<Concept> resolveIterator(
+        ResolvedConceptReferencesIterator iterator, int maxToReturn, String code) {
         Vector<Concept> v = new Vector<Concept>();
         if (iterator == null) {
             _logger.info("No match.");
@@ -898,26 +913,27 @@ public class DataUtils {
         }
         return v;
     }
-    
+
     private static final int RESOLVE_ITERATOR_MAX_RETURN = 100;
+
     public static Vector<Concept> resolveIteratorNew(
-        ResolvedConceptReferencesIterator iterator)
-        throws Exception {
+        ResolvedConceptReferencesIterator iterator) throws Exception {
         Vector<Concept> list = new Vector<Concept>();
         if (iterator == null)
             return list;
-        
+
         int lastResolved = 0;
-        while(iterator.hasNext()) {
-            ResolvedConceptReference[] refs = 
-                iterator.next(RESOLVE_ITERATOR_MAX_RETURN).
-                getResolvedConceptReference();
-            for(ResolvedConceptReference ref : refs) {
+        while (iterator.hasNext()) {
+            ResolvedConceptReference[] refs =
+                iterator.next(RESOLVE_ITERATOR_MAX_RETURN)
+                    .getResolvedConceptReference();
+            for (ResolvedConceptReference ref : refs) {
                 Concept ce = ref.getReferencedEntry();
                 list.add(ce);
                 ++lastResolved;
             }
-            _logger.debug("resolveIterator: Advancing iterator: " + lastResolved);
+            _logger.debug("resolveIterator: Advancing iterator: "
+                + lastResolved);
         }
         return list;
     }
@@ -1015,8 +1031,8 @@ public class DataUtils {
         return list;
     }
 
-    public static Vector<String> getSubconceptCodes(String scheme, String version,
-        String code) { // throws LBException{
+    public static Vector<String> getSubconceptCodes(String scheme,
+        String version, String code) { // throws LBException{
         Vector<String> v = new Vector<String>();
         try {
             LexBIGService lbSvc = RemoteServerUtil.createLexBIGService();
@@ -1070,8 +1086,8 @@ public class DataUtils {
         return v;
     }
 
-    public static Vector<String> getSuperconceptCodes(String scheme, String version,
-        String code) { // throws LBException{
+    public static Vector<String> getSuperconceptCodes(String scheme,
+        String version, String code) { // throws LBException{
         long ms = System.currentTimeMillis();
         Vector<String> v = new Vector<String>();
         try {
