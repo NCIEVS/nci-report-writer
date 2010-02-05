@@ -68,7 +68,7 @@ public class UserSessionBean extends Object {
     private static Logger _logger = Logger.getLogger(UserSessionBean.class);
     // private final int COL_NUM = 0;
     private final int FIELD_NUM = 1;
-    
+
     private Boolean _isAdmin = null;
     private String _selectedTask = null;
 
@@ -365,22 +365,23 @@ public class UserSessionBean extends Object {
         }
         return null;
     }
-    
+
     private int[] getColumnInfo() throws Exception {
         HttpServletRequest request = SessionUtil.getRequest();
         String selectedColumnInfo = request.getParameter("selectedColumnInfo");
         _logger.debug("Selected Column Info: " + selectedColumnInfo);
         if (selectedColumnInfo == null)
             throw new Exception("Please select a column.");
-        
-        StringTokenizer tokenizer = new StringTokenizer(selectedColumnInfo, ":");
+
+        StringTokenizer tokenizer =
+            new StringTokenizer(selectedColumnInfo, ":");
         int[] info = new int[tokenizer.countTokens()];
-        int i=0;
+        int i = 0;
         while (tokenizer.hasMoreTokens())
             info[i++] = Integer.parseInt(tokenizer.nextToken());
         return info;
     }
-    
+
     private void initColumnAction() {
         HttpServletRequest request = SessionUtil.getRequest();
         request.removeAttribute("warningMsg");
@@ -396,15 +397,14 @@ public class UserSessionBean extends Object {
             int[] info = getColumnInfo();
             int fieldNum = info[FIELD_NUM];
             _logger.debug("Modify column with field number = " + fieldNum);
-    
+
             ReportColumn reportColumn = getReportColumn(fieldNum);
             debug(reportColumn);
             SessionUtil.getRequest().setAttribute("reportColumn", reportColumn);
             return "add_standard_report_column";
         } catch (Exception e) {
             ExceptionUtils.print(_logger, e);
-            SessionUtil.getRequest().setAttribute("warningMsg",
-                e.getMessage());
+            SessionUtil.getRequest().setAttribute("warningMsg", e.getMessage());
             return "standard_report_column";
         }
     }
@@ -423,41 +423,41 @@ public class UserSessionBean extends Object {
             int info[] = getColumnInfo();
             int fieldNum = info[FIELD_NUM];
             _logger.debug("Deleting column with field number = " + fieldNum);
-    
+
             ReportColumn reportColumn = getReportColumn(fieldNum);
             SDKClientUtil sdkclientutil = new SDKClientUtil();
             sdkclientutil.deleteReportColumn(reportColumn);
             // setSelectedStandardReportTemplate(label);
             return "standard_report_column";
         } catch (Exception e) {
-            SessionUtil.getRequest().setAttribute("warningMsg",
-                e.getMessage());
+            SessionUtil.getRequest().setAttribute("warningMsg", e.getMessage());
             return "standard_report_column";
         }
     }
 
     private void debug(ReportColumn reportColumn) {
-        if (! _logger.isDebugEnabled())
+        if (!_logger.isDebugEnabled())
             return;
         _logger.debug(StringUtils.SEPARATOR);
         _logger.debug("ReportColumn: ");
         _logger.debug("* Column Number: " + reportColumn.getColumnNumber());
         _logger.debug("* Field Number (getId): " + reportColumn.getId());
         _logger.debug("* Field Label (getLabel): " + reportColumn.getLabel());
-        _logger.debug("* Field Type (getFieldId): " + reportColumn.getFieldId());
+        _logger
+            .debug("* Field Type (getFieldId): " + reportColumn.getFieldId());
         _logger.debug("* Property Type: " + reportColumn.getPropertyType());
         _logger.debug("* Property Name: " + reportColumn.getPropertyName());
         _logger.debug("* Is Preferred: " + reportColumn.getIsPreferred());
-        _logger.debug("* Representational Form: " 
+        _logger.debug("* Representational Form: "
             + reportColumn.getRepresentationalForm());
         _logger.debug("* Source: " + reportColumn.getSource());
         _logger.debug("* Qualifier Name: " + reportColumn.getQualifierName());
         _logger.debug("* Qualifier Value: " + reportColumn.getQualifierValue());
         _logger.debug("* Delimiter: " + reportColumn.getDelimiter());
-        _logger.debug("* Dependency (getConditionalColumnId): " 
+        _logger.debug("* Dependency (getConditionalColumnId): "
             + reportColumn.getConditionalColumnId());
     }
-    
+
     public String getRootConceptCode() {
         return _rootConceptCode;
     }
@@ -473,56 +473,63 @@ public class UserSessionBean extends Object {
         HttpServletRequest request = SessionUtil.getRequest();
         StringBuffer warningMsg = new StringBuffer();
         try {
-            String codingSchemeNameAndVersion = 
+            String codingSchemeNameAndVersion =
                 HTTPUtils.getSessionAttributeStr(request, "selectedOntology");
-    
+
             _logger.warn(StringUtils.SEPARATOR);
             String label = HTTPUtils.getParameter(request, "label");
             if (label == null || label.length() <= 0)
                 warningMsg.append("\n    * Label");
             _logger.warn("* label: " + label);
-    
+
             String codingSchemeName =
                 DataUtils.getCodingSchemeName(codingSchemeNameAndVersion);
             String codingSchemeVersion =
                 DataUtils.getCodingSchemeVersion(codingSchemeNameAndVersion);
             _logger.warn("* codingSchemeName: " + codingSchemeName);
             _logger.warn("* codingSchemeVersion: " + codingSchemeVersion);
-    
-            String rootConceptCode = HTTPUtils.getParameter(request, "rootConceptCode");
+
+            String rootConceptCode =
+                HTTPUtils.getParameter(request, "rootConceptCode");
             if (rootConceptCode == null || rootConceptCode.length() <= 0)
                 warningMsg.append("\n    * Root Concept Code");
             _logger.warn("* rootConceptCode: " + rootConceptCode);
-    
-            String selectedAssociation = HTTPUtils.getSessionAttributeStr(request, "selectedAssociation");
-            if (selectedAssociation == null || selectedAssociation.length() <= 0)
+
+            String selectedAssociation =
+                HTTPUtils
+                    .getSessionAttributeStr(request, "selectedAssociation");
+            if (selectedAssociation == null
+                || selectedAssociation.length() <= 0)
                 warningMsg.append("\n    * Association Name");
             _logger.warn("* associationname: " + selectedAssociation);
-    
+
             String direction_str = HTTPUtils.getParameter(request, "direction");
-            Boolean direction = new Boolean(direction_str.compareToIgnoreCase("source") != 0);
+            Boolean direction =
+                new Boolean(direction_str.compareToIgnoreCase("source") != 0);
             request.setAttribute("direction", direction);
             _logger.warn("* direction: " + direction);
-    
-            String selectedLevel = HTTPUtils.getSessionAttributeStr(request, "selectedLevel");
+
+            String selectedLevel =
+                HTTPUtils.getSessionAttributeStr(request, "selectedLevel");
             if (selectedLevel == null || selectedLevel.length() <= 0)
                 warningMsg.append("\n    * Level");
             _logger.warn("* level: " + selectedLevel);
-            
+
             char delimiter = '$';
             _logger.warn("* delimiter: " + delimiter);
-    
+
             if (warningMsg.length() > 0)
-                return HTTPUtils.warningMsg(request, "Please enter the following value(s):" 
-                    + warningMsg);
-    
+                return HTTPUtils.warningMsg(request,
+                    "Please enter the following value(s):" + warningMsg);
+
             Concept rootConcept =
-                DataUtils.getConceptByCode(codingSchemeName, codingSchemeVersion, 
-                    null, rootConceptCode);
-            if (rootConcept == null && ! rootConceptCode.contains("|"))
-                return HTTPUtils.warningMsg(request, "The following value(s) are invalid:"
-                    + "\n    * Root Concept Code (check case sensitivity)");
-        
+                DataUtils.getConceptByCode(codingSchemeName,
+                    codingSchemeVersion, null, rootConceptCode);
+            if (rootConcept == null && !rootConceptCode.contains("|"))
+                return HTTPUtils.warningMsg(request,
+                    "The following value(s) are invalid:"
+                        + "\n    * Root Concept Code (check case sensitivity)");
+
             // Save results using SDK writable API.
             SDKClientUtil sdkclientutil = new SDKClientUtil();
 
@@ -554,16 +561,17 @@ public class UserSessionBean extends Object {
 
         return "standard_report_template";
     }
-    
-    private boolean isValidCodingScheme(StringBuffer warningMsg, 
+
+    private boolean isValidCodingScheme(StringBuffer warningMsg,
         String codingSchemeName, String codingSchemeVersion) {
         if (DataUtils.getCodingScheme(codingSchemeName) == null) {
-            warningMsg.append(codingSchemeName + " " +
-                "coding scheme is currently not loaded.");
+            warningMsg.append(codingSchemeName + " "
+                + "coding scheme is currently not loaded.");
             return false;
         }
-            
-        if (! DataUtils.isValidCodingScheme(codingSchemeName, codingSchemeVersion)) {
+
+        if (!DataUtils.isValidCodingScheme(codingSchemeName,
+            codingSchemeVersion)) {
             CodingScheme cs = DataUtils.getCodingScheme(codingSchemeName);
             String version = cs != null ? cs.getRepresentsVersion() : null;
             warningMsg.append("Invalid coding scheme and version combination.");
@@ -573,68 +581,78 @@ public class UserSessionBean extends Object {
         }
         return true;
     }
-    
+
     public String saveModifiedTemplateAction() {
         HttpServletRequest request = SessionUtil.getRequest();
         StringBuffer warningMsg = new StringBuffer();
 
         try {
             OntologyBean ontologyBean = BeanUtils.getOntologyBean();
-            String label = HTTPUtils.getSessionAttributeStr(request, "selectedStandardReportTemplate");
+            String label =
+                HTTPUtils.getSessionAttributeStr(request,
+                    "selectedStandardReportTemplate");
             _logger.debug("* saveModifiedTemplateAction: label: " + label);
             if (label == null || label.length() <= 0)
                 warningMsg.append("\n    * Label");
-            
-            String codingSchemeName = HTTPUtils.getParameter(request, "codingScheme");
-            _logger.debug("* saveModifiedTemplateAction: codingScheme: " + codingSchemeName);
+
+            String codingSchemeName =
+                HTTPUtils.getParameter(request, "codingScheme");
+            _logger.debug("* saveModifiedTemplateAction: codingScheme: "
+                + codingSchemeName);
             if (codingSchemeName == null || codingSchemeName.length() <= 0)
                 warningMsg.append("\n    * Coding Scheme");
-    
-            String version = (String) HTTPUtils.getParameter(request, "version");
+
+            String version =
+                (String) HTTPUtils.getParameter(request, "version");
             _logger.debug("* saveModifiedTemplateAction: version: " + version);
             if (version == null || version.length() <= 0)
                 warningMsg.append("\n    * Version");
-    
-            String rootConceptCode = HTTPUtils.getParameter(request, "rootConceptCode");
+
+            String rootConceptCode =
+                HTTPUtils.getParameter(request, "rootConceptCode");
             _logger.debug("* saveModifiedTemplateAction: rootConceptCode: "
                 + rootConceptCode);
             if (rootConceptCode == null || rootConceptCode.length() <= 0)
                 warningMsg.append("\n    * Root Concept Code");
-    
+
             String associationName = ontologyBean.getSelectedAssociation();
             _logger.debug("* saveModifiedTemplateAction: associationName: "
                 + associationName);
             if (associationName == null || associationName.length() <= 0)
                 warningMsg.append("\n    * Association name");
-    
+
             String direction_str = HTTPUtils.getParameter(request, "direction");
             _logger.debug("* saveModifiedTemplateAction: direction_str: "
                 + direction_str);
-            Boolean direction = new Boolean(direction_str.compareTo("source") != 0);
+            Boolean direction =
+                new Boolean(direction_str.compareTo("source") != 0);
             request.setAttribute("direction", direction);
-    
+
             String level_str = ontologyBean.getSelectedLevel();
-            _logger.debug("* saveModifiedTemplateAction: level_str: " + level_str);
+            _logger.debug("* saveModifiedTemplateAction: level_str: "
+                + level_str);
             if (level_str == null || level_str.length() <= 0)
                 warningMsg.append("\n    * Level");
-    
+
             if (warningMsg.length() > 0) {
                 warningMsg.insert(0, "Please enter the following value(s):");
                 return HTTPUtils.warningMsg(request, warningMsg);
             }
-    
-            if (! isValidCodingScheme(warningMsg, codingSchemeName, version))
+
+            if (!isValidCodingScheme(warningMsg, codingSchemeName, version))
                 return HTTPUtils.warningMsg(request, warningMsg);
-    
+
             Concept rootConcept =
-                DataUtils.getConceptByCode(codingSchemeName, version, null, rootConceptCode);
-            if (rootConcept == null && ! rootConceptCode.contains("|"))
-                warningMsg.append("\n    * Root Concept Code (check case sensitivity)");
-    
+                DataUtils.getConceptByCode(codingSchemeName, version, null,
+                    rootConceptCode);
+            if (rootConcept == null && !rootConceptCode.contains("|"))
+                warningMsg
+                    .append("\n    * Root Concept Code (check case sensitivity)");
+
             Integer level = OntologyBean.levelToInt(level_str);
             if (level < -1)
                 return HTTPUtils.warningMsg(request, "\n    * Level");
-            
+
             if (warningMsg.length() > 0) {
                 warningMsg.insert(0, "The following value(s) are invalid:");
                 return HTTPUtils.warningMsg(request, warningMsg);
@@ -651,11 +669,12 @@ public class UserSessionBean extends Object {
             Object standardReportTemplate_obj =
                 sdkclientutil.search(FQName, methodName, key);
             if (standardReportTemplate_obj == null)
-                return HTTPUtils.warningMsg(request, 
+                return HTTPUtils.warningMsg(request,
                     "Unable to update template because this"
-                    + " report template can not be found.");
+                        + " report template can not be found.");
 
-            standardReportTemplate = (StandardReportTemplate) standardReportTemplate_obj;
+            standardReportTemplate =
+                (StandardReportTemplate) standardReportTemplate_obj;
             standardReportTemplate.setLabel(label);
             standardReportTemplate.setCodingSchemeName(codingSchemeName);
             standardReportTemplate.setCodingSchemeVersion(version);
@@ -729,7 +748,7 @@ public class UserSessionBean extends Object {
         }
         return null;
     }
-    
+
     // public String addReportColumnAction() {
     public String saveReportColumnAction() {
         HttpServletRequest request = SessionUtil.getRequest();
@@ -738,29 +757,37 @@ public class UserSessionBean extends Object {
             StandardReportTemplate standardReportTemplate =
                 getStandardReportTemplate(_selectedStandardReportTemplate);
             if (standardReportTemplate == null)
-                return HTTPUtils.warningMsg(request, "Unable to retrieve report template "
-                    + _selectedStandardReportTemplate);
-    
+                return HTTPUtils.warningMsg(request,
+                    "Unable to retrieve report template "
+                        + _selectedStandardReportTemplate);
+
             _logger.debug(StringUtils.SEPARATOR);
             String fieldlabel = HTTPUtils.getParameter(request, "fieldlabel");
             _logger.debug("* fieldlabel: " + fieldlabel);
             if (fieldlabel == null || fieldlabel.length() <= 0)
                 warningMsg.append("\n    * Field Label");
-    
-            String columnNumber_str = HTTPUtils.getParameter(request, "columnNumber");
+
+            String columnNumber_str =
+                HTTPUtils.getParameter(request, "columnNumber");
             _logger.debug("* columnNumber: " + columnNumber_str);
             if (columnNumber_str == null || columnNumber_str.length() <= 0)
                 warningMsg.append("\n    * Column Number");
-    
-            String fieldType = HTTPUtils.getSessionAttributeStr(request, "selectedDataCategory");
+
+            String fieldType =
+                HTTPUtils.getSessionAttributeStr(request,
+                    "selectedDataCategory");
             _logger.debug("* fieldType: " + fieldType);
-    
-            String propertyType = HTTPUtils.getSessionAttributeStr(request, "selectedPropertyType");
+
+            String propertyType =
+                HTTPUtils.getSessionAttributeStr(request,
+                    "selectedPropertyType");
             _logger.debug("* propertyType: " + propertyType);
-    
-            String propertyName = HTTPUtils.getSessionAttributeStr(request, "selectedPropertyName");
+
+            String propertyName =
+                HTTPUtils.getSessionAttributeStr(request,
+                    "selectedPropertyName");
             _logger.debug("* propertyName: " + propertyName);
-    
+
             String preferred = (String) request.getParameter("preferred");
             Boolean isPreferred = null;
             if (preferred != null && preferred.equalsIgnoreCase("yes"))
@@ -769,36 +796,46 @@ public class UserSessionBean extends Object {
                 isPreferred = Boolean.FALSE;
             _logger.debug("* isPreferred: " + isPreferred);
             request.setAttribute("isPreferred", isPreferred);
-    
-            String representationalForm = HTTPUtils.getSessionAttributeStr(request, "selectedRepresentationalForm");
-            _logger.debug("* representationalForm: " + representationalForm);
-    
-            String source = HTTPUtils.getSessionAttributeStr(request, "selectedSource");
-            _logger.debug("* source: " + source);
-    
-            String propertyQualifier = HTTPUtils.getSessionAttributeStr(request, "selectedPropertyQualifier");
-            _logger.debug("* propertyQualifier: " + propertyQualifier);
-    
-            String qualifierValue = HTTPUtils.getParameter(request, "qualifiervalue");
-            _logger.debug("* qualifierValue: " + qualifierValue);
-    
-            String delim = HTTPUtils.getSessionAttributeStr(request, "selectedDelimiter");
-            _logger.debug("* delim: " + delim);
-            char delimiter = delim != null && delim.length() > 0 ? delim.charAt(0) : ' ';
 
-            String conditionalColumnId = HTTPUtils.getParameter(request, "dependentfield");
+            String representationalForm =
+                HTTPUtils.getSessionAttributeStr(request,
+                    "selectedRepresentationalForm");
+            _logger.debug("* representationalForm: " + representationalForm);
+
+            String source =
+                HTTPUtils.getSessionAttributeStr(request, "selectedSource");
+            _logger.debug("* source: " + source);
+
+            String propertyQualifier =
+                HTTPUtils.getSessionAttributeStr(request,
+                    "selectedPropertyQualifier");
+            _logger.debug("* propertyQualifier: " + propertyQualifier);
+
+            String qualifierValue =
+                HTTPUtils.getParameter(request, "qualifiervalue");
+            _logger.debug("* qualifierValue: " + qualifierValue);
+
+            String delim =
+                HTTPUtils.getSessionAttributeStr(request, "selectedDelimiter");
+            _logger.debug("* delim: " + delim);
+            char delimiter =
+                delim != null && delim.length() > 0 ? delim.charAt(0) : ' ';
+
+            String conditionalColumnId =
+                HTTPUtils.getParameter(request, "dependentfield");
             _logger.debug("* conditionalColumnId: " + conditionalColumnId);
-            
+
             if (warningMsg.length() > 0) {
                 warningMsg.insert(0, "Please enter the following value(s):");
                 return HTTPUtils.warningMsg(request, warningMsg);
             }
-    
+
             int columnNumber = 0;
-            try { 
+            try {
                 columnNumber = Integer.parseInt(columnNumber_str);
             } catch (Exception e) {
-                warningMsg.append("\n    * Column Number (Expecting an integer value)");
+                warningMsg
+                    .append("\n    * Column Number (Expecting an integer value)");
             }
 
             int ccid = -1;
@@ -806,14 +843,15 @@ public class UserSessionBean extends Object {
                 if (conditionalColumnId != null && conditionalColumnId != "")
                     ccid = Integer.parseInt(conditionalColumnId);
             } catch (Exception e) {
-                warningMsg.append("\n    * Dependent Field (Expecting an integer value)");
+                warningMsg
+                    .append("\n    * Dependent Field (Expecting an integer value)");
             }
 
             if (warningMsg.length() > 0) {
                 warningMsg.insert(0, "The following value(s) are invalid:");
                 return HTTPUtils.warningMsg(request, warningMsg);
             }
-            
+
             // Save results using SDK writable API.
             SDKClientUtil sdkclientutil = new SDKClientUtil();
             Collection<ReportColumn> cc =
@@ -827,10 +865,12 @@ public class UserSessionBean extends Object {
                             (gov.nih.nci.evs.reportwriter.bean.ReportColumn) objs[i];
                         String col_label = c.getLabel();
                         if (col_label.compareToIgnoreCase(fieldlabel) == 0)
-                            return HTTPUtils.warningMsg(request, "This field label already exists.");
+                            return HTTPUtils.warningMsg(request,
+                                "This field label already exists.");
                         Integer col_num = c.getColumnNumber();
                         if (col_num.intValue() == columnNumber)
-                            return HTTPUtils.warningMsg(request, "This column number already exists.");
+                            return HTTPUtils.warningMsg(request,
+                                "This column number already exists.");
                     }
                 }
             }
@@ -1053,42 +1093,43 @@ public class UserSessionBean extends Object {
         String warningMsg = displayCodingSchemeWarning(request);
         return warningMsg == null ? "standard_report_column" : warningMsg;
     }
-    
+
     public String displayCodingSchemeWarning(HttpServletRequest request) {
         StandardReportTemplate standardReportTemplate =
             getStandardReportTemplate(_selectedStandardReportTemplate);
         String csn = standardReportTemplate.getCodingSchemeName();
         String version = standardReportTemplate.getCodingSchemeVersion();
         String csnv = DataUtils.getCodingSchemeVersion(csn, version);
-        
+
         String versionTmp = DataUtils.getCodingSchemeVersion(csnv);
         if (versionTmp != null)
             return null;
 
         CodingScheme cs = DataUtils.getCodingScheme(csn);
         if (cs == null)
-            return HTTPUtils.warningMsg(request, 
-                "The following vocabulary is not loaded:\n" + 
-                "    * " + csnv);
+            return HTTPUtils.warningMsg(request,
+                "The following vocabulary is not loaded:\n" + "    * " + csnv);
 
         versionTmp = cs.getRepresentsVersion();
         String csnvLatest = DataUtils.getCodingSchemeVersion(csn, versionTmp);
         String msg = "";
-        msg += "The selected report template is referencing an older or invalid version of the coding scheme:\n";
+        msg +=
+            "The selected report template is referencing an older or invalid version of the coding scheme:\n";
         msg += "    * Current version: " + csnv + "\n";
         msg += "    * Latest version: " + csnvLatest + "\n";
         msg += "\n";
-        msg += "Please update the version number of the coding scheme by selecting the Modify button.";
+        msg +=
+            "Please update the version number of the coding scheme by selecting the Modify button.";
         return HTTPUtils.warningMsg(request, msg);
     }
 
     public String generateStandardReportAction() {
         HttpServletRequest request = SessionUtil.getRequest();
-        
+
         String warningMsg = displayCodingSchemeWarning(request);
         if (warningMsg != null)
             return warningMsg;
-        
+
         String templateId =
             (String) request.getSession().getAttribute(
                 "selectedStandardReportTemplate");
@@ -1117,10 +1158,10 @@ public class UserSessionBean extends Object {
 
                 _logger.debug("generateStandardReportAction: codingscheme "
                     + codingscheme);
-                _logger
-                    .debug("generateStandardReportAction: version " + version);
+                _logger.debug("generateStandardReportAction: version "
+                    + version);
 
-                if (! DataUtils.isValidCodingScheme(codingscheme, version)) {
+                if (!DataUtils.isValidCodingScheme(codingscheme, version)) {
                     String message =
                         "Invalid coding scheme name "
                             + codingscheme
