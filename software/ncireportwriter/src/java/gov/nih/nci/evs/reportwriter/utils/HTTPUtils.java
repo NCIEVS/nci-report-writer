@@ -126,4 +126,39 @@ public class HTTPUtils {
         printRequestParameters();
         System.out.println(" ");
     }
+
+    public static String warningMsg(HttpServletRequest request, String msg) {
+        request.setAttribute("warningMsg", msg);
+        return "warningMsg";
+    }
+    
+    public static String warningMsg(HttpServletRequest request, StringBuffer buffer) {
+        return warningMsg(request, buffer.toString());
+    }
+
+    public static String warningMsg(HttpServletRequest request, StringBuffer buffer, 
+        Throwable throwable) {
+        if (buffer.length() > 0 && buffer.charAt(buffer.length()-1) != '\n')
+            buffer.append("\n");
+        buffer.append(throwable.getClass().getSimpleName() + ": " + 
+            throwable.getMessage());
+        return warningMsg(request, buffer);
+    }
+
+    public static String getParameter(HttpServletRequest request, String parameterName) {
+        String value = request.getParameter(parameterName);
+        value = value.trim();
+        request.setAttribute(parameterName, value);
+        return value;
+    }
+    
+    public static String getSessionAttributeStr(HttpServletRequest request,
+        String attributeName) {
+        String value =
+            (String) request.getSession().getAttribute(attributeName);
+        value = value.trim();
+        request.setAttribute(attributeName, value);
+        return value;
+    }
+
 }
