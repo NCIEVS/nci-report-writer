@@ -751,148 +751,187 @@ public class UserSessionBean extends Object {
         return null;
     }
 
+    private class MyReportColumn {
+        private HttpServletRequest _request = SessionUtil.getRequest();
+        private StringBuffer _warningMsg = new StringBuffer();
+        public StandardReportTemplate _standardReportTemplate = null;
+        public String _fieldLabel = "";
+        public int _columnNumber = 0;
+        public String _fieldType = "";
+        public String _propertyType = "";
+        public String _propertyName = "";
+        public Boolean _isPreferred = null;
+        public String _representationalForm = "";
+        public String _source = "";
+        public String _propertyQualifier = "";
+        public String _qualifierValue = "";
+        public char _delimiter = ' ';
+        public int _ccid = -1;
+
+        public MyReportColumn(HttpServletRequest request,
+            StringBuffer warningMsg) {
+            _request = request;
+            _warningMsg = warningMsg;
+        }
+
+        public boolean isValid() throws Exception {
+            _standardReportTemplate =
+                getStandardReportTemplate(_selectedStandardReportTemplate);
+            if (_standardReportTemplate == null) {
+                _warningMsg.append("Unable to retrieve report template "
+                    + _selectedStandardReportTemplate);
+                return false;
+            }
+
+            _logger.debug(StringUtils.SEPARATOR);
+            _logger.debug("Method: saveReportColumnAction");
+            _fieldLabel = HTTPUtils.getParameter(_request, "fieldlabel");
+            _logger.debug("* fieldlabel: " + _fieldLabel);
+            if (_fieldLabel == null || _fieldLabel.length() <= 0)
+                _warningMsg.append("\n    * Field Label");
+
+            String columnNumber_str =
+                HTTPUtils.getParameter(_request, "columnNumber");
+            _logger.debug("* columnNumber: " + columnNumber_str);
+            if (columnNumber_str == null || columnNumber_str.length() <= 0)
+                _warningMsg.append("\n    * Column Number");
+
+            _fieldType =
+                HTTPUtils.getSessionAttributeStr(_request,
+                    "selectedDataCategory");
+            _logger.debug("* fieldType: " + _fieldType);
+
+            _propertyType =
+                HTTPUtils.getSessionAttributeStr(_request,
+                    "selectedPropertyType");
+            _logger.debug("* propertyType: " + _propertyType);
+
+            _propertyName =
+                HTTPUtils.getSessionAttributeStr(_request,
+                    "selectedPropertyName");
+            _logger.debug("* propertyName: " + _propertyName);
+
+            String preferred = (String) _request.getParameter("preferred");
+            if (preferred != null && preferred.equalsIgnoreCase("yes"))
+                _isPreferred = Boolean.TRUE;
+            else if (preferred != null && preferred.equalsIgnoreCase("no"))
+                _isPreferred = Boolean.FALSE;
+            _logger.debug("* isPreferred: " + _isPreferred);
+            _request.setAttribute("isPreferred", _isPreferred);
+
+            _representationalForm =
+                HTTPUtils.getSessionAttributeStr(_request,
+                    "selectedRepresentationalForm");
+            _logger.debug("* representationalForm: " + _representationalForm);
+
+            _source =
+                HTTPUtils.getSessionAttributeStr(_request, "selectedSource");
+            _logger.debug("* source: " + _source);
+
+            _propertyQualifier =
+                HTTPUtils.getSessionAttributeStr(_request,
+                    "selectedPropertyQualifier");
+            _logger.debug("* propertyQualifier: " + _propertyQualifier);
+
+            _qualifierValue =
+                HTTPUtils.getParameter(_request, "qualifiervalue");
+            _logger.debug("* qualifierValue: " + _qualifierValue);
+
+            String delim =
+                HTTPUtils.getSessionAttributeStr(_request, "selectedDelimiter");
+            _logger.debug("* delim: " + delim);
+            _delimiter =
+                delim != null && delim.length() > 0 ? delim.charAt(0) : ' ';
+
+            String conditionalColumnId =
+                HTTPUtils.getParameter(_request, "dependentfield");
+            _logger.debug("* conditionalColumnId: " + conditionalColumnId);
+
+            if (_warningMsg.length() > 0) {
+                _warningMsg.insert(0, "Please enter the following value(s):");
+                return false;
+            }
+
+            try {
+                _columnNumber = Integer.parseInt(columnNumber_str);
+                if (_columnNumber <= 0)
+                    throw new Exception("Value should be greater than 0.");
+            } catch (Exception e) {
+                _warningMsg
+                    .append("\n    * Column Number (Expecting an integer value greater than 0)");
+            }
+
+            try {
+                if (conditionalColumnId != null
+                    && conditionalColumnId.length() > 0) {
+                    _ccid = Integer.parseInt(conditionalColumnId);
+                    if (_ccid <= 0)
+                        throw new Exception("Value should be greater than 0.");
+                }
+            } catch (Exception e) {
+                _warningMsg
+                    .append("\n    * Dependent Field (Expecting an integer value greater than 0 or blank)");
+            }
+
+            if (_ccid == _columnNumber) {
+                _warningMsg
+                    .append("\n    * Dependent Field can not be dependent on itself.");
+                _warningMsg
+                    .append("\n        * It can not have the same value as the Column Number.");
+            }
+
+            if (_warningMsg.length() > 0) {
+                _warningMsg.insert(0, "The following value(s) are invalid:");
+                return false;
+            }
+            return true;
+        }
+
+        public boolean alreadyExists() {
+            Collection<ReportColumn> cc =
+                _standardReportTemplate.getColumnCollection();
+            if (cc == null)
+                return false;
+
+            Object[] objs = cc.toArray();
+            if (objs.length <= 0)
+                return false;
+
+            for (int i = 0; i < objs.length; i++) {
+                gov.nih.nci.evs.reportwriter.bean.ReportColumn c =
+                    (gov.nih.nci.evs.reportwriter.bean.ReportColumn) objs[i];
+                String col_label = c.getLabel();
+                if (col_label.compareToIgnoreCase(_fieldLabel) == 0) {
+                    _warningMsg.append("This field label already exists.");
+                    return true;
+                }
+                Integer col_num = c.getColumnNumber();
+                if (col_num.intValue() == _columnNumber) {
+                    _warningMsg.append("This column number already exists.");
+                    return true;
+                }
+            }
+            return false;
+        }
+    }
+
     public String saveReportColumnAction() {
         HttpServletRequest request = SessionUtil.getRequest();
         StringBuffer warningMsg = new StringBuffer();
         try {
-            StandardReportTemplate standardReportTemplate =
-                getStandardReportTemplate(_selectedStandardReportTemplate);
-            if (standardReportTemplate == null)
-                return HTTPUtils.warningMsg(request,
-                    "Unable to retrieve report template "
-                        + _selectedStandardReportTemplate);
-
-            _logger.debug(StringUtils.SEPARATOR);
-            _logger.debug("Method: saveReportColumnAction");
-            String fieldlabel = HTTPUtils.getParameter(request, "fieldlabel");
-            _logger.debug("* fieldlabel: " + fieldlabel);
-            if (fieldlabel == null || fieldlabel.length() <= 0)
-                warningMsg.append("\n    * Field Label");
-
-            String columnNumber_str =
-                HTTPUtils.getParameter(request, "columnNumber");
-            _logger.debug("* columnNumber: " + columnNumber_str);
-            if (columnNumber_str == null || columnNumber_str.length() <= 0)
-                warningMsg.append("\n    * Column Number");
-
-            String fieldType =
-                HTTPUtils.getSessionAttributeStr(request,
-                    "selectedDataCategory");
-            _logger.debug("* fieldType: " + fieldType);
-
-            String propertyType =
-                HTTPUtils.getSessionAttributeStr(request,
-                    "selectedPropertyType");
-            _logger.debug("* propertyType: " + propertyType);
-
-            String propertyName =
-                HTTPUtils.getSessionAttributeStr(request,
-                    "selectedPropertyName");
-            _logger.debug("* propertyName: " + propertyName);
-
-            String preferred = (String) request.getParameter("preferred");
-            Boolean isPreferred = null;
-            if (preferred != null && preferred.equalsIgnoreCase("yes"))
-                isPreferred = Boolean.TRUE;
-            else if (preferred != null && preferred.equalsIgnoreCase("no"))
-                isPreferred = Boolean.FALSE;
-            _logger.debug("* isPreferred: " + isPreferred);
-            request.setAttribute("isPreferred", isPreferred);
-
-            String representationalForm =
-                HTTPUtils.getSessionAttributeStr(request,
-                    "selectedRepresentationalForm");
-            _logger.debug("* representationalForm: " + representationalForm);
-
-            String source =
-                HTTPUtils.getSessionAttributeStr(request, "selectedSource");
-            _logger.debug("* source: " + source);
-
-            String propertyQualifier =
-                HTTPUtils.getSessionAttributeStr(request,
-                    "selectedPropertyQualifier");
-            _logger.debug("* propertyQualifier: " + propertyQualifier);
-
-            String qualifierValue =
-                HTTPUtils.getParameter(request, "qualifiervalue");
-            _logger.debug("* qualifierValue: " + qualifierValue);
-
-            String delim =
-                HTTPUtils.getSessionAttributeStr(request, "selectedDelimiter");
-            _logger.debug("* delim: " + delim);
-            char delimiter =
-                delim != null && delim.length() > 0 ? delim.charAt(0) : ' ';
-
-            String conditionalColumnId =
-                HTTPUtils.getParameter(request, "dependentfield");
-            _logger.debug("* conditionalColumnId: " + conditionalColumnId);
-
-            if (warningMsg.length() > 0) {
-                warningMsg.insert(0, "Please enter the following value(s):");
+            MyReportColumn myCol = new MyReportColumn(request, warningMsg);
+            if (!myCol.isValid() || myCol.alreadyExists())
                 return HTTPUtils.warningMsg(request, warningMsg);
-            }
 
-            int columnNumber = 0;
-            try {
-                columnNumber = Integer.parseInt(columnNumber_str);
-                if (columnNumber <= 0)
-                    throw new Exception("Value should be greater than 0.");
-            } catch (Exception e) {
-                warningMsg
-                    .append("\n    * Column Number (Expecting an integer value greater than 0)");
-            }
-
-            int ccid = -1;
-            try {
-                if (conditionalColumnId != null && conditionalColumnId.length() > 0) {
-                    ccid = Integer.parseInt(conditionalColumnId);
-                    if (ccid <= 0)
-                        throw new Exception("Value should be greater than 0.");
-                }
-            } catch (Exception e) {
-                warningMsg
-                    .append("\n    * Dependent Field (Expecting an integer value greater than 0 or blank)");
-            }
-            
-            if (ccid == columnNumber) {
-                warningMsg.append("\n    * Dependent Field can not be dependent on itself.");
-                warningMsg.append("\n        * It can not have the same value as the Column Number.");
-            }
-
-            if (warningMsg.length() > 0) {
-                warningMsg.insert(0, "The following value(s) are invalid:");
-                return HTTPUtils.warningMsg(request, warningMsg);
-            }
-
-            // Save results using SDK writable API.
             SDKClientUtil sdkclientutil = new SDKClientUtil();
-            Collection<ReportColumn> cc =
-                standardReportTemplate.getColumnCollection();
-            if (cc != null) {
-                Object[] objs = cc.toArray();
-                if (objs.length > 0) {
-                    // check duplicate column number and column label
-                    for (int i = 0; i < objs.length; i++) {
-                        gov.nih.nci.evs.reportwriter.bean.ReportColumn c =
-                            (gov.nih.nci.evs.reportwriter.bean.ReportColumn) objs[i];
-                        String col_label = c.getLabel();
-                        if (col_label.compareToIgnoreCase(fieldlabel) == 0)
-                            return HTTPUtils.warningMsg(request,
-                                "This field label already exists.");
-                        Integer col_num = c.getColumnNumber();
-                        if (col_num.intValue() == columnNumber)
-                            return HTTPUtils.warningMsg(request,
-                                "This column number already exists.");
-                    }
-                }
-            }
-
             ReportColumn col =
-                sdkclientutil.createReportColumn(fieldlabel, columnNumber,
-                    fieldType, propertyType, propertyName, isPreferred,
-                    representationalForm, source, propertyQualifier,
-                    qualifierValue, delimiter, ccid);
-            col.setReportTemplate(standardReportTemplate);
+                sdkclientutil.createReportColumn(myCol._fieldLabel,
+                    myCol._columnNumber, myCol._fieldType, myCol._propertyType,
+                    myCol._propertyName, myCol._isPreferred,
+                    myCol._representationalForm, myCol._source,
+                    myCol._propertyQualifier, myCol._qualifierValue,
+                    myCol._delimiter, myCol._ccid);
+            col.setReportTemplate(myCol._standardReportTemplate);
             sdkclientutil.insertReportColumn(col);
             _logger.debug("completed insertReportColumn: ");
 
