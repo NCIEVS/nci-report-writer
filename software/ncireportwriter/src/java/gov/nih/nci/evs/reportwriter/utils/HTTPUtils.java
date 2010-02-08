@@ -6,6 +6,8 @@ import java.util.regex.*;
 import javax.faces.context.*;
 import javax.servlet.http.*;
 
+import org.apache.log4j.*;
+
 /**
  * <!-- LICENSE_TEXT_START -->
  * Copyright 2008,2009 NGIT. This software was developed in conjunction 
@@ -54,6 +56,7 @@ import javax.servlet.http.*;
  */
 
 public class HTTPUtils {
+    private static Logger _logger = Logger.getLogger(HTTPUtils.class);
 
     public static String cleanXSS(String value) {
 
@@ -71,7 +74,6 @@ public class HTTPUtils {
                 "\"\"");
         value = value.replaceAll("\"", "&quot;");
         return value;
-
     }
 
     public static String replaceAll(String string, String regex,
@@ -80,13 +82,12 @@ public class HTTPUtils {
         Pattern myPattern = Pattern.compile(regex, Pattern.CASE_INSENSITIVE);
         string = myPattern.matcher(string).replaceAll(replaceWith);
         return string;
-
     }
 
     public static void printRequestSessionAttributes() {
-        System.out.println(" ");
-        System.out.println(StringUtils.SEPARATOR);
-        System.out.println("Request Session Attribute(s):");
+        _logger.debug(" ");
+        _logger.debug(StringUtils.SEPARATOR);
+        _logger.debug("Request Session Attribute(s):");
 
         try {
             HttpServletRequest request =
@@ -100,19 +101,18 @@ public class HTTPUtils {
             while (enumeration.hasMoreElements()) {
                 String name = (String) enumeration.nextElement();
                 Object value = session.getAttribute(name);
-                System.out.println("  " + i + ") " + name + ": " + value);
+                _logger.debug("  " + i + ") " + name + ": " + value);
                 ++i;
             }
         } catch (Exception e) {
-            System.out.println(e.getClass().getSimpleName() + ": "
-                + e.getMessage());
+            ExceptionUtils.print(_logger, e);
         }
     }
 
     public static void printRequestAttributes() {
-        System.out.println(" ");
-        System.out.println(StringUtils.SEPARATOR);
-        System.out.println("Request Attribute(s):");
+        _logger.debug(" ");
+        _logger.debug(StringUtils.SEPARATOR);
+        _logger.debug("Request Attribute(s):");
 
         try {
             HttpServletRequest request =
@@ -125,19 +125,18 @@ public class HTTPUtils {
             while (enumeration.hasMoreElements()) {
                 String name = (String) enumeration.nextElement();
                 Object value = request.getAttribute(name);
-                System.out.println("  " + i + ") " + name + ": " + value);
+                _logger.debug("  " + i + ") " + name + ": " + value);
                 ++i;
             }
         } catch (Exception e) {
-            System.out.println(e.getClass().getSimpleName() + ": "
-                + e.getMessage());
+            ExceptionUtils.print(_logger, e);
         }
     }
 
     public static void printRequestParameters() {
-        System.out.println(" ");
-        System.out.println(StringUtils.SEPARATOR);
-        System.out.println("Request Parameter(s):");
+        _logger.debug(" ");
+        _logger.debug(StringUtils.SEPARATOR);
+        _logger.debug("Request Parameter(s):");
 
         try {
             HttpServletRequest request =
@@ -150,12 +149,11 @@ public class HTTPUtils {
             while (enumeration.hasMoreElements()) {
                 String name = (String) enumeration.nextElement();
                 Object value = request.getParameter(name);
-                System.out.println("  " + i + ") " + name + ": " + value);
+                _logger.debug("  " + i + ") " + name + ": " + value);
                 ++i;
             }
         } catch (Exception e) {
-            System.out.println(e.getClass().getSimpleName() + ": "
-                + e.getMessage());
+            ExceptionUtils.print(_logger, e);
         }
     }
 
@@ -163,7 +161,7 @@ public class HTTPUtils {
         printRequestSessionAttributes();
         printRequestAttributes();
         printRequestParameters();
-        System.out.println(" ");
+        _logger.debug(" ");
     }
 
     public static String warningMsg(HttpServletRequest request, String msg) {

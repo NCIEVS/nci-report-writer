@@ -7,7 +7,13 @@
   OntologyBean ontologyBean = BeanUtils.getOntologyBean();
   UserSessionBean userSessionBean = BeanUtils.getUserSessionBean();
   ReportColumn reportColumn = (ReportColumn) request.getAttribute("reportColumn");
+  boolean isAddMode = reportColumn == null;
   String columnNumber = "";
+  if (isAddMode) {
+    Integer col = (Integer) request.getSession().getAttribute("highestColumnNumber");
+    if (col != null)
+        columnNumber = Integer.toString(col.intValue() + 1);
+  }
   String fieldlabel = "";
   ontologyBean.setSelectedDataCategory(null);
   userSessionBean.setSelectedPropertyType(null);
@@ -20,7 +26,7 @@
   ontologyBean.setSelectedDelimiter(null);
   String dependentfield = "";
   String warning = (String) request.getAttribute("warningMsg");
-  if (reportColumn != null) {
+  if (! isAddMode) { // Modified
     columnNumber = reportColumn.getColumnNumber().toString();
     fieldlabel = reportColumn.getLabel();
     ontologyBean.setSelectedDataCategory(reportColumn.getFieldId());
@@ -32,7 +38,9 @@
     ontologyBean.setSelectedPropertyQualifier(reportColumn.getQualifierName());
     qualifiervalue = reportColumn.getQualifierValue();
     ontologyBean.setSelectedDelimiter(reportColumn.getDelimiter().toString());
-    dependentfield = reportColumn.getConditionalColumnId().toString();
+    int ccid = reportColumn.getConditionalColumnId().intValue();
+    if (ccid >= 0)
+      dependentfield = reportColumn.getConditionalColumnId().toString();
   } else if (warning != null) {
     columnNumber = (String) request.getParameter("columnNumber");
     fieldlabel = (String) request.getParameter("fieldlabel");
@@ -70,7 +78,11 @@
               <td>
                 <table summary="" cellpadding="0" cellspacing="0" border="0"> <!-- Table 3 (Begin) -->
                   <tr>
-                    <td class="dataTablePrimaryLabel" height="20">ADD REPORT FIELD</td>
+                    <% if (isAddMode){ %>
+                      <td class="dataTablePrimaryLabel" height="20">ADD REPORT FIELD</td>
+                    <% } else { %>
+                      <td class="dataTablePrimaryLabel" height="20">MODIFY REPORT FIELD</td>
+                    <% } %>
                   </tr>
                   <tr>
                     <td>
@@ -80,8 +92,8 @@
 
                         <tr class="dataRowLight">
                           <td class="dataCellText">Column Number</td>
-                          <td class="dataCellText">
-                            <input type="text" name="columnNumber" value="<%=columnNumber%>">
+                          <td class="dataCellText"><%=columnNumber%>
+                            <input type="hidden" name="columnNumber" value="<%=columnNumber%>">
                           </td>
                         </tr>
 
