@@ -67,6 +67,8 @@
                     if (objs != null) {
                       for (int i=0; i<objs.length; i++) {
                         ReportColumn c = (ReportColumn) objs[i];
+                        int ccid = c.getConditionalColumnId().intValue();
+                        String ccid_str = ccid >= 0 ? Integer.toString(ccid) : "";
                   %>
                         <tr>
                           <td class="dataCellText"> <input type="radio" name="selectedColumnInfo" 
@@ -83,7 +85,7 @@
                           <td class="dataCellText"><%= StringUtils.getSpaceIfBlank(c.getQualifierName()) %></td>
                           <td class="dataCellText"><%= StringUtils.getSpaceIfBlank(c.getQualifierValue()) %></td>
                           <td class="dataCellText"><%= StringUtils.getSpaceIfBlank(c.getDelimiter()) %></td>
-                          <td class="dataCellNumerical"><%= c.getConditionalColumnId() %></td>
+                          <td class="dataCellNumerical"><%= ccid_str %></td>
                         </tr>
                   <% 
                       }

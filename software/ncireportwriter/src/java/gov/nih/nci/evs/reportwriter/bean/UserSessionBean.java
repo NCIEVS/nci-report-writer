@@ -468,7 +468,6 @@ public class UserSessionBean extends Object {
         _rootConceptCode = rootConceptCode;
     }
 
-    // public String addReportAction() {
     public String saveTemplateAction() {
         HttpServletRequest request = SessionUtil.getRequest();
         StringBuffer warningMsg = new StringBuffer();
@@ -476,24 +475,25 @@ public class UserSessionBean extends Object {
             String codingSchemeNameAndVersion =
                 HTTPUtils.getSessionAttributeStr(request, "selectedOntology");
 
-            _logger.warn(StringUtils.SEPARATOR);
+            _logger.debug(StringUtils.SEPARATOR);
+            _logger.debug("Method: saveTemplateAction");
             String label = HTTPUtils.getParameter(request, "label");
             if (label == null || label.length() <= 0)
                 warningMsg.append("\n    * Label");
-            _logger.warn("* label: " + label);
+            _logger.debug("* label: " + label);
 
             String codingSchemeName =
                 DataUtils.getCodingSchemeName(codingSchemeNameAndVersion);
             String codingSchemeVersion =
                 DataUtils.getCodingSchemeVersion(codingSchemeNameAndVersion);
-            _logger.warn("* codingSchemeName: " + codingSchemeName);
-            _logger.warn("* codingSchemeVersion: " + codingSchemeVersion);
+            _logger.debug("* codingSchemeName: " + codingSchemeName);
+            _logger.debug("* codingSchemeVersion: " + codingSchemeVersion);
 
             String rootConceptCode =
                 HTTPUtils.getParameter(request, "rootConceptCode");
             if (rootConceptCode == null || rootConceptCode.length() <= 0)
                 warningMsg.append("\n    * Root Concept Code");
-            _logger.warn("* rootConceptCode: " + rootConceptCode);
+            _logger.debug("* rootConceptCode: " + rootConceptCode);
 
             String selectedAssociation =
                 HTTPUtils
@@ -501,22 +501,22 @@ public class UserSessionBean extends Object {
             if (selectedAssociation == null
                 || selectedAssociation.length() <= 0)
                 warningMsg.append("\n    * Association Name");
-            _logger.warn("* associationname: " + selectedAssociation);
+            _logger.debug("* associationname: " + selectedAssociation);
 
             String direction_str = HTTPUtils.getParameter(request, "direction");
             Boolean direction =
                 new Boolean(direction_str.compareToIgnoreCase("source") != 0);
             request.setAttribute("direction", direction);
-            _logger.warn("* direction: " + direction);
+            _logger.debug("* direction: " + direction);
 
             String selectedLevel =
                 HTTPUtils.getSessionAttributeStr(request, "selectedLevel");
             if (selectedLevel == null || selectedLevel.length() <= 0)
                 warningMsg.append("\n    * Level");
-            _logger.warn("* level: " + selectedLevel);
+            _logger.debug("* level: " + selectedLevel);
 
             char delimiter = '$';
-            _logger.warn("* delimiter: " + delimiter);
+            _logger.debug("* delimiter: " + delimiter);
 
             if (warningMsg.length() > 0)
                 return HTTPUtils.warningMsg(request,
@@ -591,6 +591,8 @@ public class UserSessionBean extends Object {
             String label =
                 HTTPUtils.getSessionAttributeStr(request,
                     "selectedStandardReportTemplate");
+            _logger.debug(StringUtils.SEPARATOR);
+            _logger.debug("Method: saveModifiedTemplateAction");
             _logger.debug("* saveModifiedTemplateAction: label: " + label);
             if (label == null || label.length() <= 0)
                 warningMsg.append("\n    * Label");
@@ -749,7 +751,6 @@ public class UserSessionBean extends Object {
         return null;
     }
 
-    // public String addReportColumnAction() {
     public String saveReportColumnAction() {
         HttpServletRequest request = SessionUtil.getRequest();
         StringBuffer warningMsg = new StringBuffer();
@@ -762,6 +763,7 @@ public class UserSessionBean extends Object {
                         + _selectedStandardReportTemplate);
 
             _logger.debug(StringUtils.SEPARATOR);
+            _logger.debug("Method: saveReportColumnAction");
             String fieldlabel = HTTPUtils.getParameter(request, "fieldlabel");
             _logger.debug("* fieldlabel: " + fieldlabel);
             if (fieldlabel == null || fieldlabel.length() <= 0)
@@ -833,18 +835,23 @@ public class UserSessionBean extends Object {
             int columnNumber = 0;
             try {
                 columnNumber = Integer.parseInt(columnNumber_str);
+                if (columnNumber <= 0)
+                    throw new Exception("Value should be greater than 0.");
             } catch (Exception e) {
                 warningMsg
-                    .append("\n    * Column Number (Expecting an integer value)");
+                    .append("\n    * Column Number (Expecting an integer value greater than 0)");
             }
 
             int ccid = -1;
             try {
-                if (conditionalColumnId != null && conditionalColumnId != "")
+                if (conditionalColumnId != null && conditionalColumnId.length() > 0) {
                     ccid = Integer.parseInt(conditionalColumnId);
+                    if (ccid <= 0)
+                        throw new Exception("Value should be greater than 0.");
+                }
             } catch (Exception e) {
                 warningMsg
-                    .append("\n    * Dependent Field (Expecting an integer value)");
+                    .append("\n    * Dependent Field (Expecting an integer value greater than 0 or blank)");
             }
 
             if (warningMsg.length() > 0) {

@@ -375,16 +375,16 @@ public class DataUtils {
             Vector<String> propertyNameListData = new Vector<String>();
             SupportedRepresentationalForm[] forms =
                 scheme.getMappings().getSupportedRepresentationalForm();
-            if (true) {
+            boolean debug = true;
+            if (debug) {
                 _logger.debug(StringUtils.SEPARATOR);
                 _logger.debug("MethodgetRepresentationalFormListData");
                 _logger.debug("* codingSchemeName: " + codingSchemeName);
                 _logger.debug("* version: " + version);
-                _logger.debug("* forms: ");
-                if (forms != null) {
-                    for (int i = 0; i < forms.length; ++i)
-                        _logger.debug("  " + i + ") " + forms[i].getLocalId());
-                }
+                ArrayList<String> list = new ArrayList<String>();
+                for (int i = 0; i < forms.length; ++i)
+                    list.add(forms[i].getLocalId());
+                StringUtils.debug(false, _logger, "* forms: ", list);
             }
             if (forms != null) {
                 for (int i = 0; i < forms.length; i++) {
