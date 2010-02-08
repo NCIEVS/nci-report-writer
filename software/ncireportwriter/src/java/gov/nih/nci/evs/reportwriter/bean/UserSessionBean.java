@@ -853,6 +853,11 @@ public class UserSessionBean extends Object {
                 warningMsg
                     .append("\n    * Dependent Field (Expecting an integer value greater than 0 or blank)");
             }
+            
+            if (ccid == columnNumber) {
+                warningMsg.append("\n    * Dependent Field can not be dependent on itself.");
+                warningMsg.append("\n        * It can not have the same value as the Column Number.");
+            }
 
             if (warningMsg.length() > 0) {
                 warningMsg.insert(0, "The following value(s) are invalid:");
