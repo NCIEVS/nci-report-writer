@@ -65,8 +65,12 @@
                   </tr>
                   <% 
                     if (objs != null) {
+                      int highestColumnNumber = 0;
                       for (int i=0; i<objs.length; i++) {
                         ReportColumn c = (ReportColumn) objs[i];
+                        int columnNumber = c.getColumnNumber().intValue();
+                        if (columnNumber > highestColumnNumber)
+                            highestColumnNumber = columnNumber;
                         int ccid = c.getConditionalColumnId().intValue();
                         String ccid_str = ccid >= 0 ? Integer.toString(ccid) : "";
                   %>
@@ -89,6 +93,7 @@
                         </tr>
                   <% 
                       }
+                      request.getSession().setAttribute("highestColumnNumber", new Integer(highestColumnNumber));
                     }
                   %>  
                 </table>
