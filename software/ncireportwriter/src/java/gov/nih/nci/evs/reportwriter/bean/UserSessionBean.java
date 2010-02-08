@@ -890,16 +890,12 @@ public class UserSessionBean extends Object {
         public boolean alreadyExists() {
             Collection<ReportColumn> cc =
                 _standardReportTemplate.getColumnCollection();
-            if (cc == null)
+            if (cc == null || cc.toArray().length <= 0)
                 return false;
 
             Object[] objs = cc.toArray();
-            if (objs.length <= 0)
-                return false;
-
             for (int i = 0; i < objs.length; i++) {
-                gov.nih.nci.evs.reportwriter.bean.ReportColumn c =
-                    (gov.nih.nci.evs.reportwriter.bean.ReportColumn) objs[i];
+                ReportColumn c = (ReportColumn) objs[i];
                 String col_label = c.getLabel();
                 if (col_label.compareToIgnoreCase(_fieldLabel) == 0) {
                     _warningMsg.append("This field label already exists.");
@@ -912,6 +908,22 @@ public class UserSessionBean extends Object {
                 }
             }
             return false;
+        }
+
+        public ReportColumn getReportColumn() {
+            Collection<ReportColumn> cc =
+                _standardReportTemplate.getColumnCollection();
+            if (cc == null || cc.toArray().length <= 0)
+                return null;
+
+            Object[] objs = cc.toArray();
+            for (int i = 0; i < objs.length; i++) {
+                ReportColumn c = (ReportColumn) objs[i];
+                Integer col_num = c.getColumnNumber();
+                if (col_num.intValue() == _columnNumber)
+                    return c;
+            }
+            return null;
         }
     }
 
@@ -933,11 +945,45 @@ public class UserSessionBean extends Object {
                     myCol._delimiter, myCol._ccid);
             col.setReportTemplate(myCol._standardReportTemplate);
             sdkclientutil.insertReportColumn(col);
-            _logger.debug("completed insertReportColumn: ");
+            _logger.debug("Completed insertReportColumn: "
+                + myCol._columnNumber);
 
             request.getSession().setAttribute("selectedStandardReportTemplate",
                 _selectedStandardReportTemplate);
 
+        } catch (Exception e) {
+            e.printStackTrace();
+            return HTTPUtils.warningMsg(request, warningMsg, e);
+        }
+        return "standard_report_column";
+    }
+
+    public String saveModifiedReportColumnAction() {
+        HTTPUtils.printAttributes(); // DYEE
+        HttpServletRequest request = SessionUtil.getRequest();
+        StringBuffer warningMsg = new StringBuffer();
+        try {
+            MyReportColumn myCol = new MyReportColumn(request, warningMsg);
+            if (!myCol.isValid())
+                return HTTPUtils.warningMsg(request, warningMsg);
+
+            SDKClientUtil sdkclientutil = new SDKClientUtil();
+            ReportColumn col = myCol.getReportColumn();
+            col.setColumnNumber(myCol._columnNumber);
+            col.setLabel(myCol._fieldLabel);
+            col.setFieldId(myCol._fieldType);
+            col.setPropertyType(myCol._propertyType);
+            col.setPropertyName(myCol._propertyName);
+            col.setIsPreferred(myCol._isPreferred);
+            col.setRepresentationalForm(myCol._representationalForm);
+            col.setSource(myCol._source);
+            col.setQualifierName(myCol._propertyQualifier);
+            col.setQualifierValue(myCol._qualifierValue);
+            col.setDelimiter(myCol._delimiter);
+            col.setConditionalColumnId(myCol._ccid);
+            sdkclientutil.updateReportColumn(col);
+            _logger.debug("Completed updateReportColumn: "
+                + myCol._columnNumber);
         } catch (Exception e) {
             e.printStackTrace();
             return HTTPUtils.warningMsg(request, warningMsg, e);
