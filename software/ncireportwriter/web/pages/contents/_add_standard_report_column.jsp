@@ -32,7 +32,7 @@
     ontologyBean.setSelectedDataCategory(reportColumn.getFieldId());
     userSessionBean.setSelectedPropertyType(reportColumn.getPropertyType());
     ontologyBean.setSelectedPropertyName(reportColumn.getPropertyName());
-    isPreferred = null;
+    isPreferred = reportColumn.getIsPreferred();
     ontologyBean.setSelectedRepresentationalForm(reportColumn.getRepresentationalForm());
     ontologyBean.setSelectedSource(reportColumn.getSource());
     ontologyBean.setSelectedPropertyQualifier(reportColumn.getQualifierName());
@@ -215,8 +215,13 @@
                     <td align="right" class="actionSection">
                       <table cellpadding="4" cellspacing="0" border="0">
                         <tr>
-                          <td><h:commandButton id="save" value="Save" 
-                              action="#{userSessionBean.saveReportColumnAction}" /></td>
+                          <% if (isAddMode) { %>
+                            <td><h:commandButton id="save" value="Save" 
+                                action="#{userSessionBean.saveReportColumnAction}" /></td>
+                          <% } else { %>
+                            <td><h:commandButton id="save" value="Save" 
+                                action="#{userSessionBean.saveModifiedReportColumnAction}" /></td>
+                          <% } %>
                           <td><input type="reset" value="Reset" /></td>
                           <td><h:commandButton id="back" action="back" value="Back" /></td>
                         </tr>

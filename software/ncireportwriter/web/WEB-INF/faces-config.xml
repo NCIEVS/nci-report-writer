@@ -258,6 +258,12 @@
     </navigation-case>
     
     <navigation-case>
+      <from-action>#{userSessionBean.saveModifiedReportColumnAction}</from-action> 
+      <from-outcome>standard_report_column</from-outcome>
+      <to-view-id>/pages/main/standard_report_column.jsp</to-view-id>
+    </navigation-case>
+
+    <navigation-case>
       <from-action>#{userSessionBean.saveReportColumnAction}</from-action> 
       <from-outcome>standard_report_column</from-outcome>
       <to-view-id>/pages/main/standard_report_column.jsp</to-view-id>
@@ -265,6 +271,12 @@
 
     <navigation-case>
       <from-action>#{userSessionBean.saveReportColumnAction}</from-action> 
+      <from-outcome>warningMsg</from-outcome>
+      <to-view-id>/pages/main/add_standard_report_column.jsp</to-view-id>
+    </navigation-case>
+
+    <navigation-case>
+      <from-action>#{userSessionBean.saveModifiedReportColumnAction}</from-action> 
       <from-outcome>warningMsg</from-outcome>
       <to-view-id>/pages/main/add_standard_report_column.jsp</to-view-id>
     </navigation-case>
