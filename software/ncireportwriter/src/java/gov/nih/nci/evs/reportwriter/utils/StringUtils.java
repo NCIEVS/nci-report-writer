@@ -1,5 +1,9 @@
 package gov.nih.nci.evs.reportwriter.utils;
 
+import java.util.*;
+
+import org.apache.log4j.*;
+
 /**
  * <!-- LICENSE_TEXT_START -->
  * Copyright 2008,2009 NGIT. This software was developed in conjunction 
@@ -75,5 +79,55 @@ public class StringUtils {
         if (value == null)
             return HTML_SPACE;
         return getSpaceIfBlank(value.toString());
+    }
+    
+    public static void debug(Logger logger, String text, List<?> list) {
+        if (text != null && text.length() > 0)
+            logger.debug(text);
+
+        if (list == null)
+            return;
+        
+        int i=0;
+        Iterator<?> iterator = list.iterator();
+        while (iterator.hasNext()) {
+            logger.debug("  " + i + ")" + iterator.next().toString());
+            ++i;
+        }
+    }
+    
+    public static String toString(List<?> list) {
+        if (list == null)
+            return "";
+        
+        StringBuffer buffer = new StringBuffer();
+        Iterator<?> iterator = list.iterator();
+        int i=0;
+        while (iterator.hasNext()) {
+            if (i > 0)
+                buffer.append(", ");
+            buffer.append(iterator.next().toString());
+            ++i;
+        }
+        return buffer.toString();
+    }
+
+    public static void debugSameLine(Logger logger, String text, List<?> list) {
+        StringBuffer buffer = new StringBuffer();
+        String values = toString(list);
+        if (text != null && text.length() > 0)
+            buffer.append(text);
+        if (list != null) {
+            buffer.append("[size=" + list.size() + "] ");
+            buffer.append(values);
+        }
+        logger.debug(buffer.toString());
+    }
+    
+    public static void debug(boolean displayInMultipleLines, 
+        Logger logger, String text, List<?> list) {
+        if (displayInMultipleLines)
+            debug(logger, text, list);
+        else debugSameLine(logger, text, list);
     }
 }
