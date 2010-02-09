@@ -452,71 +452,15 @@ public class UserSessionBean extends Object {
         HttpServletRequest request = SessionUtil.getRequest();
         StringBuffer warningMsg = new StringBuffer();
         try {
-            String codingSchemeNameAndVersion =
-                HTTPUtils.getSessionAttributeStr(request, "selectedOntology");
+            ReportTemplateUtil rt = new ReportTemplateUtil();
+            if (!rt.isAddValid(request, warningMsg))
+                return HTTPUtils.warningMsg(request, warningMsg);
 
-            _logger.debug(StringUtils.SEPARATOR);
-            _logger.debug("Method: saveTemplateAction");
-            String label = HTTPUtils.getParameter(request, "label");
-            if (label == null || label.length() <= 0)
-                warningMsg.append("\n    * Label");
-            _logger.debug("* label: " + label);
-
-            String codingSchemeName =
-                DataUtils.getCodingSchemeName(codingSchemeNameAndVersion);
-            String codingSchemeVersion =
-                DataUtils.getCodingSchemeVersion(codingSchemeNameAndVersion);
-            _logger.debug("* codingSchemeName: " + codingSchemeName);
-            _logger.debug("* codingSchemeVersion: " + codingSchemeVersion);
-
-            String rootConceptCode =
-                HTTPUtils.getParameter(request, "rootConceptCode");
-            if (rootConceptCode == null || rootConceptCode.length() <= 0)
-                warningMsg.append("\n    * Root Concept Code");
-            _logger.debug("* rootConceptCode: " + rootConceptCode);
-
-            String selectedAssociation =
-                HTTPUtils
-                    .getSessionAttributeStr(request, "selectedAssociation");
-            if (selectedAssociation == null
-                || selectedAssociation.length() <= 0)
-                warningMsg.append("\n    * Association Name");
-            _logger.debug("* associationname: " + selectedAssociation);
-
-            String direction_str = HTTPUtils.getParameter(request, "direction");
-            Boolean direction =
-                new Boolean(direction_str.compareToIgnoreCase("source") != 0);
-            request.setAttribute("direction", direction);
-            _logger.debug("* direction: " + direction);
-
-            String selectedLevel =
-                HTTPUtils.getSessionAttributeStr(request, "selectedLevel");
-            if (selectedLevel == null || selectedLevel.length() <= 0)
-                warningMsg.append("\n    * Level");
-            _logger.debug("* level: " + selectedLevel);
-
-            char delimiter = '$';
-            _logger.debug("* delimiter: " + delimiter);
-
-            if (warningMsg.length() > 0)
-                return HTTPUtils.warningMsg(request,
-                    "Please enter the following value(s):" + warningMsg);
-
-            Concept rootConcept =
-                DataUtils.getConceptByCode(codingSchemeName,
-                    codingSchemeVersion, null, rootConceptCode);
-            if (rootConcept == null && !rootConceptCode.contains("|"))
-                return HTTPUtils.warningMsg(request,
-                    "The following value(s) are invalid:"
-                        + "\n    * Root Concept Code (check case sensitivity)");
-
-            // Save results using SDK writable API.
             SDKClientUtil sdkclientutil = new SDKClientUtil();
-
             String FQName =
                 "gov.nih.nci.evs.reportwriter.bean.StandardReportTemplate";
             String methodName = "setLabel";
-            String key = label;
+            String key = rt.getLabel();
 
             Object standardReportTemplate_obj =
                 sdkclientutil.search(FQName, methodName, key);
@@ -527,13 +471,11 @@ public class UserSessionBean extends Object {
                 return HTTPUtils.warningMsg(request,
                     "A report template with the same label already exists.");
 
-            if (selectedLevel.equalsIgnoreCase(OntologyBean.LEVEL_ALL)) {
-                selectedLevel = "-1";
-            }
-            sdkclientutil.insertStandardReportTemplate(label, codingSchemeName,
-                codingSchemeVersion, rootConceptCode, selectedAssociation,
-                direction, Integer.parseInt(selectedLevel), delimiter);
-            setSelectedStandardReportTemplate(label);
+            sdkclientutil.insertStandardReportTemplate(rt.getLabel(), rt
+                .getCodingSchemeName(), rt.getCodingSchemeVersion(), rt
+                .getRootConceptCode(), rt.getAssociationName(), rt
+                .getDirection(), rt.getLevel(), rt.getDelimiter());
+            setSelectedStandardReportTemplate(rt.getLabel());
         } catch (Exception e) {
             e.printStackTrace();
             return HTTPUtils.warningMsg(request, warningMsg, e);
@@ -542,111 +484,21 @@ public class UserSessionBean extends Object {
         return "standard_report_template";
     }
 
-    private boolean isValidCodingScheme(StringBuffer warningMsg,
-        String codingSchemeName, String codingSchemeVersion) {
-        if (DataUtils.getCodingScheme(codingSchemeName) == null) {
-            warningMsg.append(codingSchemeName + " "
-                + "coding scheme is currently not loaded.");
-            return false;
-        }
-
-        if (!DataUtils.isValidCodingScheme(codingSchemeName,
-            codingSchemeVersion)) {
-            CodingScheme cs = DataUtils.getCodingScheme(codingSchemeName);
-            String version = cs != null ? cs.getRepresentsVersion() : null;
-            warningMsg.append("Invalid coding scheme and version combination.");
-            if (version != null)
-                warningMsg.append("\nTry version: " + version);
-            return false;
-        }
-        return true;
-    }
-
     public String saveModifiedTemplateAction() {
         HttpServletRequest request = SessionUtil.getRequest();
         StringBuffer warningMsg = new StringBuffer();
 
         try {
-            OntologyBean ontologyBean = BeanUtils.getOntologyBean();
-            String label =
-                HTTPUtils.getSessionAttributeStr(request,
-                    "selectedStandardReportTemplate");
-            _logger.debug(StringUtils.SEPARATOR);
-            _logger.debug("Method: saveModifiedTemplateAction");
-            _logger.debug("* saveModifiedTemplateAction: label: " + label);
-            if (label == null || label.length() <= 0)
-                warningMsg.append("\n    * Label");
-
-            String codingSchemeName =
-                HTTPUtils.getParameter(request, "codingScheme");
-            _logger.debug("* saveModifiedTemplateAction: codingScheme: "
-                + codingSchemeName);
-            if (codingSchemeName == null || codingSchemeName.length() <= 0)
-                warningMsg.append("\n    * Coding Scheme");
-
-            String version =
-                (String) HTTPUtils.getParameter(request, "version");
-            _logger.debug("* saveModifiedTemplateAction: version: " + version);
-            if (version == null || version.length() <= 0)
-                warningMsg.append("\n    * Version");
-
-            String rootConceptCode =
-                HTTPUtils.getParameter(request, "rootConceptCode");
-            _logger.debug("* saveModifiedTemplateAction: rootConceptCode: "
-                + rootConceptCode);
-            if (rootConceptCode == null || rootConceptCode.length() <= 0)
-                warningMsg.append("\n    * Root Concept Code");
-
-            String associationName = ontologyBean.getSelectedAssociation();
-            _logger.debug("* saveModifiedTemplateAction: associationName: "
-                + associationName);
-            if (associationName == null || associationName.length() <= 0)
-                warningMsg.append("\n    * Association name");
-
-            String direction_str = HTTPUtils.getParameter(request, "direction");
-            _logger.debug("* saveModifiedTemplateAction: direction_str: "
-                + direction_str);
-            Boolean direction =
-                new Boolean(direction_str.compareTo("source") != 0);
-            request.setAttribute("direction", direction);
-
-            String level_str = ontologyBean.getSelectedLevel();
-            _logger.debug("* saveModifiedTemplateAction: level_str: "
-                + level_str);
-            if (level_str == null || level_str.length() <= 0)
-                warningMsg.append("\n    * Level");
-
-            if (warningMsg.length() > 0) {
-                warningMsg.insert(0, "Please enter the following value(s):");
+            ReportTemplateUtil rt = new ReportTemplateUtil();
+            if (!rt.isModifiedValid(request, warningMsg))
                 return HTTPUtils.warningMsg(request, warningMsg);
-            }
-
-            if (!isValidCodingScheme(warningMsg, codingSchemeName, version))
-                return HTTPUtils.warningMsg(request, warningMsg);
-
-            Concept rootConcept =
-                DataUtils.getConceptByCode(codingSchemeName, version, null,
-                    rootConceptCode);
-            if (rootConcept == null && !rootConceptCode.contains("|"))
-                warningMsg
-                    .append("\n    * Root Concept Code (check case sensitivity)");
-
-            Integer level = OntologyBean.levelToInt(level_str);
-            if (level < -1)
-                return HTTPUtils.warningMsg(request, "\n    * Level");
-
-            if (warningMsg.length() > 0) {
-                warningMsg.insert(0, "The following value(s) are invalid:");
-                return HTTPUtils.warningMsg(request, warningMsg);
-            }
 
             SDKClientUtil sdkclientutil = new SDKClientUtil();
-
             StandardReportTemplate standardReportTemplate = null;
             String FQName =
                 "gov.nih.nci.evs.reportwriter.bean.StandardReportTemplate";
             String methodName = "setLabel";
-            String key = label;
+            String key = rt.getLabel();
 
             Object standardReportTemplate_obj =
                 sdkclientutil.search(FQName, methodName, key);
@@ -657,16 +509,20 @@ public class UserSessionBean extends Object {
 
             standardReportTemplate =
                 (StandardReportTemplate) standardReportTemplate_obj;
-            standardReportTemplate.setLabel(label);
-            standardReportTemplate.setCodingSchemeName(codingSchemeName);
-            standardReportTemplate.setCodingSchemeVersion(version);
-            standardReportTemplate.setRootConceptCode(rootConceptCode);
-            standardReportTemplate.setAssociationName(associationName);
-            standardReportTemplate.setDirection(direction);
-            standardReportTemplate.setLevel(level);
+            standardReportTemplate.setLabel(rt.getLabel());
+            standardReportTemplate
+                .setCodingSchemeName(rt.getCodingSchemeName());
+            standardReportTemplate.setCodingSchemeVersion(rt
+                .getCodingSchemeVersion());
+            standardReportTemplate.setRootConceptCode(rt.getRootConceptCode());
+            standardReportTemplate.setAssociationName(rt.getAssociationName());
+            standardReportTemplate.setDirection(rt.getDirection());
+            standardReportTemplate.setLevel(rt.getLevel());
             sdkclientutil.updateStandardReportTemplate(standardReportTemplate);
 
-            key = codingSchemeName + " (version: " + version + ")";
+            key =
+                rt.getCodingSchemeName() + " (version: "
+                    + rt.getCodingSchemeVersion() + ")";
             request.getSession().setAttribute("selectedOntology", key);
 
         } catch (Exception e) {
@@ -826,10 +682,8 @@ public class UserSessionBean extends Object {
             String t = _reportStatusListData.elementAt(i);
             _reportStatusList.add(new SelectItem(t));
         }
-        if (_reportStatusList != null && _reportStatusList.size() > 0) {
+        if (_reportStatusList != null && _reportStatusList.size() > 0)
             _selectedReportStatus = _reportStatusList.get(0).getLabel();
-        }
-
         return _reportStatusList;
     }
 
@@ -1128,7 +982,7 @@ public class UserSessionBean extends Object {
             return "message";
         }
 
-        String download_dir = 
+        String download_dir =
             ReportWriterProperties
                 .getProperty(ReportWriterProperties.REPORT_DOWNLOAD_DIRECTORY);
 
