@@ -392,6 +392,7 @@ public class UserSessionBean extends Object {
     }
 
     public String modifyColumnAction() {
+        HttpServletRequest request = SessionUtil.getRequest();
         try {
             initColumnAction();
             int[] info = getColumnInfo();
@@ -400,11 +401,11 @@ public class UserSessionBean extends Object {
 
             ReportColumn reportColumn = getReportColumn(fieldNum);
             debug(reportColumn);
-            SessionUtil.getRequest().setAttribute("reportColumn", reportColumn);
+            request.setAttribute("reportColumn", reportColumn);
             return "add_standard_report_column";
         } catch (Exception e) {
             ExceptionUtils.print(_logger, e);
-            SessionUtil.getRequest().setAttribute("warningMsg", e.getMessage());
+            request.setAttribute("warningMsg", e.getMessage());
             return "standard_report_column";
         }
     }
@@ -438,23 +439,25 @@ public class UserSessionBean extends Object {
     private void debug(ReportColumn reportColumn) {
         if (!_logger.isDebugEnabled())
             return;
+        _logger.debug("");
         _logger.debug(StringUtils.SEPARATOR);
         _logger.debug("ReportColumn: ");
-        _logger.debug("* Column Number: " + reportColumn.getColumnNumber());
-        _logger.debug("* Field Number (getId): " + reportColumn.getId());
-        _logger.debug("* Field Label (getLabel): " + reportColumn.getLabel());
-        _logger
-            .debug("* Field Type (getFieldId): " + reportColumn.getFieldId());
-        _logger.debug("* Property Type: " + reportColumn.getPropertyType());
-        _logger.debug("* Property Name: " + reportColumn.getPropertyName());
-        _logger.debug("* Is Preferred: " + reportColumn.getIsPreferred());
-        _logger.debug("* Representational Form: "
+        _logger.debug("  * Column Number: " + reportColumn.getColumnNumber());
+        _logger.debug("  * Field Number (getId): " + reportColumn.getId());
+        _logger.debug("  * Field Label (getLabel): " + reportColumn.getLabel());
+        _logger.debug("  * Field Type (getFieldId): "
+            + reportColumn.getFieldId());
+        _logger.debug("  * Property Type: " + reportColumn.getPropertyType());
+        _logger.debug("  * Property Name: " + reportColumn.getPropertyName());
+        _logger.debug("  * Is Preferred: " + reportColumn.getIsPreferred());
+        _logger.debug("  * Representational Form: "
             + reportColumn.getRepresentationalForm());
-        _logger.debug("* Source: " + reportColumn.getSource());
-        _logger.debug("* Qualifier Name: " + reportColumn.getQualifierName());
-        _logger.debug("* Qualifier Value: " + reportColumn.getQualifierValue());
-        _logger.debug("* Delimiter: " + reportColumn.getDelimiter());
-        _logger.debug("* Dependency (getConditionalColumnId): "
+        _logger.debug("  * Source: " + reportColumn.getSource());
+        _logger.debug("  * Qualifier Name: " + reportColumn.getQualifierName());
+        _logger.debug("  * Qualifier Value: "
+            + reportColumn.getQualifierValue());
+        _logger.debug("  * Delimiter: " + reportColumn.getDelimiter());
+        _logger.debug("  * Dependency (getConditionalColumnId): "
             + reportColumn.getConditionalColumnId());
     }
 
@@ -751,202 +754,30 @@ public class UserSessionBean extends Object {
         return null;
     }
 
-    private class MyReportColumn {
-        private HttpServletRequest _request = SessionUtil.getRequest();
-        private StringBuffer _warningMsg = new StringBuffer();
-        public StandardReportTemplate _standardReportTemplate = null;
-        public String _fieldLabel = "";
-        public int _columnNumber = 0;
-        public String _fieldType = "";
-        public String _propertyType = "";
-        public String _propertyName = "";
-        public Boolean _isPreferred = null;
-        public String _representationalForm = "";
-        public String _source = "";
-        public String _propertyQualifier = "";
-        public String _qualifierValue = "";
-        public char _delimiter = ' ';
-        public int _ccid = -1;
-
-        public MyReportColumn(HttpServletRequest request,
-            StringBuffer warningMsg) {
-            _request = request;
-            _warningMsg = warningMsg;
-        }
-
-        public boolean isValid() throws Exception {
-            _standardReportTemplate =
-                getStandardReportTemplate(_selectedStandardReportTemplate);
-            if (_standardReportTemplate == null) {
-                _warningMsg.append("Unable to retrieve report template "
-                    + _selectedStandardReportTemplate);
-                return false;
-            }
-
-            _logger.debug(StringUtils.SEPARATOR);
-            _logger.debug("Method: saveReportColumnAction");
-            _fieldLabel = HTTPUtils.getParameter(_request, "fieldlabel");
-            _logger.debug("* fieldlabel: " + _fieldLabel);
-            if (_fieldLabel == null || _fieldLabel.length() <= 0)
-                _warningMsg.append("\n    * Field Label");
-
-            String columnNumber_str =
-                HTTPUtils.getParameter(_request, "columnNumber");
-            _logger.debug("* columnNumber: " + columnNumber_str);
-            if (columnNumber_str == null || columnNumber_str.length() <= 0)
-                _warningMsg.append("\n    * Column Number");
-
-            _fieldType =
-                HTTPUtils.getSessionAttributeStr(_request,
-                    "selectedDataCategory");
-            _logger.debug("* fieldType: " + _fieldType);
-
-            _propertyType =
-                HTTPUtils.getSessionAttributeStr(_request,
-                    "selectedPropertyType");
-            _logger.debug("* propertyType: " + _propertyType);
-
-            _propertyName =
-                HTTPUtils.getSessionAttributeStr(_request,
-                    "selectedPropertyName");
-            _logger.debug("* propertyName: " + _propertyName);
-
-            String preferred = (String) _request.getParameter("preferred");
-            if (preferred != null && preferred.equalsIgnoreCase("yes"))
-                _isPreferred = Boolean.TRUE;
-            else if (preferred != null && preferred.equalsIgnoreCase("no"))
-                _isPreferred = Boolean.FALSE;
-            _logger.debug("* isPreferred: " + _isPreferred);
-            _request.setAttribute("isPreferred", _isPreferred);
-
-            _representationalForm =
-                HTTPUtils.getSessionAttributeStr(_request,
-                    "selectedRepresentationalForm");
-            _logger.debug("* representationalForm: " + _representationalForm);
-
-            _source =
-                HTTPUtils.getSessionAttributeStr(_request, "selectedSource");
-            _logger.debug("* source: " + _source);
-
-            _propertyQualifier =
-                HTTPUtils.getSessionAttributeStr(_request,
-                    "selectedPropertyQualifier");
-            _logger.debug("* propertyQualifier: " + _propertyQualifier);
-
-            _qualifierValue =
-                HTTPUtils.getParameter(_request, "qualifiervalue");
-            _logger.debug("* qualifierValue: " + _qualifierValue);
-
-            String delim =
-                HTTPUtils.getSessionAttributeStr(_request, "selectedDelimiter");
-            _logger.debug("* delim: " + delim);
-            _delimiter =
-                delim != null && delim.length() > 0 ? delim.charAt(0) : ' ';
-
-            String conditionalColumnId =
-                HTTPUtils.getParameter(_request, "dependentfield");
-            _logger.debug("* conditionalColumnId: " + conditionalColumnId);
-
-            if (_warningMsg.length() > 0) {
-                _warningMsg.insert(0, "Please enter the following value(s):");
-                return false;
-            }
-
-            try {
-                _columnNumber = Integer.parseInt(columnNumber_str);
-                if (_columnNumber <= 0)
-                    throw new Exception("Value should be greater than 0.");
-            } catch (Exception e) {
-                _warningMsg
-                    .append("\n    * Column Number (Expecting an integer value greater than 0)");
-            }
-
-            try {
-                if (conditionalColumnId != null
-                    && conditionalColumnId.length() > 0) {
-                    _ccid = Integer.parseInt(conditionalColumnId);
-                    if (_ccid <= 0)
-                        throw new Exception("Value should be greater than 0.");
-                }
-            } catch (Exception e) {
-                _warningMsg
-                    .append("\n    * Dependent Field (Expecting an integer value greater than 0 or blank)");
-            }
-
-            if (_ccid == _columnNumber) {
-                _warningMsg
-                    .append("\n    * Dependent Field can not be dependent on itself.");
-                _warningMsg
-                    .append("\n        * It can not have the same value as the Column Number.");
-            }
-
-            if (_warningMsg.length() > 0) {
-                _warningMsg.insert(0, "The following value(s) are invalid:");
-                return false;
-            }
-            return true;
-        }
-
-        public boolean alreadyExists() {
-            Collection<ReportColumn> cc =
-                _standardReportTemplate.getColumnCollection();
-            if (cc == null || cc.toArray().length <= 0)
-                return false;
-
-            Object[] objs = cc.toArray();
-            for (int i = 0; i < objs.length; i++) {
-                ReportColumn c = (ReportColumn) objs[i];
-                String col_label = c.getLabel();
-                if (col_label.compareToIgnoreCase(_fieldLabel) == 0) {
-                    _warningMsg.append("This field label already exists.");
-                    return true;
-                }
-                Integer col_num = c.getColumnNumber();
-                if (col_num.intValue() == _columnNumber) {
-                    _warningMsg.append("This column number already exists.");
-                    return true;
-                }
-            }
-            return false;
-        }
-
-        public ReportColumn getReportColumn() {
-            Collection<ReportColumn> cc =
-                _standardReportTemplate.getColumnCollection();
-            if (cc == null || cc.toArray().length <= 0)
-                return null;
-
-            Object[] objs = cc.toArray();
-            for (int i = 0; i < objs.length; i++) {
-                ReportColumn c = (ReportColumn) objs[i];
-                Integer col_num = c.getColumnNumber();
-                if (col_num.intValue() == _columnNumber)
-                    return c;
-            }
-            return null;
-        }
-    }
-
     public String saveReportColumnAction() {
         HttpServletRequest request = SessionUtil.getRequest();
         StringBuffer warningMsg = new StringBuffer();
         try {
-            MyReportColumn myCol = new MyReportColumn(request, warningMsg);
-            if (!myCol.isValid() || myCol.alreadyExists())
+            ReportColumnUtil rc =
+                new ReportColumnUtil(_selectedStandardReportTemplate,
+                    getStandardReportTemplate(_selectedStandardReportTemplate));
+            if (!rc.isValid(request, warningMsg)
+                || rc.alreadyExists(warningMsg))
                 return HTTPUtils.warningMsg(request, warningMsg);
 
             SDKClientUtil sdkclientutil = new SDKClientUtil();
             ReportColumn col =
-                sdkclientutil.createReportColumn(myCol._fieldLabel,
-                    myCol._columnNumber, myCol._fieldType, myCol._propertyType,
-                    myCol._propertyName, myCol._isPreferred,
-                    myCol._representationalForm, myCol._source,
-                    myCol._propertyQualifier, myCol._qualifierValue,
-                    myCol._delimiter, myCol._ccid);
-            col.setReportTemplate(myCol._standardReportTemplate);
+                sdkclientutil.createReportColumn(rc.getFieldLabel(), rc
+                    .getColumnNumber(), rc.getFieldType(),
+                    rc.getPropertyType(), rc.getPropertyName(), rc
+                        .isPreferred(), rc.getRepresentationalForm(), rc
+                        .getSource(), rc.getPropertyQualifier(), rc
+                        .getQualifierValue(), rc._delimiter(), rc
+                        .getConditionalColumnId());
+            col.setReportTemplate(rc.getStandardReportTemplate());
             sdkclientutil.insertReportColumn(col);
             _logger.debug("Completed insertReportColumn: "
-                + myCol._columnNumber);
+                + rc.getColumnNumber());
 
             request.getSession().setAttribute("selectedStandardReportTemplate",
                 _selectedStandardReportTemplate);
@@ -962,27 +793,29 @@ public class UserSessionBean extends Object {
         HttpServletRequest request = SessionUtil.getRequest();
         StringBuffer warningMsg = new StringBuffer();
         try {
-            MyReportColumn myCol = new MyReportColumn(request, warningMsg);
-            if (!myCol.isValid())
+            ReportColumnUtil rc =
+                new ReportColumnUtil(_selectedStandardReportTemplate,
+                    getStandardReportTemplate(_selectedStandardReportTemplate));
+            if (!rc.isValid(request, warningMsg))
                 return HTTPUtils.warningMsg(request, warningMsg);
 
             SDKClientUtil sdkclientutil = new SDKClientUtil();
-            ReportColumn col = myCol.getReportColumn();
-            col.setColumnNumber(myCol._columnNumber);
-            col.setLabel(myCol._fieldLabel);
-            col.setFieldId(myCol._fieldType);
-            col.setPropertyType(myCol._propertyType);
-            col.setPropertyName(myCol._propertyName);
-            col.setIsPreferred(myCol._isPreferred);
-            col.setRepresentationalForm(myCol._representationalForm);
-            col.setSource(myCol._source);
-            col.setQualifierName(myCol._propertyQualifier);
-            col.setQualifierValue(myCol._qualifierValue);
-            col.setDelimiter(myCol._delimiter);
-            col.setConditionalColumnId(myCol._ccid);
+            ReportColumn col = rc.getReportColumn();
+            col.setColumnNumber(rc.getColumnNumber());
+            col.setLabel(rc.getFieldLabel());
+            col.setFieldId(rc.getFieldType());
+            col.setPropertyType(rc.getPropertyType());
+            col.setPropertyName(rc.getPropertyName());
+            col.setIsPreferred(rc.isPreferred());
+            col.setRepresentationalForm(rc.getRepresentationalForm());
+            col.setSource(rc.getSource());
+            col.setQualifierName(rc.getPropertyQualifier());
+            col.setQualifierValue(rc.getQualifierValue());
+            col.setDelimiter(rc._delimiter());
+            col.setConditionalColumnId(rc.getConditionalColumnId());
             sdkclientutil.updateReportColumn(col);
             _logger.debug("Completed updateReportColumn: "
-                + myCol._columnNumber);
+                + rc.getColumnNumber());
         } catch (Exception e) {
             e.printStackTrace();
             return HTTPUtils.warningMsg(request, warningMsg, e);
