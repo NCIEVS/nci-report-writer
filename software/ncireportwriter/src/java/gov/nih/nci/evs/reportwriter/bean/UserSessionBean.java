@@ -959,7 +959,6 @@ public class UserSessionBean extends Object {
     }
 
     public String saveModifiedReportColumnAction() {
-        HTTPUtils.printAttributes(); // DYEE
         HttpServletRequest request = SessionUtil.getRequest();
         StringBuffer warningMsg = new StringBuffer();
         try {

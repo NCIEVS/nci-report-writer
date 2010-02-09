@@ -55,6 +55,9 @@ public class StringUtils {
     public static final String SEPARATOR =
         "----------------------------------------" +
         "----------------------------------------";
+    public static final String SEPARATOR_EQUAL =
+        "========================================" +
+        "========================================";
     public static final String HTML_SPACE = "&nbsp;";
 
     public static String toHtml(String text) {
