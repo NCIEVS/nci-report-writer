@@ -1,6 +1,7 @@
 package gov.nih.nci.evs.reportwriter.bean;
 
 import gov.nih.nci.evs.reportwriter.utils.*;
+
 import java.util.*;
 import javax.servlet.http.*;
 
@@ -282,5 +283,39 @@ public class ReportColumnUtil {
                 return c;
         }
         return null;
+    }
+
+    // -------------------------------------------------------------------------
+    public static void debug(ReportColumn col) {
+        if (!_logger.isDebugEnabled())
+            return;
+
+        _logger.debug("");
+        _logger.debug(StringUtils.SEPARATOR);
+        _logger.debug("ReportColumn: ");
+        _logger.debug("  * Column Number: " + col.getColumnNumber());
+        _logger.debug("  * Field Number (Id): " + col.getId());
+        _logger.debug("  * Field Label (Label): " + col.getLabel());
+        _logger.debug("  * Field Type (FieldId): " + col.getFieldId());
+        _logger.debug("  * Property Type: " + col.getPropertyType());
+        _logger.debug("  * Property Name: " + col.getPropertyName());
+        _logger.debug("  * Is Preferred: " + col.getIsPreferred());
+        _logger.debug("  * Representational Form: "
+            + col.getRepresentationalForm());
+        _logger.debug("  * Source: " + col.getSource());
+        _logger.debug("  * Qualifier Name: " + col.getQualifierName());
+        _logger.debug("  * Qualifier Value: " + col.getQualifierValue());
+        _logger.debug("  * Delimiter: " + col.getDelimiter());
+        _logger.debug("  * Dependency (ConditionalColumnId): "
+            + col.getConditionalColumnId());
+    }
+
+    public static ReportColumn getReportColumn(int fieldNum) throws Exception {
+        SDKClientUtil sdkclientutil = new SDKClientUtil();
+        String FQName = "gov.nih.nci.evs.reportwriter.bean.ReportColumn";
+        String methodName = "setId";
+        Object obj = sdkclientutil.search(FQName, methodName, fieldNum);
+        ReportColumn reportColumn = (ReportColumn) obj;
+        return reportColumn;
     }
 }
