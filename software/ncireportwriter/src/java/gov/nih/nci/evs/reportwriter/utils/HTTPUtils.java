@@ -84,10 +84,12 @@ public class HTTPUtils {
         return string;
     }
 
-    public static void printRequestSessionAttributes() {
+    public static void printRequestSessionAttributes(String text) {
         _logger.debug(" ");
         _logger.debug(StringUtils.SEPARATOR);
-        _logger.debug("Request Session Attribute(s):");
+        _logger.debug("Request Session Attribute(s): ");
+        if (text != null && text.trim().length() > 0)
+            _logger.debug(text);
 
         try {
             HttpServletRequest request =
@@ -109,10 +111,12 @@ public class HTTPUtils {
         }
     }
 
-    public static void printRequestAttributes() {
+    public static void printRequestAttributes(String text) {
         _logger.debug(" ");
         _logger.debug(StringUtils.SEPARATOR);
         _logger.debug("Request Attribute(s):");
+        if (text != null && text.trim().length() > 0)
+            _logger.debug(text);
 
         try {
             HttpServletRequest request =
@@ -133,10 +137,12 @@ public class HTTPUtils {
         }
     }
 
-    public static void printRequestParameters() {
+    public static void printRequestParameters(String text) {
         _logger.debug(" ");
         _logger.debug(StringUtils.SEPARATOR);
         _logger.debug("Request Parameter(s):");
+        if (text != null && text.trim().length() > 0)
+            _logger.debug(text);
 
         try {
             HttpServletRequest request =
@@ -157,10 +163,10 @@ public class HTTPUtils {
         }
     }
 
-    public static void printAttributes() {
-        printRequestSessionAttributes();
-        printRequestAttributes();
-        printRequestParameters();
+    public static void printAttributes(String text) {
+        printRequestSessionAttributes(text);
+        printRequestAttributes(text);
+        printRequestParameters(text);
         _logger.debug(" ");
     }
 
@@ -199,5 +205,4 @@ public class HTTPUtils {
         request.setAttribute(attributeName, value);
         return value;
     }
-
 }
