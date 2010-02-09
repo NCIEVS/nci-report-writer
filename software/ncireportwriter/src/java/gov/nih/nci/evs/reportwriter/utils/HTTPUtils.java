@@ -205,4 +205,12 @@ public class HTTPUtils {
         request.setAttribute(attributeName, value);
         return value;
     }
+    
+    public static boolean getJspAttributeBoolean(HttpServletRequest request,
+        String attributeName, boolean defaultValue) {
+        Boolean value = (Boolean) request.getAttribute(attributeName);
+        if (value == null)
+            return defaultValue;
+        return value.booleanValue();
+    }
 }

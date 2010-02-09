@@ -755,6 +755,7 @@ public class UserSessionBean extends Object {
     public String saveModifiedReportColumnAction() {
         HttpServletRequest request = SessionUtil.getRequest();
         StringBuffer warningMsg = new StringBuffer();
+        request.setAttribute("isModifyReportColumn", Boolean.TRUE);
         try {
             ReportColumnUtil rc =
                 new ReportColumnUtil(_selectedStandardReportTemplate,
@@ -783,6 +784,7 @@ public class UserSessionBean extends Object {
             e.printStackTrace();
             return HTTPUtils.warningMsg(request, warningMsg, e);
         }
+        request.removeAttribute("isModifyReportColumn");
         return "standard_report_column";
     }
 
@@ -1126,14 +1128,9 @@ public class UserSessionBean extends Object {
             return "message";
         }
 
-        String download_dir = null;
-        try {
-            download_dir =
-                ReportWriterProperties
-                    .getProperty(ReportWriterProperties.REPORT_DOWNLOAD_DIRECTORY);
-        } catch (Exception ex) {
-
-        }
+        String download_dir = 
+            ReportWriterProperties
+                .getProperty(ReportWriterProperties.REPORT_DOWNLOAD_DIRECTORY);
 
         _logger.debug("download_dir " + download_dir);
         if (download_dir == null) {
@@ -1205,11 +1202,8 @@ public class UserSessionBean extends Object {
 
         // request.getSession().setAttribute("selectedOntology",
         // ontologyNameAndVersion);
-
         // find available reports in the download directory
-
         // Check if selectedStandardReportTemplate has been approved.
-
         // to be implemented:
         boolean approved = true;
         if (approved) {
@@ -1222,9 +1216,7 @@ public class UserSessionBean extends Object {
             return "message";
         }
         // if not, display a message page indicating such.
-
         // otherwise, route to generate_standard_report
-
         // return "generate_standard_report";
     }
 
