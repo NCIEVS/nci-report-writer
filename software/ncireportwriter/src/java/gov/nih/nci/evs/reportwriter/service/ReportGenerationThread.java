@@ -233,24 +233,7 @@ public class ReportGenerationThread implements Runnable {
                 for (int i = 0; i < objs.length; i++) {
                     gov.nih.nci.evs.reportwriter.bean.ReportColumn col =
                         (gov.nih.nci.evs.reportwriter.bean.ReportColumn) objs[i];
-
-                    _logger.debug(StringUtils.SEPARATOR);
-                    _logger.debug("Report Column:");
-                    _logger.debug("ID: " + col.getId());
-                    _logger.debug("Label: " + col.getLabel());
-                    _logger.debug("Column Number: " + col.getColumnNumber());
-                    _logger.debug("PropertyType: " + col.getPropertyType());
-                    _logger.debug("PropertyName: " + col.getPropertyName());
-                    _logger.debug("IsPreferred: " + col.getIsPreferred());
-                    _logger.debug("RepresentationalForm: "
-                            + col.getRepresentationalForm());
-                    _logger.debug("Source: " + col.getSource());
-                    _logger.debug("QualifierName: " + col.getQualifierName());
-                    _logger.debug("QualifierValue: " + col.getQualifierValue());
-                    _logger.debug("Delimiter: " + col.getDelimiter());
-                    _logger.debug("ConditionalColumnIdD: "
-                            + col.getConditionalColumnId());
-
+                    ReportColumnUtil.debug(col);
                     cols[i] = col;
                 }
             }
@@ -935,24 +918,7 @@ public class ReportGenerationThread implements Runnable {
                 for (int i = 0; i < objs.length; i++) {
                     gov.nih.nci.evs.reportwriter.bean.ReportColumn col =
                         (gov.nih.nci.evs.reportwriter.bean.ReportColumn) objs[i];
-
-                    _logger.debug(StringUtils.SEPARATOR);
-                    _logger.debug("Report Column:");
-                    _logger.debug("ID: " + col.getId());
-                    _logger.debug("Label: " + col.getLabel());
-                    _logger.debug("Column Number: " + col.getColumnNumber());
-                    _logger.debug("PropertyType: " + col.getPropertyType());
-                    _logger.debug("PropertyName: " + col.getPropertyName());
-                    _logger.debug("IsPreferred: " + col.getIsPreferred());
-                    _logger.debug("RepresentationalForm: "
-                            + col.getRepresentationalForm());
-                    _logger.debug("Source: " + col.getSource());
-                    _logger.debug("QualifierName: " + col.getQualifierName());
-                    _logger.debug("QualifierValue: " + col.getQualifierValue());
-                    _logger.debug("Delimiter: " + col.getDelimiter());
-                    _logger.debug("ConditionalColumnIdD: "
-                            + col.getConditionalColumnId());
-
+                    ReportColumnUtil.debug(col);
                     cols[i] = col;
                 }
             }

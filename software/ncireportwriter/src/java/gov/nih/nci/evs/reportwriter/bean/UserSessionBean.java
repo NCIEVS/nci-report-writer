@@ -399,8 +399,9 @@ public class UserSessionBean extends Object {
             int fieldNum = info[FIELD_NUM];
             _logger.debug("Modify column with field number = " + fieldNum);
 
-            ReportColumn reportColumn = getReportColumn(fieldNum);
-            debug(reportColumn);
+            ReportColumn reportColumn =
+                ReportColumnUtil.getReportColumn(fieldNum);
+            ReportColumnUtil.debug(reportColumn);
             request.setAttribute("reportColumn", reportColumn);
             return "add_standard_report_column";
         } catch (Exception e) {
@@ -425,7 +426,8 @@ public class UserSessionBean extends Object {
             int fieldNum = info[FIELD_NUM];
             _logger.debug("Deleting column with field number = " + fieldNum);
 
-            ReportColumn reportColumn = getReportColumn(fieldNum);
+            ReportColumn reportColumn =
+                ReportColumnUtil.getReportColumn(fieldNum);
             SDKClientUtil sdkclientutil = new SDKClientUtil();
             sdkclientutil.deleteReportColumn(reportColumn);
             // setSelectedStandardReportTemplate(label);
@@ -434,31 +436,6 @@ public class UserSessionBean extends Object {
             SessionUtil.getRequest().setAttribute("warningMsg", e.getMessage());
             return "standard_report_column";
         }
-    }
-
-    private void debug(ReportColumn reportColumn) {
-        if (!_logger.isDebugEnabled())
-            return;
-        _logger.debug("");
-        _logger.debug(StringUtils.SEPARATOR);
-        _logger.debug("ReportColumn: ");
-        _logger.debug("  * Column Number: " + reportColumn.getColumnNumber());
-        _logger.debug("  * Field Number (getId): " + reportColumn.getId());
-        _logger.debug("  * Field Label (getLabel): " + reportColumn.getLabel());
-        _logger.debug("  * Field Type (getFieldId): "
-            + reportColumn.getFieldId());
-        _logger.debug("  * Property Type: " + reportColumn.getPropertyType());
-        _logger.debug("  * Property Name: " + reportColumn.getPropertyName());
-        _logger.debug("  * Is Preferred: " + reportColumn.getIsPreferred());
-        _logger.debug("  * Representational Form: "
-            + reportColumn.getRepresentationalForm());
-        _logger.debug("  * Source: " + reportColumn.getSource());
-        _logger.debug("  * Qualifier Name: " + reportColumn.getQualifierName());
-        _logger.debug("  * Qualifier Value: "
-            + reportColumn.getQualifierValue());
-        _logger.debug("  * Delimiter: " + reportColumn.getDelimiter());
-        _logger.debug("  * Dependency (getConditionalColumnId): "
-            + reportColumn.getConditionalColumnId());
     }
 
     public String getRootConceptCode() {
@@ -734,20 +711,6 @@ public class UserSessionBean extends Object {
             StandardReportTemplate standardReportTemplate =
                 (StandardReportTemplate) obj;
             return standardReportTemplate;
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return null;
-    }
-
-    public ReportColumn getReportColumn(int id) {
-        try {
-            SDKClientUtil sdkclientutil = new SDKClientUtil();
-            String FQName = "gov.nih.nci.evs.reportwriter.bean.ReportColumn";
-            String methodName = "setId";
-            Object obj = sdkclientutil.search(FQName, methodName, id);
-            ReportColumn reportColumn = (ReportColumn) obj;
-            return reportColumn;
         } catch (Exception e) {
             e.printStackTrace();
         }
