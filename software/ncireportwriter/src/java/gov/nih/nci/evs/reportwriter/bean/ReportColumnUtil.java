@@ -223,20 +223,24 @@ public class ReportColumnUtil {
 
         try {
             if (conditionalColumnId != null && conditionalColumnId.length() > 0) {
-                _conditionalColumnId = Integer.parseInt(conditionalColumnId);
-                if (_conditionalColumnId <= 0)
-                    throw new Exception("Value should be greater than 0.");
+                Integer highest = (Integer) request.getSession().getAttribute("highestColumnNumber");
+                String msg = "\n    * Dependent Field (Expecting either an integer or blank value)";
+                if (highest > 0)
+                    msg += "\n        * Value should be greater than 0 and less than or equal to " + highest + ".";
+                try {
+                    _conditionalColumnId = Integer.parseInt(conditionalColumnId);
+                } catch (Exception e) {
+                    throw new Exception(msg);
+                }
+                if (_conditionalColumnId == _columnNumber)
+                    throw new Exception(
+                        "\n    * Dependent Field can not be dependent on itself." +
+                        "\n        * It can not have the same value as the Column Number.");
+                if (_conditionalColumnId <= 0 || _conditionalColumnId > highest)
+                    throw new Exception(msg);
             }
         } catch (Exception e) {
-            warningMsg
-                .append("\n    * Dependent Field (Expecting an integer value greater than 0 or blank)");
-        }
-
-        if (_conditionalColumnId == _columnNumber) {
-            warningMsg
-                .append("\n    * Dependent Field can not be dependent on itself.");
-            warningMsg
-                .append("\n        * It can not have the same value as the Column Number.");
+            warningMsg.append(e.getMessage());
         }
 
         if (warningMsg.length() > 0) {
