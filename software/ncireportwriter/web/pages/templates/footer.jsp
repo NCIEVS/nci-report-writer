@@ -6,7 +6,7 @@
 <div class="footer">
   <ul>
     <li><a href="http://www.cancer.gov" target="_blank">NCI Home</a></li>
-    <li> | <a href="<%=pagesPath%>/contact_us.jsf">Contact Us</a></li>
+    <li> | <a href="<%=pagesPath%>/main/contact_us.jsp">Contact Us</a></li>
     <li> | <a href="http://www.cancer.gov/policies" target="_blank">Policies</a></li>
     <li> | <a href="http://www.cancer.gov/policies/page4" target="_blank">Accessibility</a></li>
     <li> | <a href="http://www.cancer.gov/policies/page7" target="_blank">FOIA</a></li>
