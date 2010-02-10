@@ -1,7 +1,11 @@
 package gov.nih.nci.evs.reportwriter.utils;
 
 import java.util.*;
+
+import javax.faces.model.*;
+
 import org.LexGrid.LexBIG.DataModel.Core.*;
+import org.LexGrid.concepts.*;
 
 /**
  * <!-- LICENSE_TEXT_START -->
@@ -59,36 +63,47 @@ public class SortComparator implements Comparator<Object> {
         _sort_option = sort_option;
     }
 
-    private String getKey(Object c, int sort_option) {
-        if (c == null)
-            return "NULL";
-        if (c instanceof org.LexGrid.concepts.Concept) {
-            org.LexGrid.concepts.Concept concept =
-                (org.LexGrid.concepts.Concept) c;
-            if (sort_option == SORT_BY_CODE)
-                return concept.getEntityCode();
-            return concept.getEntityDescription().getContent();
-
-        }
-
-        else if (c instanceof AssociatedConcept) {
-            AssociatedConcept ac = (AssociatedConcept) c;
-            if (sort_option == SORT_BY_CODE)
-                return ac.getConceptCode();
-            return ac.getEntityDescription().getContent();
-        }
-
-        else if (c instanceof String) {
-            String s = (String) c;
-            return s;
-        }
-
-        return c.toString();
-    }
-
     public int compare(Object object1, Object object2) {
         String key1 = getKey(object1, _sort_option);
         String key2 = getKey(object2, _sort_option);
         return key1.compareTo(key2);
+    }
+
+    private String getKey(Object object, int sort_option) {
+        if (object == null)
+            return "NULL";
+        if (object instanceof Concept) 
+            return getConceptValue(object, sort_option);
+        if (object instanceof AssociatedConcept)
+            return getAssociatedConceptValue(object, sort_option);
+        if (object instanceof SelectItem)
+            return getSelectItemValue(object, sort_option);
+        if (object instanceof String)
+            return getStringValue(object, sort_option);
+        return object.toString();
+    }
+
+    private String getConceptValue(Object object, int sort_option) {
+        Concept value = (Concept) object;
+        if (sort_option == SORT_BY_CODE)
+            return value.getEntityCode();
+        return value.getEntityDescription().getContent();
+    }
+    
+    private String getAssociatedConceptValue(Object object, int sort_option) {
+        AssociatedConcept value = (AssociatedConcept) object;
+        if (sort_option == SORT_BY_CODE)
+            return value.getConceptCode();
+        return value.getEntityDescription().getContent();
+    }
+    
+    private String getSelectItemValue(Object object, int sort_option) {
+        SelectItem value = (SelectItem) object;
+        return value.getValue().toString();
+    }
+    
+    private String getStringValue(Object object, int sort_option) {
+        String value = (String) object;
+        return value;
     }
 }

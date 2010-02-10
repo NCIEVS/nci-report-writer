@@ -225,6 +225,7 @@ public class DataUtils {
                 String value =
                     getCodingSchemeVersion(formalName, representsVersion);
                 _ontologies.add(new SelectItem(value, value));
+                SortUtils.quickSort(_ontologies);
                 CSNVInfo info = new CSNVInfo();
                 info.codingSchemeName = formalName;
                 info.version = representsVersion;
@@ -617,37 +618,30 @@ public class DataUtils {
 
     // =========================================================================
     public static Concept getConceptByCode(String codingSchemeName,
-        String vers, String ltag, String code) {
+        String version, String tag, String code) {
         try {
-            ReportWriterProperties
-                .getProperty(ReportWriterProperties.EVS_SERVICE_URL);
             LexBIGService lbSvc = RemoteServerUtil.createLexBIGService();
-            if (lbSvc == null) {
-                _logger.error("lbSvc == null???");
-                return null;
-            }
+            if (lbSvc == null)
+                throw new Exception("lbSvc == null???");
 
-            CodingSchemeVersionOrTag versionOrTag =
-                new CodingSchemeVersionOrTag();
-            versionOrTag.setVersion(vers);
+            CodingSchemeVersionOrTag vtag = new CodingSchemeVersionOrTag();
+            vtag.setVersion(version);
 
             ConceptReferenceList crefs =
                 createConceptReferenceList(new String[] { code },
                     codingSchemeName);
 
             CodedNodeSet cns = null;
-
             try {
-                _logger.debug("DataUtils calling getCodingSchemeConcepts: "
-                    + code);
-                cns =
-                    lbSvc.getCodingSchemeConcepts(codingSchemeName,
-                        versionOrTag);
+                cns = lbSvc.getCodingSchemeConcepts(codingSchemeName, vtag);
             } catch (Exception e1) {
-                _logger.error("DataUtils lbSvc.getCodingSchemeConcepts "
-                    + "threw exception??? " + code);
-                // e1.printStackTrace();
-                return null;
+                _logger.debug("Method: getConceptByCode");
+                _logger.debug("  * codingSchemeName: " + codingSchemeName);
+                _logger.debug("  * version: " + version);
+                _logger.debug("  * tag: " + tag);
+                _logger.debug("  * code: " + code);
+                throw new Exception(
+                    "lbSvc.getCodingSchemeConcepts threw exception??? " + code);
             }
 
             cns = cns.restrictToCodes(crefs);
@@ -655,11 +649,10 @@ public class DataUtils {
                 cns.resolveToList(null, null, null, 1);
 
             if (matches == null) {
-                _logger.warn("Concept not found.");
+                _logger.warn("Concept not found for " + code + ".");
                 return null;
             }
 
-            // Analyze the result ...
             if (matches.getResolvedConceptReferenceCount() > 0) {
                 ResolvedConceptReference ref =
                     (ResolvedConceptReference) matches
