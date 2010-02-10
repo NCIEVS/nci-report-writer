@@ -591,7 +591,7 @@ public class UserSessionBean extends Object {
                     rc.getPropertyType(), rc.getPropertyName(), rc
                         .isPreferred(), rc.getRepresentationalForm(), rc
                         .getSource(), rc.getPropertyQualifier(), rc
-                        .getQualifierValue(), rc._delimiter(), rc
+                        .getQualifierValue(), rc.delimiter(), rc
                         .getConditionalColumnId());
             col.setReportTemplate(rc.getStandardReportTemplate());
             sdkclientutil.insertReportColumn(col);
@@ -631,7 +631,7 @@ public class UserSessionBean extends Object {
             col.setSource(rc.getSource());
             col.setQualifierName(rc.getPropertyQualifier());
             col.setQualifierValue(rc.getQualifierValue());
-            col.setDelimiter(rc._delimiter());
+            col.setDelimiter(rc.delimiter());
             col.setConditionalColumnId(rc.getConditionalColumnId());
             sdkclientutil.updateReportColumn(col);
             _logger.debug("Completed updateReportColumn: "

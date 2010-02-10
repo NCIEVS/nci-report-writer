@@ -124,7 +124,7 @@ public class ReportColumnUtil {
         return _qualifierValue;
     }
 
-    public char _delimiter() {
+    public char delimiter() {
         return _delimiter;
     }
 
