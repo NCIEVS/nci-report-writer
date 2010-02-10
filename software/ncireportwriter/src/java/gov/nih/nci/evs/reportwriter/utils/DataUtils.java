@@ -225,13 +225,12 @@ public class DataUtils {
                 String value =
                     getCodingSchemeVersion(formalName, representsVersion);
                 _ontologies.add(new SelectItem(value, value));
-                SortUtils.quickSort(_ontologies);
                 CSNVInfo info = new CSNVInfo();
                 info.codingSchemeName = formalName;
                 info.version = representsVersion;
                 _csnv2InfoMap.put(value, info);
-
             }
+            SortUtils.quickSort(_ontologies);
         } catch (Exception e) {
             e.printStackTrace();
         }

@@ -55,54 +55,53 @@ import org.LexGrid.concepts.*;
  */
 
 public class SortComparator implements Comparator<Object> {
-    private static int SORT_BY_NAME = 1;
-    private static int SORT_BY_CODE = 2;
-    private int _sort_option = SORT_BY_NAME;
+    public enum SortBy { Name, Code };
+    private SortBy _sortBy = SortBy.Name;
 
-    public SortComparator(int sort_option) {
-        _sort_option = sort_option;
+    public SortComparator(SortBy sortBy) {
+        _sortBy = sortBy;
     }
 
     public int compare(Object object1, Object object2) {
-        String key1 = getKey(object1, _sort_option);
-        String key2 = getKey(object2, _sort_option);
+        String key1 = getKey(object1, _sortBy);
+        String key2 = getKey(object2, _sortBy);
         return key1.compareTo(key2);
     }
 
-    private String getKey(Object object, int sort_option) {
+    private String getKey(Object object, SortBy sortBy) {
         if (object == null)
             return "NULL";
         if (object instanceof Concept) 
-            return getConceptValue(object, sort_option);
+            return getConceptValue(object, sortBy);
         if (object instanceof AssociatedConcept)
-            return getAssociatedConceptValue(object, sort_option);
+            return getAssociatedConceptValue(object, sortBy);
         if (object instanceof SelectItem)
-            return getSelectItemValue(object, sort_option);
+            return getSelectItemValue(object, sortBy);
         if (object instanceof String)
-            return getStringValue(object, sort_option);
+            return getStringValue(object, sortBy);
         return object.toString();
     }
 
-    private String getConceptValue(Object object, int sort_option) {
+    private String getConceptValue(Object object, SortBy sortBy) {
         Concept value = (Concept) object;
-        if (sort_option == SORT_BY_CODE)
+        if (sortBy == SortBy.Code)
             return value.getEntityCode();
         return value.getEntityDescription().getContent();
     }
     
-    private String getAssociatedConceptValue(Object object, int sort_option) {
+    private String getAssociatedConceptValue(Object object, SortBy sortBy) {
         AssociatedConcept value = (AssociatedConcept) object;
-        if (sort_option == SORT_BY_CODE)
+        if (sortBy == SortBy.Code)
             return value.getConceptCode();
         return value.getEntityDescription().getContent();
     }
     
-    private String getSelectItemValue(Object object, int sort_option) {
+    private String getSelectItemValue(Object object, SortBy sortBy) {
         SelectItem value = (SelectItem) object;
         return value.getValue().toString();
     }
     
-    private String getStringValue(Object object, int sort_option) {
+    private String getStringValue(Object object, SortBy sortBy) {
         String value = (String) object;
         return value;
     }
