@@ -12,5 +12,6 @@
     </td>
     
     <td width="100%"/>
+  </tr>
 </table>
 <!-- Menu Bar Download Only (End) -->
