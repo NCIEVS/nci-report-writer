@@ -1,6 +1,11 @@
 <%@ taglib uri="http://java.sun.com/jsf/html" prefix="h" %>
 <%@ taglib uri="http://java.sun.com/jsf/core" prefix="f" %>
+<%@ page import="gov.nih.nci.evs.reportwriter.utils.*" %>
 <f:loadBundle basename="gov.nih.nci.evs.reportwriter.bean.Resources" var="reportwriterBundle"/>
+
+<%
+  String pagesPath = FormUtils.getPagesPath(request);
+%>
 
 <f:view>
   <h:form id="loginForm">                  
@@ -76,6 +81,11 @@
                                 value="#{reportwriterBundle.loginSubmitLabel}">
                             </h:commandButton>
                           </td>                                         
+                        </tr>
+                        
+                        <tr>
+                          <td>&nbsp;</td>
+                          <td><a href="<%=pagesPath%>/main/request.jsp">Can't access your account?</a></td>
                         </tr>
                       </table>
                     </td>
