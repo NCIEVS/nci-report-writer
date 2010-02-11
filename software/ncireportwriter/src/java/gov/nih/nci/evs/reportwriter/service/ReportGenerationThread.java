@@ -301,7 +301,7 @@ public class ReportGenerationThread implements Runnable {
         // convert tab-delimited file to Excel
 
         Boolean bool_obj =
-            new StandardReportService().createStandardReport(
+            StandardReportService.createStandardReport(
                     standardReportLabel + ".txt", pathname,
                     standardReportTemplate.getLabel(), "Text (tab delimited)",
                     "DRAFT", uid);
@@ -317,7 +317,7 @@ public class ReportGenerationThread implements Runnable {
         _logger.debug("Full path name: " + pathname);
 
         bool_obj =
-            new StandardReportService().createStandardReport(
+            StandardReportService.createStandardReport(
                     standardReportLabel + ".xls", pathname,
                     standardReportTemplate.getLabel(),
                     "Microsoft Office Excel", "DRAFT", uid);
@@ -976,7 +976,7 @@ public class ReportGenerationThread implements Runnable {
         _logger.debug("Output file " + pathname + " generated.");
 
         Boolean bool_obj =
-            new StandardReportService().createStandardReport(
+            StandardReportService.createStandardReport(
                     standardReportLabel + ".txt", pathname,
                     standardReportTemplate.getLabel(), "Text (tab delimited)",
                     "DRAFT", uid);
@@ -992,7 +992,7 @@ public class ReportGenerationThread implements Runnable {
         _logger.debug("Full path name: " + pathname);
 
         bool_obj =
-            new StandardReportService().createStandardReport(
+            StandardReportService.createStandardReport(
                     standardReportLabel + ".xls", pathname,
                     standardReportTemplate.getLabel(),
                     "Microsoft Office Excel", "DRAFT", uid);

@@ -57,7 +57,7 @@ public class StandardReportService {
     private static Logger _logger =
         Logger.getLogger(StandardReportService.class);
 
-    public PrintWriter openPrintWriter(String outputfile) {
+    public static PrintWriter openPrintWriter(String outputfile) {
         try {
             PrintWriter pw =
                 new PrintWriter(new BufferedWriter(new FileWriter(outputfile)));
@@ -68,7 +68,7 @@ public class StandardReportService {
         }
     }
 
-    public void closePrintWriter(PrintWriter pw) {
+    public static void closePrintWriter(PrintWriter pw) {
         if (pw == null) {
             _logger.debug("PrintWriter is not open.");
             return;
@@ -77,7 +77,7 @@ public class StandardReportService {
         pw = null;
     }
 
-    public Boolean generateStandardReport(String outputDir,
+    public static Boolean generateStandardReport(String outputDir,
         String standardReportLabel, String uid) {
         Thread reportgeneration_thread =
             new Thread(new ReportGenerationThread(outputDir,
@@ -88,7 +88,7 @@ public class StandardReportService {
         return Boolean.TRUE;
     }
 
-    public String validReport(String standardReportTemplate_value,
+    public static String validReport(String standardReportTemplate_value,
         String reportFormat_value, String reportStatus_value, String user_value) {
 
         try {
@@ -162,7 +162,7 @@ public class StandardReportService {
     /**
      * Method called upon generation of two reports (tab-delimited and Excel).
      */
-    public Boolean createStandardReport(String label, String pathName,
+    public static Boolean createStandardReport(String label, String pathName,
         String templateLabel, String format, String status, String uid) {
         try {
 
@@ -261,7 +261,7 @@ public class StandardReportService {
         return Boolean.TRUE;
     }
 
-    public Boolean initializeReportStatus() {
+    private static Boolean initializeReportStatus() {
         try {
             SDKClientUtil util = new SDKClientUtil();
             String FQName = "gov.nih.nci.evs.reportwriter.bean.ReportStatus";
@@ -296,7 +296,7 @@ public class StandardReportService {
         return Boolean.TRUE;
     }
 
-    public Boolean initializeReportFormats() {
+    private static Boolean initializeReportFormats() {
         try {
             SDKClientUtil util = new SDKClientUtil();
             String FQName = "gov.nih.nci.evs.reportwriter.bean.ReportFormat";
@@ -328,13 +328,11 @@ public class StandardReportService {
 
     public static void main(String[] args) {
         try {
-            StandardReportService standardReportService =
-                new StandardReportService();
             String standardReportLabel = "FDA-UNII Subset Report";
             String outputfile = standardReportLabel;
             outputfile.replaceAll(" ", "_");
             String outputDir = "G:\\ReportWriter\\test";
-            standardReportService.generateStandardReport(outputDir,
+            StandardReportService.generateStandardReport(outputDir,
                 standardReportLabel, "kimong");
 
         } catch (Exception e) {

@@ -973,7 +973,7 @@ public class UserSessionBean extends Object {
         String reportStatus_value = "DRAFT";
 
         String message =
-            new StandardReportService().validReport(
+            StandardReportService.validReport(
                 _selectedStandardReportTemplate, reportFormat_value,
                 reportStatus_value, uid);
 
@@ -994,7 +994,7 @@ public class UserSessionBean extends Object {
             return "message";
         }
 
-        new StandardReportService().generateStandardReport(download_dir,
+        StandardReportService.generateStandardReport(download_dir,
             _selectedStandardReportTemplate, uid);
 
         message =
