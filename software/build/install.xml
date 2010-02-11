@@ -336,8 +336,10 @@
             <!-- User login information -->
             <filter token="rw.admin.user.name" value="${rw.admin.user.name}"/>
             <filter token="rw.admin.user.passwd" value="${encrypted.rw.admin.user.passwd}"/>
+            <filter token="rw.admin.user.email" value="${rw.admin.user.email}"/>
             <filter token="rw.user.name" value="${rw.user.name}"/>
             <filter token="rw.user.passwd" value="${encrypted.rw.user.passwd}"/>
+            <filter token="rw.user.email" value="${rw.user.email}"/>
         </filterset>
         <copy todir="${db.dir.dest}" filtering="true">
             <fileset dir="${db.dir.src}">

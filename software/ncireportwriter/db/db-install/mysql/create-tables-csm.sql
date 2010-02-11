@@ -402,8 +402,8 @@ INSERT INTO `CSM_ROLE_PRIVILEGE` (`ROLE_PRIVILEGE_ID`,`ROLE_ID`,`PRIVILEGE_ID`) 
 --
 
 INSERT INTO `CSM_USER` (`USER_ID`,`LOGIN_NAME`,`MIGRATED_FLAG`,`FIRST_NAME`,`LAST_NAME`,`ORGANIZATION`,`DEPARTMENT`,`TITLE`,`PHONE_NUMBER`,`PASSWORD`,`EMAIL_ID`,`START_DATE`,`END_DATE`,`UPDATE_DATE`,`PREMGRT_LOGIN_NAME`) VALUES
- (3,'@rw.admin.user.name@',0,'Report Writer','Administrator','NCIT','NCIT','System Administrator','','@rw.admin.user.passwd@','',CURDATE(),NULL,CURDATE(),''),
- (4,'@rw.user.name@',0,'Report Writer','User','NCIT','NCIT','Read Only User','','@rw.user.passwd@','',CURDATE(),NULL,CURDATE(),'');
+ (3,'@rw.admin.user.name@',0,'Report Writer','Administrator','NCIT','NCIT','System Administrator','','@rw.admin.user.passwd@','@rw.admin.user.email@',CURDATE(),NULL,CURDATE(),''),
+ (4,'@rw.user.name@',0,'Report Writer','User','NCIT','NCIT','Read Only User','','@rw.user.passwd@','@rw.user.email@',CURDATE(),NULL,CURDATE(),'');
 UNLOCK TABLES;
 
 --
