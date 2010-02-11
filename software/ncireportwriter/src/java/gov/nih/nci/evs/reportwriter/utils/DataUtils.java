@@ -78,7 +78,8 @@ public class DataUtils {
         ReportWriterProperties.getIntProperty(
             ReportWriterProperties.MAXIMUM_RETURN, 10000);
 
-    private static List<SelectItem> _standardReportTemplateList = null;
+    private static List<SelectItem> _standardReportTemplateList =
+        new ArrayList<SelectItem>();
     private static List<SelectItem> _adminTaskList = null;
     private static List<SelectItem> _userTaskList = null;
     private static List<SelectItem> _propertyTypeList = null;
@@ -88,17 +89,6 @@ public class DataUtils {
     private static HashMap<String, CSNVInfo> _csnv2InfoMap = null;
 
     static {
-        _adminTaskList = new ArrayList<SelectItem>();
-        _adminTaskList.add(new SelectItem("Administer Standard Reports"));
-        _adminTaskList.add(new SelectItem("Maintain Report Status"));
-        _adminTaskList.add(new SelectItem("Assign Report Status"));
-        _adminTaskList.add(new SelectItem("Retrieve Standard Reports"));
-
-        _userTaskList = new ArrayList<SelectItem>();
-        _userTaskList.add(new SelectItem("Retrieve Standard Reports"));
-
-        _standardReportTemplateList = new ArrayList<SelectItem>();
-
         setCodingSchemeMap();
     }
 
@@ -116,25 +106,21 @@ public class DataUtils {
     }
 
     public static List<SelectItem> getTaskList(Boolean isAdmin) {
-        if (isAdmin == null)
-            return null;
-        else if (isAdmin.equals(Boolean.TRUE)) {
+        if (isAdmin != null && isAdmin) {
             if (_adminTaskList == null) {
                 _adminTaskList = new ArrayList<SelectItem>();
-                _adminTaskList
-                    .add(new SelectItem("Administer Standard Reports"));
+                _adminTaskList.add(new SelectItem("Administer Standard Reports"));
                 _adminTaskList.add(new SelectItem("Maintain Report Status"));
                 _adminTaskList.add(new SelectItem("Assign Report Status"));
                 _adminTaskList.add(new SelectItem("Retrieve Standard Reports"));
             }
             return _adminTaskList;
-        } else {
-            if (_userTaskList == null) {
-                _userTaskList = new ArrayList<SelectItem>();
-                _userTaskList.add(new SelectItem("Retrieve Standard Reports"));
-            }
-            return _userTaskList;
+        } 
+        if ( _userTaskList == null) {
+            _userTaskList = new ArrayList<SelectItem>();
+            _userTaskList.add(new SelectItem("Retrieve Standard Reports"));
         }
+        return _userTaskList;
     }
 
     public static List<SelectItem> getStandardReportTemplateList() {
