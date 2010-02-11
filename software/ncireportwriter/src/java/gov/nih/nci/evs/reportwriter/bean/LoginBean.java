@@ -110,21 +110,32 @@ public class LoginBean extends Object {
         _roleGroupId = roleGroupId;
     }
 
-    public Boolean hasAdminPrivilege() throws Exception {
-        AuthorizationManager aManager =
+    private User getCSMUser(String userid) throws Exception {
+        AuthorizationManager manager =
             SecurityServiceProvider.getAuthorizationManager(APP_NAME);
-        if (aManager == null)
+        if (manager == null)
             throw new Exception("Can not get authorization manager for: "
                 + APP_NAME);
 
-        User user = aManager.getUser(_userid);
+        User user = manager.getUser(userid);
         if (user == null)
-            throw new Exception("Error retrieving privileges for this user.");
+            throw new Exception("Error retrieving CSM userid " + userid + ".");
+        return user;
+    }
 
+    private Boolean hasAdminPrivilege(String userid) throws Exception {
+        User user = getCSMUser(userid);
+        AuthorizationManager manager =
+            SecurityServiceProvider.getAuthorizationManager(APP_NAME);
         boolean permission =
-            aManager
-                .checkPermission(user.getLoginName(), "admin-pe", "EXECUTE");
+            manager.checkPermission(user.getLoginName(), "admin-pe", "EXECUTE");
         return new Boolean(permission);
+    }
+
+    private String getEmail(String userid) throws Exception {
+        User user = getCSMUser(userid);
+        String email = user.getEmailId();
+        return email != null ? email : null;
     }
 
     public List<SelectItem> getTaskList() {
@@ -144,13 +155,13 @@ public class LoginBean extends Object {
                 (gov.nih.nci.evs.reportwriter.bean.User) obj;
             return user;
         } catch (Exception e) {
-            ExceptionUtils.print(_logger, e,
-                "  * getUser(" + loginName + ") method returns null");
+            ExceptionUtils.print(_logger, e, "  * getUser(" + loginName
+                + ") method returns null");
             // e.printStackTrace();
         }
         return null;
     }
-    
+
     public String loginAction() {
         useDebugUserid();
         try {
@@ -170,12 +181,13 @@ public class LoginBean extends Object {
 
             HttpServletRequest request = SessionUtil.getRequest();
             HttpSession session = request.getSession(); // true
-            if (session != null) {
+            if (session != null)
                 session.setAttribute("uid", _userid);
-                // session.setAttribute("password", password);
-            }
-            _isAdmin = hasAdminPrivilege();
+
+            _isAdmin = hasAdminPrivilege(_userid);
             session.setAttribute("isAdmin", _isAdmin);
+            String email = getEmail(_userid);
+            session.setAttribute("email", email);
 
             gov.nih.nci.evs.reportwriter.bean.User user = getUser(_userid);
             if (user == null) {
@@ -189,19 +201,21 @@ public class LoginBean extends Object {
         } catch (Exception e) {
             String msg = reformatError(e.getMessage());
             _logger.error(StringUtils.SEPARATOR);
-            ExceptionUtils.print(_logger, e,
-                "  * Error logging in: " + _userid);
+            ExceptionUtils
+                .print(_logger, e, "  * Error logging in: " + _userid);
             SessionUtil.getRequest().setAttribute("loginWarning", msg);
             return "failure";
         }
     }
 
     private void useDebugUserid() {
-        if (! ReportWriterProperties.getBoolProperty(
+        if (!ReportWriterProperties.getBoolProperty(
             ReportWriterProperties.DEBUG_ON, false))
             return;
-        if (_userid.length() <= 0) _userid = "rwadmin";
-        if (_password.length() <= 0) _password = "x";
+        if (_userid.length() <= 0)
+            _userid = "rwadmin";
+        if (_password.length() <= 0)
+            _password = "x";
     }
 
     private String reformatError(String text) {
