@@ -973,9 +973,8 @@ public class UserSessionBean extends Object {
         String reportStatus_value = "DRAFT";
 
         String message =
-            StandardReportService.validReport(
-                _selectedStandardReportTemplate, reportFormat_value,
-                reportStatus_value, uid);
+            StandardReportService.validReport(_selectedStandardReportTemplate,
+                reportFormat_value, reportStatus_value, uid);
 
         if (message.compareTo("success") != 0) {
             request.getSession().setAttribute("message", message);
@@ -1127,7 +1126,7 @@ public class UserSessionBean extends Object {
         // int id = Integer.parseInt((String) event.getNewValue());
         setSelectedVersion(_selectedVersion);
     }
-    
+
     public String submitRequestAction() {
         _logger.debug("");
         _logger.debug(StringUtils.SEPARATOR);
