@@ -1,5 +1,13 @@
 <%@ taglib uri="http://java.sun.com/jsf/html" prefix="h" %>
 <%@ taglib uri="http://java.sun.com/jsf/core" prefix="f" %> 
+<%@ page import="gov.nih.nci.evs.reportwriter.utils.*" %>
+
+<%
+  StringBuffer warningMsg = new StringBuffer();
+  if (! RemoteServerUtil.isRunning(warningMsg))
+      warningMsg.append("\nAll other tasks not dependent on LexEVS should still work.");  
+  String warning = warningMsg.toString();
+%>
 
 <f:view>
   <h:form id="SELECT_TASKForm">
@@ -10,6 +18,13 @@
           <br>
           <table summary="" cellpadding="0" cellspacing="0" border="0" 
               width="725" class="contentPage">
+            <% if (warning != null && warning.trim().length() > 0) { %>
+              <tr><td class="warningMsgColor">
+                Warning:<br/>
+                <%=StringUtils.toHtml(warning)%><br/>
+                <br/>
+              </td></tr>
+            <% } %>
             <tr>
               <td>
                 <table summary="" cellpadding="0" cellspacing="0" border="0">
