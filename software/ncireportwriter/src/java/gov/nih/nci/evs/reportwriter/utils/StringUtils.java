@@ -47,7 +47,7 @@ import org.apache.log4j.*;
  */
 
 /**
- * @author EVS Team (Kim Ong, David Yee)
+ * @author EVS Team (David Yee)
  * @version 1.0
  */
 
@@ -132,5 +132,15 @@ public class StringUtils {
         if (displayInMultipleLines)
             debug(logger, text, list);
         else debugSameLine(logger, text, list);
+    }
+    
+    public static String truncate(int maxChar, String text) {
+        if (text.length() <= maxChar)
+            return text;
+        
+        String dots = " ...";
+        text = text.substring(0, maxChar - dots.length());
+        text += dots;
+        return text;
     }
 }

@@ -47,7 +47,7 @@ import javax.servlet.http.*;
  */
 
 /**
- * @author EVS Team (Kim Ong, David Yee)
+ * @author EVS Team (David Yee)
  * @version 1.0
  */
 
