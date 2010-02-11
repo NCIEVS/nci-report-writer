@@ -4,6 +4,9 @@ import gov.nih.nci.evs.reportwriter.properties.*;
 import gov.nih.nci.system.client.*;
 
 import org.LexGrid.LexBIG.caCore.interfaces.*;
+import org.LexGrid.LexBIG.DataModel.Collections.*;
+import org.LexGrid.LexBIG.DataModel.Core.*;
+import org.LexGrid.LexBIG.DataModel.InterfaceElements.*;
 import org.LexGrid.LexBIG.Impl.*;
 import org.LexGrid.LexBIG.LexBIGService.*;
 import org.apache.log4j.*;
@@ -81,5 +84,36 @@ public class RemoteServerUtil {
             (LexEVSApplicationService) ApplicationServiceProvider
                 .getApplicationServiceFromUrl(serviceUrl, "EvsServiceInfo");
         return (LexBIGService) lexevsService;
+    }
+    
+    public static boolean isRunning(StringBuffer warningMsg) {
+        try {
+            LexBIGService lbsvr = createLexBIGService();
+            simpleTest(lbsvr);
+        } catch (Exception e) {
+            warningMsg.append("LexEVS is currently down." + 
+                "  Please report the following problem:");
+            warningMsg.append("\n    * " + e.getMessage());
+            return false;
+        }
+        return true;
+    }
+    
+    private static void simpleTest(LexBIGService lbSvc) throws Exception {
+        CodingSchemeRenderingList csrl = lbSvc.getSupportedCodingSchemes();
+
+        boolean debug = false;
+        if (! debug)
+            return;
+
+        CodingSchemeRendering[] csrs = csrl.getCodingSchemeRendering();
+        _logger.debug("List of coding schemes:");
+        for (int i = 0; i < csrs.length; i++) {
+            CodingSchemeRendering csr = csrs[i];
+            CodingSchemeSummary css = csr.getCodingSchemeSummary();
+            String name = css.getFormalName();
+            String version = css.getRepresentsVersion();
+            _logger.debug("  " + i + ") " + name + "(version: " + version + ")");
+        }
     }
 }
