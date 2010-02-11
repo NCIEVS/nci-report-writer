@@ -10,9 +10,9 @@
   }; 
 %>
 
-<%--
+<%--               
 <f:view>
-  <h:form id="AccountRequestForm">
+  <h:form id="USER_REQUESTForm">
 --%>
     <table summary="" cellpadding="0" cellspacing="0" border="0" 
         width="100%" height="100%"> <!-- Table 1 (Begin) -->
@@ -59,16 +59,21 @@
             <tr>
               <td class="newConceptNotes"><i class="warningMsgColor">* Required</i></td>
             </tr>
-<%--
+
             <tr>
-              <td><h:commandButton id="back" value="Back" action="back" /></td>
+              <td>
+<%--               
+                <h:commandButton id="submit" value="Submit" 
+                  action="#{userSessionBean.submitRequestAction}" />
+                <h:commandButton id="back" value="Back" action="back" />
+--%>                  
+              </td>
             </tr>
---%>            
           </table> <!-- Table 2 (End) -->
         </td>
       </tr>
     </table> <!-- Table 1 (End) -->
-<%--
+<%--               
   </h:form>
 </f:view>
 --%>
