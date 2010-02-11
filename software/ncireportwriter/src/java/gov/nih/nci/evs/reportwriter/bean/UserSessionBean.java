@@ -1127,4 +1127,11 @@ public class UserSessionBean extends Object {
         // int id = Integer.parseInt((String) event.getNewValue());
         setSelectedVersion(_selectedVersion);
     }
+    
+    public String submitRequestAction() {
+        _logger.debug("");
+        _logger.debug(StringUtils.SEPARATOR);
+        _logger.debug("Method: submitRequestAction");
+        return "request";
+    }
 }

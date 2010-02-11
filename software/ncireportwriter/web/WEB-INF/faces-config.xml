@@ -326,11 +326,16 @@
  
   <!-- ===================================================================== -->
   <navigation-rule>
-    <from-view-id>/pages/main/welcome1.jsp</from-view-id>
+    <from-view-id>/pages/main/request.jsp</from-view-id>
     <navigation-case>
-      <from-outcome>message</from-outcome>
-      <to-view-id>/pages/main/message.jsp</to-view-id>
-    </navigation-case>    
+      <from-outcome>back</from-outcome>
+      <to-view-id>/pages/main/login.jsp</to-view-id>
+    </navigation-case>
+    <navigation-case>
+      <from-action>#{userSessionBean.submitRequestAction}</from-action>
+      <from-outcome>request</from-outcome>
+      <to-view-id>/pages/main/request.jsp</to-view-id>
+    </navigation-case>
   </navigation-rule>  
 
   <!-- ===================================================================== -->
