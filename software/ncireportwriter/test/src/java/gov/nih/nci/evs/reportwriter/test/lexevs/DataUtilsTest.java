@@ -61,9 +61,12 @@ public class DataUtilsTest {
         _logger.info("  * standardReportLabel: " + standardReportLabel);
         _logger.info("  * uid: " + uid);
 
+        StringBuffer warningMsg = new StringBuffer();
         ReportGenerationThread thread = new ReportGenerationThread(
             outputDir, standardReportLabel, uid);
-        thread.generateStandardReport(outputDir,
-            standardReportLabel, uid);
+        Boolean successful = thread.generateStandardReport(outputDir,
+            standardReportLabel, uid, warningMsg);
+        _logger.info("  * successful: " + successful);
+        _logger.info("  * warningMsg: " + warningMsg.toString());
     }
 }
