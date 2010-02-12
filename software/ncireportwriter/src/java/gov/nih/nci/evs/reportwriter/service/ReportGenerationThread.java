@@ -79,6 +79,12 @@ public class ReportGenerationThread implements Runnable {
         _count = 0;
     }
 
+    public Boolean warningMsg(StringBuffer buffer, String text) {
+        buffer.append(text);
+        _logger.warn(text);
+        return Boolean.FALSE;
+    }
+
     public PrintWriter openPrintWriter(String outputfile) {
         try {
             PrintWriter pw =
@@ -102,8 +108,13 @@ public class ReportGenerationThread implements Runnable {
     public void run() {
         try {
             _logger.info("Generating report -- please wait...");
+            StringBuffer warningMsg = new StringBuffer();
             long ms = System.currentTimeMillis();
-            generateStandardReport(_outputDir, _standardReportLabel, _uid);
+            Boolean successful =
+                generateStandardReport(_outputDir, _standardReportLabel, _uid,
+                    warningMsg);
+            _logger.info("DYEE: successful: " + successful);
+            _logger.info("DYEE: warningMsg: " + warningMsg);
             _logger.info("Report " + " generated.");
             _logger.info("Run time (ms): " + (System.currentTimeMillis() - ms));
         } catch (Exception e) {
@@ -112,7 +123,7 @@ public class ReportGenerationThread implements Runnable {
     }
 
     public Boolean generateStandardReport(String outputDir,
-        String standardReportLabel, String uid) {
+        String standardReportLabel, String uid, StringBuffer warningMsg) {
         StandardReportTemplate standardReportTemplate = null;
         try {
             SDKClientUtil sdkclientutil = new SDKClientUtil();
@@ -127,27 +138,25 @@ public class ReportGenerationThread implements Runnable {
             _logger.debug("standardReportTemplate label: "
                 + standardReportTemplate.getLabel());
 
+            if (standardReportTemplate == null)
+                throw new Exception("standardReportTemplate == null");
         } catch (Exception e) {
-            _logger.error("Unable to identify report label "
+            return warningMsg(warningMsg, "Unable to identify report label "
                 + standardReportLabel + " -- report not generated.");
-            return Boolean.FALSE;
-        }
-
-        if (standardReportTemplate == null) {
-            _logger.error("Unable to identify report label "
-                + standardReportLabel + " -- report not generated.");
-            return Boolean.FALSE;
         }
 
         String defining_set_desc = standardReportTemplate.getRootConceptCode();
 
         if (defining_set_desc.indexOf("|") != -1) {
-            return generateSpecialReport(outputDir, standardReportLabel, uid);
+            return generateSpecialReport(outputDir, standardReportLabel, uid,
+                warningMsg);
         }
 
-        _logger.debug("Output directory: " + outputDir);
-        _logger.debug("standardReportLabel: " + standardReportLabel);
-        _logger.debug("uid: " + uid);
+        _logger.debug(StringUtils.SEPARATOR);
+        _logger.debug("Method: generateStandardReport");
+        _logger.debug("  * Output directory: " + outputDir);
+        _logger.debug("  * standardReportLabel: " + standardReportLabel);
+        _logger.debug("  * uid: " + uid);
 
         File dir = new File(outputDir);
         if (!dir.exists()) {
@@ -155,9 +164,9 @@ public class ReportGenerationThread implements Runnable {
                 + " does not exist -- try to create the directory.");
             boolean retval = dir.mkdir();
             if (!retval) {
-                _logger.error("Unable to create output directory " + outputDir
-                    + " - please check privilege setting.");
-                return Boolean.FALSE;
+                return warningMsg(warningMsg,
+                    "Unable to create output directory " + outputDir
+                        + " - please check privilege setting.");
             } else {
                 _logger.debug("Output directory: " + outputDir + " created.");
             }
@@ -174,53 +183,40 @@ public class ReportGenerationThread implements Runnable {
         _logger.debug("Full path name: " + pathname);
 
         PrintWriter pw = openPrintWriter(pathname);
-        if (pw == null) {
-            _logger.error("Unable to create output file " + pathname
-                + " - please check privilege setting.");
-            return Boolean.FALSE;
-        } else {
-            _logger.debug("opened PrintWriter " + pathname);
-        }
+        if (pw == null)
+            return warningMsg(warningMsg, "Unable to create output file "
+                + pathname + " -- please check privilege setting.");
+        _logger.debug("opened PrintWriter " + pathname);
 
-        int id = -1;
-        String label = null;
-        String codingSchemeName = null;
-        String codingSchemeVersion = null;
-        String rootConceptCode = null;
-        String associationName = null;
-        int level = -1;
-
-        id = standardReportTemplate.getId();
-        label = standardReportTemplate.getLabel();
-        codingSchemeName = standardReportTemplate.getCodingSchemeName();
-        codingSchemeVersion = standardReportTemplate.getCodingSchemeVersion();
-
-        rootConceptCode = standardReportTemplate.getRootConceptCode();
-
-        associationName = standardReportTemplate.getAssociationName();
+        int id = standardReportTemplate.getId();
+        String label = standardReportTemplate.getLabel();
+        String codingSchemeName = standardReportTemplate.getCodingSchemeName();
+        String codingSchemeVersion =
+            standardReportTemplate.getCodingSchemeVersion();
+        String rootConceptCode = standardReportTemplate.getRootConceptCode();
+        String associationName = standardReportTemplate.getAssociationName();
         boolean direction = standardReportTemplate.getDirection();
-        level = standardReportTemplate.getLevel();
+        int level = standardReportTemplate.getLevel();
         Character delimiter = standardReportTemplate.getDelimiter();
+        String delimeter_str = "\t";
 
         _logger.debug(StringUtils.SEPARATOR);
-        _logger.debug("ID: " + id);
-        _logger.debug("Label: " + label);
-        _logger.debug("CodingSchemeName: " + codingSchemeName);
-        _logger.debug("CodingSchemeVersion: " + codingSchemeVersion);
-        _logger.debug("Root: " + rootConceptCode);
-        _logger.debug("AssociationName: " + associationName);
-        _logger.debug("Direction: " + direction);
-        _logger.debug("Level: " + level);
-        _logger.debug("Delimiter: " + delimiter);
-
-        String delimeter_str = "\t";
+        _logger.debug("  * ID: " + id);
+        _logger.debug("  * Label: " + label);
+        _logger.debug("  * CodingSchemeName: " + codingSchemeName);
+        _logger.debug("  * CodingSchemeVersion: " + codingSchemeVersion);
+        _logger.debug("  * Root: " + rootConceptCode);
+        _logger.debug("  * AssociationName: " + associationName);
+        _logger.debug("  * Direction: " + direction);
+        _logger.debug("  * Level: " + level);
+        _logger.debug("  * Delimiter: " + delimiter);
 
         Object[] objs = null;
         Collection<ReportColumn> cc =
             standardReportTemplate.getColumnCollection();
         if (cc == null) {
             _logger.warn("standardReportTemplate.getColumnCollection"
-                + " returns NULL?????????????");
+                + " returns null???");
         } else {
             objs = cc.toArray();
         }
@@ -228,13 +224,11 @@ public class ReportGenerationThread implements Runnable {
         ReportColumn[] cols = null;
         if (cc != null) {
             cols = new ReportColumn[objs.length];
-            if (objs.length > 0) {
-                for (int i = 0; i < objs.length; i++) {
-                    gov.nih.nci.evs.reportwriter.bean.ReportColumn col =
-                        (gov.nih.nci.evs.reportwriter.bean.ReportColumn) objs[i];
-                    ReportColumnUtil.debug(col);
-                    cols[i] = col;
-                }
+            for (int i = 0; i < objs.length; i++) {
+                gov.nih.nci.evs.reportwriter.bean.ReportColumn col =
+                    (gov.nih.nci.evs.reportwriter.bean.ReportColumn) objs[i];
+                ReportColumnUtil.debug(col);
+                cols[i] = col;
             }
         }
 
@@ -280,11 +274,11 @@ public class ReportGenerationThread implements Runnable {
                 DataUtils.getAssociationCode(codingSchemeName,
                     codingSchemeVersion, associationName);
         } catch (Exception e) {
-            _logger
-                .error("Unable to create output file "
+            return warningMsg(
+                warningMsg,
+                "Unable to create output file "
                     + pathname
                     + " - could not map association name to its corresponding code.");
-            return Boolean.FALSE;
         }
         traverse(pw, scheme, version, tag, defining_root_concept, code,
             _hierarchicalAssoName, associationCode, direction, curr_level,
@@ -793,7 +787,7 @@ public class ReportGenerationThread implements Runnable {
     }
 
     public Boolean generateSpecialReport(String outputDir,
-        String standardReportLabel, String uid) {
+        String standardReportLabel, String uid, StringBuffer warningMsg) {
         StandardReportTemplate standardReportTemplate = null;
         try {
             SDKClientUtil sdkclientutil = new SDKClientUtil();
@@ -808,16 +802,11 @@ public class ReportGenerationThread implements Runnable {
             _logger.debug("standardReportTemplate label: "
                 + standardReportTemplate.getLabel());
 
+            if (standardReportTemplate == null)
+                throw new Exception("standardReportTemplate == null");
         } catch (Exception e) {
-            _logger.error("Unable to identify report label "
+            return warningMsg(warningMsg, "Unable to identify report label "
                 + standardReportLabel + " -- report not generated.");
-            return Boolean.FALSE;
-        }
-
-        if (standardReportTemplate == null) {
-            _logger.error("Unable to identify report label "
-                + standardReportLabel + " -- report not generated.");
-            return Boolean.FALSE;
         }
 
         String queryString = standardReportTemplate.getRootConceptCode();
@@ -831,9 +820,11 @@ public class ReportGenerationThread implements Runnable {
         String matchText = (String) v.elementAt(4);
         String matchAlgorithm = (String) v.elementAt(5);
 
-        _logger.debug("Output directory: " + outputDir);
-        _logger.debug("standardReportLabel: " + standardReportLabel);
-        _logger.debug("uid: " + uid);
+        _logger.debug(StringUtils.SEPARATOR);
+        _logger.debug("Method: generateSpecialReport");
+        _logger.debug("  * Output directory: " + outputDir);
+        _logger.debug("  * standardReportLabel: " + standardReportLabel);
+        _logger.debug("  * uid: " + uid);
 
         File dir = new File(outputDir);
         if (!dir.exists()) {
@@ -841,9 +832,9 @@ public class ReportGenerationThread implements Runnable {
                 + " does not exist -- try to create the directory.");
             boolean retval = dir.mkdir();
             if (!retval) {
-                _logger.error("Unable to create output directory " + outputDir
-                    + " - please check privilege setting.");
-                return Boolean.FALSE;
+                return warningMsg(warningMsg,
+                    "Unable to create output directory " + outputDir
+                        + " -- please check privilege setting.");
             } else {
                 _logger.debug("Output directory: " + outputDir + " created.");
             }
@@ -852,7 +843,6 @@ public class ReportGenerationThread implements Runnable {
         }
 
         String version = standardReportTemplate.getCodingSchemeVersion();
-        // append verision to the report file name:
         String pathname =
             outputDir + File.separator + standardReportLabel + "__" + version
                 + ".txt";
@@ -860,56 +850,40 @@ public class ReportGenerationThread implements Runnable {
         _logger.debug("Full path name: " + pathname);
 
         PrintWriter pw = openPrintWriter(pathname);
-        if (pw == null) {
-            _logger.error("Unable to create output file " + pathname
-                + " - please check privilege setting.");
-            return Boolean.FALSE;
-        } else {
-            _logger.debug("opened PrintWriter " + pathname);
-        }
+        if (pw == null)
+            return warningMsg(warningMsg, "Unable to create output file "
+                + pathname + " -- please check privilege setting.");
+        _logger.debug("opened PrintWriter " + pathname);
 
-        int id = -1;
-        String label = null;
-        String codingSchemeName = null;
-        String codingSchemeVersion = null;
-        String rootConceptCode = null;
-        String associationName = null;
-        int level = -1;
-
-        // char delim = '$';
-
-        id = standardReportTemplate.getId();
-        label = standardReportTemplate.getLabel();
-        codingSchemeName = standardReportTemplate.getCodingSchemeName();
-        codingSchemeVersion = standardReportTemplate.getCodingSchemeVersion();
-
-        rootConceptCode = standardReportTemplate.getRootConceptCode();
-
-        associationName = standardReportTemplate.getAssociationName();
+        int id = standardReportTemplate.getId();
+        String label = standardReportTemplate.getLabel();
+        String codingSchemeName = standardReportTemplate.getCodingSchemeName();
+        String codingSchemeVersion =
+            standardReportTemplate.getCodingSchemeVersion();
+        String rootConceptCode = standardReportTemplate.getRootConceptCode();
+        String associationName = standardReportTemplate.getAssociationName();
         boolean direction = standardReportTemplate.getDirection();
-        level = standardReportTemplate.getLevel();
-
+        int level = standardReportTemplate.getLevel();
+        // char delim = '$';
         // Character delimiter = standardReportTemplate.getDelimiter();
-
-        _logger.debug(StringUtils.SEPARATOR);
-        _logger.debug("ID: " + id);
-        _logger.debug("Label: " + label);
-        _logger.debug("CodingSchemeName: " + codingSchemeName);
-        _logger.debug("CodingSchemeVersion: " + codingSchemeVersion);
-        _logger.debug("Root: " + rootConceptCode);
-        _logger.debug("AssociationName: " + associationName);
-        _logger.debug("Direction: " + direction);
-        _logger.debug("Level: " + level);
-        // _logger.debug("Delimiter: " + delimiter);
-
         String delimeter_str = "\t";
+
+        _logger.debug("  * ID: " + id);
+        _logger.debug("  * Label: " + label);
+        _logger.debug("  * CodingSchemeName: " + codingSchemeName);
+        _logger.debug("  * CodingSchemeVersion: " + codingSchemeVersion);
+        _logger.debug("  * Root: " + rootConceptCode);
+        _logger.debug("  * AssociationName: " + associationName);
+        _logger.debug("  * Direction: " + direction);
+        _logger.debug("  * Level: " + level);
+        // _logger.debug("Delimiter: " + delimiter);
 
         Object[] objs = null;
         Collection<ReportColumn> cc =
             standardReportTemplate.getColumnCollection();
         if (cc == null) {
             _logger.warn("standardReportTemplate.getColumnCollection"
-                + " returns NULL?????????????");
+                + " returned null???");
         } else {
             objs = cc.toArray();
         }
@@ -917,13 +891,11 @@ public class ReportGenerationThread implements Runnable {
         ReportColumn[] cols = null;
         if (cc != null) {
             cols = new ReportColumn[objs.length];
-            if (objs.length > 0) {
-                for (int i = 0; i < objs.length; i++) {
-                    gov.nih.nci.evs.reportwriter.bean.ReportColumn col =
-                        (gov.nih.nci.evs.reportwriter.bean.ReportColumn) objs[i];
-                    ReportColumnUtil.debug(col);
-                    cols[i] = col;
-                }
+            for (int i = 0; i < objs.length; i++) {
+                gov.nih.nci.evs.reportwriter.bean.ReportColumn col =
+                    (gov.nih.nci.evs.reportwriter.bean.ReportColumn) objs[i];
+                ReportColumnUtil.debug(col);
+                cols[i] = col;
             }
         }
 
@@ -976,7 +948,7 @@ public class ReportGenerationThread implements Runnable {
         }
 
         closePrintWriter(pw);
-        _logger.debug("Output file " + pathname + " generated.");
+        _logger.debug("Generated output file: " + pathname);
 
         Boolean bool_obj =
             StandardReportService.createStandardReport(standardReportLabel
