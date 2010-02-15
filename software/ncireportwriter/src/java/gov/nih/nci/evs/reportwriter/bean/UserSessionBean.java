@@ -1003,6 +1003,10 @@ public class UserSessionBean extends Object {
                 + templateId
                 + ", in tab-delimited and Microsft Excel formats will be generated and placed in the designated output directory."
                 + " Please review and assign an APPROVED status before making it available to the users.";
+        if (emailAddress != null && emailAddress.length() > 0) {
+            message += "\n\nOnce the report is generated, an email notification will be sent to " +
+            emailAddress + ".";
+        }
         request.getSession().setAttribute("message", message);
         return "message"; // replaced by a messsage page (back button)
     }
