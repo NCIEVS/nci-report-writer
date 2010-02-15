@@ -145,10 +145,9 @@ public class ReportWriterProperties {
             return;
 
         ArrayList<String> keys = new ArrayList<String>();
-        for (Iterator<?> i = _properties.keySet().iterator(); i.hasNext();) {
-            String key = (String) i.next();
-            keys.add(key);
-        }
+        Iterator<?> iterator = _properties.keySet().iterator();
+        while (iterator.hasNext())
+            keys.add((String) iterator.next());
         SortUtils.quickSort(keys);
         
         _logger.debug("List of properties:");
