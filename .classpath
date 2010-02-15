@@ -45,7 +45,7 @@
 	<classpathentry kind="lib" path="software/ncireportwriter/lib/jsf-impl.jar"/>
 	<classpathentry kind="lib" path="software/ncireportwriter/lib/jstl.jar"/>
 	<classpathentry kind="lib" path="software/ncireportwriter/lib/jta.jar"/>
-	<classpathentry kind="lib" path="software/ncireportwriter/lib/lexbig.jar" sourcepath="C:/@/src/browsers/others/LexEVS_51_Source"/>
+	<classpathentry kind="lib" path="software/ncireportwriter/lib/lexbig.jar"/>
 	<classpathentry kind="lib" path="software/ncireportwriter/lib/lexevsapi51-beans.jar"/>
 	<classpathentry kind="lib" path="software/ncireportwriter/lib/lexevsapi51-framework.jar"/>
 	<classpathentry kind="lib" path="software/ncireportwriter/lib/LexEVSSecurity.jar"/>
@@ -71,7 +71,7 @@
 	<classpathentry kind="lib" path="software/ncireportwriter/lib/sdk-writable-client-framework.jar"/>
 	<classpathentry kind="lib" path="software/ncireportwriter/lib/sdk-writable-core.jar"/>
 	<classpathentry kind="lib" path="software/ncireportwriter/lib/servlet-api.jar"/>
-	<classpathentry kind="lib" path="software/ncireportwriter/lib/spring.jar" sourcepath="C:/Program Files/LexGrid/LexEVS/5.1/source"/>
+	<classpathentry kind="lib" path="software/ncireportwriter/lib/spring.jar"/>
 	<classpathentry kind="lib" path="software/ncireportwriter/lib/standard.jar"/>
 	<classpathentry kind="lib" path="software/ncireportwriter/lib/xercesImpl.jar"/>
 	<classpathentry kind="lib" path="software/ncireportwriter/lib/evs-web-framework-1.0.jar"/>
