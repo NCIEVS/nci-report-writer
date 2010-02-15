@@ -205,7 +205,8 @@ public class OntologyBean // extends BaseBean
             ReportWriterProperties.MAXIMUM_LEVEL, 20);
 
         _levelList = new ArrayList<SelectItem>();
-        for (int i = 1; i <= max_level; i++) {
+        // Note: Level = 0 means generating report only contains the root concept.
+        for (int i = 0; i <= max_level; i++) {
             String t = Integer.toString(i);
             _levelList.add(new SelectItem(t));
         }
