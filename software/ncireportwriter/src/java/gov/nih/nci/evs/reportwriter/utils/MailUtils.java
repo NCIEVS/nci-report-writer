@@ -106,10 +106,10 @@ public class MailUtils extends Object {
         }
     }
     
-    public static void postMail(String mail_smtp_server, String from, 
+    public static void postMail(String mailSmtpServer, String from, 
         String recipients[], String subject, String message, boolean send) 
             throws MessagingException, Exception {
-        if (mail_smtp_server == null || mail_smtp_server.length() <= 0)
+        if (mailSmtpServer == null || mailSmtpServer.length() <= 0)
             throw new MessagingException("SMTP host not set.");
         
         subject = StringUtils.truncate(MAX_SUBJECT_CHAR, subject);
@@ -117,7 +117,7 @@ public class MailUtils extends Object {
 
         // Sets the host smtp address.
         Properties props = new Properties();
-        props.put("mail.smtp.host", mail_smtp_server);
+        props.put("mail.smtp.host", mailSmtpServer);
 
         // Creates some properties and get the default session.
         Session session = Session.getDefaultInstance(props, null);
@@ -146,9 +146,9 @@ public class MailUtils extends Object {
             Transport.send(msg);
     }
     
-    public static void postMail(String mail_smtp_server, String from, 
+    public static void postMail(String mailSmtpServer, String from, 
         String recipients[], String subject, String message) 
             throws MessagingException, Exception {
-        postMail(mail_smtp_server, from, recipients, subject, message, true);
+        postMail(mailSmtpServer, from, recipients, subject, message, true);
     }
 }
