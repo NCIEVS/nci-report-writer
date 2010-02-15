@@ -57,6 +57,7 @@ import org.apache.log4j.*;
 public class ReportWriterProperties {
     public static final String BUILD_INFO = "BUILD_INFO";
     public static final String EVS_SERVICE_URL = "EVS_SERVICE_URL";
+    public static final String MAIL_SMTP_SERVER = "MAIL_SMTP_SERVER";
     public static final String DEBUG_ON = "DEBUG_ON";
     public static final String REPORT_DOWNLOAD_DIRECTORY = "REPORT_DOWNLOAD_DIRECTORY";
     public static final String MAXIMUM_LEVEL = "MAXIMUM_LEVEL";
@@ -64,6 +65,7 @@ public class ReportWriterProperties {
     public static final String CSM_LOCKOUT_TIME = "CSM_LOCKOUT_TIME";
     public static final String CSM_ALLOWED_LOGIN_TIME = "CSM_ALLOWED_LOGIN_TIME";
     public static final String CSM_ALLOWED_ATTEMPTS = "CSM_ALLOWED_ATTEMPTS";
+    public static final String ACCOUNT_ADMIN_USER_EMAIL = "ACCOUNT_ADMIN_USER_EMAIL";
 
     private static Logger _logger = Logger
         .getLogger(ReportWriterProperties.class);
@@ -141,12 +143,19 @@ public class ReportWriterProperties {
     private void debugProperties() {
         if (! _logger.isDebugEnabled())
             return;
-        
-        _logger.debug("List of properties:");
+
+        ArrayList<String> keys = new ArrayList<String>();
         for (Iterator<?> i = _properties.keySet().iterator(); i.hasNext();) {
             String key = (String) i.next();
+            keys.add(key);
+        }
+        SortUtils.quickSort(keys);
+        
+        _logger.debug("List of properties:");
+        for (int i=0; i<keys.size(); ++i) {
+            String key = keys.get(i);
             String value = _properties.getProperty(key);
-            _logger.debug("* " + key + ": " + value);
+            _logger.debug("  " + i + ") " + key + ": " + value);
         }
     }
 

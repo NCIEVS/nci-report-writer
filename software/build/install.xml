@@ -444,6 +444,7 @@
         <copy file="${jboss-conf.dir.dest}/${ncireportwriter-webapp.ds.file}" todir="${jboss.home}/server/${jboss.server.name}/deploy" overwrite="true" />
 
         <filterset id="embedded.filterset">
+            <filter token="mail.smtp.server" value="${mail.smtp.server}"/>
             <filter token="debug.on" value="${debug.on}"/>
             <filter token="lex.evs.api.url" value="${lex.evs.api.url}"/>
             <filter token="lg.config.file" value="${lg.config.file}"/>
@@ -463,6 +464,7 @@
             <filter token="csm.lockout.time" value="${csm.lockout.time}"/>
             <filter token="csm.allowed.login.time" value="${csm.allowed.login.time}"/>
             <filter token="csm.allowed.attempts" value="${csm.allowed.attempts}"/>
+            <filter token="account.admin.user.email" value="${account.admin.user.email}"/>
         </filterset>
 
         <mkdir dir="${application.data.path}/${ncireportwriter.conf.path}" />
