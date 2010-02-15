@@ -3,6 +3,8 @@ package gov.nih.nci.evs.reportwriter.service;
 import java.io.*;
 import java.util.*;
 
+import javax.mail.MessagingException;
+
 import gov.nih.nci.evs.reportwriter.bean.*;
 import gov.nih.nci.evs.reportwriter.utils.*;
 
@@ -106,19 +108,62 @@ public class ReportGenerationThread implements Runnable {
     }
 
     public void run() {
+        _logger.info("Generating report -- please wait...");
+        StringBuffer warningMsg = new StringBuffer();
+        Date startDate = new Date();
+        StopWatch stopWatch = new StopWatch();
+        Boolean successful = true;
         try {
-            _logger.info("Generating report -- please wait...");
-            StringBuffer warningMsg = new StringBuffer();
-            long ms = System.currentTimeMillis();
-            Boolean successful =
+            successful =
                 generateStandardReport(_outputDir, _standardReportLabel, _uid,
                     warningMsg);
-            _logger.info("DYEE: successful: " + successful);
-            _logger.info("DYEE: warningMsg: " + warningMsg);
-            _logger.info("Report " + " generated.");
-            _logger.info("Run time (ms): " + (System.currentTimeMillis() - ms));
+            long runTime = stopWatch.getDuration();
+            emailNotification(successful, warningMsg, startDate, new Date(), runTime);
+            _logger.info("Report " + _standardReportLabel + " generated.");
+            _logger.info("  * Start time: " + startDate);
+            _logger.info("  * Run time: " + stopWatch.getResult(runTime));
         } catch (Exception e) {
-            _logger.error("Exception " + e);
+            warningMsg.append("\n" + ExceptionUtils.getMessage(e));
+            long runTime = stopWatch.getDuration();
+            emailNotification(false, warningMsg, startDate, new Date(), runTime);
+            ExceptionUtils.print(_logger, e, "* In ReportGenerationThread.run");
+            e.printStackTrace();
+        }
+    }
+
+    private void emailNotification(boolean successful, StringBuffer warningMsg,
+        Date startDate, Date endDate, long runTime) {
+        try {
+            String mailServer =
+                ReportWriterProperties
+                    .getProperty(ReportWriterProperties.MAIL_SMTP_SERVER);
+            String from = "yeed@mail.nih.gov";
+            String[] recipients = new String[] { "yeed@mail.nih.gov" };
+            String subject = "";
+            StringBuffer message = new StringBuffer();
+            if (successful) {
+                subject = "Generated: " + _standardReportLabel + "...";
+                message.append(_standardReportLabel + " is generated.\n");
+            } else {
+                subject = "Failed generating: " + _standardReportLabel + "...";
+                message.append(warningMsg + "\n");
+            }
+            message.append("\n");
+            message.append(StringUtils.SEPARATOR + "\n");
+            message.append("Started:   " + startDate + "\n");
+            message.append("Completed: " + endDate + "\n");
+            message.append("Report generation time: \n");
+            message.append("  * In hours: "
+                + StopWatch.format(StopWatch.timeInHours(runTime)) + "\n");
+            message.append("  * In minutes: "
+                + StopWatch.format(StopWatch.timeInMinutes(runTime)) + "\n");
+            boolean send = true;
+            MailUtils.postMail(mailServer, from, recipients, subject, message
+                .toString(), send);
+        } catch (MessagingException e) {
+            e.printStackTrace();
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 

@@ -50,7 +50,7 @@ import org.apache.log4j.*;
  */
 
 public class ExceptionUtils {
-    private static String getMessage(Throwable exception) {
+    public static String getMessage(Throwable exception) {
         return exception.getClass().getSimpleName() + ": "
             + exception.getMessage();
     }
