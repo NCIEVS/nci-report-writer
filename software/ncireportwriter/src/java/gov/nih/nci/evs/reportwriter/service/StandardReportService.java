@@ -78,10 +78,10 @@ public class StandardReportService {
     }
 
     public static Boolean generateStandardReport(String outputDir,
-        String standardReportLabel, String uid) {
+        String standardReportLabel, String uid, String emailAddress) {
         Thread reportgeneration_thread =
             new Thread(new ReportGenerationThread(outputDir,
-                standardReportLabel, uid));
+                standardReportLabel, uid, emailAddress));
         reportgeneration_thread.start();
 
         // to be modified
@@ -333,7 +333,7 @@ public class StandardReportService {
             outputfile.replaceAll(" ", "_");
             String outputDir = "G:\\ReportWriter\\test";
             StandardReportService.generateStandardReport(outputDir,
-                standardReportLabel, "kimong");
+                standardReportLabel, "kimong", "Kim.Ong@ngc.com");
 
         } catch (Exception e) {
             _logger.error("REQUEST FAILED !!!");

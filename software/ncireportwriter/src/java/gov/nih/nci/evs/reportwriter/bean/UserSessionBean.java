@@ -993,8 +993,10 @@ public class UserSessionBean extends Object {
             return "message";
         }
 
+        String emailAddress = (String) request.getSession().getAttribute("email");
+        _logger.debug("emailAddress: " + emailAddress);
         StandardReportService.generateStandardReport(download_dir,
-            _selectedStandardReportTemplate, uid);
+            _selectedStandardReportTemplate, uid, emailAddress);
 
         message =
             "You request has been received. The report, "
