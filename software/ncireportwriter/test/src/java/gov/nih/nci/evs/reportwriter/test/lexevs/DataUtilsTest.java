@@ -55,6 +55,7 @@ public class DataUtilsTest {
         String outputDir = "c:/apps/evs/ncireportwriter-webapp/downloads";
         String standardReportLabel = "FDA-UNII Subset REPORT Test";
         String uid = "rwadmin";
+        String emailAddress = "yeed@mail.nih.gov";
         
         _logger.info("Calling: generateStandardReport");
         _logger.info("  * outputDir: " + outputDir);
@@ -63,7 +64,7 @@ public class DataUtilsTest {
 
         StringBuffer warningMsg = new StringBuffer();
         ReportGenerationThread thread = new ReportGenerationThread(
-            outputDir, standardReportLabel, uid);
+            outputDir, standardReportLabel, uid, emailAddress);
         Boolean successful = thread.generateStandardReport(outputDir,
             standardReportLabel, uid, warningMsg);
         _logger.info("  * successful: " + successful);

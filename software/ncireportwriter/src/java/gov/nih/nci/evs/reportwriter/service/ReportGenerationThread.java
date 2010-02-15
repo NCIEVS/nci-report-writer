@@ -68,15 +68,17 @@ public class ReportGenerationThread implements Runnable {
     private String _outputDir = null;
     private String _standardReportLabel = null;
     private String _uid = null;
-
+    private String _emailAddress = null;
+    
     private int _count = 0;
     private String _hierarchicalAssoName = null;
 
     public ReportGenerationThread(String outputDir, String standardReportLabel,
-        String uid) {
+        String uid, String emailAddress) {
         _outputDir = outputDir;
         _standardReportLabel = standardReportLabel;
         _uid = uid;
+        _emailAddress = emailAddress;
 
         _count = 0;
     }
@@ -134,11 +136,18 @@ public class ReportGenerationThread implements Runnable {
     private void emailNotification(boolean successful, StringBuffer warningMsg,
         Date startDate, Date endDate, long runTime) {
         try {
+            if (_emailAddress == null || _emailAddress.length() <= 0) {
+                _logger.warn("Email notification is not sent for report "
+                    + _standardReportLabel + ".");
+                _logger.warn("  * email address not set.");
+                return;
+            }
+            
             String mailServer =
                 ReportWriterProperties
                     .getProperty(ReportWriterProperties.MAIL_SMTP_SERVER);
-            String from = "yeed@mail.nih.gov";
-            String[] recipients = new String[] { "yeed@mail.nih.gov" };
+            String from = _emailAddress;
+            String[] recipients = new String[] { _emailAddress };
             String subject = "";
             StringBuffer message = new StringBuffer();
             if (successful) {
@@ -160,9 +169,8 @@ public class ReportGenerationThread implements Runnable {
             boolean send = true;
             MailUtils.postMail(mailServer, from, recipients, subject, message
                 .toString(), send);
-        } catch (MessagingException e) {
-            e.printStackTrace();
         } catch (Exception e) {
+            ExceptionUtils.print(_logger, e);
             e.printStackTrace();
         }
     }
