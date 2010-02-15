@@ -84,8 +84,9 @@
                         </tr>
                         
                         <tr>
-                          <td>&nbsp;</td>
-                          <td><a href="<%=pagesPath%>/main/request.jsp">Can't access your account?</a></td>
+                          <td colspan="2" align="center" nowrap>
+                            <a href="<%=pagesPath%>/main/request.jsp">Can't access your account?</a>
+                          </td>
                         </tr>
                       </table>
                     </td>
