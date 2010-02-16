@@ -193,21 +193,31 @@ public class HTTPUtils {
     }
 
     // -------------------------------------------------------------------------
+    private static String setAttributeString(HttpServletRequest request,
+        String attributeName, String value) {
+        if (value != null)
+            value = value.trim();
+        request.setAttribute(attributeName, value);
+        return value;
+    }
+
     public static String getParameter(HttpServletRequest request,
         String parameterName) {
         String value = request.getParameter(parameterName);
-        value = value.trim();
-        request.setAttribute(parameterName, value);
-        return value;
+        return setAttributeString(request, parameterName, value);
+    }
+
+    public static String getAttributeString(HttpServletRequest request,
+        String attributeName) {
+        String value = (String) request.getAttribute(attributeName);
+        return setAttributeString(request, attributeName, value);
     }
 
     public static String getSessionAttributeString(HttpServletRequest request,
         String attributeName) {
         String value =
             (String) request.getSession().getAttribute(attributeName);
-        value = value.trim();
-        request.setAttribute(attributeName, value);
-        return value;
+        return setAttributeString(request, attributeName, value);
     }
 
     // -------------------------------------------------------------------------
@@ -219,8 +229,8 @@ public class HTTPUtils {
         return value.booleanValue();
     }
 
-    public static String getJspParameter(HttpServletRequest request, String name,
-        boolean convertNullToBlankString) {
+    public static String getJspParameter(HttpServletRequest request,
+        String name, boolean convertNullToBlankString) {
         String value = request.getParameter(name);
         if (convertNullToBlankString && (value == null || value.length() <= 0))
             return "";
@@ -246,8 +256,9 @@ public class HTTPUtils {
         return getJspAttributeString(request, name, true, false);
     }
 
-    public static String getJspSessionAttributeString(HttpServletRequest request,
-        String name, boolean convertNullToBlankString, boolean clear) {
+    public static String getJspSessionAttributeString(
+        HttpServletRequest request, String name,
+        boolean convertNullToBlankString, boolean clear) {
         String value = (String) request.getSession().getAttribute(name);
         if (convertNullToBlankString && (value == null || value.length() <= 0))
             return "";
@@ -256,8 +267,8 @@ public class HTTPUtils {
         return cleanXSS(value);
     }
 
-    public static String getJspSessionAttributeString(HttpServletRequest request,
-        String name) {
+    public static String getJspSessionAttributeString(
+        HttpServletRequest request, String name) {
         return getJspSessionAttributeString(request, name, true, false);
     }
 

@@ -3,6 +3,7 @@ package gov.nih.nci.evs.reportwriter.bean;
 import java.io.*;
 
 import gov.nih.nci.evs.reportwriter.utils.*;
+import gov.nih.nci.evs.reportwriter.webapp.*;
 import gov.nih.nci.evs.reportwriter.service.*;
 import gov.nih.nci.evs.reportwriter.properties.*;
 
@@ -1134,9 +1135,6 @@ public class UserSessionBean extends Object {
     }
 
     public String submitRequestAction() {
-        _logger.debug("");
-        _logger.debug(StringUtils.SEPARATOR);
-        _logger.debug("Method: submitRequestAction");
-        return "request";
+        return AccountRequest.submitAccessDenied();
     }
 }
