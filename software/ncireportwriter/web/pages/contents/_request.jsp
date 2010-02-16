@@ -40,7 +40,7 @@
                 <%
                   for (int i=0; i<problems.length; ++i) {
                 %>
-                    <input type="radio" name="request" value="<%=problems[i]%>">
+                    <input type="radio" name="problem" value="<%=problems[i]%>">
                       <%=problems[i]%><br/>
                 <%
                   }
@@ -50,22 +50,22 @@
             </tr>
             
             <tr>
-              <td width="75" valign="top">Login ID: <i class="warningMsgColor">*</i></td>
+              <td class="requestLabel">Login ID: <i class="warningMsgColor">*</i></td>
               <td><input name="userid" alt="userid" class="requestPageTF<%=css%>"></td>
             </tr>
             
             <tr>
-              <td width="75" valign="top">Email: <i class="warningMsgColor">*</i></td>
+              <td class="requestLabel">Email: <i class="warningMsgColor">*</i></td>
               <td><input name="email" alt="email" class="requestPageTF<%=css%>"></td>
             </tr>
 
             <tr>
-              <td width="75" valign="top">Additional<br/>Information:</td>
+              <td class="requestLabel">Additional<br/>Information:</td>
               <td><textarea name="additionalInformation" class="requestPageTA<%=css%>"></textarea></td>
             </tr>
 
             <tr>
-              <td class="newConceptNotes"><i class="warningMsgColor">* Required</i></td>
+              <td class="requestLabel"><i class="warningMsgColor">* Required</i></td>
             </tr>
 
             <tr>

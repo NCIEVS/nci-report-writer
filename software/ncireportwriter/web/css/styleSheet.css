@@ -680,6 +680,10 @@ body
 }
 
 /* --- Quick links (End) --- */
+.requestLabel {
+  width: 75;
+  vertical-align: top;
+}
 
 .requestPageTF {
   width: 575px;
