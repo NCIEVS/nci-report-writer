@@ -2,16 +2,22 @@
 <%@ taglib uri="http://java.sun.com/jsf/core" prefix="f"%>
 <%@ page import="java.util.*"%>
 <%@ page import="gov.nih.nci.evs.reportwriter.utils.*"%>
+<%@ page import="gov.nih.nci.evs.reportwriter.webapp.*"%>
 <%
+  final String PROBLEM = AccountRequest.PROBLEM;
+  final String LOGIN_ID = AccountRequest.LOGIN_ID;
+  final String EMAIL = AccountRequest.EMAIL;
+  final String INFORMATION = AccountRequest.INFORMATION;
+
   String[] problems = new String[] { 
    "I am locked out of my account", 
    "I forgot my password",
    "My password does not work",
   }; 
-  String problem = HTTPUtils.getJspAttributeString(request, "problem");
-  String loginID = HTTPUtils.getJspAttributeString(request, "loginID");
-  String email = HTTPUtils.getJspAttributeString(request, "email");
-  String info = HTTPUtils.getJspAttributeString(request, "info");
+  String problem = HTTPUtils.getJspAttributeString(request, PROBLEM);
+  String loginID = HTTPUtils.getJspAttributeString(request, LOGIN_ID);
+  String email = HTTPUtils.getJspAttributeString(request, EMAIL);
+  String information = HTTPUtils.getJspAttributeString(request, INFORMATION);
   String warning = (String) request.getAttribute("warningMsg");
   String css = WebUtils.isUsingIE(request) ? "_IE" : "";
 %>
@@ -26,7 +32,7 @@
           width="725" class="contentPage">
           <!-- Table 2 (Begin) -->
           <% if (warning != null) { %>
-            <tr><td class="warningMsgColor">
+            <tr><td colspan="2" class="warningMsgColor">
               Warning:<br/>
               <%=StringUtils.toHtml(warning)%><br/>
               <br/>
@@ -45,12 +51,16 @@
             <td colspan="2">What's the problem you are
             experiencing? <i class="warningMsgColor">*</i><br/>
             <%
-                  for (int i=0; i<problems.length; ++i) {
-                %> <input type="radio" name="problem"
-              value="<%=problems[i]%>"> <%=problems[i]%><br/>
+               for (int i=0; i<problems.length; ++i) {
+                 String checked = "";
+                 if (problem != null && problem.equals(problems[i]))
+                    checked = "checked=\"checked\"";
+            %>
+                 <input type="radio" name="problem" <%=checked%>
+                   value="<%=problems[i]%>"> <%=problems[i]%><br/>
             <%
-                  }
-                %> <br/>
+               }
+            %> <br/>
             </td>
           </tr>
           <tr>
@@ -69,7 +79,7 @@
             <td class="requestLabel">Additional<br/>
             Information:</td>
             <td><textarea class="requestPageTA<%=css%>"
-              name="info"><%=info%></textarea></td>
+              name="information"><%=information%></textarea></td>
           </tr>
           <tr>
             <td class="requestLabel"><i class="warningMsgColor">*
