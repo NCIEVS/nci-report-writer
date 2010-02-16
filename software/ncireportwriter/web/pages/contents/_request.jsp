@@ -1,6 +1,7 @@
 <%@ taglib uri="http://java.sun.com/jsf/html" prefix="h" %>
 <%@ taglib uri="http://java.sun.com/jsf/core" prefix="f" %> 
 <%@ page import="java.util.*" %>
+<%@ page import="gov.nih.nci.evs.reportwriter.utils.*" %>
 
 <%
   String[] problems = new String[] { 
@@ -8,6 +9,8 @@
    "I forgot my password",
    "My password does not work",
   }; 
+
+  String css = WebUtils.isUsingIE(request) ? "_IE" : "";
 %>
 
 <%--               
@@ -48,12 +51,17 @@
             
             <tr>
               <td width="75" valign="top">Login ID: <i class="warningMsgColor">*</i></td>
-              <td><input type="text" name="userid"></td>
+              <td><input name="userid" alt="userid" class="requestPageTF<%=css%>"></td>
             </tr>
             
             <tr>
+              <td width="75" valign="top">Email: <i class="warningMsgColor">*</i></td>
+              <td><input name="email" alt="email" class="requestPageTF<%=css%>"></td>
+            </tr>
+
+            <tr>
               <td width="75" valign="top">Additional<br/>Information:</td>
-              <td><textarea name="additionalInformation"></textarea></td>
+              <td><textarea name="additionalInformation" class="requestPageTA<%=css%>"></textarea></td>
             </tr>
 
             <tr>

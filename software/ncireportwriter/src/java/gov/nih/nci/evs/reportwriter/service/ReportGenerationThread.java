@@ -3,8 +3,6 @@ package gov.nih.nci.evs.reportwriter.service;
 import java.io.*;
 import java.util.*;
 
-import javax.mail.MessagingException;
-
 import gov.nih.nci.evs.reportwriter.bean.*;
 import gov.nih.nci.evs.reportwriter.utils.*;
 
