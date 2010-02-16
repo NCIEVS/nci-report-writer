@@ -8,6 +8,11 @@
    "I forgot my password",
    "My password does not work",
   }; 
+  String problem = HTTPUtils.getJspAttributeString(request, "problem");
+  String loginID = HTTPUtils.getJspAttributeString(request, "loginID");
+  String email = HTTPUtils.getJspAttributeString(request, "email");
+  String info = HTTPUtils.getJspAttributeString(request, "info");
+  String warning = (String) request.getAttribute("warningMsg");
   String css = WebUtils.isUsingIE(request) ? "_IE" : "";
 %>
 <f:view>
@@ -16,57 +21,66 @@
       width="100%" height="100%">
       <!-- Table 1 (Begin) -->
       <tr>
-        <td height="500" width="100%" valign="top"><br />
+        <td height="500" width="100%" valign="top"><br/>
         <table summary="" cellpadding="0" cellspacing="0" border="0"
           width="725" class="contentPage">
           <!-- Table 2 (Begin) -->
+          <% if (warning != null) { %>
+            <tr><td class="warningMsgColor">
+              Warning:<br/>
+              <%=StringUtils.toHtml(warning)%><br/>
+              <br/>
+            </td></tr>
+          <% } %>
           <tr>
             <td colspan="2">We apologize for any inconvenience
             you're experiencing by not being able to access your
-            account.<br />
+            account.<br/>
             To resolve this issue as quickly as possible, please provide
-            us with the following information:<br />
-            <br />
+            us with the following information:<br/>
+            <br/>
             </td>
           </tr>
           <tr>
             <td colspan="2">What's the problem you are
-            experiencing? <i class="warningMsgColor">*</i><br />
+            experiencing? <i class="warningMsgColor">*</i><br/>
             <%
                   for (int i=0; i<problems.length; ++i) {
                 %> <input type="radio" name="problem"
-              value="<%=problems[i]%>"> <%=problems[i]%><br />
+              value="<%=problems[i]%>"> <%=problems[i]%><br/>
             <%
                   }
-                %> <br />
+                %> <br/>
             </td>
           </tr>
           <tr>
             <td class="requestLabel">Login ID: <i
               class="warningMsgColor">*</i></td>
-            <td><input name="userid" alt="userid"
-              class="requestPageTF<%=css%>"></td>
+            <td><input class="requestPageTF<%=css%>"
+              name="loginID" alt="loginID" value="<%=loginID%>"></td>
           </tr>
           <tr>
             <td class="requestLabel">Email: <i
               class="warningMsgColor">*</i></td>
-            <td><input name="email" alt="email"
-              class="requestPageTF<%=css%>"></td>
+            <td><input class="requestPageTF<%=css%>"
+              name="email" alt="email" value="<%=email%>"></td>
           </tr>
           <tr>
-            <td class="requestLabel">Additional<br />
+            <td class="requestLabel">Additional<br/>
             Information:</td>
-            <td><textarea name="additionalInformation"
-              class="requestPageTA<%=css%>"></textarea></td>
+            <td><textarea class="requestPageTA<%=css%>"
+              name="info"><%=info%></textarea></td>
           </tr>
           <tr>
             <td class="requestLabel"><i class="warningMsgColor">*
-            Required</i></td>
+            Required</i><br/><br/></td>
           </tr>
           <tr>
-            <td><h:commandButton id="submit" value="Submit"
-              action="#{userSessionBean.submitRequestAction}" /> <h:commandButton
-              id="back" value="Back" action="back" /></td>
+            <td>
+              <h:commandButton id="submit" value="Submit"
+                action="#{userSessionBean.submitRequestAction}" />
+              <h:commandButton id="back" value="Back" action="back" />
+            </td>
           </tr>
         </table>
         <!-- Table 2 (End) --></td>
