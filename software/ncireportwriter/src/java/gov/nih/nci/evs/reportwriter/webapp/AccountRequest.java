@@ -83,6 +83,19 @@ public class AccountRequest {
             email = HTTPUtils.getParameter(request, EMAIL);
             information = HTTPUtils.getParameter(request, INFORMATION);
         }
+
+        public void debug() {
+            if (!_logger.isDebugEnabled())
+                return;
+
+            _logger.debug("");
+            _logger.debug(StringUtils.SEPARATOR);
+            _logger.debug("AccessDeniedInfo:");
+            _logger.debug("  * problem: " + problem);
+            _logger.debug("  * loginID: " + loginID);
+            _logger.debug("  * email: " + email);
+            _logger.debug("  * information: " + information);
+        }
     }
 
     public static String submitAccessDenied() {
@@ -103,23 +116,14 @@ public class AccountRequest {
 
     private static boolean isValidAccessDenied(StringBuffer warningMsg,
         AccessDeniedInfo info) {
-        _logger.debug("");
-        _logger.debug(StringUtils.SEPARATOR);
+        info.debug();
 
-        _logger.debug("  * problem: " + info.problem);
         if (info.problem == null || info.problem.length() <= 0)
             warningMsg.append("\n    * Your problem");
-
-        _logger.debug("  * loginID: " + info.loginID);
         if (info.loginID == null || info.loginID.length() <= 0)
             warningMsg.append("\n    * Login ID");
-
-        _logger.debug("  * email: " + info.email);
         if (info.email == null || info.email.length() <= 0)
             warningMsg.append("\n    * Email");
-
-        _logger.debug("  * information: " + info.information);
-
         if (warningMsg.length() > 0) {
             warningMsg.insert(0, "Please enter the following value(s):");
             return false;
@@ -127,7 +131,6 @@ public class AccountRequest {
 
         if (!MailUtils.isValidEmailAddress(info.email))
             warningMsg.append("\n    * Email");
-
         if (warningMsg.length() > 0) {
             warningMsg.insert(0, "The following value(s) are invalid:");
             return false;
