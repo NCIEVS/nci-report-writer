@@ -680,3 +680,29 @@ body
 }
 
 /* --- Quick links (End) --- */
+
+.requestPageTF {
+  width: 575px;
+  height: 15px;
+  font-family: arial,helvetica,verdana,sans-serif;
+  font-size: 10px;
+}
+
+.requestPageTF_IE {
+  width: 575px;
+  height: 16px;
+  font-family: arial,helvetica,verdana,sans-serif;
+  font-size: 10px;
+}
+.requestPageTA {
+  width: 575px;
+  height: 75px;
+  font-family: arial,helvetica,verdana,sans-serif;
+  font-size: 10px;
+}
+.requestPageTA_IE {
+  width: 575px;
+  height: 84px;
+  font-family: arial,helvetica,verdana,sans-serif;
+  font-size: 11px;
+}
