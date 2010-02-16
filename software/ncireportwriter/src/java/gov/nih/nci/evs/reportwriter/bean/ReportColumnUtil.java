@@ -162,15 +162,15 @@ public class ReportColumnUtil {
             warningMsg.append("\n    * Column Number");
 
         _fieldType =
-            HTTPUtils.getSessionAttributeStr(request, "selectedDataCategory");
+            HTTPUtils.getSessionAttributeString(request, "selectedDataCategory");
         _logger.debug("* fieldType: " + _fieldType);
 
         _propertyType =
-            HTTPUtils.getSessionAttributeStr(request, "selectedPropertyType");
+            HTTPUtils.getSessionAttributeString(request, "selectedPropertyType");
         _logger.debug("* propertyType: " + _propertyType);
 
         _propertyName =
-            HTTPUtils.getSessionAttributeStr(request, "selectedPropertyName");
+            HTTPUtils.getSessionAttributeString(request, "selectedPropertyName");
         _logger.debug("* propertyName: " + _propertyName);
 
         String preferred = (String) request.getParameter("preferred");
@@ -182,15 +182,15 @@ public class ReportColumnUtil {
         request.setAttribute("isPreferred", _isPreferred);
 
         _representationalForm =
-            HTTPUtils.getSessionAttributeStr(request,
+            HTTPUtils.getSessionAttributeString(request,
                 "selectedRepresentationalForm");
         _logger.debug("* representationalForm: " + _representationalForm);
 
-        _source = HTTPUtils.getSessionAttributeStr(request, "selectedSource");
+        _source = HTTPUtils.getSessionAttributeString(request, "selectedSource");
         _logger.debug("* source: " + _source);
 
         _propertyQualifier =
-            HTTPUtils.getSessionAttributeStr(request,
+            HTTPUtils.getSessionAttributeString(request,
                 "selectedPropertyQualifier");
         _logger.debug("* propertyQualifier: " + _propertyQualifier);
 
@@ -198,7 +198,7 @@ public class ReportColumnUtil {
         _logger.debug("* qualifierValue: " + _qualifierValue);
 
         String delim =
-            HTTPUtils.getSessionAttributeStr(request, "selectedDelimiter");
+            HTTPUtils.getSessionAttributeString(request, "selectedDelimiter");
         _logger.debug("* delim: " + delim);
         _delimiter =
             delim != null && delim.length() > 0 ? delim.charAt(0) : ' ';

@@ -58,6 +58,7 @@ import org.apache.log4j.*;
 public class HTTPUtils {
     private static Logger _logger = Logger.getLogger(HTTPUtils.class);
 
+    // -------------------------------------------------------------------------
     public static String cleanXSS(String value) {
 
         if (value == null || value.length() < 1)
@@ -84,6 +85,7 @@ public class HTTPUtils {
         return string;
     }
 
+    // -------------------------------------------------------------------------
     public static void printRequestSessionAttributes(String text) {
         _logger.debug(" ");
         _logger.debug(StringUtils.SEPARATOR);
@@ -170,6 +172,7 @@ public class HTTPUtils {
         _logger.debug(" ");
     }
 
+    // -------------------------------------------------------------------------
     public static String warningMsg(HttpServletRequest request, String msg) {
         request.setAttribute("warningMsg", msg);
         return "warningMsg";
@@ -189,6 +192,7 @@ public class HTTPUtils {
         return warningMsg(request, buffer);
     }
 
+    // -------------------------------------------------------------------------
     public static String getParameter(HttpServletRequest request,
         String parameterName) {
         String value = request.getParameter(parameterName);
@@ -197,7 +201,7 @@ public class HTTPUtils {
         return value;
     }
 
-    public static String getSessionAttributeStr(HttpServletRequest request,
+    public static String getSessionAttributeString(HttpServletRequest request,
         String attributeName) {
         String value =
             (String) request.getSession().getAttribute(attributeName);
@@ -205,12 +209,62 @@ public class HTTPUtils {
         request.setAttribute(attributeName, value);
         return value;
     }
-    
+
+    // -------------------------------------------------------------------------
     public static boolean getJspAttributeBoolean(HttpServletRequest request,
         String attributeName, boolean defaultValue) {
         Boolean value = (Boolean) request.getAttribute(attributeName);
         if (value == null)
             return defaultValue;
         return value.booleanValue();
+    }
+
+    public static String getJspParameter(HttpServletRequest request, String name,
+        boolean convertNullToBlankString) {
+        String value = request.getParameter(name);
+        if (convertNullToBlankString && (value == null || value.length() <= 0))
+            return "";
+        return cleanXSS(value);
+    }
+
+    public static String getJspParameter(HttpServletRequest request, String name) {
+        return getJspParameter(request, name, true);
+    }
+
+    public static String getJspAttributeString(HttpServletRequest request,
+        String name, boolean convertNullToBlankString, boolean clear) {
+        String value = (String) request.getAttribute(name);
+        if (convertNullToBlankString && (value == null || value.length() <= 0))
+            return "";
+        if (clear)
+            request.setAttribute(name, null);
+        return cleanXSS(value);
+    }
+
+    public static String getJspAttributeString(HttpServletRequest request,
+        String name) {
+        return getJspAttributeString(request, name, true, false);
+    }
+
+    public static String getJspSessionAttributeString(HttpServletRequest request,
+        String name, boolean convertNullToBlankString, boolean clear) {
+        String value = (String) request.getSession().getAttribute(name);
+        if (convertNullToBlankString && (value == null || value.length() <= 0))
+            return "";
+        if (clear)
+            request.setAttribute(name, null);
+        return cleanXSS(value);
+    }
+
+    public static String getJspSessionAttributeString(HttpServletRequest request,
+        String name) {
+        return getJspSessionAttributeString(request, name, true, false);
+    }
+
+    public static void setDefaulSessiontAttribute(HttpServletRequest request,
+        String name, Object value) {
+        Object v = request.getSession().getAttribute(name);
+        if (v == null)
+            request.getSession().setAttribute(name, value);
     }
 }

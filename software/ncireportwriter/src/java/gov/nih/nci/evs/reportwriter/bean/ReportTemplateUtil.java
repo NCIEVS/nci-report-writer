@@ -106,7 +106,7 @@ public class ReportTemplateUtil {
     public boolean isAddValid(HttpServletRequest request,
         StringBuffer warningMsg) {
         String codingSchemeNameAndVersion =
-            HTTPUtils.getSessionAttributeStr(request, "selectedOntology");
+            HTTPUtils.getSessionAttributeString(request, "selectedOntology");
         _label = HTTPUtils.getParameter(request, "label");
         _codingSchemeName =
             DataUtils.getCodingSchemeName(codingSchemeNameAndVersion);
@@ -114,9 +114,9 @@ public class ReportTemplateUtil {
             DataUtils.getCodingSchemeVersion(codingSchemeNameAndVersion);
         _rootConceptCode = HTTPUtils.getParameter(request, "rootConceptCode");
         _associationName =
-            HTTPUtils.getSessionAttributeStr(request, "selectedAssociation");
+            HTTPUtils.getSessionAttributeString(request, "selectedAssociation");
         _direction_str = HTTPUtils.getParameter(request, "direction");
-        _level_str = HTTPUtils.getSessionAttributeStr(request, "selectedLevel");
+        _level_str = HTTPUtils.getSessionAttributeString(request, "selectedLevel");
 
         return isValid(request, warningMsg);
     }
@@ -127,7 +127,7 @@ public class ReportTemplateUtil {
         OntologyBean ontologyBean = BeanUtils.getOntologyBean();
 
         _label =
-            HTTPUtils.getSessionAttributeStr(request,
+            HTTPUtils.getSessionAttributeString(request,
                 "selectedStandardReportTemplate");
         _codingSchemeName = HTTPUtils.getParameter(request, "codingScheme");
         _codingSchemeVersion =
