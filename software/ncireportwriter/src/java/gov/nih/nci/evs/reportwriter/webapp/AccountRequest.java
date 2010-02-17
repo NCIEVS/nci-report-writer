@@ -78,11 +78,23 @@ public class AccountRequest {
         public String email = "";
         public String information = "";
 
-        public AccessDeniedInfo(HttpServletRequest request) {
+        private void init() {
+            problem = loginID = email = information = "";
+        }
+
+        public void getValues(HttpServletRequest request) {
             problem = HTTPUtils.getParameter(request, PROBLEM);
             loginID = HTTPUtils.getParameter(request, LOGIN_ID);
             email = HTTPUtils.getParameter(request, EMAIL);
             information = HTTPUtils.getParameter(request, INFORMATION);
+        }
+
+        public void clearValues(HttpServletRequest request) {
+            init();
+            request.removeAttribute(PROBLEM);
+            request.removeAttribute(LOGIN_ID);
+            request.removeAttribute(EMAIL);
+            request.removeAttribute(INFORMATION);
         }
 
         public void debug() {
@@ -98,12 +110,26 @@ public class AccountRequest {
             _logger.debug("  * information: " + information);
         }
     }
+    
+    public static String clearAccessDenied() {
+        HttpServletRequest request = SessionUtil.getRequest();
+        StringBuffer warningMsg = new StringBuffer();
+        try {
+            AccessDeniedInfo info = new AccessDeniedInfo();
+            info.clearValues(request);
+            return "request";
+        } catch (Exception e) {
+            e.printStackTrace();
+            return HTTPUtils.warningMsg(request, warningMsg, e);
+        }
+    }
 
     public static String submitAccessDenied() {
         HttpServletRequest request = SessionUtil.getRequest();
         StringBuffer warningMsg = new StringBuffer();
         try {
-            AccessDeniedInfo info = new AccessDeniedInfo(request);
+            AccessDeniedInfo info = new AccessDeniedInfo();
+            info.getValues(request);
 
             if (!isValidAccessDenied(warningMsg, info))
                 return HTTPUtils.warningMsg(request, warningMsg);
