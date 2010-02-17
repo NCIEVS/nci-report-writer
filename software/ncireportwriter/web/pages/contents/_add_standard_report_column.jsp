@@ -26,8 +26,8 @@
   String qualifiervalue = "";
   ontologyBean.setSelectedDelimiter(null);
   String dependentfield = "";
-  String warning = (String) request.getAttribute("warningMsg");
-  if (warning != null) {  // Note: This must come before isModify condition.
+  String warningMsg = (String) request.getAttribute("warningMsg");
+  if (warningMsg != null) {  // Note: This must come before isModify condition.
     columnNumber = (String) request.getParameter("columnNumber");
     fieldlabel = (String) request.getParameter("fieldlabel");
     String value = (String) request.getAttribute("selectedDataCategory");
@@ -68,10 +68,10 @@
           <br>
           <table summary="" cellpadding="0" cellspacing="0" border="0" 
               width="725" class="contentPage"> <!-- Table 2 (Begin) -->
-            <% if (warning != null) { %>
+            <% if (warningMsg != null && warningMsg.trim().length() > 0) { %>
               <tr><td class="warningMsgColor">
                 Warning:<br/>
-                <%=StringUtils.toHtml(warning)%><br/>
+                <%=StringUtils.toHtml(warningMsg)%><br/>
                 <br/>
               </td></tr>
             <% } %>
