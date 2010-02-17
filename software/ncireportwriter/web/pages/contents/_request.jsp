@@ -18,7 +18,8 @@
   String loginID = HTTPUtils.getJspAttributeString(request, LOGIN_ID);
   String email = HTTPUtils.getJspAttributeString(request, EMAIL);
   String information = HTTPUtils.getJspAttributeString(request, INFORMATION);
-  String warning = (String) request.getAttribute("warningMsg");
+  String warningMsg = (String) request.getAttribute("warningMsg");
+  String infoMsg = (String) request.getAttribute("infoMsg");
   String css = WebUtils.isUsingIE(request) ? "_IE" : "";
 %>
 <f:view>
@@ -31,10 +32,16 @@
         <table summary="" cellpadding="0" cellspacing="0" border="0"
           width="725" class="contentPage">
           <!-- Table 2 (Begin) -->
-          <% if (warning != null) { %>
+          <% if (warningMsg != null) { %>
             <tr><td colspan="2" class="warningMsgColor">
               Warning:<br/>
-              <%=StringUtils.toHtml(warning)%><br/>
+              <%=StringUtils.toHtml(warningMsg)%><br/>
+              <br/>
+            </td></tr>
+          <% } %>
+          <% if (infoMsg != null) { %>
+            <tr><td colspan="2" class="fyiMsgColor">
+              <%=StringUtils.toHtml(infoMsg)%><br/>
               <br/>
             </td></tr>
           <% } %>

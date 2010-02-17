@@ -69,6 +69,7 @@ public class AccountRequest {
     public final static String LOGIN_ID = "loginID";
     public final static String EMAIL = "email";
     public final static String INFORMATION = "information";
+    private static boolean _sendEmail = true;
 
     // -------------------------------------------------------------------------
     private static class AccessDeniedInfo {
@@ -107,6 +108,7 @@ public class AccountRequest {
             if (!isValidAccessDenied(warningMsg, info))
                 return HTTPUtils.warningMsg(request, warningMsg);
             emailAccessDenied(info);
+            HTTPUtils.infoMsg(request, "Your problem as been reported.");
             return "request";
         } catch (Exception e) {
             e.printStackTrace();
@@ -148,8 +150,7 @@ public class AccountRequest {
         message.append("* Login ID: " + info.loginID + "\n");
         message.append("* Email: " + info.email + "\n");
         message.append("* Additional Information: " + info.information + "\n");
-        boolean send = true;
         MailUtils.postMail(MAIL_SERVER, from, recipients, subject, message
-            .toString(), send);
+            .toString(), _sendEmail);
     }
 }

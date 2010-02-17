@@ -173,25 +173,57 @@ public class HTTPUtils {
     }
 
     // -------------------------------------------------------------------------
-    public static String warningMsg(HttpServletRequest request, String msg) {
-        request.setAttribute("warningMsg", msg);
-        return "warningMsg";
+    private static final String WARNING_MSG = "warningMsg";
+    private static final String INFO_MSG = "infoMsg";
+
+    // -------------------------------------------------------------------------
+    public static String pageMsg(HttpServletRequest request,
+        String messageType, String msg) {
+        request.setAttribute(messageType, msg);
+        return messageType;
     }
 
-    public static String warningMsg(HttpServletRequest request,
+    public static String pageMsg(HttpServletRequest request, String messageType,
         StringBuffer buffer) {
-        return warningMsg(request, buffer.toString());
+        return pageMsg(request, messageType, buffer.toString());
     }
 
-    public static String warningMsg(HttpServletRequest request,
-        StringBuffer buffer, Throwable throwable) {
+    public static String pageMsg(HttpServletRequest request,
+        String messageType, StringBuffer buffer, Throwable throwable) {
         if (buffer.length() > 0 && buffer.charAt(buffer.length() - 1) != '\n')
             buffer.append("\n");
         buffer.append(throwable.getClass().getSimpleName() + ": "
             + throwable.getMessage());
-        return warningMsg(request, buffer);
+        return pageMsg(request, messageType, buffer);
     }
 
+    public static String warningMsg(HttpServletRequest request, String msg) {
+        return pageMsg(request, WARNING_MSG, msg);
+    }
+
+    public static String warningMsg(HttpServletRequest request,
+        StringBuffer buffer) {
+        return pageMsg(request, WARNING_MSG, buffer);
+    }
+
+    public static String warningMsg(HttpServletRequest request,
+        StringBuffer buffer, Throwable throwable) {
+        return pageMsg(request, WARNING_MSG, buffer, throwable);
+    }
+
+    public static String infoMsg(HttpServletRequest request, String msg) {
+        return pageMsg(request, INFO_MSG, msg);
+    }
+
+    public static String infoMsg(HttpServletRequest request,
+        StringBuffer buffer) {
+        return pageMsg(request, INFO_MSG, buffer);
+    }
+
+    public static String infoMsg(HttpServletRequest request,
+        StringBuffer buffer, Throwable throwable) {
+        return pageMsg(request, INFO_MSG, buffer, throwable);
+    }
     // -------------------------------------------------------------------------
     private static String setAttributeString(HttpServletRequest request,
         String attributeName, String value) {
