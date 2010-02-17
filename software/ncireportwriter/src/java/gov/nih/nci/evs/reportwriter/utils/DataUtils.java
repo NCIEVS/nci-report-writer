@@ -113,9 +113,10 @@ public class DataUtils {
                 _adminTaskList.add(new SelectItem("Maintain Report Status"));
                 _adminTaskList.add(new SelectItem("Assign Report Status"));
                 _adminTaskList.add(new SelectItem("Retrieve Standard Reports"));
+                _adminTaskList.add(new SelectItem("Unlock User Account"));
             }
             return _adminTaskList;
-        } 
+        }
         if ( _userTaskList == null) {
             _userTaskList = new ArrayList<SelectItem>();
             _userTaskList.add(new SelectItem("Retrieve Standard Reports"));
@@ -679,7 +680,7 @@ public class DataUtils {
 
     /**
      * Dump_matches to output, for debug purposes
-     * 
+     *
      * @param iterator
      *            the iterator
      * @param maxToReturn
