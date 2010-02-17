@@ -327,10 +327,9 @@ public class UserSessionBean extends Object {
                 return "add_standard_report_template";
             }
             return "administer_standard_reports";
-        } else if (_selectedTask.compareTo("Maintain Report Status") == 0)
-            return "report_status";
-
-        else if (_selectedTask.compareTo("Assign Report Status") == 0) {
+        } else if (_selectedTask.compareTo("Maintain Report Status") == 0) {        	
+            return "report_status";            
+        } else if (_selectedTask.compareTo("Assign Report Status") == 0) {
             // Check if there is any DRAFT report waiting for approval:
             _standardReportTemplateList_draft =
                 getStandardReportTemplateList_draft();
@@ -343,7 +342,6 @@ public class UserSessionBean extends Object {
                 request.getSession().setAttribute("message", message);
                 return "message";
             }
-
         } else if (_selectedTask.compareTo("Retrieve Standard Reports") == 0) {
             HttpServletRequest request = SessionUtil.getRequest();
             Boolean isAdmin =
@@ -363,6 +361,8 @@ public class UserSessionBean extends Object {
                     return "message";
                 }
             }
+        } else if (_selectedTask.compareTo("Unlock User Account") == 0) {
+        	return "perform_unlock";
         }
         return null;
     }
@@ -1141,4 +1141,11 @@ public class UserSessionBean extends Object {
     public String clearAccessDenied() {
         return AccessDeniedRequest.clear();
     }
+    
+    public String submitUnlockAction() {
+        _logger.debug("");
+        _logger.debug(StringUtils.SEPARATOR);
+        _logger.debug("Method: submitUnlockAction");
+        return "unlock";
+    }     
 }
