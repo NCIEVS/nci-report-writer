@@ -3,7 +3,7 @@
 <%@ page import="gov.nih.nci.evs.reportwriter.utils.*" %>
 
 <%
-  String warning = (String) request.getAttribute("warningMsg");
+  String warningMsg = (String) request.getAttribute("warningMsg");
 %>
 
 <f:view>
@@ -15,10 +15,10 @@
           <br>
           <table summary="" cellpadding="0" cellspacing="0" border="0" 
               width="725" class="contentPage"> <!-- Table 2 (Begin) -->
-            <% if (warning != null) { %>
+            <% if (warningMsg != null && warningMsg.trim().length() > 0) { %>
               <tr><td class="warningMsgColor">
                 Warning:<br/>
-                <%=StringUtils.toHtml(warning)%><br/>
+                <%=StringUtils.toHtml(warningMsg)%><br/>
                 <br/>
               </td></tr>
             <% } %>

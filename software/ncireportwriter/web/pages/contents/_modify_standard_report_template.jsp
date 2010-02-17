@@ -37,8 +37,8 @@
       level = level_obj.toString();
     }
     
-    String warning = (String) request.getAttribute("warningMsg");
-    if (warning != null && warning.length() > 0) {
+    String warningMsg = (String) request.getAttribute("warningMsg");
+    if (warningMsg != null && warningMsg.trim().length() > 0) {
       // Note: This was caused by errors in validation.
       version = (String) request.getAttribute("version");
       rootcode = (String) request.getAttribute("rootConceptCode");
@@ -55,9 +55,9 @@
          msg += "This report template is referencing an older or invalid version of the coding scheme.\n";
          msg += "Please update the version number to:\n";
          msg += "    * " + versionTmp;
-         warning = msg;
+         warningMsg = msg;
        } else {
-         warning = codingSchemeName + " " + "coding scheme is currently not loaded.";
+         warningMsg = codingSchemeName + " " + "coding scheme is currently not loaded.";
        }
      }
    }
@@ -72,10 +72,10 @@
           <br>
           <table summary="" cellpadding="0" cellspacing="0" border="0" 
               width="725" class="contentPage"> <!-- Table 2 (Begin) -->
-            <% if (warning != null) { %>
+            <% if (warningMsg != null && warningMsg.trim().length() > 0) { %>
               <tr><td class="warningMsgColor">
                 Warning:<br/>
-                <%=StringUtils.toHtml(warning)%><br/>
+                <%=StringUtils.toHtml(warningMsg)%><br/>
                 <br/>
               </td></tr>
             <% } %>

@@ -3,10 +3,10 @@
 <%@ page import="gov.nih.nci.evs.reportwriter.utils.*" %>
 
 <%
-  StringBuffer warningMsg = new StringBuffer();
-  if (! RemoteServerUtil.isRunning(warningMsg))
-      warningMsg.append("\nAll other tasks not dependent on LexEVS should still work.");  
-  String warning = warningMsg.toString();
+  StringBuffer warningBuffer = new StringBuffer();
+  if (! RemoteServerUtil.isRunning(warningBuffer))
+      warningBuffer.append("\nAll other tasks not dependent on LexEVS should still work.");  
+  String warningMsg = warningBuffer.toString();
 %>
 
 <f:view>
@@ -18,10 +18,10 @@
           <br>
           <table summary="" cellpadding="0" cellspacing="0" border="0" 
               width="725" class="contentPage">
-            <% if (warning != null && warning.trim().length() > 0) { %>
+            <% if (warningMsg != null && warningMsg.trim().length() > 0) { %>
               <tr><td class="warningMsgColor">
                 Warning:<br/>
-                <%=StringUtils.toHtml(warning)%><br/>
+                <%=StringUtils.toHtml(warningMsg)%><br/>
                 <br/>
               </td></tr>
             <% } %>

@@ -32,14 +32,14 @@
         <table summary="" cellpadding="0" cellspacing="0" border="0"
           width="725" class="contentPage">
           <!-- Table 2 (Begin) -->
-          <% if (warningMsg != null) { %>
+          <% if (warningMsg != null && warningMsg.trim().length() > 0) { %>
             <tr><td colspan="2" class="warningMsgColor">
               Warning:<br/>
               <%=StringUtils.toHtml(warningMsg)%><br/>
               <br/>
             </td></tr>
           <% } %>
-          <% if (infoMsg != null) { %>
+          <% if (infoMsg != null && infoMsg.trim().length() > 0) { %>
             <tr><td colspan="2" class="fyiMsgColor">
               <%=StringUtils.toHtml(infoMsg)%><br/>
               <br/>
