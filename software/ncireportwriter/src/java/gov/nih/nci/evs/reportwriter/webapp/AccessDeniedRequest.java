@@ -110,7 +110,7 @@ public class AccessDeniedRequest {
             _logger.debug("  * information: " + information);
         }
     }
-    
+
     public static String clear() {
         HttpServletRequest request = SessionUtil.getRequest();
         StringBuffer warningMsg = new StringBuffer();
@@ -131,9 +131,9 @@ public class AccessDeniedRequest {
             AccessDeniedInfo info = new AccessDeniedInfo();
             info.getValues(request);
 
-            if (!isValidAccessDenied(warningMsg, info))
+            if (!isValidValues(warningMsg, info))
                 return HTTPUtils.warningMsg(request, warningMsg);
-            emailAccessDenied(info);
+            email(info);
             HTTPUtils.infoMsg(request, "Your problem as been reported.");
             return "request";
         } catch (Exception e) {
@@ -142,7 +142,7 @@ public class AccessDeniedRequest {
         }
     }
 
-    private static boolean isValidAccessDenied(StringBuffer warningMsg,
+    private static boolean isValidValues(StringBuffer warningMsg,
         AccessDeniedInfo info) {
         info.debug();
 
@@ -166,8 +166,7 @@ public class AccessDeniedRequest {
         return true;
     }
 
-    private static void emailAccessDenied(AccessDeniedInfo info)
-            throws Exception {
+    private static void email(AccessDeniedInfo info) throws Exception {
         String from = info.email;
         String[] recipients = new String[] { ACCOUNT_ADMIN_USER_EMAIL_ };
         String subject = "NCI Report Writer account access problems...";
