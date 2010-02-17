@@ -5,6 +5,7 @@
   var="reportwriterBundle" />
 <%
   String pagesPath = FormUtils.getPagesPath(request);
+  String loginWarning = (String)request.getAttribute("loginWarning");
 %>
 <f:view>
   <h:form id="loginForm">
@@ -38,12 +39,19 @@
                 <td class="sidebarTitle" height="20">LOGIN TO
                 REPORT WRITER</td>
               </tr>
-              <% } %>
-              <% if (request.getAttribute("loginWarning") != null) { %>
+              <% } %>              
               <tr>
-                <td class="txtHighlight"><%=request.getAttribute("loginWarning")%></td>
-              </tr>
-              <% }%>
+                <td class="sidebarContent">
+                  <span class="txtHighlight">
+                  <%
+                  if (loginWarning == null || loginWarning.equalsIgnoreCase("null"))
+                	  out.print("&nbsp;");
+                  else
+                    out.print(loginWarning);
+                  %>
+                  </span>
+                </td>
+              </tr>              
               <tr>
                 <td class="sidebarContent">
                 <table cellpadding="2" cellspacing="0" border="0">
