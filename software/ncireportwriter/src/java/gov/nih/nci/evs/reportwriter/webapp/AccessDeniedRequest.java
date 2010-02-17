@@ -54,9 +54,9 @@ import org.apache.log4j.*;
  * @version 1.0
  */
 
-public class AccountRequest {
+public class AccessDeniedRequest {
     // -------------------------------------------------------------------------
-    private static Logger _logger = Logger.getLogger(AccountRequest.class);
+    private static Logger _logger = Logger.getLogger(AccessDeniedRequest.class);
     private final static String MAIL_SERVER =
         ReportWriterProperties
             .getProperty(ReportWriterProperties.MAIL_SMTP_SERVER);
@@ -111,7 +111,7 @@ public class AccountRequest {
         }
     }
     
-    public static String clearAccessDenied() {
+    public static String clear() {
         HttpServletRequest request = SessionUtil.getRequest();
         StringBuffer warningMsg = new StringBuffer();
         try {
@@ -124,7 +124,7 @@ public class AccountRequest {
         }
     }
 
-    public static String submitAccessDenied() {
+    public static String submit() {
         HttpServletRequest request = SessionUtil.getRequest();
         StringBuffer warningMsg = new StringBuffer();
         try {
