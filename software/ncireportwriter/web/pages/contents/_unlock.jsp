@@ -4,7 +4,7 @@
 <%@ page import="gov.nih.nci.evs.reportwriter.utils.*"%>
 <%
   String loginID = HTTPUtils.getJspAttributeString(request, "loginID");
-  String warning = (String) request.getAttribute("warningMsg");
+  String message = HTTPUtils.getJspAttributeString(request, "standardMsg");
   String css = WebUtils.isUsingIE(request) ? "_IE" : "";
 %>
 <f:view>
@@ -17,15 +17,8 @@
         <table summary="" cellpadding="0" cellspacing="0" border="0"
           width="725" class="contentPage">
           <!-- Table 2 (Begin) -->
-          <% if (warning != null) { %>
-            <tr><td class="warningMsgColor">
-              Warning:<br/>
-              <%=StringUtils.toHtml(warning)%><br/>
-              <br/>
-            </td></tr>
-          <% } %>
           <tr>
-            <td colspan="2" class="inputMessage">To unlock a user, select the user from the list
+            <td class="inputMessage">To unlock a user, select the user from the list
             below and then click the Submit button.<br/><br/>
             </td>
           </tr>
@@ -41,6 +34,12 @@
               <h:commandButton id="submit" value="Submit"
                 action="#{userSessionBean.submitUnlockAction}" />
               <h:commandButton id="back" value="Back" action="back" />
+            </td>
+          </tr>
+          <tr><td height="15"></td></tr>
+          <tr>
+            <td class="inputMessage">
+              <% if (message != null) out.println(message); %>
             </td>
           </tr>
         </table>
