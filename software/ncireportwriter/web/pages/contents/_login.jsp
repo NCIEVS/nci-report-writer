@@ -25,14 +25,11 @@
               <% 
                   String queryString = request.getQueryString();
                   if (queryString != null && queryString.contains("logout")) { 
+                	  loginWarning = "You have successfully logged out.";
                 %>
               <tr>
                 <td class="sidebarTitle" height="20">LOGOUT REPORT
                 WRITER</td>
-              </tr>
-              <tr>
-                <td class="txtHighlight">You have successfully
-                logged out.</td>
               </tr>
               <% } else { %>
               <tr>
