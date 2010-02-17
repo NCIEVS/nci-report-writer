@@ -4,10 +4,10 @@
 <%@ page import="gov.nih.nci.evs.reportwriter.utils.*"%>
 <%@ page import="gov.nih.nci.evs.reportwriter.webapp.*"%>
 <%
-  final String PROBLEM = AccountRequest.PROBLEM;
-  final String LOGIN_ID = AccountRequest.LOGIN_ID;
-  final String EMAIL = AccountRequest.EMAIL;
-  final String INFORMATION = AccountRequest.INFORMATION;
+  final String PROBLEM = AccessDeniedRequest.PROBLEM;
+  final String LOGIN_ID = AccessDeniedRequest.LOGIN_ID;
+  final String EMAIL = AccessDeniedRequest.EMAIL;
+  final String INFORMATION = AccessDeniedRequest.INFORMATION;
 
   String[] problems = new String[] { 
    "I am locked out of my account", 

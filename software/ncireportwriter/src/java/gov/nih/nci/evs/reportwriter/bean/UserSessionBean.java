@@ -1135,10 +1135,10 @@ public class UserSessionBean extends Object {
     }
 
     public String submitAccessDenied() {
-        return AccountRequest.submitAccessDenied();
+        return AccessDeniedRequest.submit();
     }
 
     public String clearAccessDenied() {
-        return AccountRequest.clearAccessDenied();
+        return AccessDeniedRequest.clear();
     }
 }
