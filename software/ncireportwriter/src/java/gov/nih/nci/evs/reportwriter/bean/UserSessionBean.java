@@ -18,6 +18,8 @@ import org.apache.log4j.*;
 import org.LexGrid.codingSchemes.*;
 import org.LexGrid.concepts.*;
 
+import gov.nih.nci.security.authentication.LockoutManager;
+
 /**
  * <!-- LICENSE_TEXT_START -->
  * Copyright 2008,2009 NGIT. This software was developed in conjunction 
@@ -1143,9 +1145,14 @@ public class UserSessionBean extends Object {
     }
     
     public String submitUnlockAction() {
-        _logger.debug("");
-        _logger.debug(StringUtils.SEPARATOR);
         _logger.debug("Method: submitUnlockAction");
+        HttpServletRequest request = SessionUtil.getRequest();
+        String userid = (String) request.getParameter("loginID");
+        if (userid != null && userid.length() > 0) {
+        	_logger.debug("Unlocking user: " + userid);       	
+        	LockoutManager.getInstance().unLockUser(userid);      	
+        	request.setAttribute("standardMsg","User has been unlocked.");
+        }	
         return "unlock";
     }     
 }
