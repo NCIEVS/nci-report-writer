@@ -684,6 +684,7 @@ body
 }
 
 /* --- Quick links (End) --- */
+
 .requestLabel {
   width: 75;
   vertical-align: top;
@@ -713,4 +714,22 @@ body
   height: 84px;
   font-family: arial,helvetica,verdana,sans-serif;
   font-size: 11px;
+}
+
+/* --- Standard Form styles --- */
+
+.inputLabel {
+  vertical-align: center;
+  font-size: 12px;
+}
+
+.inputItem {
+  height: 15px;
+  font-family: arial,helvetica,verdana,sans-serif;
+  font-size: 12px;
+}
+
+.inputMessage {
+  font-family: arial,helvetica,verdana,sans-serif;
+  font-size: 15px;
 }
