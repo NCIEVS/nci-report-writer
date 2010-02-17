@@ -1149,9 +1149,14 @@ public class UserSessionBean extends Object {
         HttpServletRequest request = SessionUtil.getRequest();
         String userid = (String) request.getParameter("loginID");
         if (userid != null && userid.length() > 0) {
-        	_logger.debug("Unlocking user: " + userid);       	
-        	LockoutManager.getInstance().unLockUser(userid);      	
-        	request.setAttribute("standardMsg","User has been unlocked.");
+        	LockoutManager mgr = LockoutManager.getInstance();
+        	if (mgr.isUserLockedOut(userid)) {       	
+        		_logger.debug("Unlocking user: " + userid);       	
+        		mgr.unLockUser(userid);      	
+        		request.setAttribute("standardMsg","User has been unlocked.");
+        	} else {
+        		request.setAttribute("standardMsg","Unknown user or user is not locked.");
+        	}
         }	
         return "unlock";
     }     
