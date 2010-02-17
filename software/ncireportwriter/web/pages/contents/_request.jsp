@@ -93,9 +93,11 @@
             Required</i><br/><br/></td>
           </tr>
           <tr>
-            <td>
+            <td colspan="2">
               <h:commandButton id="submit" value="Submit"
-                action="#{userSessionBean.submitRequestAction}" />
+                action="#{userSessionBean.submitAccessDenied}" />
+              <h:commandButton id="clear" value="Clear"
+                action="#{userSessionBean.clearAccessDenied}" />
               <h:commandButton id="back" value="Back" action="back" />
             </td>
           </tr>

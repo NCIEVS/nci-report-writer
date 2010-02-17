@@ -279,7 +279,7 @@ public class HTTPUtils {
         if (convertNullToBlankString && (value == null || value.length() <= 0))
             return "";
         if (clear)
-            request.setAttribute(name, null);
+            request.removeAttribute(name);
         return cleanXSS(value);
     }
 
@@ -295,7 +295,7 @@ public class HTTPUtils {
         if (convertNullToBlankString && (value == null || value.length() <= 0))
             return "";
         if (clear)
-            request.setAttribute(name, null);
+            request.removeAttribute(name);
         return cleanXSS(value);
     }
 

@@ -1134,7 +1134,11 @@ public class UserSessionBean extends Object {
         setSelectedVersion(_selectedVersion);
     }
 
-    public String submitRequestAction() {
+    public String submitAccessDenied() {
         return AccountRequest.submitAccessDenied();
+    }
+
+    public String clearAccessDenied() {
+        return AccountRequest.clearAccessDenied();
     }
 }
