@@ -9,43 +9,43 @@
 %>
 <f:view>
   <h:form id="USER_UNLOCKForm">
-    <table summary="" cellpadding="0" cellspacing="0" border="0"
-      width="100%" height="100%">
-      <!-- Table 1 (Begin) -->
+    <table summary="" cellpadding="0" cellspacing="0" border="0">
+      <tr><td height="10"></td></tr>
       <tr>
-        <td height="500" width="100%" valign="top"><br/>
-        <table summary="" cellpadding="0" cellspacing="0" border="0"
-          width="725" class="contentPage">
-          <!-- Table 2 (Begin) -->
-          <tr>
-            <td class="inputMessage">To unlock a user, select the user from the list
-            below and then click the Submit button.<br/><br/>
-            </td>
-          </tr>
-          <tr>
-            <td>
-              <span class="inputLabel">Login ID:&nbsp;</span>
-              <input class="inputItem" name="loginID" value="<%=loginID%>">
-            </td>
-          </tr>
-          <tr><td height="15"></td></tr>
-          <tr>
-            <td>
-              <h:commandButton id="submit" value="Submit"
-                action="#{userSessionBean.submitUnlockAction}" />
-              <h:commandButton id="back" value="Back" action="back" />
-            </td>
-          </tr>
-          <tr><td height="15"></td></tr>
-          <tr>
-            <td class="inputMessage">
-              <% if (message != null) out.println(message); %>
-            </td>
-          </tr>
-        </table>
-        <!-- Table 2 (End) --></td>
+        <td class="inputLabel">To unlock a user, select the user from the list
+        below and then click the Submit button.<br/><br/>
+        </td>        
+      </tr>     
+    </table>      
+    <table summary="" cellpadding="0" cellspacing="0" border="0">
+      <tr><td height="5" colspan="3"></td></tr>      
+      <tr>
+        <td class="inputLabel">
+          Login ID:&nbsp;
+        </td>
+        <td>  
+          <input class="inputItem" name="loginID" value="<%=loginID%>">&nbsp;&nbsp;
+        </td>
+        <td>  
+          <h:commandButton id="submit" value="Unlock"
+            action="#{userSessionBean.submitUnlockAction}" />              
+        </td>
       </tr>
+      <tr><td height="5" colspan="3"></td></tr>
+      <tr>
+        <td></td>
+        <td colspan="2">
+          <h:commandButton id="back" value="Back" action="back" />
+        </td>
+      </tr>      
     </table>
-    <!-- Table 1 (End) -->
+    <table summary="" cellpadding="0" cellspacing="0" border="0">
+      <tr><td height="10"></td></tr>
+      <tr>
+        <td class="inputMessage" height="15px">
+        <% if (message != null) out.print(message); else out.print("X&nbsp;"); %>
+        </td>       
+      </tr>  
+    </table>    
   </h:form>
 </f:view>
