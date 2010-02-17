@@ -720,16 +720,17 @@ body
 
 .inputLabel {
   vertical-align: center;
-  font-size: 12px;
+  font-size:10px;
 }
 
 .inputItem {
   height: 15px;
   font-family: arial,helvetica,verdana,sans-serif;
-  font-size: 12px;
+  font-size:10px;
 }
 
 .inputMessage {
   font-family: arial,helvetica,verdana,sans-serif;
-  font-size: 12px;
+  font-size:10px;
+  color: blue;
 }
