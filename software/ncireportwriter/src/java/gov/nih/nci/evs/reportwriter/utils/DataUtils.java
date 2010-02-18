@@ -971,6 +971,8 @@ public class DataUtils {
                 while (refEnum.hasMoreElements()) {
                     ResolvedConceptReference ref = refEnum.nextElement();
                     AssociationList targetof = ref.getTargetOf();
+                    if (targetof == null)
+                        continue;
                     Association[] associations = targetof.getAssociation();
 
                     for (int i = 0; i < associations.length; i++) {
