@@ -31,9 +31,9 @@
           <jsp:include page="/pages/templates/footer.jsp"/>
         </div>
       </div>
+      <!-- Note: Keep the div below on one line to avoid IE bug. -->
       <div class="mainbox-bottom"><img src="<%=imagesPath%>/mainbox-bottom.gif"
-        width="745" height="5" alt="Mainbox Bottom" />
-      </div>
+        width="745" height="5" alt="Mainbox Bottom" /></div>
     </div>
     <br/>
   </body>
