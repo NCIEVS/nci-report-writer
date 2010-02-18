@@ -282,22 +282,3 @@ public class FindRelatedCodesUtil {
         }
     }
 }
-
-/*
- * C49755:Medical Device Component or Accessory FULL_SYN: DEVICE COMPONENT OR
- * ACCESSORY RepresentationalForm: PT Source: FDA
- * 
- * 
- * Qualifier name: source-code Qualifier value: 3049 FULL_SYN: Medical Device
- * Component or Accessory RepresentationalForm: PT Source: NCI
- * 
- * 
- * FULL_SYN: Medical Device Component RepresentationalForm: SY Source: NCI
- * 
- * 
- * Preferred_Name: Medical Device Component or Accessory
- * 
- * 
- * label: Medical Device Component or Accessory
- */
-
