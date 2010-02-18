@@ -14,6 +14,7 @@
     <title><ui:get name="title" default="NCI Report Writer"/></title>
     <link rel="stylesheet" type="text/css" href="<%= FormUtils.getCSSPath(request) %>/styleSheet.css" />
     <link rel="shortcut icon" href="<%= FormUtils.getBasePath(request) %>/favicon.ico" type="image/x-icon" />
+    <script type="text/javascript" src="<%= request.getContextPath() %>/js/dropdown.js"></script>
   </head>
   <body>
     <jsp:include page="/pages/templates/header.jsp" />
@@ -34,6 +35,6 @@
         width="745" height="5" alt="Mainbox Bottom" />
       </div>
     </div>
-    <br>
+    <br/>
   </body>
 </html>
