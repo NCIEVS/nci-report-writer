@@ -67,7 +67,7 @@ public class ReportGenerationThread implements Runnable {
     private String _standardReportLabel = null;
     private String _uid = null;
     private String _emailAddress = null;
-    
+
     private int _count = 0;
     private String _hierarchicalAssoName = null;
 
@@ -118,7 +118,8 @@ public class ReportGenerationThread implements Runnable {
                 generateStandardReport(_outputDir, _standardReportLabel, _uid,
                     warningMsg);
             long runTime = stopWatch.getDuration();
-            emailNotification(successful, warningMsg, startDate, new Date(), runTime);
+            emailNotification(successful, warningMsg, startDate, new Date(),
+                runTime);
             _logger.info("Report " + _standardReportLabel + " generated.");
             _logger.info("  * Start time: " + startDate);
             _logger.info("  * Run time: " + stopWatch.getResult(runTime));
@@ -140,7 +141,7 @@ public class ReportGenerationThread implements Runnable {
                 _logger.warn("  * email address not set.");
                 return;
             }
-            
+
             String mailServer =
                 ReportWriterProperties
                     .getProperty(ReportWriterProperties.MAIL_SMTP_SERVER);
@@ -511,7 +512,6 @@ public class ReportGenerationThread implements Runnable {
     public String getReportColumnValue(String scheme, String version,
         Concept defining_root_concept, Concept associated_concept,
         Concept node, ReportColumn rc) {
-
         String field_Id = rc.getFieldId();
         String property_name = rc.getPropertyName();
         String qualifier_name = rc.getQualifierName();
@@ -542,6 +542,16 @@ public class ReportGenerationThread implements Runnable {
             property_type = null;
         if (isNull(delimiter))
             delimiter = null;
+
+        String label = rc.getLabel().toUpperCase().replaceAll(" ", "_");
+        if (label.indexOf("CDRH_PARENT") != -1) {
+            Vector<Concept> v =
+                DataUtils.getAssociationTargets(scheme, version, node
+                    .getEntityCode(), "A10");
+            if (v == null || v.size() <= 0)
+                return "Not Available";
+            associated_concept = (Concept) v.elementAt(0);
+        }
 
         if (field_Id.equals("Code"))
             return node.getEntityCode();
