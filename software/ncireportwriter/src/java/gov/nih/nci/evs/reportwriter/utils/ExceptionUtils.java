@@ -71,4 +71,20 @@ public class ExceptionUtils {
         for (int i=0; i<texts.length; ++i)
             logger.error(texts[i]);
     }
+    
+    public static String getStackTrace(Throwable exception) {
+        StackTraceElement[] elements = exception.getStackTrace();
+        StringBuffer buffer = new StringBuffer();
+        buffer.append(exception.getClass().getCanonicalName() + ": "
+            + exception.getMessage() + "\n");
+        for (int i=0; i<elements.length; ++i) {
+            StackTraceElement element = elements[i];
+            buffer.append("  at " + element.getClassName());
+            buffer.append("." + element.getMethodName());
+            buffer.append("(" + element.getFileName());
+            buffer.append(":" + element.getLineNumber() + ")");
+            buffer.append("\n");
+        }
+        return buffer.toString();
+    }
 }

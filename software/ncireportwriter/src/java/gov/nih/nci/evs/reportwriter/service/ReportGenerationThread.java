@@ -124,7 +124,7 @@ public class ReportGenerationThread implements Runnable {
             _logger.info("  * Start time: " + startDate);
             _logger.info("  * Run time: " + stopWatch.getResult(runTime));
         } catch (Exception e) {
-            warningMsg.append("\n" + ExceptionUtils.getMessage(e));
+            warningMsg.append("\n" + ExceptionUtils.getStackTrace(e));
             long runTime = stopWatch.getDuration();
             emailNotification(false, warningMsg, startDate, new Date(), runTime);
             ExceptionUtils.print(_logger, e, "* In ReportGenerationThread.run");
@@ -197,179 +197,187 @@ public class ReportGenerationThread implements Runnable {
                 + standardReportLabel + " -- report not generated.");
         }
 
-        String defining_set_desc = standardReportTemplate.getRootConceptCode();
-
-        if (defining_set_desc.indexOf("|") != -1) {
-            return generateSpecialReport(outputDir, standardReportLabel, uid,
-                warningMsg);
-        }
-
-        _logger.debug(StringUtils.SEPARATOR);
-        _logger.debug("Method: generateStandardReport");
-        _logger.debug("  * Output directory: " + outputDir);
-        _logger.debug("  * standardReportLabel: " + standardReportLabel);
-        _logger.debug("  * uid: " + uid);
-
-        File dir = new File(outputDir);
-        if (!dir.exists()) {
-            _logger.debug("Output directory " + outputDir
-                + " does not exist -- try to create the directory.");
-            boolean retval = dir.mkdir();
-            if (!retval) {
-                return warningMsg(warningMsg,
-                    "Unable to create output directory " + outputDir
-                        + " - please check privilege setting.");
-            } else {
-                _logger.debug("Output directory: " + outputDir + " created.");
-            }
-        } else {
-            _logger.debug("Output directory: " + outputDir + " exists.");
-        }
-
-        String version = standardReportTemplate.getCodingSchemeVersion();
-        // append version to the report file name:
-        String pathname =
-            outputDir + File.separator + standardReportLabel + "__" + version
-                + ".txt";
-        pathname = pathname.replaceAll(" ", "_");
-        _logger.debug("Full path name: " + pathname);
-
-        PrintWriter pw = openPrintWriter(pathname);
-        if (pw == null)
-            return warningMsg(warningMsg, "Unable to create output file "
-                + pathname + " -- please check privilege setting.");
-        _logger.debug("opened PrintWriter " + pathname);
-
-        int id = standardReportTemplate.getId();
-        String label = standardReportTemplate.getLabel();
-        String codingSchemeName = standardReportTemplate.getCodingSchemeName();
-        String codingSchemeVersion =
-            standardReportTemplate.getCodingSchemeVersion();
-        String rootConceptCode = standardReportTemplate.getRootConceptCode();
-        String associationName = standardReportTemplate.getAssociationName();
-        boolean direction = standardReportTemplate.getDirection();
-        int level = standardReportTemplate.getLevel();
-        Character delimiter = standardReportTemplate.getDelimiter();
-        String delimeter_str = "\t";
-
-        _logger.debug(StringUtils.SEPARATOR);
-        _logger.debug("  * ID: " + id);
-        _logger.debug("  * Label: " + label);
-        _logger.debug("  * CodingSchemeName: " + codingSchemeName);
-        _logger.debug("  * CodingSchemeVersion: " + codingSchemeVersion);
-        _logger.debug("  * Root: " + rootConceptCode);
-        _logger.debug("  * AssociationName: " + associationName);
-        _logger.debug("  * Direction: " + direction);
-        _logger.debug("  * Level: " + level);
-        _logger.debug("  * Delimiter: " + delimiter);
-
-        Object[] objs = null;
-        Collection<ReportColumn> cc =
-            standardReportTemplate.getColumnCollection();
-        if (cc == null) {
-            _logger.warn("standardReportTemplate.getColumnCollection"
-                + " returns null???");
-        } else {
-            objs = cc.toArray();
-        }
-
-        ReportColumn[] cols = null;
-        if (cc != null) {
-            cols = new ReportColumn[objs.length];
-            for (int i = 0; i < objs.length; i++) {
-                gov.nih.nci.evs.reportwriter.bean.ReportColumn col =
-                    (gov.nih.nci.evs.reportwriter.bean.ReportColumn) objs[i];
-                ReportColumnUtil.debug(col);
-                cols[i] = col;
-            }
-        }
-
-        _logger.debug(StringUtils.SEPARATOR);
-        _logger.debug("* Start generating report..." + pathname);
-
-        printReportHeading(pw, cols);
-
-        String scheme = standardReportTemplate.getCodingSchemeName();
-        version = standardReportTemplate.getCodingSchemeVersion();
-
-        String code = standardReportTemplate.getRootConceptCode();
-        Concept defining_root_concept =
-            DataUtils.getConceptByCode(codingSchemeName, codingSchemeVersion,
-                null, rootConceptCode);
-
-        associationName = standardReportTemplate.getAssociationName();
-        level = standardReportTemplate.getLevel();
-
-        String tag = null;
-        int curr_level = 0;
-        int max_level = standardReportTemplate.getLevel();
-        if (max_level < 0)
-            max_level =
-                ReportWriterProperties.getIntProperty(
-                    ReportWriterProperties.MAXIMUM_LEVEL, 20);
-
-        // printReportHeading(pw, cols);
-        if (_hierarchicalAssoName == null) {
-            Vector<String> hierarchicalAssoName_vec =
-                DataUtils.getHierarchyAssociationId(scheme, version);
-            if (hierarchicalAssoName_vec == null
-                || hierarchicalAssoName_vec.size() == 0) {
-                return Boolean.FALSE;
-            }
-            _hierarchicalAssoName =
-                (String) hierarchicalAssoName_vec.elementAt(0);
-        }
-
-        String associationCode = "";
         try {
-            associationCode =
-                DataUtils.getAssociationCode(codingSchemeName,
-                    codingSchemeVersion, associationName);
+            String defining_set_desc =
+                standardReportTemplate.getRootConceptCode();
+
+            if (defining_set_desc.indexOf("|") != -1) {
+                return generateSpecialReport(outputDir, standardReportLabel,
+                    uid, warningMsg);
+            }
+
+            _logger.debug(StringUtils.SEPARATOR);
+            _logger.debug("Method: generateStandardReport");
+            _logger.debug("  * Output directory: " + outputDir);
+            _logger.debug("  * standardReportLabel: " + standardReportLabel);
+            _logger.debug("  * uid: " + uid);
+
+            File dir = new File(outputDir);
+            if (!dir.exists()) {
+                _logger.debug("Output directory " + outputDir
+                    + " does not exist -- try to create the directory.");
+                boolean retval = dir.mkdir();
+                if (!retval) {
+                    throw new Exception("Unable to create output directory "
+                        + outputDir + " - please check privilege setting.");
+                } else {
+                    _logger.debug("Output directory: " + outputDir
+                        + " created.");
+                }
+            } else {
+                _logger.debug("Output directory: " + outputDir + " exists.");
+            }
+
+            String version = standardReportTemplate.getCodingSchemeVersion();
+            // append version to the report file name:
+            String pathname =
+                outputDir + File.separator + standardReportLabel + "__"
+                    + version + ".txt";
+            pathname = pathname.replaceAll(" ", "_");
+            _logger.debug("Full path name: " + pathname);
+
+            PrintWriter pw = openPrintWriter(pathname);
+            if (pw == null)
+                throw new Exception("Unable to create output file " + pathname
+                    + " -- please check privilege setting.");
+            _logger.debug("opened PrintWriter " + pathname);
+
+            int id = standardReportTemplate.getId();
+            String label = standardReportTemplate.getLabel();
+            String codingSchemeName =
+                standardReportTemplate.getCodingSchemeName();
+            String codingSchemeVersion =
+                standardReportTemplate.getCodingSchemeVersion();
+            String rootConceptCode =
+                standardReportTemplate.getRootConceptCode();
+            String associationName =
+                standardReportTemplate.getAssociationName();
+            boolean direction = standardReportTemplate.getDirection();
+            int level = standardReportTemplate.getLevel();
+            Character delimiter = standardReportTemplate.getDelimiter();
+            String delimeter_str = "\t";
+
+            _logger.debug(StringUtils.SEPARATOR);
+            _logger.debug("  * ID: " + id);
+            _logger.debug("  * Label: " + label);
+            _logger.debug("  * CodingSchemeName: " + codingSchemeName);
+            _logger.debug("  * CodingSchemeVersion: " + codingSchemeVersion);
+            _logger.debug("  * Root: " + rootConceptCode);
+            _logger.debug("  * AssociationName: " + associationName);
+            _logger.debug("  * Direction: " + direction);
+            _logger.debug("  * Level: " + level);
+            _logger.debug("  * Delimiter: " + delimiter);
+
+            Object[] objs = null;
+            Collection<ReportColumn> cc =
+                standardReportTemplate.getColumnCollection();
+            if (cc == null) {
+                throw new Exception(
+                    "standardReportTemplate.getColumnCollection"
+                        + " returns null???");
+            } else {
+                objs = cc.toArray();
+            }
+
+            ReportColumn[] cols = null;
+            if (cc != null) {
+                cols = new ReportColumn[objs.length];
+                for (int i = 0; i < objs.length; i++) {
+                    gov.nih.nci.evs.reportwriter.bean.ReportColumn col =
+                        (gov.nih.nci.evs.reportwriter.bean.ReportColumn) objs[i];
+                    ReportColumnUtil.debug(col);
+                    cols[i] = col;
+                }
+            }
+
+            _logger.debug(StringUtils.SEPARATOR);
+            _logger.debug("* Start generating report..." + pathname);
+
+            printReportHeading(pw, cols);
+
+            String scheme = standardReportTemplate.getCodingSchemeName();
+            version = standardReportTemplate.getCodingSchemeVersion();
+
+            String code = standardReportTemplate.getRootConceptCode();
+            Concept defining_root_concept =
+                DataUtils.getConceptByCode(codingSchemeName,
+                    codingSchemeVersion, null, rootConceptCode);
+
+            associationName = standardReportTemplate.getAssociationName();
+            level = standardReportTemplate.getLevel();
+
+            String tag = null;
+            int curr_level = 0;
+            int max_level = standardReportTemplate.getLevel();
+            if (max_level < 0)
+                max_level =
+                    ReportWriterProperties.getIntProperty(
+                        ReportWriterProperties.MAXIMUM_LEVEL, 20);
+
+            // printReportHeading(pw, cols);
+            if (_hierarchicalAssoName == null) {
+                Vector<String> hierarchicalAssoName_vec =
+                    DataUtils.getHierarchyAssociationId(scheme, version);
+                if (hierarchicalAssoName_vec == null
+                    || hierarchicalAssoName_vec.size() == 0) {
+                    return Boolean.FALSE;
+                }
+                _hierarchicalAssoName =
+                    (String) hierarchicalAssoName_vec.elementAt(0);
+            }
+
+            String associationCode = "";
+            try {
+                associationCode =
+                    DataUtils.getAssociationCode(codingSchemeName,
+                        codingSchemeVersion, associationName);
+            } catch (Exception e) {
+                throw new Exception(
+                    "Unable to create output file "
+                        + pathname
+                        + " - could not map association name to its corresponding code.");
+            }
+            traverse(pw, scheme, version, tag, defining_root_concept, code,
+                _hierarchicalAssoName, associationCode, direction, curr_level,
+                max_level, cols);
+            closePrintWriter(pw);
+
+            _logger.debug("Total number of concepts processed: " + _count);
+
+            // convert to Excel:
+
+            // createStandardReport -- need user's loginName
+            // StandardReport extends Report
+            // private StandardReportTemplate template;
+
+            _logger.debug("Output file " + pathname + " generated.");
+
+            // convert tab-delimited file to Excel
+
+            Boolean bool_obj =
+                StandardReportService.createStandardReport(standardReportLabel
+                    + ".txt", pathname, standardReportTemplate.getLabel(),
+                    "Text (tab delimited)", "DRAFT", uid);
+
+            // convert to Excel
+            bool_obj = FileUtil.convertToExcel(pathname, delimeter_str);
+
+            // create xls report record
+            pathname =
+                outputDir + File.separator + standardReportLabel + "__"
+                    + version + ".xls";
+            pathname = pathname.replaceAll(" ", "_");
+            _logger.debug("Full path name: " + pathname);
+
+            bool_obj =
+                StandardReportService.createStandardReport(standardReportLabel
+                    + ".xls", pathname, standardReportTemplate.getLabel(),
+                    "Microsoft Office Excel", "DRAFT", uid);
+
+            return bool_obj;
         } catch (Exception e) {
-            return warningMsg(
-                warningMsg,
-                "Unable to create output file "
-                    + pathname
-                    + " - could not map association name to its corresponding code.");
+            return warningMsg(warningMsg, e.getMessage());
         }
-        traverse(pw, scheme, version, tag, defining_root_concept, code,
-            _hierarchicalAssoName, associationCode, direction, curr_level,
-            max_level, cols);
-        closePrintWriter(pw);
-
-        _logger.debug("Total number of concepts processed: " + _count);
-
-        // convert to Excel:
-
-        // createStandardReport -- need user's loginName
-        // StandardReport extends Report
-        // private StandardReportTemplate template;
-
-        _logger.debug("Output file " + pathname + " generated.");
-
-        // convert tab-delimited file to Excel
-
-        Boolean bool_obj =
-            StandardReportService.createStandardReport(standardReportLabel
-                + ".txt", pathname, standardReportTemplate.getLabel(),
-                "Text (tab delimited)", "DRAFT", uid);
-
-        // convert to Excel
-        bool_obj = FileUtil.convertToExcel(pathname, delimeter_str);
-
-        // create xls report record
-        pathname =
-            outputDir + File.separator + standardReportLabel + "__" + version
-                + ".xls";
-        pathname = pathname.replaceAll(" ", "_");
-        _logger.debug("Full path name: " + pathname);
-
-        bool_obj =
-            StandardReportService.createStandardReport(standardReportLabel
-                + ".xls", pathname, standardReportTemplate.getLabel(),
-                "Microsoft Office Excel", "DRAFT", uid);
-
-        return bool_obj;
     }
 
     public void printReportHeading(PrintWriter pw, ReportColumn[] cols) {
@@ -872,166 +880,175 @@ public class ReportGenerationThread implements Runnable {
                 + standardReportLabel + " -- report not generated.");
         }
 
-        String queryString = standardReportTemplate.getRootConceptCode();
-        String delimiter = "|";
-        Vector<String> v = parseData(queryString, delimiter);
+        try {
+            String queryString = standardReportTemplate.getRootConceptCode();
+            String delimiter = "|";
+            Vector<String> v = parseData(queryString, delimiter);
 
-        String property = (String) v.elementAt(0);
-        String source = (String) v.elementAt(1);
-        String qualifier_name = (String) v.elementAt(2);
-        String qualifier_value = (String) v.elementAt(3);
-        String matchText = (String) v.elementAt(4);
-        String matchAlgorithm = (String) v.elementAt(5);
+            String property = (String) v.elementAt(0);
+            String source = (String) v.elementAt(1);
+            String qualifier_name = (String) v.elementAt(2);
+            String qualifier_value = (String) v.elementAt(3);
+            String matchText = (String) v.elementAt(4);
+            String matchAlgorithm = (String) v.elementAt(5);
 
-        _logger.debug(StringUtils.SEPARATOR);
-        _logger.debug("Method: generateSpecialReport");
-        _logger.debug("  * Output directory: " + outputDir);
-        _logger.debug("  * standardReportLabel: " + standardReportLabel);
-        _logger.debug("  * uid: " + uid);
+            _logger.debug(StringUtils.SEPARATOR);
+            _logger.debug("Method: generateSpecialReport");
+            _logger.debug("  * Output directory: " + outputDir);
+            _logger.debug("  * standardReportLabel: " + standardReportLabel);
+            _logger.debug("  * uid: " + uid);
 
-        File dir = new File(outputDir);
-        if (!dir.exists()) {
-            _logger.debug("Output directory " + outputDir
-                + " does not exist -- try to create the directory.");
-            boolean retval = dir.mkdir();
-            if (!retval) {
-                return warningMsg(warningMsg,
-                    "Unable to create output directory " + outputDir
-                        + " -- please check privilege setting.");
+            File dir = new File(outputDir);
+            if (!dir.exists()) {
+                _logger.debug("Output directory " + outputDir
+                    + " does not exist -- try to create the directory.");
+                boolean retval = dir.mkdir();
+                if (!retval) {
+                    throw new Exception("Unable to create output directory "
+                        + outputDir + " -- please check privilege setting.");
+                } else {
+                    _logger.debug("Output directory: " + outputDir
+                        + " created.");
+                }
             } else {
-                _logger.debug("Output directory: " + outputDir + " created.");
+                _logger.debug("Output directory: " + outputDir + " exists.");
             }
-        } else {
-            _logger.debug("Output directory: " + outputDir + " exists.");
-        }
 
-        String version = standardReportTemplate.getCodingSchemeVersion();
-        String pathname =
-            outputDir + File.separator + standardReportLabel + "__" + version
-                + ".txt";
-        pathname = pathname.replaceAll(" ", "_");
-        _logger.debug("Full path name: " + pathname);
+            String version = standardReportTemplate.getCodingSchemeVersion();
+            String pathname =
+                outputDir + File.separator + standardReportLabel + "__"
+                    + version + ".txt";
+            pathname = pathname.replaceAll(" ", "_");
+            _logger.debug("Full path name: " + pathname);
 
-        PrintWriter pw = openPrintWriter(pathname);
-        if (pw == null)
-            return warningMsg(warningMsg, "Unable to create output file "
-                + pathname + " -- please check privilege setting.");
-        _logger.debug("opened PrintWriter " + pathname);
+            PrintWriter pw = openPrintWriter(pathname);
+            if (pw == null)
+                throw new Exception("Unable to create output file " + pathname
+                    + " -- please check privilege setting.");
+            _logger.debug("opened PrintWriter " + pathname);
 
-        int id = standardReportTemplate.getId();
-        String label = standardReportTemplate.getLabel();
-        String codingSchemeName = standardReportTemplate.getCodingSchemeName();
-        String codingSchemeVersion =
-            standardReportTemplate.getCodingSchemeVersion();
-        String rootConceptCode = standardReportTemplate.getRootConceptCode();
-        String associationName = standardReportTemplate.getAssociationName();
-        boolean direction = standardReportTemplate.getDirection();
-        int level = standardReportTemplate.getLevel();
-        // char delim = '$';
-        // Character delimiter = standardReportTemplate.getDelimiter();
-        String delimeter_str = "\t";
+            int id = standardReportTemplate.getId();
+            String label = standardReportTemplate.getLabel();
+            String codingSchemeName =
+                standardReportTemplate.getCodingSchemeName();
+            String codingSchemeVersion =
+                standardReportTemplate.getCodingSchemeVersion();
+            String rootConceptCode =
+                standardReportTemplate.getRootConceptCode();
+            String associationName =
+                standardReportTemplate.getAssociationName();
+            boolean direction = standardReportTemplate.getDirection();
+            int level = standardReportTemplate.getLevel();
+            // char delim = '$';
+            // Character delimiter = standardReportTemplate.getDelimiter();
+            String delimeter_str = "\t";
 
-        _logger.debug("  * ID: " + id);
-        _logger.debug("  * Label: " + label);
-        _logger.debug("  * CodingSchemeName: " + codingSchemeName);
-        _logger.debug("  * CodingSchemeVersion: " + codingSchemeVersion);
-        _logger.debug("  * Root: " + rootConceptCode);
-        _logger.debug("  * AssociationName: " + associationName);
-        _logger.debug("  * Direction: " + direction);
-        _logger.debug("  * Level: " + level);
-        // _logger.debug("Delimiter: " + delimiter);
+            _logger.debug("  * ID: " + id);
+            _logger.debug("  * Label: " + label);
+            _logger.debug("  * CodingSchemeName: " + codingSchemeName);
+            _logger.debug("  * CodingSchemeVersion: " + codingSchemeVersion);
+            _logger.debug("  * Root: " + rootConceptCode);
+            _logger.debug("  * AssociationName: " + associationName);
+            _logger.debug("  * Direction: " + direction);
+            _logger.debug("  * Level: " + level);
+            // _logger.debug("Delimiter: " + delimiter);
 
-        Object[] objs = null;
-        Collection<ReportColumn> cc =
-            standardReportTemplate.getColumnCollection();
-        if (cc == null) {
-            _logger.warn("standardReportTemplate.getColumnCollection"
-                + " returned null???");
-        } else {
-            objs = cc.toArray();
-        }
-
-        ReportColumn[] cols = null;
-        if (cc != null) {
-            cols = new ReportColumn[objs.length];
-            for (int i = 0; i < objs.length; i++) {
-                gov.nih.nci.evs.reportwriter.bean.ReportColumn col =
-                    (gov.nih.nci.evs.reportwriter.bean.ReportColumn) objs[i];
-                ReportColumnUtil.debug(col);
-                cols[i] = col;
+            Object[] objs = null;
+            Collection<ReportColumn> cc =
+                standardReportTemplate.getColumnCollection();
+            if (cc == null) {
+                throw new Exception(
+                    "standardReportTemplate.getColumnCollection"
+                        + " returned null???");
+            } else {
+                objs = cc.toArray();
             }
+
+            ReportColumn[] cols = null;
+            if (cc != null) {
+                cols = new ReportColumn[objs.length];
+                for (int i = 0; i < objs.length; i++) {
+                    gov.nih.nci.evs.reportwriter.bean.ReportColumn col =
+                        (gov.nih.nci.evs.reportwriter.bean.ReportColumn) objs[i];
+                    ReportColumnUtil.debug(col);
+                    cols[i] = col;
+                }
+            }
+
+            _logger.debug(StringUtils.SEPARATOR);
+            _logger.debug("* Start generating report..." + pathname);
+
+            printReportHeading(pw, cols);
+
+            // String scheme = standardReportTemplate.getCodingSchemeName();
+            version = standardReportTemplate.getCodingSchemeVersion();
+
+            Vector<String> property_vec = null;
+            if (property != null && property.compareTo("null") != 0) {
+                property_vec = new Vector<String>();
+                property_vec.add(property);
+            }
+
+            Vector<String> source_vec = null;
+            if (source != null && source.compareTo("null") != 0) {
+                source_vec = new Vector<String>();
+                source_vec.add(source);
+            }
+
+            Vector<String> qualifier_name_vec = null;
+            if (qualifier_name != null && qualifier_name.compareTo("null") != 0) {
+                qualifier_name_vec = new Vector<String>();
+                qualifier_name_vec.add(qualifier_name);
+            }
+
+            Vector<String> qualifier_value_vec = null;
+            if (qualifier_value != null
+                && qualifier_value.compareTo("null") != 0) {
+                qualifier_value_vec = new Vector<String>();
+                qualifier_value_vec.add(qualifier_value);
+            }
+
+            int maxToReturn = 10000;
+            String language = null;
+
+            Vector<Concept> concept_vec =
+                DataUtils.restrictToMatchingProperty(codingSchemeName, version,
+                    property_vec, source_vec, qualifier_name_vec,
+                    qualifier_value_vec, matchText, matchAlgorithm, language,
+                    maxToReturn);
+
+            String delim = "\t";
+            for (int i = 0; i < concept_vec.size(); i++) {
+                Concept c = (Concept) concept_vec.elementAt(i);
+                writeColumnData(pw, codingSchemeName, version, null, null, c,
+                    delim, cols, true);
+            }
+
+            closePrintWriter(pw);
+            _logger.debug("Generated output file: " + pathname);
+
+            Boolean bool_obj =
+                StandardReportService.createStandardReport(standardReportLabel
+                    + ".txt", pathname, standardReportTemplate.getLabel(),
+                    "Text (tab delimited)", "DRAFT", uid);
+
+            // convert to Excel
+            bool_obj = FileUtil.convertToExcel(pathname, delimeter_str);
+
+            // create xls report record
+            pathname =
+                outputDir + File.separator + standardReportLabel + "__"
+                    + version + ".xls";
+            pathname = pathname.replaceAll(" ", "_");
+            _logger.debug("Full path name: " + pathname);
+
+            bool_obj =
+                StandardReportService.createStandardReport(standardReportLabel
+                    + ".xls", pathname, standardReportTemplate.getLabel(),
+                    "Microsoft Office Excel", "DRAFT", uid);
+            return bool_obj;
+        } catch (Exception e) {
+            return warningMsg(warningMsg, e.getMessage());
         }
-
-        _logger.debug(StringUtils.SEPARATOR);
-        _logger.debug("* Start generating report..." + pathname);
-
-        printReportHeading(pw, cols);
-
-        // String scheme = standardReportTemplate.getCodingSchemeName();
-        version = standardReportTemplate.getCodingSchemeVersion();
-
-        Vector<String> property_vec = null;
-        if (property != null && property.compareTo("null") != 0) {
-            property_vec = new Vector<String>();
-            property_vec.add(property);
-        }
-
-        Vector<String> source_vec = null;
-        if (source != null && source.compareTo("null") != 0) {
-            source_vec = new Vector<String>();
-            source_vec.add(source);
-        }
-
-        Vector<String> qualifier_name_vec = null;
-        if (qualifier_name != null && qualifier_name.compareTo("null") != 0) {
-            qualifier_name_vec = new Vector<String>();
-            qualifier_name_vec.add(qualifier_name);
-        }
-
-        Vector<String> qualifier_value_vec = null;
-        if (qualifier_value != null && qualifier_value.compareTo("null") != 0) {
-            qualifier_value_vec = new Vector<String>();
-            qualifier_value_vec.add(qualifier_value);
-        }
-
-        int maxToReturn = 10000;
-        String language = null;
-
-        Vector<Concept> concept_vec =
-            DataUtils.restrictToMatchingProperty(codingSchemeName, version,
-                property_vec, source_vec, qualifier_name_vec,
-                qualifier_value_vec, matchText, matchAlgorithm, language,
-                maxToReturn);
-
-        String delim = "\t";
-        for (int i = 0; i < concept_vec.size(); i++) {
-            Concept c = (Concept) concept_vec.elementAt(i);
-            writeColumnData(pw, codingSchemeName, version, null, null, c,
-                delim, cols, true);
-        }
-
-        closePrintWriter(pw);
-        _logger.debug("Generated output file: " + pathname);
-
-        Boolean bool_obj =
-            StandardReportService.createStandardReport(standardReportLabel
-                + ".txt", pathname, standardReportTemplate.getLabel(),
-                "Text (tab delimited)", "DRAFT", uid);
-
-        // convert to Excel
-        bool_obj = FileUtil.convertToExcel(pathname, delimeter_str);
-
-        // create xls report record
-        pathname =
-            outputDir + File.separator + standardReportLabel + "__" + version
-                + ".xls";
-        pathname = pathname.replaceAll(" ", "_");
-        _logger.debug("Full path name: " + pathname);
-
-        bool_obj =
-            StandardReportService.createStandardReport(standardReportLabel
-                + ".xls", pathname, standardReportTemplate.getLabel(),
-                "Microsoft Office Excel", "DRAFT", uid);
-        return bool_obj;
     }
 }
