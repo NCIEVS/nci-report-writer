@@ -6,8 +6,16 @@
 <%
   String imagesPath = FormUtils.getImagesPath(request);
   String buildInfo = ReportWriterProperties.getInstance().getBuildInfo();
+  String application_version = ReportWriterProperties.getInstance().getApplicationVersion();
+  String anthill_build_tag_built = ReportWriterProperties.getInstance().getAnthillBuildTagBuilt();
+  String evs_service_url = ReportWriterProperties.getInstance().getEVSServiceURL(); 
 %>
-<!-- Build info: <%=buildInfo%> -->
+<!--
+   Build info: <%=buildInfo%>
+ Version info: <%=application_version%>
+          Tag: <%=anthill_build_tag_built%>
+   LexEVS URL: <%=evs_service_url%>          
+  -->
 <html>
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
