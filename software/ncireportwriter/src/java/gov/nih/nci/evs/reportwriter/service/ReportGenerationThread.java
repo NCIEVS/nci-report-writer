@@ -386,7 +386,9 @@ public class ReportGenerationThread implements Runnable {
         }
         for (int i = 0; i < cols.length; i++) {
             ReportColumn rc = (ReportColumn) cols[i];
-            columnHeadings = columnHeadings + rc.getLabel();
+            String label = rc.getLabel();
+            label = label.replaceAll("\\[CDRH] ", "");
+            columnHeadings = columnHeadings + label;
             if (i < cols.length - 1)
                 columnHeadings = columnHeadings + delimeter_str;
         }
