@@ -447,9 +447,10 @@
             <filter token="mail.smtp.server" value="${mail.smtp.server}"/>
             <filter token="debug.on" value="${debug.on}"/>
             <filter token="lex.evs.api.url" value="${lex.evs.api.url}"/>
+        	  <filter token="application.version" value="${application.version}"/>
+        	  <filter token="ncireportwriter.build.info" value="Built: ${BUILD_DATE}"/>
             <filter token="lg.config.file" value="${lg.config.file}"/>
-            <filter token="ncireportwriter.conf.path" value="${application.data.path}/${ncireportwriter.conf.path}"/>
-            <filter token="ncireportwriter.build.info" value="Built: ${BUILD_DATE}"/>
+            <filter token="ncireportwriter.conf.path" value="${application.data.path}/${ncireportwriter.conf.path}"/>            
             <filter token="application.base.path" value="${application.base.path}"/>
             <filter token="application.url" value="${application.url}"/>
             <filter token="jboss.home" value="${jboss.home}"/>
