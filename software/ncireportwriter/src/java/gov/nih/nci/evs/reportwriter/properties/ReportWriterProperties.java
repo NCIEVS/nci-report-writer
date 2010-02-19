@@ -57,6 +57,8 @@ import org.apache.log4j.*;
 public class ReportWriterProperties {
     public static final String BUILD_INFO = "BUILD_INFO";
     public static final String EVS_SERVICE_URL = "EVS_SERVICE_URL";
+    public static final String RW_APP_VERSION = "APPLICATION_VERSION";
+    public static final String ANTHILL_BUILD_TAG_BUILT = "ANTHILL_BUILD_TAG_BUILT";      
     public static final String MAIL_SMTP_SERVER = "MAIL_SMTP_SERVER";
     public static final String DEBUG_ON = "DEBUG_ON";
     public static final String REPORT_DOWNLOAD_DIRECTORY = "REPORT_DOWNLOAD_DIRECTORY";
@@ -66,12 +68,15 @@ public class ReportWriterProperties {
     public static final String CSM_ALLOWED_LOGIN_TIME = "CSM_ALLOWED_LOGIN_TIME";
     public static final String CSM_ALLOWED_ATTEMPTS = "CSM_ALLOWED_ATTEMPTS";
     public static final String ACCOUNT_ADMIN_USER_EMAIL = "ACCOUNT_ADMIN_USER_EMAIL";
-
+   
     private static Logger _logger = Logger
         .getLogger(ReportWriterProperties.class);
     private static ReportWriterProperties _instance;
     private Properties _properties = new Properties();
     private String _buildInfo = null;
+    private String _applicationVersion = null;
+    private String _anthillBuildTagBuilt = null;
+    private String _EVSServiceURL = null;
     
     private ReportWriterProperties() {
         loadProperties();
@@ -172,4 +177,50 @@ public class ReportWriterProperties {
         _logger.info("getBuildInfo returns " + _buildInfo);
         return _buildInfo;
     }
+    
+    public String getApplicationVersion() {
+        if (_applicationVersion != null)
+            return _applicationVersion;
+        try {
+        	_applicationVersion = getProperty(RW_APP_VERSION);
+            if (_applicationVersion == null)
+            	_applicationVersion = "null";
+        } catch (Exception e) {
+        	_applicationVersion = e.getMessage();
+        }
+
+        _logger.info("getApplicationVersion returns " + _applicationVersion);
+        return _applicationVersion;
+    }
+    
+    public String getAnthillBuildTagBuilt() {
+        if (_anthillBuildTagBuilt != null)
+            return _anthillBuildTagBuilt;
+        try {
+        	_anthillBuildTagBuilt = getProperty(ANTHILL_BUILD_TAG_BUILT);
+            if (_anthillBuildTagBuilt == null)
+            	_anthillBuildTagBuilt = "null";
+        } catch (Exception e) {
+        	_anthillBuildTagBuilt = e.getMessage();
+        }
+
+        _logger.info("getAnthillBuildTagBuilt returns " + _anthillBuildTagBuilt);
+        return _anthillBuildTagBuilt;
+    }
+
+    public String getEVSServiceURL() {
+        if (_EVSServiceURL != null)
+            return _EVSServiceURL;
+        try {
+        	_EVSServiceURL = getProperty(EVS_SERVICE_URL);
+            if (_EVSServiceURL == null)
+            	_EVSServiceURL = "null";
+        } catch (Exception e) {
+        	_EVSServiceURL = e.getMessage();
+        }
+
+        _logger.info("getBuildInfo returns " + _EVSServiceURL);
+        return _EVSServiceURL;
+    }    
+    
 }
