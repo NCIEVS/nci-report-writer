@@ -169,7 +169,8 @@ public class AccessDeniedRequest {
     private static void email(AccessDeniedInfo info) throws Exception {
         String from = info.email;
         String[] recipients = new String[] { ACCOUNT_ADMIN_USER_EMAIL_ };
-        String subject = "NCI Report Writer account access problems...";
+        String subject = "NCI Report Writer account access problems (for " 
+            + info.loginID + ") ...";
         StringBuffer message = new StringBuffer();
         message.append("* Problem: " + info.problem + "\n");
         message.append("* Login ID: " + info.loginID + "\n");
