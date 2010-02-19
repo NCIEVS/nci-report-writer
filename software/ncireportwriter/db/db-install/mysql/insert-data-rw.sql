@@ -44,12 +44,12 @@ INSERT INTO `REPORT_STATUS` (`ID`,`LABEL`,`DESCRIPTION`,`ACTIVE`) VALUES
 --
 
 INSERT INTO `STANDARD_REPORT_TEMPLATE` (`ID`,`LABEL`,`ROOT_CONCEPT_CODE`,`ASSOCIATION_NAME`,`DIRECTION`,`CODING_SCHEME_NAME`,`CODING_SCHEME_VERSION`,`LEVEL`,`DELIMITER`) VALUES
- (202,'FDA-UNII Subset REPORT','C63923','Concept_In_Subset',0,'NCI Thesaurus','09.05d',1,'$'),
- (2323,'Individual Case Safety (ICS) Subset REPORT','C54447','Concept_In_Subset',0,'NCI Thesaurus','09.05d',1,'$'),
- (3535,'Structured Product Labeling (SPL) REPORT','C54452','Concept_In_Subset',0,'NCI Thesaurus','09.05d',2,'$'),
- (4040,'CDISC Subset REPORT ','C61410','Concept_In_Subset',0,'NCI Thesaurus','09.05d',1,'$'),
- (4646,'CDRH Subset REPORT','C62596','Concept_In_Subset',0,'NCI Thesaurus','09.05d',1,'$'),
- (6060,'FDA-SPL Country Code REPORT','Semantic_Type|null|null|null|Geographic Area|exactMatch','',0,'NCI Thesaurus','09.05d',0,'$');
+ (202,'FDA-UNII Subset REPORT','C63923','Concept_In_Subset',0,'NCI Thesaurus','09.12d',1,'$'),
+ (2323,'Individual Case Safety (ICS) Subset REPORT','C54447','Concept_In_Subset',0,'NCI Thesaurus','09.12d',1,'$'),
+ (3535,'Structured Product Labeling (SPL) REPORT','C54452','Concept_In_Subset',0,'NCI Thesaurus','09.12d',2,'$'),
+ (4040,'CDISC Subset REPORT ','C61410','Concept_In_Subset',0,'NCI Thesaurus','09.12d',1,'$'),
+ (4646,'CDRH Subset REPORT','C62596','Concept_In_Subset',0,'NCI Thesaurus','09.12d',1,'$'),
+ (6060,'FDA-SPL Country Code REPORT','Semantic_Type|null|null|null|Geographic Area|exactMatch','',0,'NCI Thesaurus','09.12d',0,'$');
 
 --
 -- Data for table `REPORT_COLUMN`
@@ -90,12 +90,9 @@ INSERT INTO `REPORT_COLUMN` (`ID`,`COLUMN_NUMBER`,`LABEL`,`FIELD_ID`,`PROPERTY_T
  (4850,7,'Source Synonym(s)','Property','PRESENTATION','FULL_SYN',NULL,'SY','FDA','','','|',-1,4646),
  (4851,8,'Source Definition','Property','DEFINITION','ALT_DEFINITION',NULL,'','FDA','','','|',-1,4646),
  (4852,9,'NCI Definition','Property','DEFINITION','DEFINITION',NULL,'',' ','','','|',-1,4646),
- (4853,10,'Parent Concept\'s NCIT Concept Code','1st Parent Code','','',NULL,'',' ','','','|',-1,4646),
- (4854,11,'Parent Concept\'s Source Code','1st Parent Property Qualifier','PRESENTATION','FULL_SYN',NULL,'PT','FDA','source-code','','|',-1,4646),
- (4855,12,'Parent Concept\'s Source PT','1st Parent Property','PRESENTATION','FULL_SYN',NULL,'PT','FDA','','','|',-1,4646),
- (4856,13,'Parent Concept\'s NCIT PT','1st Parent Property','PRESENTATION','Preferred_Name',NULL,'',' ','','','|',-1,4646),
- (4857,14,'Second Parent\'s Concept\'s NCIt Concept Code','2nd Parent Code','','',NULL,'',' ','','','|',-1,4646),
- (4858,15,'Second Parent\'s Concept\'s NCIt PT','2nd Parent Property','PRESENTATION','Preferred_Name',NULL,'',' ','','','|',6,4646),
+ (4853,10,'[CDRH] Parent Concept Code','Associated Concept Code','','',NULL,'','','','','|',-1,4646),
+ (4854,11,'[CDRH] Parent Source Code','Associated Concept Property Qualifier','PRESENTATION','FULL_SYN',NULL,'PT','FDA','source-code','','|',-1,4646),
+ (4855,12,'[CDRH] Parent Source PT','Associated Concept Property','PRESENTATION','FULL_SYN',NULL,'PT','FDA','','','|',-1,4646),
  (6161,1,'ISO Code','Property','PRESENTATION','FULL_SYN',NULL,'CA3','NCI','','','|',-1,6060),
  (6162,2,'NCI Concept Code','Code','','',NULL,'',' ','','','|',-1,6060),
  (6163,3,'NCI Preferred Term','Property','PRESENTATION','Preferred_Name',NULL,'',' ','','','|',-1,6060);

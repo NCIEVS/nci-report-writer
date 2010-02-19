@@ -543,8 +543,8 @@ public class ReportGenerationThread implements Runnable {
         if (isNull(delimiter))
             delimiter = null;
 
-        String label = rc.getLabel().toUpperCase().replaceAll(" ", "_");
-        if (label.indexOf("CDRH_PARENT") != -1) {
+        String label = rc.getLabel().toUpperCase();
+        if (label.indexOf("[CDRH] PARENT") != -1) {
             Vector<Concept> v =
                 DataUtils.getAssociationTargets(scheme, version, node
                     .getEntityCode(), "A10");
