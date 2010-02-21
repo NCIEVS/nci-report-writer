@@ -12,8 +12,8 @@
   String rootcode = null;
   String associationname = null;
   Boolean direction = null;
-  String level = null; 
-  Object obj = null;
+  String level = null;
+  boolean enabledSave = true;
   
   try {
     String templateLabel = (String) request.getSession().getAttribute("selectedStandardReportTemplate");
@@ -22,8 +22,7 @@
     String FQName = "gov.nih.nci.evs.reportwriter.bean.StandardReportTemplate";
     String methodName = "setLabel";
     String key = templateLabel;
-
-    obj = sdkclientutil.search(FQName, methodName, key);
+    Object obj = sdkclientutil.search(FQName, methodName, key);
 
     if (obj != null) {
       standardReportTemplate = (StandardReportTemplate) obj;
@@ -44,23 +43,30 @@
       rootcode = (String) request.getAttribute("rootConceptCode");
       direction = (Boolean) request.getAttribute("direction");
     } else {
-     String csnv = DataUtils.getCodingSchemeVersion(codingSchemeName, version);
+     // Note: This section is called during the initial page display.
+     String csnv = DataUtils.getCSNVKey(codingSchemeName, version);
      String versionTmp = DataUtils.getCodingSchemeVersion(csnv);
      if (versionTmp == null) {
        CodingScheme cs = DataUtils.getCodingScheme(codingSchemeName);
        if (cs != null) {
          versionTmp = cs.getRepresentsVersion();
-         String csnvLatest = DataUtils.getCodingSchemeVersion(codingSchemeName, versionTmp);
+         String csnvLatest = DataUtils.getCSNVKey(codingSchemeName, versionTmp);
          String msg = "";
          msg += "This report template is referencing an older or invalid version of the coding scheme.\n";
          msg += "Please update the version number to:\n";
          msg += "    * " + versionTmp;
          warningMsg = msg;
        } else {
-         warningMsg = codingSchemeName + " " + "coding scheme is currently not loaded.";
+         warningMsg = codingSchemeName + " " + "coding scheme is currently offline or not loaded.";
+         enabledSave = false;
        }
      }
    }
+
+   //Note: Need to help refresh the Association Name list.
+   OntologyBean ontologyBean = BeanUtils.getOntologyBean();
+   ontologyBean.setSelectedOntology(
+     DataUtils.getCSNVKey(codingSchemeName, version));
 %>        
 
 <f:view>
@@ -162,8 +168,15 @@
                       <td align="right" class="actionSection">
                         <table cellpadding="4" cellspacing="0" border="0">
                           <tr>
-                            <td><h:commandButton id="save" action="#{userSessionBean.saveModifiedTemplateAction}" value="Save" /></td>
-                            <td><input type="reset" value="Reset" /></td>
+                            <% if (enabledSave) { %>
+                              <td><h:commandButton id="save" value="Save" 
+                                action="#{userSessionBean.saveModifiedTemplateAction}"/></td>
+                            <% } else {%>
+                              <td><h:commandButton id="save" value="Save" disabled="true"
+                                action="#{userSessionBean.saveModifiedTemplateAction}" /></td>
+                            <% } %>
+                            <% String enabledState = enabledSave ? "" : "disabled=\"disabled\""; %>
+                            <td><input type="reset" value="Reset" <%=enabledState%>/></td>
                             <td><h:commandButton id="back" action="back" value="Back" /></td>
                           </tr>
                         </table>

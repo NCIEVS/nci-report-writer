@@ -158,7 +158,7 @@ public class DataUtils {
 
     public static boolean isValidCodingScheme(String codingSchemeName,
         String version) {
-        String csnv = getCodingSchemeVersion(codingSchemeName, version);
+        String csnv = getCSNVKey(codingSchemeName, version);
         return getCodingSchemeVersion(csnv) != null;
     }
 
@@ -210,7 +210,7 @@ public class DataUtils {
 
                 _codingSchemeMap.put(formalName, scheme);
                 String value =
-                    getCodingSchemeVersion(formalName, representsVersion);
+                    getCSNVKey(formalName, representsVersion);
                 _ontologies.add(new SelectItem(value, value));
                 CSNVInfo info = new CSNVInfo();
                 info.codingSchemeName = formalName;
@@ -223,10 +223,21 @@ public class DataUtils {
         }
     }
 
-    public static String getCodingSchemeVersion(String codingSchemeName,
+    public static String getCSNVKey(String codingSchemeName,
         String version) {
         String value = codingSchemeName + " (version: " + version + ")";
         return value;
+    }
+    
+    public static String getCSNFromKey(String key) {
+        if (key == null || key.length() <= 0)
+            return "";
+        int i = key.indexOf(" (version: ");
+        if (i <= 0)
+            return "";
+        
+        String codingSchemeName = key.substring(0, i);
+        return codingSchemeName;
     }
 
     public static String getCodingSchemeName(String key) {
@@ -244,13 +255,30 @@ public class DataUtils {
         public String version = "";
     }
 
+    public static CSNVInfo getLatestCSNVInfo(String key) {
+        CSNVInfo info = new CSNVInfo();
+        info.codingSchemeName = getCSNFromKey(key);
+        CodingScheme cs = getCodingScheme(info.codingSchemeName);
+        if (cs == null)
+            return null;
+
+        info.version = cs.getRepresentsVersion();
+        _logger.warn("Method: DataUtils.getTempCSNVInfo");
+        _logger.warn(" * CSNV key not valid: " + key);
+        _logger.warn(" * Instead, using: " + 
+            getCSNVKey(info.codingSchemeName, info.version));
+        return info;
+    }
+    
     public static CodingScheme getCodingScheme(String codingSchemeName) {
         return _codingSchemeMap.get(codingSchemeName);
     }
-
+    
     public static Vector<String> getSupportedAssociations(
         AssociationType associationType, String key) throws Exception {
         CSNVInfo info = _csnv2InfoMap.get(key);
+        if (info == null)
+            info = getLatestCSNVInfo(key);
         if (info == null)
             return null;
         return getSupportedAssociations(associationType, info.codingSchemeName,

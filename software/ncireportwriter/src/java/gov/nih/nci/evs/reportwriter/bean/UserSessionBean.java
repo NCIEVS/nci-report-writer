@@ -838,7 +838,7 @@ public class UserSessionBean extends Object {
             getStandardReportTemplate(_selectedStandardReportTemplate);
         String csn = standardReportTemplate.getCodingSchemeName();
         String version = standardReportTemplate.getCodingSchemeVersion();
-        String csnv = DataUtils.getCodingSchemeVersion(csn, version);
+        String csnv = DataUtils.getCSNVKey(csn, version);
         request.getSession().setAttribute("selectedOntology", csnv);
 
         String warningMsg = displayCodingSchemeWarning(request);
@@ -850,7 +850,7 @@ public class UserSessionBean extends Object {
             getStandardReportTemplate(_selectedStandardReportTemplate);
         String csn = standardReportTemplate.getCodingSchemeName();
         String version = standardReportTemplate.getCodingSchemeVersion();
-        String csnv = DataUtils.getCodingSchemeVersion(csn, version);
+        String csnv = DataUtils.getCSNVKey(csn, version);
 
         String versionTmp = DataUtils.getCodingSchemeVersion(csnv);
         if (versionTmp != null)
@@ -862,7 +862,7 @@ public class UserSessionBean extends Object {
                 "The following vocabulary is not loaded:\n" + "    * " + csnv);
 
         versionTmp = cs.getRepresentsVersion();
-        String csnvLatest = DataUtils.getCodingSchemeVersion(csn, versionTmp);
+        String csnvLatest = DataUtils.getCSNVKey(csn, versionTmp);
         String msg = "";
         msg +=
             "The selected report template is referencing an older or invalid version of the coding scheme:\n";
