@@ -7,6 +7,8 @@
   String label = "";
   String rootConceptCode = "";
   Boolean direction = Boolean.FALSE;
+  boolean enabledSave = true;
+
   String warningMsg = (String) request.getAttribute("warningMsg");
   if (warningMsg != null && warningMsg.trim().length() > 0) {
     label = (String) request.getAttribute("label");
@@ -14,6 +16,14 @@
     ontologyBean.setSelectedOntology((String) request.getAttribute("selectedOntology"));
     rootConceptCode = (String) request.getAttribute("rootConceptCode");
     direction = (Boolean) request.getAttribute("direction");
+  }
+
+  StringBuffer warningBuffer = new StringBuffer();
+  if (! RemoteServerUtil.isRunning(warningBuffer)) {
+    if (warningMsg != null && warningMsg.trim().length() > 0)
+        warningBuffer.append("\n" + warningMsg);
+    warningMsg = warningBuffer.toString();
+    enabledSave = false;
   }
 %>
 
@@ -113,9 +123,15 @@
                     <td align="right" class="actionSection">
                       <table cellpadding="4" cellspacing="0" border="0">
                         <tr>
-                          <td><h:commandButton id="save" value="Save" 
-                              action="#{userSessionBean.saveTemplateAction}" /></td>
-                          <td><input type="reset" value="Reset" /></td>
+                          <% if (enabledSave) { %>
+                            <td><h:commandButton id="save" value="Save" 
+                                action="#{userSessionBean.saveTemplateAction}" /></td>
+                          <% } else {%>
+                            <td><h:commandButton id="save" value="Save" disabled="true"
+                                action="#{userSessionBean.saveTemplateAction}" /></td>
+                          <% } %>
+                          <% String enabledState = enabledSave ? "" : "disabled=\"disabled\""; %>
+                          <td><input type="reset" value="Reset" <%=enabledState%>/></td>
                           <td><h:commandButton id="back" value="Back" action="back" /></td>
                         </tr>
                       </table>

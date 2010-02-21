@@ -71,10 +71,6 @@ public class OntologyBean // extends BaseBean
     private String _selectedDirection = null;
     private List<SelectItem> _directionList = null;
 
-    protected void init() {
-        _ontologies = getOntologyList();
-    }
-
     public void setSelectedOntology(String selectedOntology) {
         _selectedOntology = selectedOntology;
         HttpServletRequest request = SessionUtil.getRequest();
@@ -156,7 +152,7 @@ public class OntologyBean // extends BaseBean
     public String getSelectedDirection() {
         return _selectedDirection;
     }
-
+    
     public List<SelectItem> getAssociationList() {
 
         if (_selectedOntology == null) {
@@ -164,7 +160,7 @@ public class OntologyBean // extends BaseBean
         }
 
         try {
-            if (_associationList == null) {
+            //DYEE: if (_associationList == null) {
                 _associationList = new ArrayList<SelectItem>();
                 Vector<String> associationNames =
                     DataUtils.getSupportedAssociations(
@@ -176,8 +172,7 @@ public class OntologyBean // extends BaseBean
                         _associationList.add(new SelectItem(name));
                     }
     
-                    if ((_selectedAssociation == null || _selectedAssociation
-                        .length() <= 0)
+                    if ((_selectedAssociation == null || _selectedAssociation.length() <= 0)
                         && _associationList != null && _associationList.size() > 0) {
                         for (int j = 0; j < _associationList.size(); j++) {
                             SelectItem item = (SelectItem) _associationList.get(j);
@@ -185,11 +180,10 @@ public class OntologyBean // extends BaseBean
                                 setSelectedAssociation(item.getLabel());
                                 break;
                             }
-    
                         }
                     }
                 }
-            }
+            //DYEE: }
             return _associationList;
         } catch (Exception e) {
             _associationList = null;
