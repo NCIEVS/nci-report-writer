@@ -60,6 +60,7 @@ import gov.nih.nci.evs.reportwriter.properties.*;
 
 public class OntologyBean // extends BaseBean
 {
+    private static final String DEFAULT_ONTOLOGY = "NCI Thesaurus";
     public static final String DEFAULT_ASSOCIATION = "Concept_In_Subset";
     public static final String LEVEL_ALL = "All";
     private static Logger _logger = Logger.getLogger(OntologyBean.class);
@@ -70,6 +71,18 @@ public class OntologyBean // extends BaseBean
     private String _selectedAssociation = null;
     private String _selectedDirection = null;
     private List<SelectItem> _directionList = null;
+    
+    public String getDefaultOntologyKey() {
+        String version = DataUtils.getCodingSchemeVersionByName(DEFAULT_ONTOLOGY);
+        if (version == null)
+            return null;
+        String key = DataUtils.getCSNVKey(DEFAULT_ONTOLOGY, version);
+        return key;
+    }
+    
+    public void setDefaultSelectedOntology() {
+        setSelectedOntology(getDefaultOntologyKey());
+    }
 
     public void setSelectedOntology(String selectedOntology) {
         _selectedOntology = selectedOntology;
@@ -88,10 +101,9 @@ public class OntologyBean // extends BaseBean
         _ontologies = DataUtils.getOntologyList();
         if (_ontologies != null && _ontologies.size() > 0) {
             for (int i = 0; i < _ontologies.size(); i++) {
-                SelectItem item = (SelectItem) _ontologies.get(i);
+                SelectItem item = _ontologies.get(i);
                 String key = item.getLabel();
-                if (key.indexOf("NCI Thesaurus") != -1
-                    || key.indexOf("NCI_Thesaurus") != -1) {
+                if (key.indexOf(DEFAULT_ONTOLOGY) != -1) {
                     _selectedOntology = key;
                     break;
                 }
@@ -140,6 +152,8 @@ public class OntologyBean // extends BaseBean
         String newValue = (String) vce.getNewValue();
         setSelectedOntology(newValue);
         _associationList = getAssociationList();
+        HttpServletRequest request = SessionUtil.getRequest();
+        request.setAttribute("ValueChangeEvent", vce);
     }
 
     public void setSelectedDirection(String selectedDirection) {
@@ -154,39 +168,43 @@ public class OntologyBean // extends BaseBean
     }
     
     public List<SelectItem> getAssociationList() {
-
-        if (_selectedOntology == null) {
+        if (_selectedOntology == null)
             _ontologies = getOntologyList();
-        }
 
         try {
             //DYEE: if (_associationList == null) {
-                _associationList = new ArrayList<SelectItem>();
-                Vector<String> associationNames =
-                    DataUtils.getSupportedAssociations(
-                        DataUtils.AssociationType.Names, _selectedOntology);
-                if (associationNames != null) {
-                    _associationList.add(new SelectItem(""));
-                    for (int i = 0; i < associationNames.size(); i++) {
-                        String name = (String) associationNames.elementAt(i);
-                        _associationList.add(new SelectItem(name));
-                    }
-    
-                    if ((_selectedAssociation == null || _selectedAssociation.length() <= 0)
-                        && _associationList != null && _associationList.size() > 0) {
-                        for (int j = 0; j < _associationList.size(); j++) {
-                            SelectItem item = (SelectItem) _associationList.get(j);
-                            if (item.getLabel().compareTo(DEFAULT_ASSOCIATION) == 0) {
-                                setSelectedAssociation(item.getLabel());
-                                break;
-                            }
+            _associationList = new ArrayList<SelectItem>();
+            Vector<String> associationNames =
+                DataUtils.getSupportedAssociations(
+                    DataUtils.AssociationType.Names, _selectedOntology);
+            if (associationNames != null) {
+                _associationList.add(new SelectItem(""));
+                for (int i = 0; i < associationNames.size(); i++) {
+                    String name = (String) associationNames.elementAt(i);
+                    _associationList.add(new SelectItem(name));
+                }
+
+                if ((_selectedAssociation == null || _selectedAssociation.length() <= 0)
+                    && _associationList != null && _associationList.size() > 0) {
+                    for (int j = 0; j < _associationList.size(); j++) {
+                        SelectItem item = (SelectItem) _associationList.get(j);
+                        if (item.getLabel().compareTo(DEFAULT_ASSOCIATION) == 0) {
+                            setSelectedAssociation(item.getLabel());
+                            break;
                         }
                     }
                 }
+            }
             //DYEE: }
             return _associationList;
         } catch (Exception e) {
             _associationList = null;
+            ExceptionUtils.print(_logger, e, new String[] {
+                "  * In method: OntologyBean.getAssociationList",
+                "  * _selectedOntology: " + _selectedOntology,
+                "  * _associationList: " + _associationList,
+            });
+            e.printStackTrace();
             return new ArrayList<SelectItem>();
         }
     }

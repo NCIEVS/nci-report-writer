@@ -4,20 +4,25 @@
 <%@ page import="gov.nih.nci.evs.reportwriter.utils.*" %>
 
 <%
+  OntologyBean ontologyBean = BeanUtils.getOntologyBean();
   String label = "";
   String rootConceptCode = "";
   Boolean direction = Boolean.FALSE;
   boolean enabledSave = true;
+  boolean firstTime = request.getAttribute("ValueChangeEvent") == null;
+  
+  if (firstTime) {
+    ontologyBean.setDefaultSelectedOntology();
+  }
 
   String warningMsg = (String) request.getAttribute("warningMsg");
   if (warningMsg != null && warningMsg.trim().length() > 0) {
     label = (String) request.getAttribute("label");
-    OntologyBean ontologyBean = BeanUtils.getOntologyBean();
     ontologyBean.setSelectedOntology((String) request.getAttribute("selectedOntology"));
     rootConceptCode = (String) request.getAttribute("rootConceptCode");
     direction = (Boolean) request.getAttribute("direction");
   }
-
+  
   StringBuffer warningBuffer = new StringBuffer();
   if (! RemoteServerUtil.isRunning(warningBuffer)) {
     if (warningMsg != null && warningMsg.trim().length() > 0)
@@ -66,7 +71,7 @@
                           </td>
                           <td class="dataCellText">
                             <h:selectOneMenu id="ontologyId" 
-                              value="#{ontologyBean.selectedOntology}" 
+                              value="#{ontologyBean.selectedOntology}" onchange="submit();"
                               valueChangeListener="#{ontologyBean.ontologySelectionChanged}" >
                                 <f:selectItems value="#{ontologyBean.ontologyList}" />
                             </h:selectOneMenu>                                          
