@@ -1,10 +1,5 @@
 package gov.nih.nci.evs.reportwriter.properties;
 
-import gov.nih.nci.evs.reportwriter.utils.*;
-
-import java.io.*;
-import java.util.*;
-
 import org.apache.log4j.*;
 
 /**
@@ -50,11 +45,12 @@ import org.apache.log4j.*;
  */
 
 /**
- * @author EVS Team (Kim Ong, David Yee)
+ * @author EVS Team (David Yee)
  * @version 1.0
  */
 
-public class ReportWriterProperties {
+public class ReportWriterProperties extends PropertyNameValueFileParser {
+    // -------------------------------------------------------------------------
     public static final String BUILD_INFO = "BUILD_INFO";
     public static final String EVS_SERVICE_URL = "EVS_SERVICE_URL";
     public static final String RW_APP_VERSION = "APPLICATION_VERSION";
@@ -69,17 +65,20 @@ public class ReportWriterProperties {
     public static final String CSM_ALLOWED_ATTEMPTS = "CSM_ALLOWED_ATTEMPTS";
     public static final String ACCOUNT_ADMIN_USER_EMAIL = "ACCOUNT_ADMIN_USER_EMAIL";
    
-    private static Logger _logger = Logger
-        .getLogger(ReportWriterProperties.class);
+    // -------------------------------------------------------------------------
+    private final String PROPERTY_FILE_ENV =
+        "gov.nih.nci.cacore.ncireportwriterProperties";
+    private static Logger _logger = Logger.getLogger(ReportWriterProperties.class);
     private static ReportWriterProperties _instance;
-    private Properties _properties = new Properties();
     private String _buildInfo = null;
     private String _applicationVersion = null;
     private String _anthillBuildTagBuilt = null;
     private String _EVSServiceURL = null;
-    
+
+    // -------------------------------------------------------------------------
     private ReportWriterProperties() {
-        loadProperties();
+        String propertyFile = System.getProperty(PROPERTY_FILE_ENV);
+        loadProperties(propertyFile);
     }
 
     public static ReportWriterProperties getInstance() {
@@ -89,78 +88,6 @@ public class ReportWriterProperties {
             }
         }
         return _instance;
-    }
-
-    private void loadProperties() {
-        try {
-            String propertyFile = System
-                .getProperty("gov.nih.nci.cacore.ncireportwriterProperties");
-            _logger.info("File location= " + propertyFile);
-            
-            if (propertyFile == null || propertyFile.length() <= 0)
-                throw new Exception("Property file not set." + 
-                    "\n  * Property File: " + propertyFile);
-
-            FileInputStream fis = new FileInputStream(new File(propertyFile));
-            _properties.load(fis);
-            debugProperties();
-        } catch (Exception e) {
-            ExceptionUtils.print(_logger, e);
-        }
-    }
-    
-    private String fetchProperty(String key) {
-        return _properties.getProperty(key);
-    }
-    
-    public static String getProperty(String key) {
-        return getInstance().fetchProperty(key);
-    }
-    
-    public static int getIntProperty(String key, int defaultValue) {
-        String strValue = getInstance().fetchProperty(key);
-        try {
-            if (strValue == null)
-                return defaultValue;
-            return Integer.parseInt(strValue);
-        } catch (Exception e) {
-            _logger.error("Invalid integer property value for: " + key);
-            _logger.error("  Value from the property file: " + strValue);
-            _logger.error("  Defaulting to: " + defaultValue);
-            return defaultValue;
-        }
-    }
-
-    public static boolean getBoolProperty(String key, boolean defaultValue) {
-        String strValue = getInstance().fetchProperty(key);
-        try {
-            if (strValue == null)
-                return defaultValue;
-            return Boolean.parseBoolean(strValue);
-        } catch (Exception e) {
-            _logger.error("Invalid boolean property value for: " + key);
-            _logger.error("  Value from the property file: " + strValue);
-            _logger.error("  Defaulting to: " + defaultValue);
-            return defaultValue;
-        }
-    }
-
-    private void debugProperties() {
-        if (! _logger.isDebugEnabled())
-            return;
-
-        ArrayList<String> keys = new ArrayList<String>();
-        Iterator<?> iterator = _properties.keySet().iterator();
-        while (iterator.hasNext())
-            keys.add((String) iterator.next());
-        SortUtils.quickSort(keys);
-        
-        _logger.debug("List of properties:");
-        for (int i=0; i<keys.size(); ++i) {
-            String key = keys.get(i);
-            String value = _properties.getProperty(key);
-            _logger.debug("  " + i + ") " + key + ": " + value);
-        }
     }
 
     public String getBuildInfo() {
@@ -177,16 +104,16 @@ public class ReportWriterProperties {
         _logger.info("getBuildInfo returns " + _buildInfo);
         return _buildInfo;
     }
-    
+
     public String getApplicationVersion() {
         if (_applicationVersion != null)
             return _applicationVersion;
         try {
-        	_applicationVersion = getProperty(RW_APP_VERSION);
+            _applicationVersion = getProperty(RW_APP_VERSION);
             if (_applicationVersion == null)
-            	_applicationVersion = "null";
+                _applicationVersion = "null";
         } catch (Exception e) {
-        	_applicationVersion = e.getMessage();
+            _applicationVersion = e.getMessage();
         }
 
         _logger.info("getApplicationVersion returns " + _applicationVersion);
@@ -197,11 +124,11 @@ public class ReportWriterProperties {
         if (_anthillBuildTagBuilt != null)
             return _anthillBuildTagBuilt;
         try {
-        	_anthillBuildTagBuilt = getProperty(ANTHILL_BUILD_TAG_BUILT);
+            _anthillBuildTagBuilt = getProperty(ANTHILL_BUILD_TAG_BUILT);
             if (_anthillBuildTagBuilt == null)
-            	_anthillBuildTagBuilt = "null";
+                _anthillBuildTagBuilt = "null";
         } catch (Exception e) {
-        	_anthillBuildTagBuilt = e.getMessage();
+            _anthillBuildTagBuilt = e.getMessage();
         }
 
         _logger.info("getAnthillBuildTagBuilt returns " + _anthillBuildTagBuilt);
@@ -212,15 +139,14 @@ public class ReportWriterProperties {
         if (_EVSServiceURL != null)
             return _EVSServiceURL;
         try {
-        	_EVSServiceURL = getProperty(EVS_SERVICE_URL);
+            _EVSServiceURL = getProperty(EVS_SERVICE_URL);
             if (_EVSServiceURL == null)
-            	_EVSServiceURL = "null";
+                _EVSServiceURL = "null";
         } catch (Exception e) {
-        	_EVSServiceURL = e.getMessage();
+            _EVSServiceURL = e.getMessage();
         }
 
         _logger.info("getBuildInfo returns " + _EVSServiceURL);
         return _EVSServiceURL;
     }    
-    
 }

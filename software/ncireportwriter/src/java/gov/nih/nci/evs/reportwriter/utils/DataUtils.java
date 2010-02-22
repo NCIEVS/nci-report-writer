@@ -75,7 +75,7 @@ public class DataUtils {
 
     private static Logger _logger = Logger.getLogger(DataUtils.class);
     private static int _maxReturn =
-        ReportWriterProperties.getIntProperty(
+        ReportWriterProperties.getInstance().getIntProperty(
             ReportWriterProperties.MAXIMUM_RETURN, 10000);
 
     private static List<SelectItem> _standardReportTemplateList =

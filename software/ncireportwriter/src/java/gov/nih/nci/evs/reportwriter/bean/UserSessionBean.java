@@ -985,7 +985,7 @@ public class UserSessionBean extends Object {
         }
 
         String download_dir =
-            ReportWriterProperties
+            ReportWriterProperties.getInstance()
                 .getProperty(ReportWriterProperties.REPORT_DOWNLOAD_DIRECTORY);
 
         _logger.debug("download_dir " + download_dir);
@@ -1029,7 +1029,7 @@ public class UserSessionBean extends Object {
         String download_dir = null;
         try {
             download_dir =
-                ReportWriterProperties
+                ReportWriterProperties.getInstance()
                     .getProperty(ReportWriterProperties.REPORT_DOWNLOAD_DIRECTORY);
             // logger.debug("download_dir " + download_dir);
 
