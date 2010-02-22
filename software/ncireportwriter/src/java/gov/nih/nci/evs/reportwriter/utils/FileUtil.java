@@ -176,10 +176,12 @@ public class FileUtil {
         toprow.setFont(font);
         toprow.setFillForegroundColor(HSSFColor.GREY_25_PERCENT.index);
         toprow.setFillPattern(HSSFCellStyle.SOLID_FOREGROUND);
+        toprow.setAlignment(HSSFCellStyle.VERTICAL_CENTER);
         toprow.setWrapText(true);
 
         cs.setWrapText(true);
         cs.setAlignment(HSSFCellStyle.ALIGN_JUSTIFY);
+        //cs.setAlignment(HSSFCellStyle.VERTICAL_CENTER);
 
         HSSFRow wr = null;
         int rownum = 0;
@@ -191,7 +193,7 @@ public class FileUtil {
                 continue;
             Vector<String> v = parseData(line, delimiter);
             wr = ws.createRow(rownum);
-            wr.setHeightInPoints(60);
+            wr.setHeightInPoints(rownum == 0 ? 40 : 15);
 
             for (int i = 0; i < v.size(); i++) {
                 HSSFCell wc = wr.createCell(i);
