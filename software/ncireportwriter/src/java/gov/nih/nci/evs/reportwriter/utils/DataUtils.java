@@ -274,6 +274,14 @@ public class DataUtils {
         return _codingSchemeMap.get(codingSchemeName);
     }
     
+    public static String getCodingSchemeVersionByName(String codingSchemeName) {
+        CodingScheme cs = getCodingScheme(codingSchemeName);
+        if (cs == null)
+            return null;
+        String version = cs.getRepresentsVersion();
+        return version;
+    }
+    
     public static Vector<String> getSupportedAssociations(
         AssociationType associationType, String key) throws Exception {
         CSNVInfo info = _csnv2InfoMap.get(key);
