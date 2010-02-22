@@ -58,11 +58,11 @@ public class AccessDeniedRequest {
     // -------------------------------------------------------------------------
     private static Logger _logger = Logger.getLogger(AccessDeniedRequest.class);
     private final static String MAIL_SERVER =
-        ReportWriterProperties.getInstance()
-            .getProperty(ReportWriterProperties.MAIL_SMTP_SERVER);
+        AppProperties.getInstance()
+            .getProperty(AppProperties.MAIL_SMTP_SERVER);
     private final static String ACCOUNT_ADMIN_USER_EMAIL_ =
-        ReportWriterProperties.getInstance()
-            .getProperty(ReportWriterProperties.ACCOUNT_ADMIN_USER_EMAIL);
+        AppProperties.getInstance()
+            .getProperty(AppProperties.ACCOUNT_ADMIN_USER_EMAIL);
 
     // -------------------------------------------------------------------------
     public final static String PROBLEM = "problem";
