@@ -77,7 +77,21 @@ public class PropertyNameValueFileParser {
     protected String fetchProperty(String key) {
         return _properties.getProperty(key);
     }
-    
+
+    protected String getSpecialProperty(String key) {
+        String value = "";
+        try {
+            value = getProperty(key);
+            if (value == null)
+                value = "null";
+        } catch (Exception e) {
+            value = e.getMessage();
+        }
+
+        _logger.info(key + ": " + value);
+        return value;
+    }
+
     public String getProperty(String key) {
         return fetchProperty(key);
     }

@@ -1,7 +1,5 @@
 package gov.nih.nci.evs.reportwriter.properties;
 
-import org.apache.log4j.*;
-
 /**
  * <!-- LICENSE_TEXT_START -->
  * Copyright 2008,2009 NGIT. This software was developed in conjunction 
@@ -53,7 +51,7 @@ public class AppProperties extends PropertyNameValueFileParser {
     // -------------------------------------------------------------------------
     public static final String BUILD_INFO = "BUILD_INFO";
     public static final String EVS_SERVICE_URL = "EVS_SERVICE_URL";
-    public static final String RW_APP_VERSION = "APPLICATION_VERSION";
+    public static final String APPLICATION_VERSION = "APPLICATION_VERSION";
     public static final String ANTHILL_BUILD_TAG_BUILT = "ANTHILL_BUILD_TAG_BUILT";      
     public static final String MAIL_SMTP_SERVER = "MAIL_SMTP_SERVER";
     public static final String DEBUG_ON = "DEBUG_ON";
@@ -68,7 +66,6 @@ public class AppProperties extends PropertyNameValueFileParser {
     // -------------------------------------------------------------------------
     private final String PROPERTY_FILE_ENV =
         "gov.nih.nci.cacore.ncireportwriterProperties";
-    private static Logger _logger = Logger.getLogger(AppProperties.class);
     private static AppProperties _instance;
     private String _buildInfo = null;
     private String _applicationVersion = null;
@@ -89,64 +86,29 @@ public class AppProperties extends PropertyNameValueFileParser {
         }
         return _instance;
     }
-
+    
+    // -------------------------------------------------------------------------
     public String getBuildInfo() {
         if (_buildInfo != null)
             return _buildInfo;
-        try {
-            _buildInfo = getProperty(BUILD_INFO);
-            if (_buildInfo == null)
-                _buildInfo = "null";
-        } catch (Exception e) {
-            _buildInfo = e.getMessage();
-        }
-
-        _logger.info("getBuildInfo returns " + _buildInfo);
-        return _buildInfo;
+        return _buildInfo = getSpecialProperty(BUILD_INFO);
     }
 
     public String getApplicationVersion() {
         if (_applicationVersion != null)
             return _applicationVersion;
-        try {
-            _applicationVersion = getProperty(RW_APP_VERSION);
-            if (_applicationVersion == null)
-                _applicationVersion = "null";
-        } catch (Exception e) {
-            _applicationVersion = e.getMessage();
-        }
-
-        _logger.info("getApplicationVersion returns " + _applicationVersion);
-        return _applicationVersion;
+        return _applicationVersion = getSpecialProperty(APPLICATION_VERSION);
     }
     
     public String getAnthillBuildTagBuilt() {
         if (_anthillBuildTagBuilt != null)
             return _anthillBuildTagBuilt;
-        try {
-            _anthillBuildTagBuilt = getProperty(ANTHILL_BUILD_TAG_BUILT);
-            if (_anthillBuildTagBuilt == null)
-                _anthillBuildTagBuilt = "null";
-        } catch (Exception e) {
-            _anthillBuildTagBuilt = e.getMessage();
-        }
-
-        _logger.info("getAnthillBuildTagBuilt returns " + _anthillBuildTagBuilt);
-        return _anthillBuildTagBuilt;
+        return _anthillBuildTagBuilt = getSpecialProperty(ANTHILL_BUILD_TAG_BUILT);
     }
 
     public String getEVSServiceURL() {
         if (_EVSServiceURL != null)
             return _EVSServiceURL;
-        try {
-            _EVSServiceURL = getProperty(EVS_SERVICE_URL);
-            if (_EVSServiceURL == null)
-                _EVSServiceURL = "null";
-        } catch (Exception e) {
-            _EVSServiceURL = e.getMessage();
-        }
-
-        _logger.info("getBuildInfo returns " + _EVSServiceURL);
-        return _EVSServiceURL;
+        return _EVSServiceURL = getSpecialProperty(EVS_SERVICE_URL);
     }    
 }
