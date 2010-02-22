@@ -398,7 +398,8 @@
         <!-- Remove old reports from the download folder -->
 
         <delete quiet="true" includeemptydirs="true">
-            <fileset dir="${application.data.path}/${report.download.directory}" includes="**/*" />
+            <fileset dir="${application.data.path}/${report.download.directory}" includes="**/*.txt" />
+            <fileset dir="${application.data.path}/${report.download.directory}" includes="**/*.xls" />
         </delete>
 
     </target>
