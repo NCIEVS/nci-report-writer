@@ -49,7 +49,7 @@ import org.apache.log4j.*;
  * @version 1.0
  */
 
-public class ReportWriterProperties extends PropertyNameValueFileParser {
+public class AppProperties extends PropertyNameValueFileParser {
     // -------------------------------------------------------------------------
     public static final String BUILD_INFO = "BUILD_INFO";
     public static final String EVS_SERVICE_URL = "EVS_SERVICE_URL";
@@ -68,23 +68,23 @@ public class ReportWriterProperties extends PropertyNameValueFileParser {
     // -------------------------------------------------------------------------
     private final String PROPERTY_FILE_ENV =
         "gov.nih.nci.cacore.ncireportwriterProperties";
-    private static Logger _logger = Logger.getLogger(ReportWriterProperties.class);
-    private static ReportWriterProperties _instance;
+    private static Logger _logger = Logger.getLogger(AppProperties.class);
+    private static AppProperties _instance;
     private String _buildInfo = null;
     private String _applicationVersion = null;
     private String _anthillBuildTagBuilt = null;
     private String _EVSServiceURL = null;
 
     // -------------------------------------------------------------------------
-    private ReportWriterProperties() {
+    private AppProperties() {
         String propertyFile = System.getProperty(PROPERTY_FILE_ENV);
         loadProperties(propertyFile);
     }
 
-    public static ReportWriterProperties getInstance() {
+    public static AppProperties getInstance() {
         if (_instance == null) {
-            synchronized (ReportWriterProperties.class) {
-                _instance = new ReportWriterProperties();
+            synchronized (AppProperties.class) {
+                _instance = new AppProperties();
             }
         }
         return _instance;

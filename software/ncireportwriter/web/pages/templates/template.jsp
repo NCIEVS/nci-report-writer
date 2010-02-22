@@ -4,11 +4,12 @@
 <%@ page import="gov.nih.nci.evs.reportwriter.utils.*" %>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <%
+  AppProperties appProperties = AppProperties.getInstance();
   String imagesPath = FormUtils.getImagesPath(request);
-  String buildInfo = ReportWriterProperties.getInstance().getBuildInfo();
-  String application_version = ReportWriterProperties.getInstance().getApplicationVersion();
-  String anthill_build_tag_built = ReportWriterProperties.getInstance().getAnthillBuildTagBuilt();
-  String evs_service_url = ReportWriterProperties.getInstance().getEVSServiceURL(); 
+  String buildInfo = appProperties.getBuildInfo();
+  String application_version = appProperties.getApplicationVersion();
+  String anthill_build_tag_built = appProperties.getAnthillBuildTagBuilt();
+  String evs_service_url = appProperties.getEVSServiceURL(); 
 %>
 <!--
    Build info: <%=buildInfo%>

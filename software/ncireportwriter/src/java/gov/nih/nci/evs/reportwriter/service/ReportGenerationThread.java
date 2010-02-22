@@ -143,8 +143,8 @@ public class ReportGenerationThread implements Runnable {
             }
 
             String mailServer =
-                ReportWriterProperties.getInstance()
-                    .getProperty(ReportWriterProperties.MAIL_SMTP_SERVER);
+                AppProperties.getInstance()
+                    .getProperty(AppProperties.MAIL_SMTP_SERVER);
             String from = _emailAddress;
             String[] recipients = new String[] { _emailAddress };
             String subject = "";
@@ -311,8 +311,8 @@ public class ReportGenerationThread implements Runnable {
             int max_level = standardReportTemplate.getLevel();
             if (max_level < 0)
                 max_level =
-                    ReportWriterProperties.getInstance().getIntProperty(
-                        ReportWriterProperties.MAXIMUM_LEVEL, 20);
+                    AppProperties.getInstance().getIntProperty(
+                        AppProperties.MAXIMUM_LEVEL, 20);
 
             // printReportHeading(pw, cols);
             if (_hierarchicalAssoName == null) {
