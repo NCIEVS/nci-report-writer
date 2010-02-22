@@ -82,6 +82,7 @@ public class LoginFilter implements Filter {
                 || path.equals("/")
                 || path.equals("/download_nologin.jsf")
                 || path.equals("/request.jsf")
+                || path.equals("/contact_us.jsf")
                 || path.equals("/download.jsf")) {
                 chain.doFilter(request, response);
                 return;

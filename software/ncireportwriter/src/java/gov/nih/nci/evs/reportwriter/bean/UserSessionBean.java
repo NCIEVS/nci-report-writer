@@ -1144,6 +1144,14 @@ public class UserSessionBean extends Object {
         return AccessDeniedRequest.clear();
     }
     
+    public String submitContactUs() {
+        return new ContactUsRequest().submit();
+    }
+
+    public String clearContactUs() {
+        return new ContactUsRequest().clear();
+    }
+
     public String submitUnlockAction() {
         _logger.debug("Method: submitUnlockAction");
         HttpServletRequest request = SessionUtil.getRequest();
