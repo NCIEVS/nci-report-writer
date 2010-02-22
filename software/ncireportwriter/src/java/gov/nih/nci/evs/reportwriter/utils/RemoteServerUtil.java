@@ -64,7 +64,7 @@ public class RemoteServerUtil {
     private static boolean _firstTime = true;
     
     public static LexBIGService createLexBIGService() throws Exception {
-        String serviceUrl = ReportWriterProperties
+        String serviceUrl = ReportWriterProperties.getInstance()
             .getProperty(ReportWriterProperties.EVS_SERVICE_URL);
         return createLexBIGService(serviceUrl);
     }

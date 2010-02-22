@@ -213,7 +213,7 @@ public class OntologyBean // extends BaseBean
     private List<SelectItem> _levelList = null;
 
     public List<SelectItem> getLevelList() {
-        int max_level = ReportWriterProperties.getIntProperty(
+        int max_level = ReportWriterProperties.getInstance().getIntProperty(
             ReportWriterProperties.MAXIMUM_LEVEL, 20);
 
         _levelList = new ArrayList<SelectItem>();

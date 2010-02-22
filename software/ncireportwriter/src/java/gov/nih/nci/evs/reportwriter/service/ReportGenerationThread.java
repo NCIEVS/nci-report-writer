@@ -143,7 +143,7 @@ public class ReportGenerationThread implements Runnable {
             }
 
             String mailServer =
-                ReportWriterProperties
+                ReportWriterProperties.getInstance()
                     .getProperty(ReportWriterProperties.MAIL_SMTP_SERVER);
             String from = _emailAddress;
             String[] recipients = new String[] { _emailAddress };
@@ -311,7 +311,7 @@ public class ReportGenerationThread implements Runnable {
             int max_level = standardReportTemplate.getLevel();
             if (max_level < 0)
                 max_level =
-                    ReportWriterProperties.getIntProperty(
+                    ReportWriterProperties.getInstance().getIntProperty(
                         ReportWriterProperties.MAXIMUM_LEVEL, 20);
 
             // printReportHeading(pw, cols);

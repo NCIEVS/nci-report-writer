@@ -65,13 +65,13 @@ public class LoginBean extends Object {
     private static Logger _logger = Logger.getLogger(LoginBean.class);
     private static final String APP_NAME = "ncireportwriter";
     private static final String CSM_LOCKOUT_TIME =
-        ReportWriterProperties
+        ReportWriterProperties.getInstance()
             .getProperty(ReportWriterProperties.CSM_LOCKOUT_TIME);
     private static final String CSM_ALLOWED_LOGIN_TIME =
-        ReportWriterProperties
+        ReportWriterProperties.getInstance()
             .getProperty(ReportWriterProperties.CSM_ALLOWED_LOGIN_TIME);
     private static final String CSM_ALLOWED_ATTEMPTS =
-        ReportWriterProperties
+        ReportWriterProperties.getInstance()
             .getProperty(ReportWriterProperties.CSM_ALLOWED_ATTEMPTS);
 
     private String _userid;
@@ -209,7 +209,7 @@ public class LoginBean extends Object {
     }
 
     private void useDebugUserid() {
-        if (!ReportWriterProperties.getBoolProperty(
+        if (!ReportWriterProperties.getInstance().getBoolProperty(
             ReportWriterProperties.DEBUG_ON, false))
             return;
         if (_userid.length() <= 0)
