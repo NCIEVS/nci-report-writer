@@ -12,16 +12,16 @@ if "%1" == ""  (
     echo.
     echo Available targets are:
     echo.
-    echo   1. clean                -- Remove classes directory for clean build
-    echo   2. all                  -- Normal build of application
-    echo   3. install              -- Builds, installs JBoss and database locally
-    echo   4. upgrade:wdbinstall   -- Builds, upgrades JBoss and installs database locally
-    echo   5. upgrade              -- Build and upgrade application
-    echo   6. dev:wdbinstall       -- Builds, upgrades JBoss and installs database on DEV
-    echo   7. dev                  -- Builds, upgrades JBoss on DEV
-    echo   8. qa:wdbinstall        -- Builds, upgrades JBoss and install database on QA
-    echo   9. qa                   -- Builds, upgrades JBoss on QA
-    echo  10. deploy               -- Redeploy application locally
+    echo   clean                -- Remove classes directory for clean build
+    echo   all                  -- Normal build of application
+    echo   install              -- Builds, installs JBoss and database locally
+    echo   upgrade:wdbinstall   -- Builds, upgrades JBoss and installs database locally
+    echo   upgrade              -- Build and upgrade application
+    echo   dev:wdbinstall       -- Builds, upgrades JBoss and installs database on DEV
+    echo   dev                  -- Builds, upgrades JBoss on DEV
+    echo   qa:wdbinstall        -- Builds, upgrades JBoss and install database on QA
+    echo   qa                   -- Builds, upgrades JBoss on QA
+    echo   deploy               -- Redeploy application locally
     goto DONE
 )
 if "%1" == "usage" (
