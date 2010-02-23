@@ -505,6 +505,7 @@
         <xmltask source="${jboss.home}/server/${jboss.server.name}/conf/${log4j.file.name}"
             dest="${jboss.home}/server/${jboss.server.name}/conf/${log4j.file.name}">
             <remove path="/log4j:configuration/appender[@name='TestAppender']"/>
+            <!--
             <insert path="/log4j:configuration">
                 <![CDATA[
                 <appender name="TestAppender" class="org.jboss.logging.appender.RollingFileAppender">
@@ -512,14 +513,15 @@
                     <param name="File" value="${jboss.server.log.dir}/testAppender.log"/>
                     <param name="Append" value="false"/>
                     <param name="MaxFileSize" value="${log4j.maxFileSize}"/>
-                    <!--<param name="MaxBackupIndex" value="${log4j.maxDays}"/>-->
                     <layout class="org.apache.log4j.PatternLayout">
                         <param name="ConversionPattern" value="%d %-5p [%c] %m%n"/>
                     </layout>
                 </appender>
                 ]]>
             </insert>
+            -->
             <remove path="/log4j:configuration/category[@name='org.nih.nci']"/>
+            <!--
             <insert path="/log4j:configuration">
                 <![CDATA[
                 <category name="org.nih.nci">
@@ -527,6 +529,7 @@
                 </category>
                 ]]>
             </insert>
+            -->
         </xmltask>
         <!--<copy file="${jboss.home}/server/${jboss.server.name}/conf/${log4j.file.name}" tofile="${jboss.home}/server/${jboss.server.name}/conf/${log4j.file.name}.2"/>-->
         <validate-log4j
