@@ -3,6 +3,7 @@ package gov.nih.nci.evs.reportwriter.bean;
 import gov.nih.nci.evs.reportwriter.properties.*;
 import gov.nih.nci.evs.reportwriter.utils.*;
 import gov.nih.nci.security.*;
+import gov.nih.nci.security.authentication.*;
 import gov.nih.nci.security.authorization.domainobjects.User;
 
 import java.util.*;
@@ -62,7 +63,8 @@ import org.apache.log4j.*;
  */
 
 public class LoginBean extends Object {
-    private static Logger _logger = Logger.getLogger(LoginBean.class);
+	
+	private static Logger _logger = Logger.getLogger(LoginBean.class);
     private static final String APP_NAME = "ncireportwriter";
     private static final String CSM_LOCKOUT_TIME =
         AppProperties.getInstance()
@@ -81,6 +83,12 @@ public class LoginBean extends Object {
     private Boolean _isAdmin = null;
     private InitialContext _context = null;
 
+    public LoginBean() {
+		super();
+		LockoutManager.initialize(CSM_LOCKOUT_TIME, CSM_ALLOWED_LOGIN_TIME,
+				CSM_ALLOWED_ATTEMPTS);
+	}    
+    
     public void setSelectedTask(String selectedTask) {
         _selectedTask = selectedTask;
         _logger.debug("selectedTask: " + _selectedTask);
@@ -170,7 +178,7 @@ public class LoginBean extends Object {
                 throw new Exception("Please enter your login ID.");
             if (_password.length() <= 0)
                 throw new Exception("Please enter your password.");
-
+           
             AuthenticationManager authenticationManager =
                 SecurityServiceProvider.getAuthenticationManager(APP_NAME,
                     CSM_LOCKOUT_TIME, CSM_ALLOWED_LOGIN_TIME,
