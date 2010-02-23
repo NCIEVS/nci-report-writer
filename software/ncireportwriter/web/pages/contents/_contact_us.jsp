@@ -20,17 +20,16 @@
   boolean isUserError = warningMsg != null && warningMsg.trim().length() > 0;
 %>
 <f:view>
-  <div class="texttitle-blue">Contact Us</div>
-  <hr></hr>
+  <div class="welcomeTitle" style="height: 15px">Contact Us</div>
+  <hr/>
 
   <div>
     <b>You can request help or make suggestions by filling out the
       online form below, or by using any one of these contact points:
-    </b>
+    </b><br/>
   </div>
-  <br/>
 
-  <table class="textbody">
+  <table>
     <tr>
       <td>&nbsp;&nbsp;&nbsp;&nbsp;</td>
       <td>Telephone:</td>
@@ -94,17 +93,17 @@
       <% if (isUserError) %> <i style="color:#FF0000;">* Required)</i>
       <i>Subject of your email:</i>
     </p>
-    <input class="textbody" size="100" name="subject" alt="Subject" value="<%= subject %>" onFocus="active = true" onBlur="active = false" onKeyPress="return ifenter(event,this.form)">
+    <input class="welcomeContent" style="width: 700px" name="subject" alt="Subject" value="<%= subject %>" onFocus="active = true" onBlur="active = false" onKeyPress="return ifenter(event,this.form)">
     <p>
       <% if (isUserError) %> <i style="color:#FF0000;">* Required)</i>
       <i>Detailed description of your problem or suggestion (no attachments):</i>
     </p>
-    <TEXTAREA class="textbody" Name="<%= EMAIL_MSG %>" rows="4" cols="98"><%= email_msg %></TEXTAREA>
+    <TEXTAREA class="welcomeContent" style="width: 700px" Name="<%= EMAIL_MSG %>" rows="4"><%= email_msg %></TEXTAREA>
     <p>
       <% if (isUserError) %> <i style="color:#FF0000;">* Required)</i>
       <i>Your e-mail address:</i>
     </p>
-    <input class="textbody" size="100" name="<%= EMAIL_ADDRESS %>" alt="<%= EMAIL_ADDRESS %>" value="<%= email_address %>" onFocus="active = true" onBlur="active = false" onKeyPress="return ifenter(event,this.form)">
+    <input class="welcomeContent" style="width: 700px" name="<%= EMAIL_ADDRESS %>" alt="<%= EMAIL_ADDRESS %>" value="<%= email_address %>" onFocus="active = true" onBlur="active = false" onKeyPress="return ifenter(event,this.form)">
     <br/><br/>
     
     <h:commandButton
