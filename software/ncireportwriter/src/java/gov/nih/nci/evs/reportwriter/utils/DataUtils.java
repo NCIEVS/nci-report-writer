@@ -10,6 +10,7 @@ import org.LexGrid.LexBIG.DataModel.Collections.*;
 import org.LexGrid.LexBIG.DataModel.Core.*;
 import org.LexGrid.LexBIG.LexBIGService.*;
 import org.LexGrid.LexBIG.Utility.*;
+import org.LexGrid.commonTypes.*;
 import org.LexGrid.concepts.*;
 import org.LexGrid.LexBIG.DataModel.InterfaceElements.*;
 import org.LexGrid.LexBIG.Utility.Iterators.*;
@@ -109,7 +110,8 @@ public class DataUtils {
         if (isAdmin != null && isAdmin) {
             if (_adminTaskList == null) {
                 _adminTaskList = new ArrayList<SelectItem>();
-                _adminTaskList.add(new SelectItem("Administer Standard Reports"));
+                _adminTaskList
+                    .add(new SelectItem("Administer Standard Reports"));
                 _adminTaskList.add(new SelectItem("Maintain Report Status"));
                 _adminTaskList.add(new SelectItem("Assign Report Status"));
                 _adminTaskList.add(new SelectItem("Retrieve Standard Reports"));
@@ -117,7 +119,7 @@ public class DataUtils {
             }
             return _adminTaskList;
         }
-        if ( _userTaskList == null) {
+        if (_userTaskList == null) {
             _userTaskList = new ArrayList<SelectItem>();
             _userTaskList.add(new SelectItem("Retrieve Standard Reports"));
         }
@@ -209,8 +211,7 @@ public class DataUtils {
                 }
 
                 _codingSchemeMap.put(formalName, scheme);
-                String value =
-                    getCSNVKey(formalName, representsVersion);
+                String value = getCSNVKey(formalName, representsVersion);
                 _ontologies.add(new SelectItem(value, value));
                 CSNVInfo info = new CSNVInfo();
                 info.codingSchemeName = formalName;
@@ -223,19 +224,18 @@ public class DataUtils {
         }
     }
 
-    public static String getCSNVKey(String codingSchemeName,
-        String version) {
+    public static String getCSNVKey(String codingSchemeName, String version) {
         String value = codingSchemeName + " (version: " + version + ")";
         return value;
     }
-    
+
     public static String getCSNFromKey(String key) {
         if (key == null || key.length() <= 0)
             return "";
         int i = key.indexOf(" (version: ");
         if (i <= 0)
             return "";
-        
+
         String codingSchemeName = key.substring(0, i);
         return codingSchemeName;
     }
@@ -265,15 +265,15 @@ public class DataUtils {
         info.version = cs.getRepresentsVersion();
         _logger.warn("Method: DataUtils.getTempCSNVInfo");
         _logger.warn(" * CSNV key not valid: " + key);
-        _logger.warn(" * Instead, using: " + 
-            getCSNVKey(info.codingSchemeName, info.version));
+        _logger.warn(" * Instead, using: "
+            + getCSNVKey(info.codingSchemeName, info.version));
         return info;
     }
-    
+
     public static CodingScheme getCodingScheme(String codingSchemeName) {
         return _codingSchemeMap.get(codingSchemeName);
     }
-    
+
     public static String getCodingSchemeVersionByName(String codingSchemeName) {
         CodingScheme cs = getCodingScheme(codingSchemeName);
         if (cs == null)
@@ -281,7 +281,7 @@ public class DataUtils {
         String version = cs.getRepresentsVersion();
         return version;
     }
-    
+
     public static Vector<String> getSupportedAssociations(
         AssociationType associationType, String key) throws Exception {
         CSNVInfo info = _csnv2InfoMap.get(key);
@@ -717,7 +717,7 @@ public class DataUtils {
 
     /**
      * Dump_matches to output, for debug purposes
-     *
+     * 
      * @param iterator
      *            the iterator
      * @param maxToReturn
@@ -860,6 +860,101 @@ public class DataUtils {
             ex.printStackTrace();
         }
         return v;
+    }
+
+    public static Vector<String> getSubconceptCodes2(String scheme,
+        String version, String code) {
+        // eturned bar delimited name|code
+        Vector<String> list = new Vector<String>();
+        CodingSchemeVersionOrTag csvt = new CodingSchemeVersionOrTag();
+        if (version != null)
+            csvt.setVersion(version);
+        long ms = System.currentTimeMillis();
+        try {
+            LexBIGService lbSvc = RemoteServerUtil.createLexBIGService();
+            LexBIGServiceConvenienceMethods lbscm =
+                (LexBIGServiceConvenienceMethods) lbSvc
+                    .getGenericExtension("LexBIGServiceConvenienceMethods");
+            lbscm.setLexBIGService(lbSvc);
+            CodingScheme cs = lbSvc.resolveCodingScheme(scheme, csvt);
+            if (cs == null)
+                return null;
+            Mappings mappings = cs.getMappings();
+            SupportedHierarchy[] hierarchies = mappings.getSupportedHierarchy();
+            if (hierarchies == null || hierarchies.length == 0)
+                return null;
+            SupportedHierarchy hierarchyDefn = hierarchies[0];
+            String hier_id = hierarchyDefn.getLocalId();
+            String[] associationsToNavigate =
+                hierarchyDefn.getAssociationNames();
+            boolean associationsNavigatedFwd =
+                hierarchyDefn.getIsForwardNavigable();
+            NameAndValueList nameAndValueList =
+                createNameAndValueList(associationsToNavigate, null);
+            ResolvedConceptReferenceList matches = null;
+            try {
+                CodedNodeGraph cng = lbSvc.getNodeGraph(scheme, csvt, null);
+                NameAndValueList nameAndValueList_qualifier = null;
+                cng =
+                    cng.restrictToAssociations(nameAndValueList,
+                        nameAndValueList_qualifier);
+                ConceptReference graphFocus =
+                    ConvenienceMethods.createConceptReference(code, scheme);
+                matches =
+                    cng.resolveAsList(graphFocus, associationsNavigatedFwd,
+                        !associationsNavigatedFwd, 1, 1, new LocalNameList(),
+                        null, null, -1);
+            } catch (Exception ex) {
+                ex.printStackTrace();
+            }
+            // Analyze the result ...
+            if (matches != null
+                && matches.getResolvedConceptReferenceCount() > 0) {
+                ResolvedConceptReference ref =
+                    (ResolvedConceptReference) matches
+                        .enumerateResolvedConceptReference().nextElement();
+                if (ref != null) {
+                    AssociationList sourceof = ref.getSourceOf();
+                    if (!associationsNavigatedFwd)
+                        sourceof = ref.getTargetOf();
+                    if (sourceof != null) {
+                        Association[] associations = sourceof.getAssociation();
+                        if (associations != null) {
+                            for (int i = 0; i < associations.length; i++) {
+                                Association assoc = associations[i];
+                                if (assoc != null) {
+                                    if (assoc.getAssociatedConcepts() != null) {
+                                        AssociatedConcept[] acl =
+                                            assoc.getAssociatedConcepts()
+                                                .getAssociatedConcept();
+                                        if (acl != null) {
+                                            for (int j = 0; j < acl.length; j++) {
+                                                AssociatedConcept ac = acl[j];
+                                                if (ac != null) {
+                                                    EntityDescription ed =
+                                                        ac
+                                                            .getEntityDescription();
+                                                    if (ed != null) {
+                                                        list.add(ac
+                                                            .getConceptCode());
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+        System.out.println("Run time (milliseconds) getSubconcepts: "
+            + (System.currentTimeMillis() - ms) + " to resolve ");
+        SortUtils.quickSort(list);
+        return list;
     }
 
     public static ResolvedConceptReferencesIterator codedNodeGraph2CodedNodeSetIterator(
@@ -1068,6 +1163,8 @@ public class DataUtils {
                     .getContent();
 
             } catch (Exception e) {
+                ExceptionUtils.print(_logger, e, "DataUtils.getSubconceptCodes");
+                //e.printStackTrace();
             }
 
             // Iterate through all hierarchies and levels ...
@@ -1081,6 +1178,7 @@ public class DataUtils {
                         lbscm.getHierarchyLevelNext(scheme, csvt, hierarchyID,
                             code, false, null);
                 } catch (Exception e) {
+                    ExceptionUtils.print(_logger, e, "DataUtils.getSubconceptCodes");
                     _logger.error("getSubconceptCodes "
                         + "Exception lbscm.getHierarchyLevelNext");
                     return v;
@@ -1099,7 +1197,8 @@ public class DataUtils {
                 }
             }
         } catch (Exception ex) {
-            // ex.printStackTrace();
+            ExceptionUtils.print(_logger, ex, "DataUtils.getSubconceptCodes");
+            ex.printStackTrace();
         }
         return v;
     }
