@@ -3,13 +3,19 @@
 <%@ page import="gov.nih.nci.evs.reportwriter.properties.*" %>
 <%@ page import="gov.nih.nci.evs.reportwriter.utils.*" %>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<%!
+  private static final String buildInfo = AppProperties.getInstance().
+    getSpecialProperty(AppProperties.BUILD_INFO);
+  private static final String application_version = AppProperties.getInstance().
+    getSpecialProperty(AppProperties.APPLICATION_VERSION);
+  private static final String anthill_build_tag_built = AppProperties.getInstance().
+    getSpecialProperty(AppProperties.ANTHILL_BUILD_TAG_BUILT);
+  private static final String evs_service_url = AppProperties.getInstance().
+    getSpecialProperty(AppProperties.EVS_SERVICE_URL);
+%>
+
 <%
-  AppProperties appProperties = AppProperties.getInstance();
   String imagesPath = FormUtils.getImagesPath(request);
-  String buildInfo = appProperties.getBuildInfo();
-  String application_version = appProperties.getApplicationVersion();
-  String anthill_build_tag_built = appProperties.getAnthillBuildTagBuilt();
-  String evs_service_url = appProperties.getEVSServiceURL(); 
 %>
 <!--
    Build info: <%=buildInfo%>

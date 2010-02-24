@@ -67,10 +67,6 @@ public class AppProperties extends PropertyNameValueFileParser {
     private final String PROPERTY_FILE_ENV =
         "gov.nih.nci.cacore.ncireportwriterProperties";
     private static AppProperties _instance;
-    private String _buildInfo = null;
-    private String _applicationVersion = null;
-    private String _anthillBuildTagBuilt = null;
-    private String _EVSServiceURL = null;
 
     // -------------------------------------------------------------------------
     private AppProperties() {
@@ -86,29 +82,4 @@ public class AppProperties extends PropertyNameValueFileParser {
         }
         return _instance;
     }
-    
-    // -------------------------------------------------------------------------
-    public String getBuildInfo() {
-        if (_buildInfo != null)
-            return _buildInfo;
-        return _buildInfo = getSpecialProperty(BUILD_INFO);
-    }
-
-    public String getApplicationVersion() {
-        if (_applicationVersion != null)
-            return _applicationVersion;
-        return _applicationVersion = getSpecialProperty(APPLICATION_VERSION);
-    }
-    
-    public String getAnthillBuildTagBuilt() {
-        if (_anthillBuildTagBuilt != null)
-            return _anthillBuildTagBuilt;
-        return _anthillBuildTagBuilt = getSpecialProperty(ANTHILL_BUILD_TAG_BUILT);
-    }
-
-    public String getEVSServiceURL() {
-        if (_EVSServiceURL != null)
-            return _EVSServiceURL;
-        return _EVSServiceURL = getSpecialProperty(EVS_SERVICE_URL);
-    }    
 }

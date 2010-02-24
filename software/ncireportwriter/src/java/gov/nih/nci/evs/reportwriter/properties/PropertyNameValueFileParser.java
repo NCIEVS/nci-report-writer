@@ -78,7 +78,7 @@ public class PropertyNameValueFileParser {
         return _properties.getProperty(key);
     }
 
-    protected String getSpecialProperty(String key) {
+    public String getSpecialProperty(String key) {
         String value = "";
         try {
             value = getProperty(key);
