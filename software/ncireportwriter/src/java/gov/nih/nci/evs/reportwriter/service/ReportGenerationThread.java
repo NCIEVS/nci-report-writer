@@ -467,7 +467,6 @@ public class ReportGenerationThread implements Runnable {
         String tag, Concept defining_root_concept, String code,
         String hierarchyAssociationName, String associationCode,
         boolean direction, int level, int maxLevel, ReportColumn[] cols) {
-        // _logger.debug("Level: " + level + "\tmaxLevel: " + maxLevel);
         if (maxLevel != -1 && level > maxLevel)
             return;
 
@@ -504,15 +503,21 @@ public class ReportGenerationThread implements Runnable {
                 c, delim, cols);
         }
 
-        Vector<Concept> subconcept_vec =
-            DataUtils.getAssociationTargets(scheme, version, root
-                .getEntityCode(), hierarchyAssociationName);
+        // Note: Commented old method on 2/24/10 (Wed).  subconcept_vec size was 0.
+        // Vector<Concept> subconcept_vec =
+        //     DataUtils.getAssociationTargets(scheme, version, root
+        //     .getEntityCode(), hierarchyAssociationName);
+        Vector<String> subconcept_vec =
+            DataUtils.getSubconceptCodes2(scheme, version, root
+            .getEntityCode());
         if (subconcept_vec == null | subconcept_vec.size() == 0)
             return;
         level++;
         for (int k = 0; k < subconcept_vec.size(); k++) {
-            Concept concept = (Concept) subconcept_vec.elementAt(k);
-            String subconcep_code = concept.getEntityCode();
+            // Note: Commented old method on 2/24/10 (Wed).  subconcept_vec size was 0.
+            // Concept concept = (Concept) subconcept_vec.elementAt(k);
+            // String subconcep_code = concept.getEntityCode();
+            String subconcep_code = subconcept_vec.elementAt(k);
             traverse(pw, scheme, version, tag, defining_root_concept,
                 subconcep_code, hierarchyAssociationName, associationCode,
                 direction, level, maxLevel, cols);
