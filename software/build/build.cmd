@@ -1,5 +1,5 @@
 @echo off
-cls
+rem cls
 echo.
 echo ******************************************
 echo **** Command file to invoke build.xml ****
@@ -89,5 +89,8 @@ if "%1" == "clean" (
     )
     goto DONE
 )
+echo.
+echo Unknown command "%1"
+echo.
 :DONE
 endlocal

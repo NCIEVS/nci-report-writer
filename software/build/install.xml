@@ -349,6 +349,7 @@
             <filterset>
                 <filtersfile file="${properties.file}"/>
                 <filtersfile file="project.properties"/>
+                <filter token="db-upgrade.run.dir" value="${working.dir}/db/db-upgrade/${database.type}"/>
             </filterset>
         </copy>
         <mkdir dir="${os.temp.dir}/${project.name}"/>

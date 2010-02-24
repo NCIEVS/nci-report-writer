@@ -1,20 +1,24 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <databaseChangeLog
-    xmlns="http://www.liquibase.org/xml/ns/dbchangelog/1.7"
+    xmlns="http://www.liquibase.org/xml/ns/dbchangelog/1.9"
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog/1.7
-    http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-1.7.xsd">
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog/1.9
+    http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-1.9.xsd">
+
     <preConditions>
-        <or>
-            <dbms type="oracle" />
-            <dbms type="mysql" />
-            <dbms type="postgresql" />
-        </or>
+        <dbms type="mysql" />
     </preConditions>
-    <changeSet id="1" author="bda">
-        <comment>Need to have at least one changeset to allow tagging to work.</comment>
+
+    <changeSet id="1" author="EVS Team">
+        <comment>Initial database setup.</comment>
         <sql>select now()</sql>
     </changeSet>
+
+    <!-- changeSet id="2" author="EVS Team">
+        <comment>Upgrading the Report Writer database</comment>
+        <sqlFile path="@db-upgrade.run.dir@/upgrade-data-csm.sql"/>
+        <sqlFile path="@db-upgrade.run.dir@/upgrade-data-rw.sql"/>
+    </changeSet -->
 
 </databaseChangeLog>
