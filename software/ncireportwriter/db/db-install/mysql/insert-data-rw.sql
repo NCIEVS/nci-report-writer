@@ -47,7 +47,7 @@ INSERT INTO `STANDARD_REPORT_TEMPLATE` (`ID`,`LABEL`,`ROOT_CONCEPT_CODE`,`ASSOCI
  (202,'FDA-UNII Subset REPORT','C63923','Concept_In_Subset',0,'NCI Thesaurus','09.12d',1,'$'),
  (2323,'Individual Case Safety (ICS) Subset REPORT','C54447','Concept_In_Subset',0,'NCI Thesaurus','09.12d',1,'$'),
  (3535,'Structured Product Labeling (SPL) REPORT','C54452','Concept_In_Subset',0,'NCI Thesaurus','09.12d',2,'$'),
- (4040,'CDISC Subset REPORT ','C61410','Concept_In_Subset',0,'NCI Thesaurus','09.05d',1,'$'),
+ (4040,'CDISC Subset REPORT ','C61410','Concept_In_Subset',0,'NCI Thesaurus','09.12d',1,'$'),
  (4646,'CDRH Subset REPORT','C62596','Concept_In_Subset',0,'NCI Thesaurus','09.12d',1,'$'),
  (6060,'FDA-SPL Country Code REPORT','Semantic_Type|null|null|null|Geographic Area|exactMatch','',0,'NCI Thesaurus','09.12d',0,'$');
 
