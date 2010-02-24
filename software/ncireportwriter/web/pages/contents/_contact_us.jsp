@@ -26,10 +26,11 @@
   <div>
     <b>You can request help or make suggestions by filling out the
       online form below, or by using any one of these contact points:
-    </b><br/>
+    </b>
   </div>
 
   <table>
+    <tr><td height="15px"></td></tr>
     <tr>
       <td>&nbsp;&nbsp;&nbsp;&nbsp;</td>
       <td>Telephone:</td>
@@ -74,7 +75,8 @@
     if (isUserError)
       color = "style=\"color:#FF0000;\"";
   %>
-  <p><b>Online Form</b></p>
+  <br/><b>Online Form</b><br/>
+  <br/>
   <p <%= color %>>
     To use this web form, please fill in every box below and then click on 'Submit'. 
     <%
@@ -89,21 +91,20 @@
   </p>
   
   <form method="post">
-    <p>
-      <% if (isUserError) %> <i style="color:#FF0000;">* Required)</i>
-      <i>Subject of your email:</i>
-    </p>
-    <input class="welcomeContent" style="width: 700px" name="subject" alt="Subject" value="<%= subject %>" onFocus="active = true" onBlur="active = false" onKeyPress="return ifenter(event,this.form)">
-    <p>
-      <% if (isUserError) %> <i style="color:#FF0000;">* Required)</i>
-      <i>Detailed description of your problem or suggestion (no attachments):</i>
-    </p>
-    <TEXTAREA class="welcomeContent" style="width: 700px" Name="<%= EMAIL_MSG %>" rows="4"><%= email_msg %></TEXTAREA>
-    <p>
-      <% if (isUserError) %> <i style="color:#FF0000;">* Required)</i>
-      <i>Your e-mail address:</i>
-    </p>
-    <input class="welcomeContent" style="width: 700px" name="<%= EMAIL_ADDRESS %>" alt="<%= EMAIL_ADDRESS %>" value="<%= email_address %>" onFocus="active = true" onBlur="active = false" onKeyPress="return ifenter(event,this.form)">
+    <% if (isUserError) %> <i style="color:#FF0000;">* Required)</i>
+    <i>Subject of your email:</i>
+    <br/>
+    <input class="inputItem" style="width: 690px" name="subject" alt="Subject" value="<%= subject %>" onFocus="active = true" onBlur="active = false" onKeyPress="return ifenter(event,this.form)">
+    <br/><br/>
+    <% if (isUserError) %> <i style="color:#FF0000;">* Required)</i>
+    <i>Detailed description of your problem or suggestion (no attachments):</i>
+    <br/>
+    <textarea class="textItem" style="width: 690px" rows="4" Name="<%= EMAIL_MSG %>" rows="4"><%= email_msg %></textarea>
+    <br/><br/>
+    <% if (isUserError) %> <i style="color:#FF0000;">* Required)</i>
+    <i>Your e-mail address:</i>
+    <br/>
+    <input class="inputItem" style="width: 690px" name="<%= EMAIL_ADDRESS %>" alt="<%= EMAIL_ADDRESS %>" value="<%= email_address %>" onFocus="active = true" onBlur="active = false" onKeyPress="return ifenter(event,this.form)">
     <br/><br/>
     
     <h:commandButton

@@ -729,6 +729,11 @@ body
   font-size:10px;
 }
 
+.textItem {
+  font-family: arial,helvetica,verdana,sans-serif;
+  font-size:10px;
+}
+
 .inputMessage {
   font-family: arial,helvetica,verdana,sans-serif;
   font-size:10px;
