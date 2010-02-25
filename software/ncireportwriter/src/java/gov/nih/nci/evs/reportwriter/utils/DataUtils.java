@@ -884,7 +884,7 @@ public class DataUtils {
             if (hierarchies == null || hierarchies.length == 0)
                 return null;
             SupportedHierarchy hierarchyDefn = hierarchies[0];
-            String hier_id = hierarchyDefn.getLocalId();
+            // String hier_id = hierarchyDefn.getLocalId();
             String[] associationsToNavigate =
                 hierarchyDefn.getAssociationNames();
             boolean associationsNavigatedFwd =
