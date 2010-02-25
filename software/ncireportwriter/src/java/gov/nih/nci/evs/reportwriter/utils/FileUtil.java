@@ -58,6 +58,7 @@ public class FileUtil {
     private static Logger _logger = Logger.getLogger(FileUtil.class);
     private static final int MAX_WIDTH = 30;
     private static final int MAX_CODE_WIDTH = 10;
+    private static boolean ADJUST_HEIGHT = false;
 
     private static Vector<String> parseData(String line, String tab) {
         Vector<String> data_vec = new Vector<String>();
@@ -132,19 +133,17 @@ public class FileUtil {
 
 
     public static int getHeightInPoints(Vector<String> v) {
-		int height = 15;
+		int num_lines = 1;
+		if (!ADJUST_HEIGHT) return num_lines;
 		int MAX_CELL_WIDTH = 50;
-		int num_lines = 0;
+
 		for (int i=0; i<v.size(); i++) {
 			String s = (String) v.elementAt(i);
 			int len = s.length();
-			int lines = len / MAX_CELL_WIDTH + 1;
-			if (len / MAX_CELL_WIDTH * num_lines == len) {
-				lines = len / MAX_CELL_WIDTH;
-			}
+			int lines = len / MAX_CELL_WIDTH;
 			if (lines > num_lines) num_lines = lines;
 		}
-		return num_lines - 1;
+		return num_lines;
 	}
 
 
@@ -224,8 +223,6 @@ public class FileUtil {
             HSSFWorkbook wb = new HSSFWorkbook();
             HSSFSheet ws = wb.createSheet(workSheetLabel);
 
-
-
             HSSFCellStyle toprow = wb.createCellStyle();
             HSSFCellStyle cs = wb.createCellStyle();
 
@@ -240,8 +237,8 @@ public class FileUtil {
             toprow.setWrapText(true);
 
             cs.setWrapText(true);
-            cs.setAlignment(HSSFCellStyle.ALIGN_JUSTIFY);
-            //cs.setAlignment(HSSFCellStyle.VERTICAL_CENTER);
+            //cs.setAlignment(HSSFCellStyle.ALIGN_JUSTIFY);
+            cs.setAlignment(HSSFCellStyle.VERTICAL_TOP);
 
 
             HSSFRow wr = null;
@@ -259,9 +256,11 @@ public class FileUtil {
                     if (rownum == 0) {
                         wr.setHeightInPoints(baseline_height * heading_height_multiplier);
 				    } else {
-						int num_lines = getHeightInPoints(v);
-					    //wr.setHeightInPoints(baseline_height);
-					    wr.setHeightInPoints(baseline_height * num_lines);
+						wr.setHeightInPoints(baseline_height);
+						if (ADJUST_HEIGHT) {
+							int num_lines = getHeightInPoints(v);
+							wr.setHeightInPoints(baseline_height * num_lines);
+					    }
 					}
 
                     for (int i = 0; i < v.size(); i++) {
@@ -310,8 +309,8 @@ public class FileUtil {
 					}
 
                     //int colWidth = b[i] * 315;
-
                     int colWidth = multiplier * 315;
+
                     // fileds like definition run long, some sanity required
                     if (colWidth > 20000) {
                         colWidth = 20000;
