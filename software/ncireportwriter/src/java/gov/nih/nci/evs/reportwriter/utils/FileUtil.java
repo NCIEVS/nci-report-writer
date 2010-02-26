@@ -88,11 +88,13 @@ public class FileUtil {
         File file = new File(textfile);
         FileInputStream fis = new FileInputStream(file);
         BufferedInputStream bis = new BufferedInputStream(fis);
-        DataInputStream dis = new DataInputStream(bis);
+        BufferedReader br = new BufferedReader(new InputStreamReader(bis));
 
         int rownum = 0;
-        while (dis.available() != 0) {
-            String line = dis.readLine();
+        while (true) {
+            String line = br.readLine();
+            if (line == null)
+                break;
             if (line.length() <= 0)
                 continue;
             Vector<String> v = parseData(line, delimiter);
@@ -111,7 +113,7 @@ public class FileUtil {
             }
             rownum++;
         }
-        dis.close();
+        br.close();
         return a;
     }
 
@@ -186,7 +188,7 @@ public class FileUtil {
 
         FileInputStream fis = new FileInputStream(file);
         BufferedInputStream bis = new BufferedInputStream(fis);
-        DataInputStream dis = new DataInputStream(bis);
+        BufferedReader br = new BufferedReader(new InputStreamReader(bis));
 
         FileOutputStream fout = new FileOutputStream(excelfile);
         HSSFWorkbook wb = new HSSFWorkbook();
@@ -212,8 +214,10 @@ public class FileUtil {
         int rownum = 0;
         // int baseline_height = 15;
         int baseline_height = 12;
-        while (dis.available() != 0) {
-            String line = dis.readLine();
+        while (true) {
+            String line = br.readLine();
+            if (line == null)
+                break;
             // line = line.trim(); Note: 090512 first value could be empty
             if (line.length() <= 0)
                 continue;
@@ -255,7 +259,7 @@ public class FileUtil {
             rownum++;
         }
 
-        dis.close();
+        br.close();
 
         for (int i = 0; i < 255; i++) {
             if (b[i] != 0) {
@@ -305,11 +309,11 @@ public class FileUtil {
         File file = new File(textfile);
         FileInputStream fis = new FileInputStream(file);
         BufferedInputStream bis = new BufferedInputStream(fis);
-        DataInputStream dis = new DataInputStream(bis);
-
-        String line = dis.readLine();
+        BufferedReader br = new BufferedReader(new InputStreamReader(bis));
+        
+        String line = br.readLine();
         Vector<String> v = parseData(line, delimiter);
-        dis.close();
+        br.close();
         return v;
     }
 
@@ -320,16 +324,18 @@ public class FileUtil {
 
         FileInputStream fis = new FileInputStream(file);
         BufferedInputStream bis = new BufferedInputStream(fis);
-        DataInputStream dis = new DataInputStream(bis);
+        BufferedReader br = new BufferedReader(new InputStreamReader(bis));
 
         // Header line
-        String line = dis.readLine();
+        String line = br.readLine();
         Vector<String> v = parseData(line, delimiter);
         for (int i = 0; i < v.size(); i++)
             width_vec.add(new Integer(0));
 
-        while (dis.available() != 0) {
-            line = dis.readLine();
+        while (true) {
+            line = br.readLine();
+            if (line == null)
+                break;
             if (line.length() <= 0)
                 continue;
             v = parseData(line, delimiter);
@@ -344,7 +350,7 @@ public class FileUtil {
             }
         }
 
-        dis.close();
+        br.close();
         return width_vec;
     }
 
