@@ -27,7 +27,7 @@
         </td></tr>
       <% } %>
       <tr>
-        <td class="inputLabel">To unlock a user, select the user from the list
+        <td class="inputLabel">To unlock a user, enter the user's login ID
         below and then click the Unlock button.<br/><br/>
         </td>        
       </tr>     
@@ -47,7 +47,9 @@
         <td></td>
         <td colspan="2">
           <h:commandButton id="submit" value="Unlock"
-            action="#{userSessionBean.submitUnlockAction}" />              
+            action="#{userSessionBean.submitUnlockAccount}" />              
+          <h:commandButton id="clear" value="Clear"
+            action="#{userSessionBean.clearUnlockAccount}" />              
           <h:commandButton id="back" value="Back" action="back" />
         </td>
       </tr>      

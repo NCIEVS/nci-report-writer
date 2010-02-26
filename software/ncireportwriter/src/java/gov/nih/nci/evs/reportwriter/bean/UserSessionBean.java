@@ -1150,7 +1150,11 @@ public class UserSessionBean extends Object {
         return new ContactUsRequest().clear();
     }
 
-    public String submitUnlockAction() {
+    public String submitUnlockAccount() {
         return new UserAccountRequest().unlock();
+    }     
+
+    public String clearUnlockAccount() {
+        return new UserAccountRequest().clear();
     }     
 }
