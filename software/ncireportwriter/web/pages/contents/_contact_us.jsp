@@ -18,6 +18,7 @@
   String email_address = HTTPUtils.getJspAttributeString(request, EMAIL_ADDRESS);
   String warningMsg = (String) request.getAttribute("warningMsg");
   boolean hasWarningMsg = warningMsg != null && warningMsg.trim().length() > 0;
+  String infoMsg = (String) request.getAttribute("infoMsg");
 %>
 <f:view>
   <div class="welcomeTitle" style="height: 15px">Contact Us</div>
@@ -81,10 +82,13 @@
     To use this web form, please fill in every box below and then click on 'Submit'. 
     <%
       if (hasWarningMsg) {
-          warningMsg = warningMsg.replaceAll("&lt;br/&gt;", "\n");
-          warningMsg = StringUtils.toHtml(warningMsg);
     %>
-          <br/><i style="color:#FF0000;"><%= warningMsg %></i>
+        <br/><i style="color:#FF0000;"><%= StringUtils.toHtml(warningMsg) %></i>
+    <%
+      }
+      if (infoMsg != null && infoMsg.trim().length() > 0) {
+    %>
+        <br/><i class="fyiMsgColor"><%= StringUtils.toHtml(infoMsg) %></i>
     <%
       }
     %>
@@ -108,17 +112,20 @@
     <br/><br/>
     
     <h:commandButton
+      id="submit"
+      value="Submit"
+      action="#{userSessionBean.submitContactUs}"
+      alt="submit" />
+    <h:commandButton
       id="clear"
       value="Clear"
       action="#{userSessionBean.clearContactUs}"
-      alt="clear">
-    </h:commandButton>
-    <h:commandButton
-      id="mail"
-      value="Submit"
-      action="#{userSessionBean.submitContactUs}"
-      alt="submit" >
-    </h:commandButton>
+      alt="clear" />
+    <h:commandButton 
+      id="back" 
+      value="Back"
+      action="back"
+      alt="back" />
   </form>
   <br/>
   

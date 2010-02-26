@@ -1137,11 +1137,11 @@ public class UserSessionBean extends Object {
     }
 
     public String submitAccessDenied() {
-        return AccessDeniedRequest.submit();
+        return new AccessDeniedRequest().submit();
     }
 
     public String clearAccessDenied() {
-        return AccessDeniedRequest.clear();
+        return new AccessDeniedRequest().clear();
     }
     
     public String submitContactUs() {
