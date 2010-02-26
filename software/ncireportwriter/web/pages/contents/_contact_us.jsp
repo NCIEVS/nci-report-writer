@@ -17,7 +17,7 @@
   String email_msg = HTTPUtils.getJspAttributeString(request, EMAIL_MSG);
   String email_address = HTTPUtils.getJspAttributeString(request, EMAIL_ADDRESS);
   String warningMsg = (String) request.getAttribute("warningMsg");
-  boolean isUserError = warningMsg != null && warningMsg.trim().length() > 0;
+  boolean hasWarningMsg = warningMsg != null && warningMsg.trim().length() > 0;
 %>
 <f:view>
   <div class="welcomeTitle" style="height: 15px">Contact Us</div>
@@ -72,15 +72,15 @@
 
   <%
     String color = ""; 
-    if (isUserError)
+    if (hasWarningMsg)
       color = "style=\"color:#FF0000;\"";
   %>
-  <br/><b>Online Form</b><br/>
+  <br/><br/><b>Online Form</b>
   <br/>
   <p <%= color %>>
     To use this web form, please fill in every box below and then click on 'Submit'. 
     <%
-      if (isUserError) {
+      if (hasWarningMsg) {
           warningMsg = warningMsg.replaceAll("&lt;br/&gt;", "\n");
           warningMsg = StringUtils.toHtml(warningMsg);
     %>
@@ -91,17 +91,17 @@
   </p>
   
   <form method="post">
-    <% if (isUserError) %> <i style="color:#FF0000;">* Required)</i>
+    <% if (hasWarningMsg) %> <i style="color:#FF0000;">* Required)</i>
     <i>Subject of your email:</i>
     <br/>
     <input class="inputItem" style="width: 690px" name="subject" alt="Subject" value="<%= subject %>" onFocus="active = true" onBlur="active = false" onKeyPress="return ifenter(event,this.form)">
     <br/><br/>
-    <% if (isUserError) %> <i style="color:#FF0000;">* Required)</i>
+    <% if (hasWarningMsg) %> <i style="color:#FF0000;">* Required)</i>
     <i>Detailed description of your problem or suggestion (no attachments):</i>
     <br/>
     <textarea class="textItem" style="width: 690px" rows="4" Name="<%= EMAIL_MSG %>" rows="4"><%= email_msg %></textarea>
     <br/><br/>
-    <% if (isUserError) %> <i style="color:#FF0000;">* Required)</i>
+    <% if (hasWarningMsg) %> <i style="color:#FF0000;">* Required)</i>
     <i>Your e-mail address:</i>
     <br/>
     <input class="inputItem" style="width: 690px" name="<%= EMAIL_ADDRESS %>" alt="<%= EMAIL_ADDRESS %>" value="<%= email_address %>" onFocus="active = true" onBlur="active = false" onKeyPress="return ifenter(event,this.form)">
@@ -109,13 +109,13 @@
     
     <h:commandButton
       id="clear"
-      value="clear"
+      value="Clear"
       action="#{userSessionBean.clearContactUs}"
       alt="clear">
     </h:commandButton>
     <h:commandButton
       id="mail"
-      value="submit"
+      value="Submit"
       action="#{userSessionBean.submitContactUs}"
       alt="submit" >
     </h:commandButton>

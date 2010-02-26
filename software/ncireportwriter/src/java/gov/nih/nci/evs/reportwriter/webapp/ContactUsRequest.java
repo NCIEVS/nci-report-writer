@@ -7,6 +7,7 @@ import gov.nih.nci.evs.reportwriter.utils.*;
 
 public class ContactUsRequest {
     // -------------------------------------------------------------------------
+    private static final String CONTACT_US_PAGE = "contact_us";
     public static final String SUBJECT = "subject";
     public static final String EMAIL_MSG = "email_msg";
     public static final String EMAIL_ADDRESS = "email_address";
@@ -14,7 +15,11 @@ public class ContactUsRequest {
 
     // -------------------------------------------------------------------------
     public String clear() {
-        return "contact_us";
+        HttpServletRequest request = SessionUtil.getRequest();
+        request.removeAttribute(SUBJECT);
+        request.removeAttribute(EMAIL_MSG);
+        request.removeAttribute(EMAIL_ADDRESS);
+        return CONTACT_US_PAGE;
     }
     
     public String submit() {
@@ -42,6 +47,6 @@ public class ContactUsRequest {
         }
 
         HTTPUtils.infoMsg(request, "Your message was successfully sent.");
-        return "contact_us";
+        return clear();
     }
 }
