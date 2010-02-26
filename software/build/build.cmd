@@ -6,8 +6,8 @@ echo **** Command file to invoke build.xml ****
 echo ******************************************
 echo.
 setlocal
-set DEVPROPFILE=C:\SVN-Projects\ncireportwriter-properties\properties\dev-upgrade.properties
-set QAPROPFILE=C:\SVN-Projects\ncireportwriter-properties\properties\qa-upgrade.properties
+set DEVPROPFILE=C:\NCI-Projects\ncireportwriter-properties\properties\dev-upgrade.properties
+set QAPROPFILE=C:\NCI-Projects\ncireportwriter-properties\properties\qa-upgrade.properties
 if "%1" == ""  (
     echo.
     echo Available targets are:
