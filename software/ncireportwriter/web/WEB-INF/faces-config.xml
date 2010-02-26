@@ -354,11 +354,6 @@
       <from-outcome>back</from-outcome>
       <to-view-id>/pages/main/task.jsp</to-view-id>
     </navigation-case>
-    <navigation-case>
-      <from-action>#{userSessionBean.submitRequestAction}</from-action>
-      <from-outcome>unlock</from-outcome>
-      <to-view-id>/pages/main/unlock.jsp</to-view-id>
-    </navigation-case>
   </navigation-rule>  
 
   <!-- ===================================================================== -->
