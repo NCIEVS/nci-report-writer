@@ -1,9 +1,11 @@
 package gov.nih.nci.evs.reportwriter.webapp;
 
+import gov.nih.nci.evs.reportwriter.utils.*;
+import gov.nih.nci.security.authentication.*;
+
 import javax.servlet.http.*;
 
-import gov.nih.nci.evs.reportwriter.properties.*;
-import gov.nih.nci.evs.reportwriter.utils.*;
+import org.apache.log4j.*;
 
 /**
  * <!-- LICENSE_TEXT_START -->
@@ -48,52 +50,30 @@ import gov.nih.nci.evs.reportwriter.utils.*;
  */
 
 /**
- * @author EVS Team (David Yee)
+ * @author EVS Team (Will Garcia, David Yee)
  * @version 1.0
  */
 
-public class ContactUsRequest {
-    // -------------------------------------------------------------------------
-    public static final String SUBJECT = "subject";
-    public static final String EMAIL_MSG = "email_msg";
-    public static final String EMAIL_ADDRESS = "email_address";
-    private boolean _isSendEmail = true;
+public class UserAccountRequest {
+    private static Logger _logger = Logger.getLogger(UserAccountRequest.class);
 
-    // -------------------------------------------------------------------------
-    public String clear() {
-        HttpServletRequest request = SessionUtil.getRequest();
-        request.removeAttribute(SUBJECT);
-        request.removeAttribute(EMAIL_MSG);
-        request.removeAttribute(EMAIL_ADDRESS);
-        return "clear";
-    }
+    public static final String LOGIN_ID = "loginID";
     
-    public String submit() {
+    public String unlock() {
+        _logger.debug("Method: UserAccountRequest.unlock");
         HttpServletRequest request = SessionUtil.getRequest();
-        AppProperties appProperties = AppProperties.getInstance();
-        try {
-            String mailServer = appProperties.getProperty(
-                AppProperties.MAIL_SMTP_SERVER);
-            String subject = HTTPUtils.getParameter(request, SUBJECT);
-            String emailMsg = HTTPUtils.getParameter(request, EMAIL_MSG);
-            String from = HTTPUtils.getParameter(request, EMAIL_ADDRESS);
-            String recipients[] = new String[] { //DYEE
-                appProperties.getProperty(AppProperties.ACCOUNT_ADMIN_USER_EMAIL)
-            };
-            MailUtils.postMail(mailServer, from, recipients, subject, emailMsg, _isSendEmail);
-        } catch (UserInputException e) {
-            return HTTPUtils.warningMsg(request, e.getMessage());
-        } catch (Exception e) {
-            StringBuffer warningMsg = new StringBuffer();
-            warningMsg.append("System Error: Your message was not sent.\n");
-            warningMsg.append("    (If possible, please contact NCI systems team.)\n");
-            warningMsg.append("\n");
-            warningMsg.append(e.getMessage() + "\n");
-            return HTTPUtils.warningMsg(request, warningMsg);
-        }
+        String userid = HTTPUtils.getParameter(request, LOGIN_ID);
 
-        HTTPUtils.infoMsg(request, "Your message was successfully sent.");
-        clear();
-        return "submit";
+        if (userid == null || userid.trim().length() <= 0)
+            return HTTPUtils.warningMsg(request, "Please enter the Login ID.");
+
+        LockoutManager mgr = LockoutManager.getInstance();
+        if (!mgr.isUserLockedOut(userid))
+            return HTTPUtils.warningMsg(request,
+                "User login ID is either unknown or not locked.");
+
+        _logger.debug("Unlocking userid: " + userid);
+        mgr.unLockUser(userid);
+        return HTTPUtils.infoMsg(request, "User has been unlocked.");
     }
 }
