@@ -69,10 +69,10 @@ public class AccessDeniedRequest {
     public final static String LOGIN_ID = "loginID";
     public final static String EMAIL = "email";
     public final static String INFORMATION = "information";
-    private static boolean _sendEmail = true;
+    private boolean _sendEmail = true;
 
     // -------------------------------------------------------------------------
-    private static class AccessDeniedInfo {
+    private class AccessDeniedInfo {
         public String problem = "";
         public String loginID = "";
         public String email = "";
@@ -111,20 +111,20 @@ public class AccessDeniedRequest {
         }
     }
 
-    public static String clear() {
+    public String clear() {
         HttpServletRequest request = SessionUtil.getRequest();
         StringBuffer warningMsg = new StringBuffer();
         try {
             AccessDeniedInfo info = new AccessDeniedInfo();
             info.clearValues(request);
-            return "request";
+            return "clear";
         } catch (Exception e) {
             e.printStackTrace();
             return HTTPUtils.warningMsg(request, warningMsg, e);
         }
     }
 
-    public static String submit() {
+    public String submit() {
         HttpServletRequest request = SessionUtil.getRequest();
         StringBuffer warningMsg = new StringBuffer();
         try {
@@ -135,14 +135,14 @@ public class AccessDeniedRequest {
                 return HTTPUtils.warningMsg(request, warningMsg);
             email(info);
             HTTPUtils.infoMsg(request, "Your problem as been reported.");
-            return "request";
+            return "submit";
         } catch (Exception e) {
             e.printStackTrace();
             return HTTPUtils.warningMsg(request, warningMsg, e);
         }
     }
 
-    private static boolean isValidValues(StringBuffer warningMsg,
+    private boolean isValidValues(StringBuffer warningMsg,
         AccessDeniedInfo info) {
         info.debug();
 
@@ -166,7 +166,7 @@ public class AccessDeniedRequest {
         return true;
     }
 
-    private static void email(AccessDeniedInfo info) throws Exception {
+    private void email(AccessDeniedInfo info) throws Exception {
         String from = info.email;
         String[] recipients = new String[] { ACCOUNT_ADMIN_USER_EMAIL_ };
         String subject = "NCI Report Writer account access problems (for " 
