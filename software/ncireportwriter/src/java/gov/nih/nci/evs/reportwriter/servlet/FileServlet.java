@@ -1,6 +1,7 @@
 package gov.nih.nci.evs.reportwriter.servlet;
 
 import java.io.*;
+
 import javax.servlet.*;
 import javax.servlet.http.*;
 
@@ -144,27 +145,23 @@ public final class FileServlet extends HttpServlet {
 
         if (format.indexOf("Excel") == -1) {
             try {
-                FileInputStream fis = null;
-                BufferedInputStream bis = null;
-                DataInputStream dis = null;
-                try {
-                    fis = new FileInputStream(file);
-                    bis = new BufferedInputStream(fis);
-                    dis = new DataInputStream(bis);
-                    String s = "";
-                    while (dis.available() != 0) {
-                        String line = dis.readLine();
-                        s = s + line + line_br;
-                    }
-                    PrintWriter out = response.getWriter();
-                    out.write(s);
-                    out.flush();
-                    out.close();
-                } catch (Exception e) {
+                FileInputStream fis = new FileInputStream(file);
+                BufferedInputStream bis = new BufferedInputStream(fis);
+                BufferedReader br = new BufferedReader(new InputStreamReader(bis));
 
+                String s = "";
+                while (true) {
+                    String line = br.readLine();
+                    if (line == null)
+                        break;
+                    s = s + line + line_br;
                 }
-
+                PrintWriter out = response.getWriter();
+                out.write(s);
+                out.flush();
+                out.close();
             } catch (Exception e) {
+
             }
         } else if (format.indexOf("Excel") != -1) {
             try {
