@@ -376,7 +376,7 @@ public class ReportGenerationThread implements Runnable {
 
             return bool_obj;
         } catch (Exception e) {
-            return warningMsg(warningMsg, e.getMessage());
+            return warningMsg(warningMsg, ExceptionUtils.getStackTrace(e));
         }
     }
 
@@ -621,9 +621,11 @@ public class ReportGenerationThread implements Runnable {
             }
         }
 
-        org.LexGrid.commonTypes.Property[] properties = null;
+        org.LexGrid.commonTypes.Property[] properties = 
+            new org.LexGrid.commonTypes.Property[]{};
 
-        if (property_type.compareToIgnoreCase("GENERIC") == 0) {
+        if (property_type == null) {
+        } else if (property_type.compareToIgnoreCase("GENERIC") == 0) {
             properties = concept.getProperty();
         } else if (property_type.compareToIgnoreCase("PRESENTATION") == 0) {
             properties = concept.getPresentation();
@@ -1053,7 +1055,7 @@ public class ReportGenerationThread implements Runnable {
                     "Microsoft Office Excel", "DRAFT", uid);
             return bool_obj;
         } catch (Exception e) {
-            return warningMsg(warningMsg, e.getMessage());
+            return warningMsg(warningMsg, ExceptionUtils.getStackTrace(e));
         }
     }
 }
