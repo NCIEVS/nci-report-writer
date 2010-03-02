@@ -30,7 +30,7 @@ public class CDISCTest {
         String value = getCdiscPt(codingScheme, version, code, parentCode);
         _logger.debug("Value: " + value);
     }
-    
+
     private String getCdiscPt(String codingScheme, String version, String code,
         String parentCode) throws Exception {
         Concept concept =
@@ -49,45 +49,85 @@ public class CDISCTest {
         _logger.debug("* concept: " + name + "(" + code + ")");
         _logger
             .debug("* parentConcept: " + parentName + "(" + parentCode + ")");
-        
-        Vector<String> v = getSynonyms(parentConcept);
+
+        String nciABTerm = null;
+        Vector<SynonymInfo> v = getSynonyms(parentConcept);
         ListUtils.debug(_logger, "getSynonyms(parentConcept)", v);
+        int n = v.size();
+        for (int i = 0; i < n; ++i) {
+            SynonymInfo info = v.get(i);
+            if (info.source.equalsIgnoreCase("NCI")
+                && info.type.equalsIgnoreCase("AB")) {
+                nciABTerm = info.name;
+            }
+        }
+        if (nciABTerm == null)
+            return "";
+
         v = getSynonyms(concept);
         ListUtils.debug(_logger, "getSynonyms(concept)", v);
+        n = v.size();
+        for (int i = 0; i < n; ++i) {
+            SynonymInfo info = v.get(i);
+            if (info.sourceCode.equals(nciABTerm))
+                return info.name;
+        }
+        for (int i = 0; i < n; ++i) {
+            SynonymInfo info = v.get(i);
+            if (info.source.equalsIgnoreCase("CDISC")
+                && info.source.equalsIgnoreCase("SY"))
+                return info.name;
+        }
+        for (int i = 0; i < n; ++i) {
+            SynonymInfo info = v.get(i);
+            if (info.source.equalsIgnoreCase("CDISC")
+                && info.source.equalsIgnoreCase("PT"))
+                return info.name;
+        }
         return "";
     }
-    
-    public static Vector<String> getSynonyms(Concept concept) {
+
+    public class SynonymInfo {
+        public String name = "";
+        public String type = "";
+        public String source = "";
+        public String sourceCode = "";
+
+        public String toString() {
+            return "name=" + name + ", type=" + type + ", source=" + source
+                + ", sourceCode=" + sourceCode;
+        }
+    }
+
+    public Vector<SynonymInfo> getSynonyms(Concept concept) {
+        Vector<SynonymInfo> v = new Vector<SynonymInfo>();
         if (concept == null)
-            return null;
-        Vector<String> v = new Vector<String>();
+            return v;
+
         Presentation[] properties = concept.getPresentation();
         for (int i = 0; i < properties.length; i++) {
             Presentation p = properties[i];
-            String term_name = p.getValue().getContent();
-            String term_type = "null";
-            String term_source = "null";
-            String term_source_code = "null";
+            SynonymInfo info = new SynonymInfo();
 
+            info.name = p.getValue().getContent();
             int n = p.getPropertyQualifierCount();
             for (int j = 0; j < n; j++) {
                 PropertyQualifier q = p.getPropertyQualifier(j);
                 String qualifier_name = q.getPropertyQualifierName();
                 String qualifier_value = q.getValue().getContent();
                 if (qualifier_name.compareTo("source-code") == 0) {
-                    term_source_code = qualifier_value;
+                    info.sourceCode = qualifier_value;
                     break;
                 }
             }
-            
-            term_type = p.getRepresentationalForm();
+
+            info.type = p.getRepresentationalForm();
             Source[] sources = p.getSource();
             if (sources != null && sources.length > 0) {
                 Source src = sources[0];
-                term_source = src.getContent();
+                info.source = src.getContent();
             }
-            v.add(term_name + "|" + term_type + "|" + term_source + "|"
-                    + term_source_code);
+            v.add(info);
         }
         SortUtils.quickSort(v);
         return v;
