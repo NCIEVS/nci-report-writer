@@ -19,6 +19,7 @@ import org.LexGrid.naming.*;
 import org.LexGrid.LexBIG.DataModel.Core.types.*;
 import org.LexGrid.LexBIG.Extensions.Generic.*;
 import gov.nih.nci.evs.reportwriter.properties.*;
+
 import org.LexGrid.LexBIG.Exceptions.*;
 import org.apache.log4j.*;
 
@@ -930,7 +931,7 @@ public class DataUtils {
                                         if (acl != null) {
                                             for (int j = 0; j < acl.length; j++) {
                                                 AssociatedConcept ac = acl[j];
-                                                if (ac != null) {
+                                                if (ac != null && ac.getConceptCode().indexOf("@") == -1) {
                                                     EntityDescription ed =
                                                         ac
                                                             .getEntityDescription();
@@ -1584,5 +1585,133 @@ public class DataUtils {
             newV.add(concept);
         }
         return newV;
+    }
+    
+    public static String getCdiscPreferredTerm(String codingScheme, String version,
+        String code, String associatedCode) throws Exception {
+        Concept concept =
+            DataUtils.getConceptByCode(codingScheme, version, null, code);
+        if (concept == null)
+            throw new Exception("Can not retrieve concept from code " + code
+                + ".");
+        Concept associatedConcept =
+            DataUtils.getConceptByCode(codingScheme, version, null,
+                associatedCode);
+        if (associatedConcept == null)
+            throw new Exception(
+                "Can not retrieve associated concept from code "
+                    + associatedConcept + ".");
+
+        String name = concept.getEntityDescription().getContent();
+        String associatedName =
+            associatedConcept.getEntityDescription().getContent();
+        _logger.debug("* concept: " + name + "(" + code + ")");
+        _logger.debug("* associatedConcept: " + associatedName + "("
+            + associatedCode + ")");
+        return getCdiscPreferredTerm(concept, associatedConcept, "|");
+    }
+
+    public static String getCdiscPreferredTerm(Concept concept,
+        Concept associated_concept, String delimiter) throws Exception {
+        String nciABTerm = null;
+        Vector<SynonymInfo> v = getSynonyms(associated_concept);
+        int n = v.size();
+        for (int i = 0; i < n; ++i) {
+            SynonymInfo info = v.get(i);
+            if (info.source.equalsIgnoreCase("NCI")
+                && info.type.equalsIgnoreCase("AB")) {
+                nciABTerm = info.name;
+            }
+        }
+        v = getSynonyms(concept);
+        n = v.size();
+        boolean debug = false;
+
+        StringBuffer buffer = new StringBuffer();
+        if (nciABTerm != null) {
+            for (int i = 0; i < n; ++i) {
+                SynonymInfo info = v.get(i);
+                if (info.sourceCode.equals(nciABTerm))
+                    StringUtils.append(buffer, info.name, delimiter);
+            }
+            if (buffer.length() > 0) {
+                if (debug)
+                    buffer.insert(0, "[nciABTerm=" + nciABTerm + "]: ");
+                return buffer.toString();
+            }
+        }
+        
+        // If any, retrieve "CDISC|SY".
+        for (int i = 0; i < n; ++i) {
+            SynonymInfo info = v.get(i);
+            if (info.source.equalsIgnoreCase("CDISC")
+                && info.type.equalsIgnoreCase("SY"))
+                StringUtils.append(buffer, info.name, delimiter);
+        }
+        if (buffer.length() > 0) {
+            if (debug)
+                buffer.insert(0, "[CDISC|SY]: ");
+            return buffer.toString();
+        }
+
+        // If any, retrieve "CDISC|PT".
+        for (int i = 0; i < n; ++i) {
+            SynonymInfo info = v.get(i);
+            if (info.source.equalsIgnoreCase("CDISC")
+                && info.type.equalsIgnoreCase("PT"))
+                StringUtils.append(buffer, info.name, delimiter);
+        }
+        if (buffer.length() > 0) {
+            if (debug)
+                buffer.insert(0, "[CDISC|PT]: ");
+            return buffer.toString();
+        }
+        return "";
+    }
+
+    public static class SynonymInfo {
+        public String name = "";
+        public String type = "";
+        public String source = "";
+        public String sourceCode = "";
+
+        public String toString() {
+            return "name=" + name + ", type=" + type + ", source=" + source
+                + ", sourceCode=" + sourceCode;
+        }
+    }
+
+    public static Vector<SynonymInfo> getSynonyms(Concept concept) {
+        Vector<SynonymInfo> v = new Vector<SynonymInfo>();
+        if (concept == null)
+            return v;
+
+        Presentation[] properties = concept.getPresentation();
+        for (int i = 0; i < properties.length; i++) {
+            Presentation p = properties[i];
+            SynonymInfo info = new SynonymInfo();
+
+            info.name = p.getValue().getContent();
+            int n = p.getPropertyQualifierCount();
+            for (int j = 0; j < n; j++) {
+                PropertyQualifier q = p.getPropertyQualifier(j);
+                String qualifier_name = q.getPropertyQualifierName();
+                String qualifier_value = q.getValue().getContent();
+                if (qualifier_name.compareTo("source-code") == 0) {
+                    info.sourceCode = qualifier_value;
+                    break;
+                }
+            }
+
+            info.type = p.getRepresentationalForm();
+            Source[] sources = p.getSource();
+            if (sources != null && sources.length > 0) {
+                Source src = sources[0];
+                info.source = src.getContent();
+            }
+            v.add(info);
+        }
+        SortUtils.quickSort(v);
+        return v;
     }
 }
