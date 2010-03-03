@@ -26,33 +26,41 @@ public class CDISCTest {
         String codingScheme = "NCI Thesaurus";
         String version = "09.12d";
         String code = "C17998";
-        String parentCode = "C66731";
-        String value = getCdiscPt(codingScheme, version, code, parentCode);
+        String associatedCode = "C66731";
+        String value =
+            getCdiscPreferredTerm(codingScheme, version, code, associatedCode);
         _logger.debug("Value: " + value);
     }
 
-    private String getCdiscPt(String codingScheme, String version, String code,
-        String parentCode) throws Exception {
+    private String getCdiscPreferredTerm(String codingScheme, String version,
+        String code, String associatedCode) throws Exception {
         Concept concept =
             DataUtils.getConceptByCode(codingScheme, version, null, code);
         if (concept == null)
             throw new Exception("Can not retrieve concept from code " + code
                 + ".");
-        Concept parentConcept =
-            DataUtils.getConceptByCode(codingScheme, version, null, parentCode);
-        if (parentConcept == null)
-            throw new Exception("Can not retrieve parent concept from code "
-                + parentConcept + ".");
+        Concept associatedConcept =
+            DataUtils.getConceptByCode(codingScheme, version, null,
+                associatedCode);
+        if (associatedConcept == null)
+            throw new Exception(
+                "Can not retrieve associated concept from code "
+                    + associatedConcept + ".");
 
         String name = concept.getEntityDescription().getContent();
-        String parentName = parentConcept.getEntityDescription().getContent();
+        String associatedName =
+            associatedConcept.getEntityDescription().getContent();
         _logger.debug("* concept: " + name + "(" + code + ")");
-        _logger
-            .debug("* parentConcept: " + parentName + "(" + parentCode + ")");
+        _logger.debug("* associatedConcept: " + associatedName + "("
+            + associatedCode + ")");
+        return getCdiscPreferredTerm(concept, associatedConcept);
+    }
 
+    private String getCdiscPreferredTerm(Concept concept,
+        Concept associated_concept) throws Exception {
         String nciABTerm = null;
-        Vector<SynonymInfo> v = getSynonyms(parentConcept);
-        ListUtils.debug(_logger, "getSynonyms(parentConcept)", v);
+        Vector<SynonymInfo> v = getSynonyms(associated_concept);
+        ListUtils.debug(_logger, "getSynonyms(associatedConcept)", v);
         int n = v.size();
         for (int i = 0; i < n; ++i) {
             SynonymInfo info = v.get(i);
