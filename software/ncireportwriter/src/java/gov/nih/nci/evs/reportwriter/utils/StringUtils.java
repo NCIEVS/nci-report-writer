@@ -143,4 +143,10 @@ public class StringUtils {
         text += dots;
         return text;
     }
+
+    public static void append(StringBuffer buffer, String value, String delimiter) {
+        if (buffer.length() > 0)
+            buffer.append(delimiter);
+        buffer.append(value);
+    }
 }
