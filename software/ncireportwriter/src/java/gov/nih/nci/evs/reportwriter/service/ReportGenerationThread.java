@@ -439,23 +439,44 @@ public class ReportGenerationThread implements Runnable {
         }
     }
 
+    private String cdiscCodelistCode = "";
+    
     private void writeColumnData(PrintWriter pw, String scheme, String version,
         Concept defining_root_concept, Concept associated_concept, Concept c,
         String delim, ReportColumn[] cols) {
-        String output_line = "";
+        Vector<String> values = new Vector<String>();
+        boolean isCDISCExtensibleValue = false;
         for (int i = 0; i < cols.length; i++) {
             ReportColumn rc = (ReportColumn) cols[i];
-            String s =
-                getReportColumnValue(scheme, version, defining_root_concept,
-                    associated_concept, c, rc);
-            if (i == 0) {
-                output_line = s;
-            } else {
-                // output_line = output_line + "\t" + s;
-                output_line = output_line + delim + s;
+            //DYEEDump.debug(rc);
+            String value = getReportColumnValue(scheme, version, defining_root_concept,
+                associated_concept, c, rc);
+            
+            if (rc.getLabel().equals("Codelist Extensible (Yes/No)")) {
+                if (value == null || value.trim().length() <= 0)
+                    return; //Abort: Row not needed
+                if (! values.get(i-1).equals(cdiscCodelistCode)) {
+                    isCDISCExtensibleValue = true;
+                    cdiscCodelistCode = values.get(i-1);
+                }
             }
+            values.add(value);
         }
-        pw.println(output_line);
+        if (isCDISCExtensibleValue) {
+            Vector<String> subHeaderValues = new Vector<String>();
+            for (int i = 0; i < cols.length; i++) {
+                ReportColumn rc = (ReportColumn) cols[i];
+                DYEE.println(StringUtils.SEPARATOR);
+                DYEE.println("* defining_root_concept=" + (defining_root_concept != null ? defining_root_concept.getEntityCode(): "null"));
+                DYEE.println("* associated_concept=" + (associated_concept != null ? associated_concept.getEntityCode(): "null"));
+                DYEE.println("* c=" + (c != null ? c.getEntityCode(): "null"));
+                String value = getReportColumnValue(scheme, version, defining_root_concept,
+                    null, associated_concept, rc);
+                subHeaderValues.add(value);
+            }
+            pw.println(StringUtils.toString(subHeaderValues, delim));
+        }
+        pw.println(StringUtils.toString(values, delim));
 
         _count++;
         if ((_count / 100) * 100 == _count) {
@@ -572,14 +593,19 @@ public class ReportGenerationThread implements Runnable {
 
         if (field_Id.equals("Code"))
             return node.getEntityCode();
-        if (field_Id.equals("Associated Concept Code"))
+        if (field_Id.equals("Associated Concept Code")) {
+            if (associated_concept == null)
+                return "";
             return associated_concept.getEntityCode();
+        }
 
         Concept concept = node;
         if (property_name != null
             && property_name.compareTo("Contributing_Source") == 0) {
             concept = defining_root_concept;
         } else if (field_Id.indexOf("Associated") != -1) {
+            if (associated_concept == null)
+                return "";
             concept = associated_concept;
         } else if (field_Id.indexOf("Parent") != -1) {
             if (_hierarchicalAssoName == null) {

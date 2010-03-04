@@ -98,21 +98,28 @@ public class StringUtils {
             ++i;
         }
     }
+
+    public static void append(StringBuffer buffer, String value, String delimiter) {
+        if (buffer.length() > 0)
+            buffer.append(delimiter);
+        buffer.append(value);
+    }
     
-    public static String toString(List<?> list) {
+    public static String toString(List<?> list, String delimiter) {
         if (list == null)
             return "";
         
-        StringBuffer buffer = new StringBuffer();
         Iterator<?> iterator = list.iterator();
-        int i=0;
+        StringBuffer buffer = new StringBuffer();
         while (iterator.hasNext()) {
-            if (i > 0)
-                buffer.append(", ");
-            buffer.append(iterator.next().toString());
-            ++i;
+            String value = iterator.next().toString();
+            append(buffer, value, delimiter);
         }
         return buffer.toString();
+    }
+
+    public static String toString(List<?> list) {
+        return toString(list, ", ");
     }
 
     public static void debugSameLine(Logger logger, String text, List<?> list) {
@@ -142,11 +149,5 @@ public class StringUtils {
         text = text.substring(0, maxChar - dots.length());
         text += dots;
         return text;
-    }
-
-    public static void append(StringBuffer buffer, String value, String delimiter) {
-        if (buffer.length() > 0)
-            buffer.append(delimiter);
-        buffer.append(value);
     }
 }
