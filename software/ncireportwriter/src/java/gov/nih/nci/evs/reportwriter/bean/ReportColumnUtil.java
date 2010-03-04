@@ -291,6 +291,10 @@ public class ReportColumnUtil {
 
     // -------------------------------------------------------------------------
     public static void debug(ReportColumn col) {
+        debugFlat(col);
+    }
+    
+    public static void debugSummary(ReportColumn col) {
         if (!_logger.isDebugEnabled())
             return;
 
@@ -312,6 +316,29 @@ public class ReportColumnUtil {
         _logger.debug("  * Delimiter: " + col.getDelimiter());
         _logger.debug("  * Dependency (ConditionalColumnId): "
             + col.getConditionalColumnId());
+    }
+
+    public static void debugFlat(ReportColumn col) {
+        if (!_logger.isDebugEnabled())
+            return;
+
+        StringBuffer buffer = new StringBuffer();
+        buffer.append("ReportColumn=" + col.getColumnNumber());
+        buffer.append(", id=" + col.getId());
+        buffer.append(", label=" + col.getLabel());
+        buffer.append(", fieldId=" + col.getFieldId());
+        buffer.append(", propertyType=" + col.getPropertyType());
+        buffer.append(", propertyName=" + col.getPropertyName());
+        buffer.append(", isPreferred=" + col.getIsPreferred());
+        buffer.append(", representationalForm="
+            + col.getRepresentationalForm());
+        buffer.append(", source=" + col.getSource());
+        buffer.append(", qualifierName=" + col.getQualifierName());
+        buffer.append(", qualifierValue=" + col.getQualifierValue());
+        buffer.append(", delimiter=" + col.getDelimiter());
+        buffer.append(", conditionalColumnId="
+            + col.getConditionalColumnId());
+        _logger.debug(buffer.toString());
     }
 
     public static ReportColumn getReportColumn(int fieldNum) throws Exception {
