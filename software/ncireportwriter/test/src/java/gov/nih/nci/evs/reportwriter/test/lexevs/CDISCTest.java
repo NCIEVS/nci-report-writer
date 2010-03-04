@@ -1,7 +1,7 @@
 package gov.nih.nci.evs.reportwriter.test.lexevs;
 
+import gov.nih.nci.evs.reportwriter.service.*;
 import gov.nih.nci.evs.reportwriter.test.utils.*;
-import gov.nih.nci.evs.reportwriter.utils.*;
 
 import org.apache.log4j.*;
 
@@ -24,7 +24,7 @@ public class CDISCTest {
         String code = "C17998";
         String associatedCode = "C66731";
         String value =
-            DataUtils.getCdiscPreferredTerm(codingScheme, version, code,
+            SpecialCases.CDISC.getPreferredTerm(codingScheme, version, code,
                 associatedCode);
         _logger.debug("Value: " + value);
     }

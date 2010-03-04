@@ -568,7 +568,7 @@ public class ReportGenerationThread implements Runnable {
             associated_concept = (Concept) v.elementAt(0);
         }
         
-        String cdiscValue = SpecialCases.getCdiscSubmissionValue(
+        String cdiscValue = SpecialCases.CDISC.getSubmissionValue(
             label, node, associated_concept, delimiter);
         if (cdiscValue != null) return cdiscValue;
 
