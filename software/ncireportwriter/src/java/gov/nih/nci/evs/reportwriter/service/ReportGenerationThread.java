@@ -568,19 +568,9 @@ public class ReportGenerationThread implements Runnable {
             associated_concept = (Concept) v.elementAt(0);
         }
         
-        if (label.equalsIgnoreCase("CDISC Submission Value")) {
-            try {
-                String value = DataUtils.getCdiscPreferredTerm(node,
-                    associated_concept, delimiter);
-                _logger.debug("DYEE: " + node.getEntityCode() + ", " +
-                    associated_concept.getEntityCode() + ": " + value);
-                return value;
-            } catch (Exception e) {
-                //e.printStackTrace();
-                ExceptionUtils.print(_logger, e, 
-                    "Method: ReportGenerationThread.getReportColumnValue");
-            }
-        }
+        String cdiscValue = SpecialCases.getCdiscSubmissionValue(
+            label, node, associated_concept, delimiter);
+        if (cdiscValue != null) return cdiscValue;
 
         if (field_Id.equals("Code"))
             return node.getEntityCode();
