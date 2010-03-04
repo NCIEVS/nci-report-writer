@@ -395,7 +395,7 @@ public class ReportGenerationThread implements Runnable {
         for (int i = 0; i < cols.length; i++) {
             ReportColumn rc = (ReportColumn) cols[i];
             String label = rc.getLabel();
-            label = label.replaceAll("\\[CDRH] ", "");
+            label = SpecialCases.CDRH.replaceLabel(label);
             columnHeadings = columnHeadings + label;
             if (i < cols.length - 1)
                 columnHeadings = columnHeadings + delimeter_str;
@@ -559,14 +559,12 @@ public class ReportGenerationThread implements Runnable {
             delimiter = null;
 
         String label = rc.getLabel().toUpperCase();
-        if (label.indexOf("[CDRH] PARENT") != -1) {
-            Vector<Concept> v =
-                DataUtils.getAssociationTargets(scheme, version, node
-                    .getEntityCode(), "A10");
-            if (v == null || v.size() <= 0)
-                return "Not Available";
-            associated_concept = (Concept) v.elementAt(0);
-        }
+        SpecialCases.CDRHInfo cdrhInfo = SpecialCases.CDRH.getAssociatedConcept(
+            label, scheme, version, node);
+        if (cdrhInfo != null && cdrhInfo.value != null)
+            return cdrhInfo.value;
+        if (cdrhInfo != null && cdrhInfo.associated_concept != null)
+            associated_concept = cdrhInfo.associated_concept;
         
         String cdiscValue = SpecialCases.CDISC.getSubmissionValue(
             label, node, associated_concept, delimiter);

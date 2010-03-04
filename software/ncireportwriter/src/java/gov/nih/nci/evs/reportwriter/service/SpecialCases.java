@@ -58,6 +58,41 @@ import org.apache.log4j.*;
 public class SpecialCases {
     private static Logger _logger = Logger.getLogger(SpecialCases.class);
 
+    public static class CDRHInfo {
+        String value = null;
+        Concept associated_concept = null;
+        
+        public CDRHInfo(String value) {
+            this.value = value;
+        }
+
+        public CDRHInfo(Concept associated_concept) {
+            this.associated_concept = associated_concept;
+        }
+    }
+    
+    public static class CDRH {
+        public static CDRHInfo getAssociatedConcept(String label,
+            String scheme, String version, Concept node) {
+            if (label.indexOf("[CDRH] PARENT") < 0)
+                return null;
+
+            Vector<Concept> v =
+                DataUtils.getAssociationTargets(scheme, version, node
+                    .getEntityCode(), "A10");
+            if (v == null || v.size() <= 0)
+                return new CDRHInfo("Not Available");
+
+            Concept associated_concept = (Concept) v.elementAt(0);
+            return new CDRHInfo(associated_concept);
+        }
+        
+        public static String replaceLabel(String label) {
+            label = label.replaceAll("\\[CDRH] ", "");
+            return label;
+        }
+    }
+
     public static class CDISC {
         private static boolean _debugGetCdiscPreferredTerm = true; // DYEE
 
@@ -107,8 +142,8 @@ public class SpecialCases {
             delimiter = "; ";
             String nciABTerm = null;
             Vector<SynonymInfo> v = DataUtils.getSynonyms(associated_concept);
-//            ListUtils.debug(_logger, "associated_concept: "
-//                + associated_concept.getEntityCode(), v);
+            // ListUtils.debug(_logger, "associated_concept: "
+            // + associated_concept.getEntityCode(), v);
             int n = v.size();
             for (int i = 0; i < n; ++i) {
                 SynonymInfo info = v.get(i);
@@ -118,7 +153,8 @@ public class SpecialCases {
                 }
             }
             v = DataUtils.getSynonyms(concept);
-//            ListUtils.debug(_logger, "concept: " + concept.getEntityCode(), v);
+            // ListUtils.debug(_logger, "concept: " + concept.getEntityCode(),
+            // v);
             n = v.size();
             boolean debug = _debugGetCdiscPreferredTerm;
 
