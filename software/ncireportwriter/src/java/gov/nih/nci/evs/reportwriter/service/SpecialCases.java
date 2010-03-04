@@ -57,110 +57,111 @@ import org.apache.log4j.*;
 
 public class SpecialCases {
     private static Logger _logger = Logger.getLogger(SpecialCases.class);
-    private static boolean _debugGetCdiscPreferredTerm = true; //DYEE
 
-    // -------------------------------------------------------------------------
-    // Handles CDISC specific cases:
-    // -------------------------------------------------------------------------
-    public static String getCdiscSubmissionValue(String label, Concept node,
-        Concept associated_concept, String delimiter) {
-        try {
-            if (label.equalsIgnoreCase("CDISC Submission Value")) {
-                String value = SpecialCases.getCdiscPreferredTerm(node,
-                    associated_concept, delimiter);
-                _logger.debug("DYEE: " + node.getEntityCode() + ", " +
-                    associated_concept.getEntityCode() + ": " + value);
+    public static class CDISC {
+        private static boolean _debugGetCdiscPreferredTerm = true; // DYEE
+
+        public static String getSubmissionValue(String label, Concept node,
+            Concept associated_concept, String delimiter) {
+            try {
+                if (!label.equalsIgnoreCase("CDISC Submission Value"))
+                    return null;
+                String value =
+                    getPreferredTerm(node, associated_concept, delimiter);
                 return value;
-            }
-        } catch (Exception e) {
-            //e.printStackTrace();
-            ExceptionUtils.print(_logger, e, 
-                "Method: SpecialCases.getCdiscSubmissionValue");
-        }
-        return null;
-    }
-    
-    public static String getCdiscPreferredTerm(String codingScheme, String version,
-        String code, String associatedCode) throws Exception {
-        Concept concept =
-            DataUtils.getConceptByCode(codingScheme, version, null, code);
-        if (concept == null)
-            throw new Exception("Can not retrieve concept from code " + code
-                + ".");
-        Concept associatedConcept =
-            DataUtils.getConceptByCode(codingScheme, version, null,
-                associatedCode);
-        if (associatedConcept == null)
-            throw new Exception(
-                "Can not retrieve associated concept from code "
-                    + associatedConcept + ".");
-
-        String name = concept.getEntityDescription().getContent();
-        String associatedName =
-            associatedConcept.getEntityDescription().getContent();
-        _logger.debug("* concept: " + name + "(" + code + ")");
-        _logger.debug("* associatedConcept: " + associatedName + "("
-            + associatedCode + ")");
-        return getCdiscPreferredTerm(concept, associatedConcept, "|");
-    }
-
-    public static String getCdiscPreferredTerm(Concept concept,
-        Concept associated_concept, String delimiter) throws Exception {
-        String nciABTerm = null;
-        Vector<SynonymInfo> v = DataUtils.getSynonyms(associated_concept);
-        ListUtils.debug(_logger, "associated_concept: " + associated_concept.getEntityCode(), v);
-        int n = v.size();
-        for (int i = 0; i < n; ++i) {
-            SynonymInfo info = v.get(i);
-            if (info.source.equalsIgnoreCase("NCI")
-                && info.type.equalsIgnoreCase("AB")) {
-                nciABTerm = info.name;
+            } catch (Exception e) {
+                // e.printStackTrace();
+                ExceptionUtils.print(_logger, e,
+                    "Method: SpecialCases.getCdiscSubmissionValue");
+                return null;
             }
         }
-        v = DataUtils.getSynonyms(concept);
-        ListUtils.debug(_logger, "concept: " + concept.getEntityCode(), v);
-        n = v.size();
-        boolean debug = _debugGetCdiscPreferredTerm;
 
-        StringBuffer buffer = new StringBuffer();
-        if (nciABTerm != null) {
+        public static String getPreferredTerm(String codingScheme,
+            String version, String code, String associatedCode)
+                throws Exception {
+            Concept concept =
+                DataUtils.getConceptByCode(codingScheme, version, null, code);
+            if (concept == null)
+                throw new Exception("Can not retrieve concept from code "
+                    + code + ".");
+            Concept associatedConcept =
+                DataUtils.getConceptByCode(codingScheme, version, null,
+                    associatedCode);
+            if (associatedConcept == null)
+                throw new Exception(
+                    "Can not retrieve associated concept from code "
+                        + associatedConcept + ".");
+
+            String name = concept.getEntityDescription().getContent();
+            String associatedName =
+                associatedConcept.getEntityDescription().getContent();
+            _logger.debug("* concept: " + name + "(" + code + ")");
+            _logger.debug("* associatedConcept: " + associatedName + "("
+                + associatedCode + ")");
+            return getPreferredTerm(concept, associatedConcept, "|");
+        }
+
+        public static String getPreferredTerm(Concept concept,
+            Concept associated_concept, String delimiter) throws Exception {
+            delimiter = "; ";
+            String nciABTerm = null;
+            Vector<SynonymInfo> v = DataUtils.getSynonyms(associated_concept);
+//            ListUtils.debug(_logger, "associated_concept: "
+//                + associated_concept.getEntityCode(), v);
+            int n = v.size();
             for (int i = 0; i < n; ++i) {
                 SynonymInfo info = v.get(i);
-                if (info.sourceCode.equals(nciABTerm))
+                if (info.source.equalsIgnoreCase("NCI")
+                    && info.type.equalsIgnoreCase("AB")) {
+                    nciABTerm = info.name;
+                }
+            }
+            v = DataUtils.getSynonyms(concept);
+//            ListUtils.debug(_logger, "concept: " + concept.getEntityCode(), v);
+            n = v.size();
+            boolean debug = _debugGetCdiscPreferredTerm;
+
+            StringBuffer buffer = new StringBuffer();
+            if (nciABTerm != null) {
+                for (int i = 0; i < n; ++i) {
+                    SynonymInfo info = v.get(i);
+                    if (info.sourceCode.equals(nciABTerm))
+                        StringUtils.append(buffer, info.name, delimiter);
+                }
+                if (buffer.length() > 0) {
+                    if (debug)
+                        buffer.insert(0, "[nciABTerm=" + nciABTerm + "]: ");
+                    return buffer.toString();
+                }
+            }
+
+            // If any, retrieve "CDISC|SY".
+            for (int i = 0; i < n; ++i) {
+                SynonymInfo info = v.get(i);
+                if (info.source.equalsIgnoreCase("CDISC")
+                    && info.type.equalsIgnoreCase("SY"))
                     StringUtils.append(buffer, info.name, delimiter);
             }
             if (buffer.length() > 0) {
                 if (debug)
-                    buffer.insert(0, "[nciABTerm=" + nciABTerm + "]: ");
+                    buffer.insert(0, "[CDISC|SY]: ");
                 return buffer.toString();
             }
-        }
-        
-        // If any, retrieve "CDISC|SY".
-        for (int i = 0; i < n; ++i) {
-            SynonymInfo info = v.get(i);
-            if (info.source.equalsIgnoreCase("CDISC")
-                && info.type.equalsIgnoreCase("SY"))
-                StringUtils.append(buffer, info.name, delimiter);
-        }
-        if (buffer.length() > 0) {
-            if (debug)
-                buffer.insert(0, "[CDISC|SY]: ");
-            return buffer.toString();
-        }
 
-        // If any, retrieve "CDISC|PT".
-        for (int i = 0; i < n; ++i) {
-            SynonymInfo info = v.get(i);
-            if (info.source.equalsIgnoreCase("CDISC")
-                && info.type.equalsIgnoreCase("PT"))
-                StringUtils.append(buffer, info.name, delimiter);
+            // If any, retrieve "CDISC|PT".
+            for (int i = 0; i < n; ++i) {
+                SynonymInfo info = v.get(i);
+                if (info.source.equalsIgnoreCase("CDISC")
+                    && info.type.equalsIgnoreCase("PT"))
+                    StringUtils.append(buffer, info.name, delimiter);
+            }
+            if (buffer.length() > 0) {
+                if (debug)
+                    buffer.insert(0, "[CDISC|PT]: ");
+                return buffer.toString();
+            }
+            return "";
         }
-        if (buffer.length() > 0) {
-            if (debug)
-                buffer.insert(0, "[CDISC|PT]: ");
-            return buffer.toString();
-        }
-        return "";
     }
 }
