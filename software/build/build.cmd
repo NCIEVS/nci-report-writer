@@ -8,6 +8,7 @@ echo.
 setlocal
 set DEVPROPFILE=C:\NCI-Projects\ncireportwriter-properties\properties\dev-upgrade.properties
 set QAPROPFILE=C:\NCI-Projects\ncireportwriter-properties\properties\qa-upgrade.properties
+set DATAQAPROPFILE=C:\NCI-Projects\ncireportwriter-properties\properties\data-qa-upgrade.properties
 if "%1" == ""  (
     echo.
     echo Available targets are:
@@ -21,6 +22,7 @@ if "%1" == ""  (
     echo   dev                  -- Builds, upgrades JBoss on DEV
     echo   qa:wdbinstall        -- Builds, upgrades JBoss and install database on QA
     echo   qa                   -- Builds, upgrades JBoss on QA
+    echo   data-qa              -- Builds, upgrades JBoss on DATA-QA
     echo   deploy               -- Redeploy application locally
     goto DONE
 )
@@ -67,6 +69,10 @@ if not "%1" == "dev:wdbinstall" goto d1
 :d1
 if "%1" == "qa" (
     ant -Dproperties.file=%QAPROPFILE% deploy:remote:upgrade
+    goto DONE
+)
+if "%1" == "data-qa" (
+    ant -Dproperties.file=%DATAQAPROPFILE% deploy:remote:upgrade
     goto DONE
 )
 if not "%1" == "qa:wdbinstall" goto q1
