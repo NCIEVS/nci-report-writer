@@ -440,7 +440,7 @@ public class ReportGenerationThread implements Runnable {
     }
 
     private String cdiscCodelistCode = "";
-    
+
     private void writeColumnData(PrintWriter pw, String scheme, String version,
         Concept defining_root_concept, Concept associated_concept, Concept c,
         String delim, ReportColumn[] cols) {
@@ -451,7 +451,7 @@ public class ReportGenerationThread implements Runnable {
             //DYEEDump.debug(rc);
             String value = getReportColumnValue(scheme, version, defining_root_concept,
                 associated_concept, c, rc);
-            
+
             if (rc.getLabel().equals("Codelist Extensible (Yes/No)")) {
                 if (value == null || value.trim().length() <= 0)
                     return; //Abort: Row not needed
@@ -466,10 +466,6 @@ public class ReportGenerationThread implements Runnable {
             Vector<String> subHeaderValues = new Vector<String>();
             for (int i = 0; i < cols.length; i++) {
                 ReportColumn rc = (ReportColumn) cols[i];
-                DYEE.println(StringUtils.SEPARATOR);
-                DYEE.println("* defining_root_concept=" + (defining_root_concept != null ? defining_root_concept.getEntityCode(): "null"));
-                DYEE.println("* associated_concept=" + (associated_concept != null ? associated_concept.getEntityCode(): "null"));
-                DYEE.println("* c=" + (c != null ? c.getEntityCode(): "null"));
                 String value = getReportColumnValue(scheme, version, defining_root_concept,
                     null, associated_concept, rc);
                 subHeaderValues.add(value);
@@ -586,7 +582,7 @@ public class ReportGenerationThread implements Runnable {
             return cdrhInfo.value;
         if (cdrhInfo != null && cdrhInfo.associated_concept != null)
             associated_concept = cdrhInfo.associated_concept;
-        
+
         String cdiscValue = SpecialCases.CDISC.getSubmissionValue(
             label, node, associated_concept, delimiter);
         if (cdiscValue != null) return cdiscValue;
@@ -649,7 +645,7 @@ public class ReportGenerationThread implements Runnable {
             }
         }
 
-        org.LexGrid.commonTypes.Property[] properties = 
+        org.LexGrid.commonTypes.Property[] properties =
             new org.LexGrid.commonTypes.Property[]{};
 
         if (property_type == null) {
