@@ -49,7 +49,8 @@ INSERT INTO `STANDARD_REPORT_TEMPLATE` (`ID`,`LABEL`,`ROOT_CONCEPT_CODE`,`ASSOCI
  (3535,'Structured Product Labeling (SPL) REPORT','C54452','Concept_In_Subset',0,'NCI Thesaurus','09.12d',-1,'$'),
  (4040,'CDISC Subset REPORT ','C61410','Concept_In_Subset',0,'NCI Thesaurus','09.12d',-1,'$'),
  (4646,'CDRH Subset REPORT','C62596','Concept_In_Subset',0,'NCI Thesaurus','09.12d',-1,'$'),
- (6060,'FDA-SPL Country Code REPORT','Semantic_Type|null|null|null|Geographic Area|exactMatch','',0,'NCI Thesaurus','09.12d',-1,'$');
+ (6060,'FDA-SPL Country Code REPORT','Semantic_Type|null|null|null|Geographic Area|exactMatch','',0,'NCI Thesaurus','09.12d',-1,'$'),
+ (6868,'CDISC SDTM Terminology','C61410','Concept_In_Subset',0,'NCI Thesaurus','09.12d',-1,'$');
 
 --
 -- Data for table `REPORT_COLUMN`
@@ -95,7 +96,16 @@ INSERT INTO `REPORT_COLUMN` (`ID`,`COLUMN_NUMBER`,`LABEL`,`FIELD_ID`,`PROPERTY_T
  (4855,12,'[CDRH] Parent Concept''s FDA Source PT','Associated Concept Property','PRESENTATION','FULL_SYN',NULL,'PT','FDA','','','|',-1,4646),
  (6161,1,'ISO Code','Property','PRESENTATION','FULL_SYN',NULL,'CA3','NCI','','','|',-1,6060),
  (6162,2,'NCI Concept Code','Code','','',NULL,'',' ','','','|',-1,6060),
- (6163,3,'NCI Preferred Term','Property','PRESENTATION','Preferred_Name',NULL,'',' ','','','|',-1,6060);
+ (6163,3,'NCI Preferred Term','Property','PRESENTATION','Preferred_Name',NULL,'',' ','','','|',-1,6060),
+ (6969,1,'Code','Code','','',NULL,'','','','','|',-1,6868),
+ (6970,2,'Codelist Code','Associated Concept Code','','',NULL,'','','','','|',-1,6868),
+ (6971,3,'Codelist Extensible (Yes/No)','Associated Concept Property','GENERIC','Extensible List',NULL,'','','','','|',-1,6868),
+ (6972,4,'Codelist Name','Associated Concept Property','PRESENTATION','FULL_SYN',NULL,'SY','CDISC','','','|',-1,6868),
+ (6973,5,'CDISC Submission Value','Property','PRESENTATION','FULL_SYN',NULL,'PT','CDISC','','','|',-1,6868),
+ (6974,6,'CDISC Preferred Term','Property','PRESENTATION','FULL_SYN',NULL,'PT','CDISC','','','|',-1,6868),
+ (6975,7,'CDISC Symonym(s)','Property','PRESENTATION','FULL_SYN',NULL,'SY','CDISC','','','|',-1,6868),
+ (6976,8,'CDISC Definition','Property','DEFINITION','ALT_DEFINITION',NULL,'','CDISC','','','|',-1,6868),
+ (6977,9,'NCI Preferred Term','Property','PRESENTATION','FULL_SYN',NULL,'PT','NCI','','','|',-1,6868);
 
 --
 -- Data for table `REPORT`
