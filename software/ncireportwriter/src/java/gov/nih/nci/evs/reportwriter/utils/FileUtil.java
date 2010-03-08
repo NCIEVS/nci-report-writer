@@ -139,10 +139,23 @@ public class FileUtil {
         return convertToExcel(textfile, delimiter, excelfile);
     }
 
+    public static int findColumnIndicator(Vector headings) {
+        for (int i = 0; i < headings.size(); i++) {
+            String heading = (String) headings.elementAt(i);
+            if (heading.indexOf("Extensible") != -1) {
+				return i;
+			}
+		}
+		return -1;
+	}
+
     public static Boolean convertToExcel(String textfile, String delimiter,
         String excelfile) throws Exception {
+
         Vector<String> headings = getColumnHeadings(textfile, delimiter);
         Vector<Integer> width_vec = getColumnWidths(textfile, delimiter);
+
+        int extensible_col = findColumnIndicator(headings);
 
         int heading_height_multiplier = 1;
         for (int i = 0; i < width_vec.size(); i++) {
@@ -192,8 +205,11 @@ public class FileUtil {
 
         FileOutputStream fout = new FileOutputStream(excelfile);
         HSSFWorkbook wb = new HSSFWorkbook();
+
         HSSFSheet ws = wb.createSheet(workSheetLabel);
         HSSFCellStyle toprow = wb.createCellStyle();
+        HSSFCellStyle highlightedrow = wb.createCellStyle();
+
         HSSFCellStyle cs = wb.createCellStyle();
 
         // Note: GF20673 shade top row
@@ -205,6 +221,12 @@ public class FileUtil {
         toprow.setFillPattern(HSSFCellStyle.SOLID_FOREGROUND);
         toprow.setAlignment(HSSFCellStyle.VERTICAL_CENTER);
         toprow.setWrapText(true);
+
+        highlightedrow.setFont(font);
+        highlightedrow.setFillForegroundColor(HSSFColor.SKY_BLUE.index);
+        highlightedrow.setFillPattern(HSSFCellStyle.SOLID_FOREGROUND);
+        highlightedrow.setAlignment(HSSFCellStyle.VERTICAL_CENTER);
+        //highlightedrow.setWrapText(true);
 
         cs.setWrapText(true);
         // cs.setAlignment(HSSFCellStyle.ALIGN_JUSTIFY);
@@ -236,14 +258,29 @@ public class FileUtil {
                 }
             }
 
+            boolean highlight_row = false;
+			if (extensible_col != -1) {
+				String extensible_value = (String) v.elementAt(extensible_col);
+				if (extensible_value.compareTo("") != 0) {
+					highlight_row = true;
+				}
+			}
+
             for (int i = 0; i < v.size(); i++) {
                 HSSFCell wc = wr.createCell(i);
                 if (rownum == 0) {
                     wc.setCellStyle(toprow);
                 } else if (a[i].equals(Boolean.TRUE)) {
+
                     wc.setCellStyle(cs);
                     wc.setCellType(HSSFCell.CELL_TYPE_STRING);
-                }
+
+                    if (highlight_row) wc.setCellStyle(highlightedrow);
+
+                } else {
+					if (highlight_row) wc.setCellStyle(highlightedrow);
+				}
+
 
                 String s = (String) v.elementAt(i);
                 s = s.trim();
@@ -255,12 +292,12 @@ public class FileUtil {
                     s = null;
                 }
                 wc.setCellValue(s);
+
             }
             rownum++;
         }
 
         br.close();
-
         for (int i = 0; i < 255; i++) {
             if (b[i] != 0) {
                 int multiplier = b[i];
@@ -310,7 +347,7 @@ public class FileUtil {
         FileInputStream fis = new FileInputStream(file);
         BufferedInputStream bis = new BufferedInputStream(fis);
         BufferedReader br = new BufferedReader(new InputStreamReader(bis));
-        
+
         String line = br.readLine();
         Vector<String> v = parseData(line, delimiter);
         br.close();
