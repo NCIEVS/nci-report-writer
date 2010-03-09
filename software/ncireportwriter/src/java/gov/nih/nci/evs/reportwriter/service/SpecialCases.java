@@ -94,7 +94,7 @@ public class SpecialCases {
     }
 
     public static class CDISC {
-        private static boolean _debugGetCdiscPreferredTerm = true; // DYEE
+        private static boolean _debugGetCdiscPreferredTerm = false; // DYEE
 
         public static String getSubmissionValue(String label, Concept node,
             Concept associated_concept, String delimiter) {

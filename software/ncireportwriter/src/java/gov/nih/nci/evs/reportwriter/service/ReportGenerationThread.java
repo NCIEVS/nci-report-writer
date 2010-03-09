@@ -440,7 +440,9 @@ public class ReportGenerationThread implements Runnable {
     }
 
     private String cdiscCodelistCode = "";
-
+    private int cdiscCodelistExtensibleColumnIndex = -1;
+    private String cdiscCodelistExtensibleColumnValue = "";
+    
     private void writeColumnData(PrintWriter pw, String scheme, String version,
         Concept defining_root_concept, Concept associated_concept, Concept c,
         String delim, ReportColumn[] cols) {
@@ -448,17 +450,19 @@ public class ReportGenerationThread implements Runnable {
         boolean isCDISCExtensibleValue = false;
         for (int i = 0; i < cols.length; i++) {
             ReportColumn rc = (ReportColumn) cols[i];
-            //DYEEDump.debug(rc);
             String value = getReportColumnValue(scheme, version, defining_root_concept,
                 associated_concept, c, rc);
-
+            
             if (rc.getLabel().equals("Codelist Extensible (Yes/No)")) {
+                cdiscCodelistExtensibleColumnIndex = i;
+                cdiscCodelistExtensibleColumnValue = value;
                 if (value == null || value.trim().length() <= 0)
                     return; //Abort: Row not needed
                 if (! values.get(i-1).equals(cdiscCodelistCode)) {
                     isCDISCExtensibleValue = true;
                     cdiscCodelistCode = values.get(i-1);
                 }
+                value = "";
             }
             values.add(value);
         }
@@ -470,6 +474,8 @@ public class ReportGenerationThread implements Runnable {
                     null, associated_concept, rc);
                 subHeaderValues.add(value);
             }
+            subHeaderValues.set(cdiscCodelistExtensibleColumnIndex, 
+                cdiscCodelistExtensibleColumnValue);
             pw.println(StringUtils.toString(subHeaderValues, delim));
         }
         pw.println(StringUtils.toString(values, delim));
@@ -582,7 +588,7 @@ public class ReportGenerationThread implements Runnable {
             return cdrhInfo.value;
         if (cdrhInfo != null && cdrhInfo.associated_concept != null)
             associated_concept = cdrhInfo.associated_concept;
-
+        
         String cdiscValue = SpecialCases.CDISC.getSubmissionValue(
             label, node, associated_concept, delimiter);
         if (cdiscValue != null) return cdiscValue;
@@ -645,7 +651,7 @@ public class ReportGenerationThread implements Runnable {
             }
         }
 
-        org.LexGrid.commonTypes.Property[] properties =
+        org.LexGrid.commonTypes.Property[] properties = 
             new org.LexGrid.commonTypes.Property[]{};
 
         if (property_type == null) {
