@@ -98,16 +98,33 @@ public class SpecialCases {
     public static class CDISCExtensibleInfo {
         public boolean isExtensibleValue = false;
         public String codelistCode = "";
-        public int extensibleColumnIndex = -1;
+        public int codelistCodeColumnIndex = -1;
+        public int codelistExtensibleColumnIndex = -1;
+        public int codelistNameColumnIndex = -1;
         public String extensibleColumnValue = "";
         public String newValue = "";
         public boolean skipRow = false;
+
+        public CDISCExtensibleInfo(ReportColumn[] cols) {
+            for (int i = 0; i < cols.length; i++) {
+                ReportColumn rc = (ReportColumn) cols[i];
+                String header = rc.getLabel();
+                if (header.contains(CDISC.EXTENSIBLE_LABEL))
+                    codelistExtensibleColumnIndex = i;
+                else if (header.contains(CDISC.CODELIST_CODE_LABEL))
+                    codelistCodeColumnIndex = i;
+                else if (header.contains(CDISC.CODELIST_NAME_LABEL))
+                    codelistNameColumnIndex = i;
+            }
+        }
     }
 
     public static class CDISC {
         private static boolean _debugGetCdiscPreferredTerm = false;
-        private static final String SUBMISSION_LABEL = "Submission";
+        private static final String CODELIST_CODE_LABEL = "Codelist Code";
         private static final String EXTENSIBLE_LABEL = "Extensible";
+        private static final String CODELIST_NAME_LABEL = "Codelist Name";
+        private static final String SUBMISSION_LABEL = "Submission";
 
         public static String getSubmissionValue(String label, Concept node,
             Concept associated_concept, String delimiter) {
@@ -219,16 +236,15 @@ public class SpecialCases {
             if (!rc.getLabel().contains(EXTENSIBLE_LABEL))
                 return false;
 
-            info.extensibleColumnIndex = i;
             info.extensibleColumnValue = value;
             info.skipRow = value == null || value.trim().length() <= 0;
             if (info.skipRow)
                 return true;
 
-            int codelistCodeColumnIndex = i - 1; // Note: Assumption only
-            if (!values.get(codelistCodeColumnIndex).equals(info.codelistCode)) {
+            if (!values.get(info.codelistCodeColumnIndex).equals(
+                info.codelistCode)) {
                 info.isExtensibleValue = true;
-                info.codelistCode = values.get(codelistCodeColumnIndex);
+                info.codelistCode = values.get(info.codelistCodeColumnIndex);
             }
             info.newValue = "";
             return true;
@@ -236,24 +252,28 @@ public class SpecialCases {
 
         public static void writeSubheader(
             SpecialCases.CDISCExtensibleInfo info,
-            ReportGenerationThread reportGenerationThread, PrintWriter pw,
-            String scheme, String version, Concept defining_root_concept,
+            ReportGenerationThread reportGenerationThread,
+            Vector<String> values, PrintWriter pw, String scheme,
+            String version, Concept defining_root_concept,
             Concept associated_concept, Concept c, String delim,
             ReportColumn[] cols) {
             if (!info.isExtensibleValue)
                 return;
 
-            Vector<String> values = new Vector<String>();
+            Vector<String> subHeader = new Vector<String>();
             for (int i = 0; i < cols.length; i++) {
                 ReportColumn rc = (ReportColumn) cols[i];
                 String value =
                     reportGenerationThread.getReportColumnValue(scheme,
                         version, defining_root_concept, null,
                         associated_concept, rc);
-                values.add(value);
+                subHeader.add(value);
             }
-            values.set(info.extensibleColumnIndex, info.extensibleColumnValue);
-            pw.println(StringUtils.toString(values, delim));
+            subHeader.set(info.codelistExtensibleColumnIndex,
+                info.extensibleColumnValue);
+            subHeader.set(info.codelistNameColumnIndex,
+                values.get(info.codelistNameColumnIndex));
+            pw.println(StringUtils.toString(subHeader, delim));
         }
     }
 }
