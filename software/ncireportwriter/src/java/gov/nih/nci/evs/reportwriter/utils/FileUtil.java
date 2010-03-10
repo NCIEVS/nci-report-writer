@@ -139,15 +139,14 @@ public class FileUtil {
         return convertToExcel(textfile, delimiter, excelfile);
     }
 
-    public static int findColumnIndicator(Vector headings) {
+    public static int findColumnIndicator(Vector<String> headings, String label) {
         for (int i = 0; i < headings.size(); i++) {
-            String heading = (String) headings.elementAt(i);
-            if (heading.indexOf("Extensible") != -1) {
-				return i;
-			}
-		}
-		return -1;
-	}
+            String heading = headings.elementAt(i);
+            if (heading.contains(label))
+                return i;
+        }
+        return -1;
+    }
 
     public static Boolean convertToExcel(String textfile, String delimiter,
         String excelfile) throws Exception {
@@ -155,7 +154,8 @@ public class FileUtil {
         Vector<String> headings = getColumnHeadings(textfile, delimiter);
         Vector<Integer> width_vec = getColumnWidths(textfile, delimiter);
 
-        int extensible_col = findColumnIndicator(headings);
+        // Note: Special Case for CDISC STDM Terminology report.
+        int extensible_col = findColumnIndicator(headings, "Extensible");
 
         int heading_height_multiplier = 1;
         for (int i = 0; i < width_vec.size(); i++) {
@@ -226,7 +226,7 @@ public class FileUtil {
         highlightedrow.setFillForegroundColor(HSSFColor.SKY_BLUE.index);
         highlightedrow.setFillPattern(HSSFCellStyle.SOLID_FOREGROUND);
         highlightedrow.setAlignment(HSSFCellStyle.VERTICAL_CENTER);
-        //highlightedrow.setWrapText(true);
+        // highlightedrow.setWrapText(true);
 
         cs.setWrapText(true);
         // cs.setAlignment(HSSFCellStyle.ALIGN_JUSTIFY);
@@ -258,13 +258,10 @@ public class FileUtil {
                 }
             }
 
-            boolean highlight_row = false;
-			if (extensible_col != -1) {
-				String extensible_value = (String) v.elementAt(extensible_col);
-				if (extensible_value.compareTo("") != 0) {
-					highlight_row = true;
-				}
-			}
+            // Note: Special Case for CDISC STDM Terminology report.
+            boolean highlight_row =
+                extensible_col != -1
+                    && v.elementAt(extensible_col).trim().length() > 0;
 
             for (int i = 0; i < v.size(); i++) {
                 HSSFCell wc = wr.createCell(i);
@@ -275,12 +272,13 @@ public class FileUtil {
                     wc.setCellStyle(cs);
                     wc.setCellType(HSSFCell.CELL_TYPE_STRING);
 
-                    if (highlight_row) wc.setCellStyle(highlightedrow);
+                    if (highlight_row)
+                        wc.setCellStyle(highlightedrow);
 
                 } else {
-					if (highlight_row) wc.setCellStyle(highlightedrow);
-				}
-
+                    if (highlight_row)
+                        wc.setCellStyle(highlightedrow);
+                }
 
                 String s = (String) v.elementAt(i);
                 s = s.trim();
