@@ -106,14 +106,13 @@ public class SpecialCases {
 
     public static class CDISC {
         private static boolean _debugGetCdiscPreferredTerm = false;
-        private static final String SUBMISSION_LABEL = "CDISC Submission Value";
-        private static final String EXTENSIBLE_LABEL =
-            "Codelist Extensible (Yes/No)";
+        private static final String SUBMISSION_LABEL = "Submission";
+        private static final String EXTENSIBLE_LABEL = "Extensible";
 
         public static String getSubmissionValue(String label, Concept node,
             Concept associated_concept, String delimiter) {
             try {
-                if (!label.equalsIgnoreCase(SUBMISSION_LABEL))
+                if (!label.contains(SUBMISSION_LABEL))
                     return null;
                 String value =
                     getPreferredTerm(node, associated_concept, delimiter);
@@ -217,18 +216,16 @@ public class SpecialCases {
         public static boolean writeExtensibleColumnData(
             SpecialCases.CDISCExtensibleInfo info, ReportColumn rc,
             Vector<String> values, String value, int i) {
-            if (!rc.getLabel().equals(EXTENSIBLE_LABEL))
+            if (!rc.getLabel().contains(EXTENSIBLE_LABEL))
                 return false;
 
-            info.skipRow = false;
             info.extensibleColumnIndex = i;
             info.extensibleColumnValue = value;
-            if (value == null || value.trim().length() <= 0) {
-                info.skipRow = true;
+            info.skipRow = value == null || value.trim().length() <= 0;
+            if (info.skipRow)
                 return true;
-            }
 
-            int codelistCodeColumnIndex = i-1;  //Note: Assumption only
+            int codelistCodeColumnIndex = i - 1; // Note: Assumption only
             if (!values.get(codelistCodeColumnIndex).equals(info.codelistCode)) {
                 info.isExtensibleValue = true;
                 info.codelistCode = values.get(codelistCodeColumnIndex);
