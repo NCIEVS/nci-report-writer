@@ -143,8 +143,8 @@ public class ReportGenerationThread implements Runnable {
             }
 
             String mailServer =
-                AppProperties.getInstance()
-                    .getProperty(AppProperties.MAIL_SMTP_SERVER);
+                AppProperties.getInstance().getProperty(
+                    AppProperties.MAIL_SMTP_SERVER);
             String from = _emailAddress;
             String[] recipients = new String[] { _emailAddress };
             String subject = "";
@@ -438,28 +438,32 @@ public class ReportGenerationThread implements Runnable {
             _logger.debug("Number of concepts processed: " + _count);
         }
     }
-    
-    SpecialCases.CDISCExtensibleInfo _cdiscInfo = new SpecialCases.CDISCExtensibleInfo();
+
+    SpecialCases.CDISCExtensibleInfo _cdiscInfo =
+        new SpecialCases.CDISCExtensibleInfo();
+
     private void writeColumnData(PrintWriter pw, String scheme, String version,
         Concept defining_root_concept, Concept associated_concept, Concept c,
         String delim, ReportColumn[] cols) {
         Vector<String> values = new Vector<String>();
         _cdiscInfo.isExtensibleValue = false;
-        
+
         for (int i = 0; i < cols.length; i++) {
             ReportColumn rc = (ReportColumn) cols[i];
-            String value = getReportColumnValue(scheme, version, defining_root_concept,
-                associated_concept, c, rc);
-            
-            if (SpecialCases.CDISC.writeExtensibleColumnData(_cdiscInfo, rc, values, value, i)) {
+            String value =
+                getReportColumnValue(scheme, version, defining_root_concept,
+                    associated_concept, c, rc);
+
+            if (SpecialCases.CDISC.writeExtensibleColumnData(_cdiscInfo, rc,
+                values, value, i)) {
                 if (_cdiscInfo.skipRow)
                     return;
                 value = _cdiscInfo.newValue;
             }
             values.add(value);
         }
-        SpecialCases.CDISC.writeSubheader(_cdiscInfo, this, pw, scheme, version, defining_root_concept, 
-            associated_concept, c, delim, cols);
+        SpecialCases.CDISC.writeSubheader(_cdiscInfo, this, pw, scheme,
+            version, defining_root_concept, associated_concept, c, delim, cols);
         pw.println(StringUtils.toString(values, delim));
 
         _count++;
@@ -508,18 +512,18 @@ public class ReportGenerationThread implements Runnable {
                 c, delim, cols);
         }
 
-        // Note: Commented old method on 2/24/10 (Wed).  subconcept_vec size was 0.
+        // Note: Commented on 2/24/10 (Wed). subconcept_vec size was 0.
         // Vector<Concept> subconcept_vec =
-        //     DataUtils.getAssociationTargets(scheme, version, root
-        //     .getEntityCode(), hierarchyAssociationName);
+        // DataUtils.getAssociationTargets(scheme, version, root
+        // .getEntityCode(), hierarchyAssociationName);
         Vector<String> subconcept_vec =
-            DataUtils.getSubconceptCodes2(scheme, version, root
-            .getEntityCode());
+            DataUtils
+                .getSubconceptCodes2(scheme, version, root.getEntityCode());
         if (subconcept_vec == null | subconcept_vec.size() == 0)
             return;
         level++;
         for (int k = 0; k < subconcept_vec.size(); k++) {
-            // Note: Commented old method on 2/24/10 (Wed).  subconcept_vec size was 0.
+            // Note: Commented on 2/24/10 (Wed). subconcept_vec size was 0.
             // Concept concept = (Concept) subconcept_vec.elementAt(k);
             // String subconcep_code = concept.getEntityCode();
             String subconcep_code = subconcept_vec.elementAt(k);
@@ -564,16 +568,19 @@ public class ReportGenerationThread implements Runnable {
             delimiter = null;
 
         String label = rc.getLabel().toUpperCase();
-        SpecialCases.CDRHInfo cdrhInfo = SpecialCases.CDRH.getAssociatedConcept(
-            label, scheme, version, node);
+        SpecialCases.CDRHInfo cdrhInfo =
+            SpecialCases.CDRH
+                .getAssociatedConcept(label, scheme, version, node);
         if (cdrhInfo != null && cdrhInfo.value != null)
             return cdrhInfo.value;
         if (cdrhInfo != null && cdrhInfo.associated_concept != null)
             associated_concept = cdrhInfo.associated_concept;
-        
-        String cdiscValue = SpecialCases.CDISC.getSubmissionValue(
-            label, node, associated_concept, delimiter);
-        if (cdiscValue != null) return cdiscValue;
+
+        String cdiscValue =
+            SpecialCases.CDISC.getSubmissionValue(label, node,
+                associated_concept, delimiter);
+        if (cdiscValue != null)
+            return cdiscValue;
 
         if (field_Id.equals("Code"))
             return node.getEntityCode();
@@ -633,8 +640,8 @@ public class ReportGenerationThread implements Runnable {
             }
         }
 
-        org.LexGrid.commonTypes.Property[] properties = 
-            new org.LexGrid.commonTypes.Property[]{};
+        org.LexGrid.commonTypes.Property[] properties =
+            new org.LexGrid.commonTypes.Property[] {};
 
         if (property_type == null) {
         } else if (property_type.compareToIgnoreCase("GENERIC") == 0) {
