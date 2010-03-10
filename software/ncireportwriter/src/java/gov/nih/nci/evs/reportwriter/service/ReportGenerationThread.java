@@ -438,46 +438,28 @@ public class ReportGenerationThread implements Runnable {
             _logger.debug("Number of concepts processed: " + _count);
         }
     }
-
-    private String cdiscCodelistCode = "";
-    private int cdiscCodelistExtensibleColumnIndex = -1;
-    private String cdiscCodelistExtensibleColumnValue = "";
     
+    SpecialCases.CDISCExtensibleInfo _cdiscInfo = new SpecialCases.CDISCExtensibleInfo();
     private void writeColumnData(PrintWriter pw, String scheme, String version,
         Concept defining_root_concept, Concept associated_concept, Concept c,
         String delim, ReportColumn[] cols) {
         Vector<String> values = new Vector<String>();
-        boolean isCDISCExtensibleValue = false;
+        _cdiscInfo.isExtensibleValue = false;
+        
         for (int i = 0; i < cols.length; i++) {
             ReportColumn rc = (ReportColumn) cols[i];
             String value = getReportColumnValue(scheme, version, defining_root_concept,
                 associated_concept, c, rc);
             
-            if (rc.getLabel().equals("Codelist Extensible (Yes/No)")) {
-                cdiscCodelistExtensibleColumnIndex = i;
-                cdiscCodelistExtensibleColumnValue = value;
-                if (value == null || value.trim().length() <= 0)
-                    return; //Abort: Row not needed
-                if (! values.get(i-1).equals(cdiscCodelistCode)) {
-                    isCDISCExtensibleValue = true;
-                    cdiscCodelistCode = values.get(i-1);
-                }
-                value = "";
+            if (SpecialCases.CDISC.writeExtensibleColumnData(_cdiscInfo, rc, values, value, i)) {
+                if (_cdiscInfo.skipRow)
+                    return;
+                value = _cdiscInfo.newValue;
             }
             values.add(value);
         }
-        if (isCDISCExtensibleValue) {
-            Vector<String> subHeaderValues = new Vector<String>();
-            for (int i = 0; i < cols.length; i++) {
-                ReportColumn rc = (ReportColumn) cols[i];
-                String value = getReportColumnValue(scheme, version, defining_root_concept,
-                    null, associated_concept, rc);
-                subHeaderValues.add(value);
-            }
-            subHeaderValues.set(cdiscCodelistExtensibleColumnIndex, 
-                cdiscCodelistExtensibleColumnValue);
-            pw.println(StringUtils.toString(subHeaderValues, delim));
-        }
+        SpecialCases.CDISC.writeSubheader(_cdiscInfo, this, pw, scheme, version, defining_root_concept, 
+            associated_concept, c, delim, cols);
         pw.println(StringUtils.toString(values, delim));
 
         _count++;

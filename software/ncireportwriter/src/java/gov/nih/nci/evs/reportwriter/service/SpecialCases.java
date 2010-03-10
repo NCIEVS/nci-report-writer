@@ -1,8 +1,10 @@
 package gov.nih.nci.evs.reportwriter.service;
 
+import gov.nih.nci.evs.reportwriter.bean.*;
 import gov.nih.nci.evs.reportwriter.utils.*;
 import gov.nih.nci.evs.reportwriter.utils.DataUtils.*;
 
+import java.io.*;
 import java.util.*;
 
 import org.LexGrid.concepts.*;
@@ -61,7 +63,7 @@ public class SpecialCases {
     public static class CDRHInfo {
         String value = null;
         Concept associated_concept = null;
-        
+
         public CDRHInfo(String value) {
             this.value = value;
         }
@@ -70,7 +72,7 @@ public class SpecialCases {
             this.associated_concept = associated_concept;
         }
     }
-    
+
     public static class CDRH {
         public static CDRHInfo getAssociatedConcept(String label,
             String scheme, String version, Concept node) {
@@ -86,20 +88,32 @@ public class SpecialCases {
             Concept associated_concept = (Concept) v.elementAt(0);
             return new CDRHInfo(associated_concept);
         }
-        
+
         public static String replaceLabel(String label) {
             label = label.replaceAll("\\[CDRH] ", "");
             return label;
         }
     }
 
+    public static class CDISCExtensibleInfo {
+        public boolean isExtensibleValue = false;
+        public String codelistCode = "";
+        public int extensibleColumnIndex = -1;
+        public String extensibleColumnValue = "";
+        public String newValue = "";
+        public boolean skipRow = false;
+    }
+
     public static class CDISC {
-        private static boolean _debugGetCdiscPreferredTerm = false; // DYEE
+        private static boolean _debugGetCdiscPreferredTerm = false;
+        private static final String SUBMISSION_LABEL = "CDISC Submission Value";
+        private static final String EXTENSIBLE_LABEL =
+            "Codelist Extensible (Yes/No)";
 
         public static String getSubmissionValue(String label, Concept node,
             Concept associated_concept, String delimiter) {
             try {
-                if (!label.equalsIgnoreCase("CDISC Submission Value"))
+                if (!label.equalsIgnoreCase(SUBMISSION_LABEL))
                     return null;
                 String value =
                     getPreferredTerm(node, associated_concept, delimiter);
@@ -198,6 +212,51 @@ public class SpecialCases {
                 return buffer.toString();
             }
             return "";
+        }
+
+        public static boolean writeExtensibleColumnData(
+            SpecialCases.CDISCExtensibleInfo info, ReportColumn rc,
+            Vector<String> values, String value, int i) {
+            if (!rc.getLabel().equals(EXTENSIBLE_LABEL))
+                return false;
+
+            info.skipRow = false;
+            info.extensibleColumnIndex = i;
+            info.extensibleColumnValue = value;
+            if (value == null || value.trim().length() <= 0) {
+                info.skipRow = true;
+                return true;
+            }
+
+            int codelistCodeColumnIndex = i-1;  //Note: Assumption only
+            if (!values.get(codelistCodeColumnIndex).equals(info.codelistCode)) {
+                info.isExtensibleValue = true;
+                info.codelistCode = values.get(codelistCodeColumnIndex);
+            }
+            info.newValue = "";
+            return true;
+        }
+
+        public static void writeSubheader(
+            SpecialCases.CDISCExtensibleInfo info,
+            ReportGenerationThread reportGenerationThread, PrintWriter pw,
+            String scheme, String version, Concept defining_root_concept,
+            Concept associated_concept, Concept c, String delim,
+            ReportColumn[] cols) {
+            if (!info.isExtensibleValue)
+                return;
+
+            Vector<String> values = new Vector<String>();
+            for (int i = 0; i < cols.length; i++) {
+                ReportColumn rc = (ReportColumn) cols[i];
+                String value =
+                    reportGenerationThread.getReportColumnValue(scheme,
+                        version, defining_root_concept, null,
+                        associated_concept, rc);
+                values.add(value);
+            }
+            values.set(info.extensibleColumnIndex, info.extensibleColumnValue);
+            pw.println(StringUtils.toString(values, delim));
         }
     }
 }
