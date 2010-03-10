@@ -337,6 +337,7 @@ public class ReportGenerationThread implements Runnable {
                         + pathname
                         + " - could not map association name to its corresponding code.");
             }
+            _cdiscInfo = new SpecialCases.CDISCExtensibleInfo(cols);
             traverse(pw, scheme, version, tag, defining_root_concept, code,
                 _hierarchicalAssoName, associationCode, direction, curr_level,
                 max_level, cols);
@@ -439,8 +440,7 @@ public class ReportGenerationThread implements Runnable {
         }
     }
 
-    SpecialCases.CDISCExtensibleInfo _cdiscInfo =
-        new SpecialCases.CDISCExtensibleInfo();
+    SpecialCases.CDISCExtensibleInfo _cdiscInfo = null;
 
     private void writeColumnData(PrintWriter pw, String scheme, String version,
         Concept defining_root_concept, Concept associated_concept, Concept c,
@@ -462,7 +462,7 @@ public class ReportGenerationThread implements Runnable {
             }
             values.add(value);
         }
-        SpecialCases.CDISC.writeSubheader(_cdiscInfo, this, pw, scheme,
+        SpecialCases.CDISC.writeSubheader(_cdiscInfo, this, values, pw, scheme,
             version, defining_root_concept, associated_concept, c, delim, cols);
         pw.println(StringUtils.toString(values, delim));
 
