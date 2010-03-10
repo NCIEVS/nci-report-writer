@@ -44,13 +44,13 @@ INSERT INTO `REPORT_STATUS` (`ID`,`LABEL`,`DESCRIPTION`,`ACTIVE`) VALUES
 --
 
 INSERT INTO `STANDARD_REPORT_TEMPLATE` (`ID`,`LABEL`,`ROOT_CONCEPT_CODE`,`ASSOCIATION_NAME`,`DIRECTION`,`CODING_SCHEME_NAME`,`CODING_SCHEME_VERSION`,`LEVEL`,`DELIMITER`) VALUES
- (202,'FDA-UNII Subset REPORT','C63923','Concept_In_Subset',0,'NCI Thesaurus','09.12d',-1,'$'),
- (2323,'Individual Case Safety (ICS) Subset REPORT','C54447','Concept_In_Subset',0,'NCI Thesaurus','09.12d',-1,'$'),
- (3535,'Structured Product Labeling (SPL) REPORT','C54452','Concept_In_Subset',0,'NCI Thesaurus','09.12d',-1,'$'),
- (4040,'CDISC Subset REPORT ','C61410','Concept_In_Subset',0,'NCI Thesaurus','09.12d',-1,'$'),
- (4646,'CDRH Subset REPORT','C62596','Concept_In_Subset',0,'NCI Thesaurus','09.12d',-1,'$'),
- (6060,'FDA-SPL Country Code REPORT','Semantic_Type|null|null|null|Geographic Area|exactMatch','',0,'NCI Thesaurus','09.12d',-1,'$'),
- (6868,'CDISC SDTM Terminology','C61410','Concept_In_Subset',0,'NCI Thesaurus','09.12d',-1,'$');
+ (202,'FDA-UNII Subset REPORT','C63923','Concept_In_Subset',0,'NCI Thesaurus','10.02d',-1,'$'),
+ (2323,'Individual Case Safety (ICS) Subset REPORT','C54447','Concept_In_Subset',0,'NCI Thesaurus','10.02d',-1,'$'),
+ (3535,'Structured Product Labeling (SPL) REPORT','C54452','Concept_In_Subset',0,'NCI Thesaurus','10.02d',-1,'$'),
+ (4040,'CDISC Subset REPORT ','C61410','Concept_In_Subset',0,'NCI Thesaurus','10.02d',-1,'$'),
+ (4646,'CDRH Subset REPORT','C62596','Concept_In_Subset',0,'NCI Thesaurus','10.02d',-1,'$'),
+ (6060,'FDA-SPL Country Code REPORT','Semantic_Type|null|null|null|Geographic Area|exactMatch','',0,'NCI Thesaurus','10.02d',-1,'$'),
+ (6868,'CDISC SDTM Terminology','C61410','Concept_In_Subset',0,'NCI Thesaurus','10.02d',-1,'$');
 
 --
 -- Data for table `REPORT_COLUMN`
@@ -99,7 +99,7 @@ INSERT INTO `REPORT_COLUMN` (`ID`,`COLUMN_NUMBER`,`LABEL`,`FIELD_ID`,`PROPERTY_T
  (6163,3,'NCI Preferred Term','Property','PRESENTATION','Preferred_Name',NULL,'',' ','','','|',-1,6060),
  (6969,1,'Code','Code','','',NULL,'','','','','|',-1,6868),
  (6970,2,'Codelist Code','Associated Concept Code','','',NULL,'','','','','|',-1,6868),
- (6971,3,'Codelist Extensible (Yes/No)','Associated Concept Property','GENERIC','Extensible List',NULL,'','','','','|',-1,6868),
+ (6971,3,'Codelist Extensible (Yes/No)','Associated Concept Property','GENERIC','Extensible_List',NULL,'','','','','|',-1,6868),
  (6972,4,'Codelist Name','Associated Concept Property','PRESENTATION','FULL_SYN',NULL,'SY','CDISC','','','|',-1,6868),
  (6973,5,'CDISC Submission Value','Property','PRESENTATION','FULL_SYN',NULL,'PT','CDISC','','','|',-1,6868),
  (6974,6,'CDISC Preferred Term','Property','PRESENTATION','FULL_SYN',NULL,'PT','CDISC','','','|',-1,6868),
