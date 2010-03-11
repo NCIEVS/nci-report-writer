@@ -119,7 +119,7 @@ public class AccessDeniedRequest {
             info.clearValues(request);
             return "clear";
         } catch (Exception e) {
-            e.printStackTrace();
+            ExceptionUtils.print(_logger, e);
             return HTTPUtils.warningMsg(request, warningMsg, e);
         }
     }
@@ -137,7 +137,7 @@ public class AccessDeniedRequest {
             HTTPUtils.infoMsg(request, "Your problem as been reported.");
             return "submit";
         } catch (Exception e) {
-            e.printStackTrace();
+            ExceptionUtils.print(_logger, e);
             return HTTPUtils.warningMsg(request, warningMsg, e);
         }
     }
