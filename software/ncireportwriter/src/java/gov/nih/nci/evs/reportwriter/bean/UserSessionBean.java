@@ -449,115 +449,6 @@ public class UserSessionBean extends Object {
         _rootConceptCode = rootConceptCode;
     }
 
-    public String saveTemplateAction() {
-        HttpServletRequest request = SessionUtil.getRequest();
-        StringBuffer warningMsg = new StringBuffer();
-        try {
-            ReportTemplateRequest rt = new ReportTemplateRequest();
-            if (!rt.isAddValid(request, warningMsg))
-                return HTTPUtils.warningMsg(request, warningMsg);
-
-            SDKClientUtil sdkclientutil = new SDKClientUtil();
-            String FQName =
-                "gov.nih.nci.evs.reportwriter.bean.StandardReportTemplate";
-            String methodName = "setLabel";
-            String key = rt.getLabel();
-
-            Object standardReportTemplate_obj =
-                sdkclientutil.search(FQName, methodName, key);
-            standardReportTemplate_obj =
-                sdkclientutil.search(FQName, methodName, key);
-
-            if (standardReportTemplate_obj != null)
-                return HTTPUtils.warningMsg(request,
-                    "A report template with the same label already exists.");
-
-            sdkclientutil.insertStandardReportTemplate(rt.getLabel(), rt
-                .getCodingSchemeName(), rt.getCodingSchemeVersion(), rt
-                .getRootConceptCode(), rt.getAssociationName(), rt
-                .getDirection(), rt.getLevel(), rt.getDelimiter());
-            setSelectedStandardReportTemplate(rt.getLabel());
-        } catch (Exception e) {
-            e.printStackTrace();
-            return HTTPUtils.warningMsg(request, warningMsg, e);
-        }
-
-        return "standard_report_template";
-    }
-
-    public String saveModifiedTemplateAction() {
-        HttpServletRequest request = SessionUtil.getRequest();
-        StringBuffer warningMsg = new StringBuffer();
-
-        try {
-            ReportTemplateRequest rt = new ReportTemplateRequest();
-            if (!rt.isModifiedValid(request, warningMsg))
-                return HTTPUtils.warningMsg(request, warningMsg);
-
-            SDKClientUtil sdkclientutil = new SDKClientUtil();
-            StandardReportTemplate standardReportTemplate = null;
-            String FQName =
-                "gov.nih.nci.evs.reportwriter.bean.StandardReportTemplate";
-            String methodName = "setLabel";
-            String key = rt.getLabel();
-
-            Object standardReportTemplate_obj =
-                sdkclientutil.search(FQName, methodName, key);
-            if (standardReportTemplate_obj == null)
-                return HTTPUtils.warningMsg(request,
-                    "Unable to update template because this"
-                        + " report template can not be found.");
-
-            standardReportTemplate =
-                (StandardReportTemplate) standardReportTemplate_obj;
-            standardReportTemplate.setLabel(rt.getLabel());
-            standardReportTemplate
-                .setCodingSchemeName(rt.getCodingSchemeName());
-            standardReportTemplate.setCodingSchemeVersion(rt
-                .getCodingSchemeVersion());
-            standardReportTemplate.setRootConceptCode(rt.getRootConceptCode());
-            standardReportTemplate.setAssociationName(rt.getAssociationName());
-            standardReportTemplate.setDirection(rt.getDirection());
-            standardReportTemplate.setLevel(rt.getLevel());
-            sdkclientutil.updateStandardReportTemplate(standardReportTemplate);
-
-            key =
-                rt.getCodingSchemeName() + " (version: "
-                    + rt.getCodingSchemeVersion() + ")";
-            request.getSession().setAttribute("selectedOntology", key);
-
-        } catch (Exception e) {
-            e.printStackTrace();
-            HTTPUtils.warningMsg(request, warningMsg, e);
-        }
-
-        return "standard_report_template";
-    }
-
-    public String deleteReportTemplateAction() {
-        HttpServletRequest request = SessionUtil.getRequest();
-        String template_label =
-            (String) request.getSession().getAttribute(
-                "selectedStandardReportTemplate");
-
-        _logger.warn("deleteReportTemplateAction: " + template_label);
-
-        try {
-            StandardReportTemplate template =
-                getStandardReportTemplate(template_label);
-            SDKClientUtil sdkclientutil = new SDKClientUtil();
-            sdkclientutil.deleteStandardReportTemplate(template);
-
-            // setSelectedStandardReportTemplate(label);
-            getStandardReportTemplateList();
-
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-        return "standard_report_template";
-    }
-
     public StandardReportTemplate getStandardReportTemplate(String label) {
         try {
             SDKClientUtil sdkclientutil = new SDKClientUtil();
@@ -761,70 +652,6 @@ public class UserSessionBean extends Object {
             getStandardReportTemplateList_draft();
 
         return "assign_report_status";
-    }
-
-    public String addReportTemplateAction() {
-        OntologyBean ontologyBean = BeanUtils.getOntologyBean();
-        ontologyBean.setSelectedAssociation(OntologyBean.DEFAULT_ASSOCIATION);
-        ontologyBean.setSelectedLevel(null);
-
-        return "add_standard_report_template";
-    }
-
-    public String modifyReportTemplateAction() {
-        HttpServletRequest request = SessionUtil.getRequest();
-        String templateLabel =
-            (String) request.getSession().getAttribute(
-                "selectedStandardReportTemplate");
-
-        // find thesaurus name through template
-        try {
-            SDKClientUtil sdkclientutil = new SDKClientUtil();
-
-            _logger.debug("modifyReportTemplateAction" + " " + templateLabel);
-
-            StandardReportTemplate standardReportTemplate = null;
-            String FQName =
-                "gov.nih.nci.evs.reportwriter.bean.StandardReportTemplate";
-            String methodName = "setLabel";
-            String key = templateLabel;
-            Object standardReportTemplate_obj =
-                sdkclientutil.search(FQName, methodName, key);
-            if (standardReportTemplate_obj != null) {
-                standardReportTemplate =
-                    (StandardReportTemplate) standardReportTemplate_obj;
-
-                _logger.debug("modifyReportTemplateAction" + " "
-                    + standardReportTemplate.getCodingSchemeName());
-
-                _versionList =
-                    getVersionList(standardReportTemplate.getCodingSchemeName());
-
-                // StandardReportTemplate standardReportTemplate =
-                // getStandardReportTemplate(selectedStandardReportTemplate);
-                String ontologyNameAndVersion =
-                    standardReportTemplate.getCodingSchemeName()
-                        + " (version: "
-                        + standardReportTemplate.getCodingSchemeVersion() + ")";
-                request.getSession().setAttribute("selectedOntology",
-                    ontologyNameAndVersion);
-
-                OntologyBean ontologyBean = BeanUtils.getOntologyBean();
-                String associationName =
-                    standardReportTemplate.getAssociationName();
-                ontologyBean.setSelectedAssociation(associationName);
-                Integer level = standardReportTemplate.getLevel();
-                ontologyBean.setSelectedLevel(level.toString());
-            }
-        } catch (Exception ex) {
-            String message =
-                "Unable to construct available coding scheme version list."
-                    + "\n* Exception: " + ex.getLocalizedMessage();
-            request.getSession().setAttribute("message", message);
-            return "message";
-        }
-
-        return "modify_standard_report_template";
     }
 
     public String editReportContentAction() {
@@ -1116,6 +943,10 @@ public class UserSessionBean extends Object {
         }
         return _versionList;
     }
+  
+    public void setVersionList(List<SelectItem> list) {
+        _versionList = list;
+    }
 
     public void setSelectedVersion(String selectedVersion) {
         _selectedVersion = selectedVersion;
@@ -1132,6 +963,26 @@ public class UserSessionBean extends Object {
             return;
         // int id = Integer.parseInt((String) event.getNewValue());
         setSelectedVersion(_selectedVersion);
+    }
+
+    public String addReportTemplateAction() {
+        return new ReportTemplateRequest().addAction();
+    }
+
+    public String modifyReportTemplateAction() {
+        return new ReportTemplateRequest().modifyAction();
+    }
+
+    public String saveTemplateAction() {
+        return new ReportTemplateRequest().saveAction();
+    }
+
+    public String saveModifiedTemplateAction() {
+        return new ReportTemplateRequest().saveModifiedAction();
+    }
+
+    public String deleteReportTemplateAction() {
+        return new ReportTemplateRequest().deleteAction();
     }
 
     public String submitAccessDenied() {
