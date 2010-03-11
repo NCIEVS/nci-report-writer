@@ -61,8 +61,9 @@ public class AppProperties extends PropertyNameValueFileParser {
     public static final String CSM_LOCKOUT_TIME = "CSM_LOCKOUT_TIME";
     public static final String CSM_ALLOWED_LOGIN_TIME = "CSM_ALLOWED_LOGIN_TIME";
     public static final String CSM_ALLOWED_ATTEMPTS = "CSM_ALLOWED_ATTEMPTS";
+    public static final String CONTACT_US_EMAIL = "CONTACT_US_EMAIL";
     public static final String ACCOUNT_ADMIN_USER_EMAIL = "ACCOUNT_ADMIN_USER_EMAIL";
-   
+    
     // -------------------------------------------------------------------------
     private final String PROPERTY_FILE_ENV =
         "gov.nih.nci.cacore.ncireportwriterProperties";

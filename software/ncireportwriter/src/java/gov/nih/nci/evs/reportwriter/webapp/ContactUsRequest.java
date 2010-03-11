@@ -67,25 +67,27 @@ public class ContactUsRequest {
         request.removeAttribute(EMAIL_ADDRESS);
         return "clear";
     }
-    
+
     public String submit() {
         HttpServletRequest request = SessionUtil.getRequest();
         AppProperties appProperties = AppProperties.getInstance();
         try {
-            String mailServer = appProperties.getProperty(
-                AppProperties.MAIL_SMTP_SERVER);
+            String mailServer =
+                appProperties.getProperty(AppProperties.MAIL_SMTP_SERVER);
             String subject = HTTPUtils.getParameter(request, SUBJECT);
             String emailMsg = HTTPUtils.getParameter(request, EMAIL_MSG);
             String from = HTTPUtils.getParameter(request, EMAIL_ADDRESS);
-            String recipients = //DYEE
-                appProperties.getProperty(AppProperties.ACCOUNT_ADMIN_USER_EMAIL);
-            MailUtils.postMail(mailServer, from, recipients, subject, emailMsg, _isSendEmail);
+            String recipients =
+                appProperties.getProperty(AppProperties.CONTACT_US_EMAIL);
+            MailUtils.postMail(mailServer, from, recipients, subject, emailMsg,
+                _isSendEmail);
         } catch (UserInputException e) {
             return HTTPUtils.warningMsg(request, e.getMessage());
         } catch (Exception e) {
             StringBuffer warningMsg = new StringBuffer();
             warningMsg.append("System Error: Your message was not sent.\n");
-            warningMsg.append("    (If possible, please contact NCI systems team.)\n");
+            warningMsg
+                .append("    (If possible, please contact NCI systems team.)\n");
             warningMsg.append("\n");
             warningMsg.append(e.getMessage() + "\n");
             return HTTPUtils.warningMsg(request, warningMsg);
