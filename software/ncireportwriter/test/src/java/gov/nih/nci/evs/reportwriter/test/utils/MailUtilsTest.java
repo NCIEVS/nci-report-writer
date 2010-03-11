@@ -26,7 +26,7 @@ public class MailUtilsTest {
             String mailServer =
                 AppProperties.getInstance().getProperty(
                     AppProperties.MAIL_SMTP_SERVER);
-            String sender = ";;a;;yeed@mail.nih.gov;;;";
+            String sender = ";;a@b.c;;;yeed@mail.nih.gov;;;";
             String recipients = "a;b;c;d;e;;g;h";
             String subject = "Testing MailUtils";
             String message = "Testing\n1\n2\n3";
