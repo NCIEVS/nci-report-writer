@@ -474,6 +474,7 @@
             <filter token="csm.lockout.time" value="${csm.lockout.time}"/>
             <filter token="csm.allowed.login.time" value="${csm.allowed.login.time}"/>
             <filter token="csm.allowed.attempts" value="${csm.allowed.attempts}"/>
+            <filter token="contact.us.email" value="${contact.us.email}"/>
             <filter token="account.admin.user.email" value="${account.admin.user.email}"/>
         </filterset>
 
