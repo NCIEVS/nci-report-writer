@@ -401,8 +401,8 @@ public class UserSessionBean extends Object {
             _logger.debug("Modify column with field number = " + fieldNum);
 
             ReportColumn reportColumn =
-                ReportColumnUtil.getReportColumn(fieldNum);
-            ReportColumnUtil.debug(reportColumn);
+                ReportColumnRequest.getReportColumn(fieldNum);
+            ReportColumnRequest.debug(reportColumn);
             request.setAttribute("reportColumn", reportColumn);
             return "add_standard_report_column";
         } catch (Exception e) {
@@ -428,7 +428,7 @@ public class UserSessionBean extends Object {
             _logger.debug("Deleting column with field number = " + fieldNum);
 
             ReportColumn reportColumn =
-                ReportColumnUtil.getReportColumn(fieldNum);
+                ReportColumnRequest.getReportColumn(fieldNum);
             SDKClientUtil sdkclientutil = new SDKClientUtil();
             sdkclientutil.deleteReportColumn(reportColumn);
             // setSelectedStandardReportTemplate(label);
@@ -453,7 +453,7 @@ public class UserSessionBean extends Object {
         HttpServletRequest request = SessionUtil.getRequest();
         StringBuffer warningMsg = new StringBuffer();
         try {
-            ReportTemplateUtil rt = new ReportTemplateUtil();
+            ReportTemplateRequest rt = new ReportTemplateRequest();
             if (!rt.isAddValid(request, warningMsg))
                 return HTTPUtils.warningMsg(request, warningMsg);
 
@@ -490,7 +490,7 @@ public class UserSessionBean extends Object {
         StringBuffer warningMsg = new StringBuffer();
 
         try {
-            ReportTemplateUtil rt = new ReportTemplateUtil();
+            ReportTemplateRequest rt = new ReportTemplateRequest();
             if (!rt.isModifiedValid(request, warningMsg))
                 return HTTPUtils.warningMsg(request, warningMsg);
 
@@ -578,8 +578,8 @@ public class UserSessionBean extends Object {
         HttpServletRequest request = SessionUtil.getRequest();
         StringBuffer warningMsg = new StringBuffer();
         try {
-            ReportColumnUtil rc =
-                new ReportColumnUtil(_selectedStandardReportTemplate,
+            ReportColumnRequest rc =
+                new ReportColumnRequest(_selectedStandardReportTemplate,
                     getStandardReportTemplate(_selectedStandardReportTemplate));
             if (!rc.isValid(request, warningMsg)
                 || rc.alreadyExists(warningMsg))
@@ -614,8 +614,8 @@ public class UserSessionBean extends Object {
         StringBuffer warningMsg = new StringBuffer();
         request.setAttribute("isModifyReportColumn", Boolean.TRUE);
         try {
-            ReportColumnUtil rc =
-                new ReportColumnUtil(_selectedStandardReportTemplate,
+            ReportColumnRequest rc =
+                new ReportColumnRequest(_selectedStandardReportTemplate,
                     getStandardReportTemplate(_selectedStandardReportTemplate));
             if (!rc.isValid(request, warningMsg))
                 return HTTPUtils.warningMsg(request, warningMsg);

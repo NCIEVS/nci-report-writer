@@ -285,7 +285,7 @@ public class ReportGenerationThread implements Runnable {
                 for (int i = 0; i < objs.length; i++) {
                     gov.nih.nci.evs.reportwriter.bean.ReportColumn col =
                         (gov.nih.nci.evs.reportwriter.bean.ReportColumn) objs[i];
-                    ReportColumnUtil.debug(col);
+                    Debug.print(col);
                     cols[i] = col;
                 }
             }
@@ -996,7 +996,7 @@ public class ReportGenerationThread implements Runnable {
                 for (int i = 0; i < objs.length; i++) {
                     gov.nih.nci.evs.reportwriter.bean.ReportColumn col =
                         (gov.nih.nci.evs.reportwriter.bean.ReportColumn) objs[i];
-                    ReportColumnUtil.debug(col);
+                    Debug.print(col);
                     cols[i] = col;
                 }
             }

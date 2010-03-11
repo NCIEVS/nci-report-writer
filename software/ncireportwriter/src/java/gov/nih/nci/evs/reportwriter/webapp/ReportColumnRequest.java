@@ -1,5 +1,6 @@
-package gov.nih.nci.evs.reportwriter.bean;
+package gov.nih.nci.evs.reportwriter.webapp;
 
+import gov.nih.nci.evs.reportwriter.bean.*;
 import gov.nih.nci.evs.reportwriter.utils.*;
 
 import java.util.*;
@@ -54,9 +55,9 @@ import org.apache.log4j.*;
  * @version 1.0
  */
 
-public class ReportColumnUtil {
+public class ReportColumnRequest {
     // -------------------------------------------------------------------------
-    private static Logger _logger = Logger.getLogger(ReportColumnUtil.class);
+    private static Logger _logger = Logger.getLogger(ReportColumnRequest.class);
     private StandardReportTemplate _standardReportTemplate = null;
     private String _selectedStandardReportTemplate = "";
     private String _fieldLabel = "";
@@ -73,7 +74,7 @@ public class ReportColumnUtil {
     private int _conditionalColumnId = -1;
 
     // -------------------------------------------------------------------------
-    public ReportColumnUtil(String selectedStandardReportTemplate,
+    public ReportColumnRequest(String selectedStandardReportTemplate,
         StandardReportTemplate standardReportTemplate) {
         setStandardReportTemplate(selectedStandardReportTemplate,
             standardReportTemplate);
