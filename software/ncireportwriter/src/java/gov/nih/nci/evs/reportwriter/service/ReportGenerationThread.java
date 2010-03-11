@@ -146,7 +146,7 @@ public class ReportGenerationThread implements Runnable {
                 AppProperties.getInstance().getProperty(
                     AppProperties.MAIL_SMTP_SERVER);
             String from = _emailAddress;
-            String[] recipients = new String[] { _emailAddress };
+            String recipients = _emailAddress;
             String subject = "";
             StringBuffer message = new StringBuffer();
             if (successful) {

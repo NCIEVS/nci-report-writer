@@ -150,4 +150,26 @@ public class StringUtils {
         text += dots;
         return text;
     }
+    
+    public static String[] toStrings(String value, String delimiter,
+        boolean includeDelimiter, boolean trim) {
+        ArrayList<String> list = new ArrayList<String>();
+        if (value != null) {
+            StringTokenizer tokenizer = new StringTokenizer(value, delimiter,
+                includeDelimiter);
+            while (tokenizer.hasMoreElements()) {
+                String s = tokenizer.nextToken();
+                if (trim)
+                    s = s.trim();
+                if (s.length() > 0)
+                    list.add(s);
+            }
+        }
+        return list.toArray(new String[list.size()]);
+    }
+
+    public static String[] toStrings(String value, String delimiter,
+        boolean includeDelimiter) {
+        return toStrings(value, delimiter, includeDelimiter, true);
+    }
 }

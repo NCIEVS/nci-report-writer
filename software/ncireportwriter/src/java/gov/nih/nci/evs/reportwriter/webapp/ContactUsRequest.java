@@ -77,9 +77,8 @@ public class ContactUsRequest {
             String subject = HTTPUtils.getParameter(request, SUBJECT);
             String emailMsg = HTTPUtils.getParameter(request, EMAIL_MSG);
             String from = HTTPUtils.getParameter(request, EMAIL_ADDRESS);
-            String recipients[] = new String[] { //DYEE
-                appProperties.getProperty(AppProperties.ACCOUNT_ADMIN_USER_EMAIL)
-            };
+            String recipients = //DYEE
+                appProperties.getProperty(AppProperties.ACCOUNT_ADMIN_USER_EMAIL);
             MailUtils.postMail(mailServer, from, recipients, subject, emailMsg, _isSendEmail);
         } catch (UserInputException e) {
             return HTTPUtils.warningMsg(request, e.getMessage());
