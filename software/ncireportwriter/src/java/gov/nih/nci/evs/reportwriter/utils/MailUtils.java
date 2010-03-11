@@ -55,6 +55,7 @@ import javax.mail.internet.*;
 public class MailUtils extends Object {
     private static final long serialVersionUID = 1L;
     private static final int MAX_SUBJECT_CHAR = 256;
+    private static final String INDENT = "    ";
 
     public static boolean isValidEmailAddress(String text) {
         int posOfAtChar = text.indexOf('@');
@@ -74,51 +75,70 @@ public class MailUtils extends Object {
     private static void postMailValidation(String[] senderList,
         String[] recipientList, String subject, String message)
             throws UserInputException {
-        StringBuffer error = new StringBuffer();
-        String indent = "    ";
+        validateMissingFields(senderList, recipientList, subject, message);
+        validEmailAddresses(senderList, "sender");
+        validEmailAddresses(recipientList, "recipient");
+    }
+
+    private static void validateMissingFields(String[] senderList,
+        String[] recipientList, String subject, String message)
+            throws UserInputException {
+        StringBuffer buffer = new StringBuffer();
         int ctr = 0;
 
         if (subject == null || subject.length() <= 0) {
-            error.append(indent + "* subject of your email\n");
+            buffer.append(INDENT + "* subject of your email\n");
             ++ctr;
         }
         if (message == null || message.length() <= 0) {
-            error.append(indent + "* detailed description\n");
+            buffer.append(INDENT + "* detailed description\n");
+            ++ctr;
+        }
+
+        if (recipientList == null || recipientList.length <= 0
+            || recipientList[0].trim().length() <= 0) {
+            buffer.append(INDENT + "* recipient e-mail address\n");
             ++ctr;
         }
 
         if (senderList == null || senderList.length <= 0
             || senderList[0].trim().length() <= 0) {
-            error.append(indent + "* your e-mail address\n");
+            buffer.append(INDENT + "* sender e-mail address\n");
             ++ctr;
         }
-        if (error.length() > 0) {
-            String s = "Warning: Your message was not sent.\n";
-            if (ctr > 1)
-                s += "The following fields were not set:\n";
-            else
-                s += "The following field was not set:\n";
-            error.insert(0, s);
-            throw new UserInputException(error.toString());
-        }
 
-        String sender = senderList[0]; // Ignoring all others
-        if (!isValidEmailAddress(sender))
-            error.append(indent + "* Invalid sender e-mail address: " + sender
-                + "\n");
+        if (buffer.length() <= 0)
+            return;
 
-        for (int i = 0; i < recipientList.length; ++i) {
-            String recipient = recipientList[i];
-            if (!isValidEmailAddress(recipient)) {
-                error.append(indent + "* Invalid recipient e-mail address: "
-                    + recipient + "\n");
-            }
+        String s = "Warning: Your message was not sent.\n";
+        s +=
+            "The following field" + WordUtils.was_were(ctr, "s")
+                + " not set:\n";
+        buffer.insert(0, s);
+        throw new UserInputException(buffer.toString());
+    }
+
+    public static void validEmailAddresses(String[] emailList, String emailType)
+            throws UserInputException {
+        StringBuffer buffer = new StringBuffer();
+        int ctr = 0;
+
+        for (int i = 0; i < emailList.length; ++i) {
+            String email = emailList[i];
+            if (isValidEmailAddress(email))
+                continue;
+            buffer.append(INDENT + INDENT + "* " + email + "\n");
+            ++ctr;
         }
-        if (error.length() > 0) {
-            String s = "Warning: Your message was not sent.\n";
-            error.insert(0, s);
-            throw new UserInputException(error.toString());
-        }
+        if (buffer.length() <= 0)
+            return;
+
+        String s = "Warning: Your message was not sent.\n";
+        s +=
+            INDENT + "* Invalid " + WordUtils.addEndingSpaceIfNeeded(emailType)
+                + "e-mail address" + WordUtils.plural(ctr, "es") + ":\n";
+        buffer.insert(0, s);
+        throw new UserInputException(buffer.toString());
     }
 
     public static void postMail(String mailSmtpServer, String senders,
