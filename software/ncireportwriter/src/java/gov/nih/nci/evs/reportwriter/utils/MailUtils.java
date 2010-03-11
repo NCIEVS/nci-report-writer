@@ -151,38 +151,41 @@ public class MailUtils extends Object {
         String recipientList[] = StringUtils.toStrings(recipients, ";", false);
         subject = StringUtils.truncate(MAX_SUBJECT_CHAR, subject);
         postMailValidation(senderList, recipientList, subject, message);
-        String sender = senderList[0];
 
-        // Sets the host smtp address.
-        Properties props = new Properties();
-        props.put("mail.smtp.host", mailSmtpServer);
-
-        // Creates some properties and get the default session.
-        Session session = Session.getDefaultInstance(props, null);
-        session.setDebug(false);
-
-        // Creates a message.
-        Message msg = new MimeMessage(session);
-
-        // Sets the from and recipient addresses.
-        InternetAddress senderAddress = new InternetAddress(sender);
-        msg.setFrom(senderAddress);
-        msg.setRecipient(Message.RecipientType.BCC, senderAddress);
-
-        InternetAddress[] recipientAddress =
-            new InternetAddress[recipientList.length];
-        for (int i = 0; i < recipientList.length; i++)
-            recipientAddress[i] = new InternetAddress(recipientList[i]);
-        msg.setRecipients(Message.RecipientType.TO, recipientAddress);
-
-        // Optional: You can set your custom headers in the email if you want.
-        msg.addHeader("MyHeaderName", "myHeaderValue");
-
-        // Setting the Subject and Content Type.
-        msg.setSubject(subject);
-        msg.setContent(message, "text/plain");
-        if (send)
-            Transport.send(msg);
+        for (int i=0; i<senderList.length; ++i) {
+            String sender = senderList[i];
+    
+            // Sets the host smtp address.
+            Properties props = new Properties();
+            props.put("mail.smtp.host", mailSmtpServer);
+    
+            // Creates some properties and get the default session.
+            Session session = Session.getDefaultInstance(props, null);
+            session.setDebug(false);
+    
+            // Creates a message.
+            Message msg = new MimeMessage(session);
+    
+            // Sets the from and recipient addresses.
+            InternetAddress senderAddress = new InternetAddress(sender);
+            msg.setFrom(senderAddress);
+            msg.setRecipient(Message.RecipientType.BCC, senderAddress);
+    
+            InternetAddress[] recipientAddress =
+                new InternetAddress[recipientList.length];
+            for (int j = 0; j < recipientList.length; j++)
+                recipientAddress[j] = new InternetAddress(recipientList[j]);
+            msg.setRecipients(Message.RecipientType.TO, recipientAddress);
+    
+            // Optional: You can set your custom headers in the email if you want.
+            msg.addHeader("MyHeaderName", "myHeaderValue");
+    
+            // Setting the Subject and Content Type.
+            msg.setSubject(subject);
+            msg.setContent(message, "text/plain");
+            if (send)
+                Transport.send(msg);
+        }
     }
 
     public static void postMail(String mailSmtpServer, String senders,
