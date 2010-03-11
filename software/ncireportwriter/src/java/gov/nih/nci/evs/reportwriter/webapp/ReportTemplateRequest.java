@@ -1,5 +1,6 @@
-package gov.nih.nci.evs.reportwriter.bean;
+package gov.nih.nci.evs.reportwriter.webapp;
 
+import gov.nih.nci.evs.reportwriter.bean.*;
 import gov.nih.nci.evs.reportwriter.utils.*;
 
 import javax.servlet.http.*;
@@ -55,9 +56,9 @@ import org.apache.log4j.*;
  * @version 1.0
  */
 
-public class ReportTemplateUtil {
+public class ReportTemplateRequest {
     // -------------------------------------------------------------------------
-    private static Logger _logger = Logger.getLogger(ReportTemplateUtil.class);
+    private static Logger _logger = Logger.getLogger(ReportTemplateRequest.class);
     private String _label = "";
     private String _codingSchemeName = "";
     private String _codingSchemeVersion = "";
