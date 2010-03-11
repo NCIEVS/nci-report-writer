@@ -18,10 +18,11 @@ INSERT INTO `USER` (`ID`,`LOGIN_NAME`) VALUES
 
 --
 -- Data for table `hi_value`
+-- Note: Need to set hi_value whenever you manually add rows to a table.
 --
 
 INSERT INTO `hi_value` (`next_value`) VALUES
- (68);
+ (70);
 
 --
 -- Data for table `REPORT_FORMAT`
