@@ -60,7 +60,7 @@ public class AccessDeniedRequest {
     private final static String MAIL_SERVER =
         AppProperties.getInstance()
             .getProperty(AppProperties.MAIL_SMTP_SERVER);
-    private final static String ACCOUNT_ADMIN_USER_EMAIL_ =
+    private final static String ACCOUNT_ADMIN_USER_EMAIL =
         AppProperties.getInstance()
             .getProperty(AppProperties.ACCOUNT_ADMIN_USER_EMAIL);
 
@@ -168,7 +168,7 @@ public class AccessDeniedRequest {
 
     private void email(AccessDeniedInfo info) throws Exception {
         String from = info.email;
-        String[] recipients = new String[] { ACCOUNT_ADMIN_USER_EMAIL_ };
+        String recipients = ACCOUNT_ADMIN_USER_EMAIL;
         String subject = "NCI Report Writer account access problems (for " 
             + info.loginID + ") ...";
         StringBuffer message = new StringBuffer();

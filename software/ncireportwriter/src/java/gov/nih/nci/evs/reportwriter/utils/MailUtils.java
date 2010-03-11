@@ -71,8 +71,9 @@ public class MailUtils extends Object {
         return true;
     }
 
-    private static void postMailValidation(String from, String recipients[],
-        String subject, String message) throws UserInputException {
+    private static void postMailValidation(String[] senderList,
+        String[] recipientList, String subject, String message)
+            throws UserInputException {
         StringBuffer error = new StringBuffer();
         String indent = "    ";
         int ctr = 0;
@@ -85,7 +86,9 @@ public class MailUtils extends Object {
             error.append(indent + "* detailed description\n");
             ++ctr;
         }
-        if (from == null || from.length() <= 0) {
+
+        if (senderList == null || senderList.length <= 0
+            || senderList[0].trim().length() <= 0) {
             error.append(indent + "* your e-mail address\n");
             ++ctr;
         }
@@ -99,21 +102,36 @@ public class MailUtils extends Object {
             throw new UserInputException(error.toString());
         }
 
-        if (!isValidEmailAddress(from)) {
-            error.append("Warning: Your message was not sent.\n");
-            error.append(indent + "* Invalid e-mail address: \"" + from + "\"");
+        String sender = senderList[0]; // Ignoring all others
+        if (!isValidEmailAddress(sender))
+            error.append(indent + "* Invalid sender e-mail address: " + sender
+                + "\n");
+
+        for (int i = 0; i < recipientList.length; ++i) {
+            String recipient = recipientList[i];
+            if (!isValidEmailAddress(recipient)) {
+                error.append(indent + "* Invalid recipient e-mail address: "
+                    + recipient + "\n");
+            }
+        }
+        if (error.length() > 0) {
+            String s = "Warning: Your message was not sent.\n";
+            error.insert(0, s);
             throw new UserInputException(error.toString());
         }
     }
-    
-    public static void postMail(String mailSmtpServer, String from, 
-        String recipients[], String subject, String message, boolean send) 
+
+    public static void postMail(String mailSmtpServer, String senders,
+        String recipients, String subject, String message, boolean send)
             throws MessagingException, Exception {
         if (mailSmtpServer == null || mailSmtpServer.length() <= 0)
             throw new MessagingException("SMTP host not set.");
-        
+
+        String senderList[] = StringUtils.toStrings(senders, ";", false);
+        String recipientList[] = StringUtils.toStrings(recipients, ";", false);
         subject = StringUtils.truncate(MAX_SUBJECT_CHAR, subject);
-        postMailValidation(from, recipients, subject, message);
+        postMailValidation(senderList, recipientList, subject, message);
+        String sender = senderList[0];
 
         // Sets the host smtp address.
         Properties props = new Properties();
@@ -126,15 +144,16 @@ public class MailUtils extends Object {
         // Creates a message.
         Message msg = new MimeMessage(session);
 
-        // Sets the from and to addresses.
-        InternetAddress addressFrom = new InternetAddress(from);
-        msg.setFrom(addressFrom);
-        msg.setRecipient(Message.RecipientType.BCC, addressFrom);
+        // Sets the from and recipient addresses.
+        InternetAddress senderAddress = new InternetAddress(sender);
+        msg.setFrom(senderAddress);
+        msg.setRecipient(Message.RecipientType.BCC, senderAddress);
 
-        InternetAddress[] addressTo = new InternetAddress[recipients.length];
-        for (int i = 0; i < recipients.length; i++)
-            addressTo[i] = new InternetAddress(recipients[i]);
-        msg.setRecipients(Message.RecipientType.TO, addressTo);
+        InternetAddress[] recipientAddress =
+            new InternetAddress[recipientList.length];
+        for (int i = 0; i < recipientList.length; i++)
+            recipientAddress[i] = new InternetAddress(recipientList[i]);
+        msg.setRecipients(Message.RecipientType.TO, recipientAddress);
 
         // Optional: You can set your custom headers in the email if you want.
         msg.addHeader("MyHeaderName", "myHeaderValue");
@@ -145,10 +164,10 @@ public class MailUtils extends Object {
         if (send)
             Transport.send(msg);
     }
-    
-    public static void postMail(String mailSmtpServer, String from, 
-        String recipients[], String subject, String message) 
+
+    public static void postMail(String mailSmtpServer, String senders,
+        String recipients, String subject, String message)
             throws MessagingException, Exception {
-        postMail(mailSmtpServer, from, recipients, subject, message, true);
+        postMail(mailSmtpServer, senders, recipients, subject, message, true);
     }
 }

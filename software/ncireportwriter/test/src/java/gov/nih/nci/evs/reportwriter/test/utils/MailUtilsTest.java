@@ -12,19 +12,26 @@ public class MailUtilsTest {
         args = SetupEnv.getInstance().parse(args);
         new MailUtilsTest().test();
     }
+    
+    public void test1() {
+        String value = "   yeed@mail.nih.gov   ;     ;;;a;b;adf; afdfsadf ; dfadf ";
+        String values[] = StringUtils.toStrings(value, ";", false);
+        _logger.debug("List of values:");
+        for (int i=0; i<values.length; ++i)
+            _logger.debug("  " + i + ") " + values[i]);
+    }
 
     public void test() {
         try {
             String mailServer =
                 AppProperties.getInstance().getProperty(
                     AppProperties.MAIL_SMTP_SERVER);
-            String from = "yeed@mail.nih.gov";
-            String[] recipients = new String[] { from };
+            String sender = ";;a;;yeed@mail.nih.gov;;;";
+            String recipients = "a;b;c;d;e;;g;h";
             String subject = "Testing MailUtils";
             String message = "Testing\n1\n2\n3";
             boolean send = true;
-            MailUtils.postMail(mailServer, from, recipients, subject, message
-                .toString(), send);
+            MailUtils.postMail(mailServer, sender, recipients, subject, message, send);
             _logger.debug("Done.");
         } catch (Exception e) {
             e.printStackTrace();
