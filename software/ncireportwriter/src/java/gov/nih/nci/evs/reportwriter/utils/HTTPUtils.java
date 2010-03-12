@@ -183,8 +183,8 @@ public class HTTPUtils {
         return messageType;
     }
 
-    public static String pageMsg(HttpServletRequest request, String messageType,
-        StringBuffer buffer) {
+    public static String pageMsg(HttpServletRequest request,
+        String messageType, StringBuffer buffer) {
         return pageMsg(request, messageType, buffer.toString());
     }
 
@@ -215,8 +215,7 @@ public class HTTPUtils {
         return pageMsg(request, INFO_MSG, msg);
     }
 
-    public static String infoMsg(HttpServletRequest request,
-        StringBuffer buffer) {
+    public static String infoMsg(HttpServletRequest request, StringBuffer buffer) {
         return pageMsg(request, INFO_MSG, buffer);
     }
 
@@ -224,6 +223,20 @@ public class HTTPUtils {
         StringBuffer buffer, Throwable throwable) {
         return pageMsg(request, INFO_MSG, buffer, throwable);
     }
+
+    // -------------------------------------------------------------------------
+    // Note: Should be using warningMsg or infoMsg methods instead.
+    // This method used temporarily until it is no longer needed.
+    public static String sessionMsg(HttpServletRequest request, String msg) {
+        request.getSession().setAttribute("message", msg);
+        return "message";
+    }
+
+    public static String sessionMsg(HttpServletRequest request,
+        StringBuffer buffer) {
+        return sessionMsg(request, buffer.toString());
+    }
+
     // -------------------------------------------------------------------------
     private static String setAttributeString(HttpServletRequest request,
         String attributeName, String value) {
