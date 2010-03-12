@@ -81,11 +81,11 @@ public class ReportColumnRequest {
     }
 
     public ReportColumnRequest(String selectedStandardReportTemplate) {
-        setStandardReportTemplate(selectedStandardReportTemplate);
+        init(selectedStandardReportTemplate);
     }
 
     // -------------------------------------------------------------------------
-    private void setStandardReportTemplate(String selectedStandardReportTemplate) {
+    private void init(String selectedStandardReportTemplate) {
         _selectedStandardReportTemplate = selectedStandardReportTemplate;
         UserSessionBean userSessionBean = BeanUtils.getUserSessionBean();
         _standardReportTemplate =
