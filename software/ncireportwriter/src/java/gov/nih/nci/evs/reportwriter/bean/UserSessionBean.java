@@ -324,8 +324,8 @@ public class UserSessionBean extends Object {
                 return "add_standard_report_template";
             }
             return "administer_standard_reports";
-        } else if (_selectedTask.compareTo("Maintain Report Status") == 0) {        	
-            return "report_status";            
+        } else if (_selectedTask.compareTo("Maintain Report Status") == 0) {
+            return "report_status";
         } else if (_selectedTask.compareTo("Assign Report Status") == 0) {
             // Check if there is any DRAFT report waiting for approval:
             _standardReportTemplateList_draft =
@@ -359,7 +359,7 @@ public class UserSessionBean extends Object {
                 }
             }
         } else if (_selectedTask.compareTo("Unlock User Account") == 0) {
-        	return "perform_unlock";
+            return "perform_unlock";
         }
         return null;
     }
@@ -664,8 +664,8 @@ public class UserSessionBean extends Object {
         }
 
         String download_dir =
-            AppProperties.getInstance()
-                .getProperty(AppProperties.REPORT_DOWNLOAD_DIRECTORY);
+            AppProperties.getInstance().getProperty(
+                AppProperties.REPORT_DOWNLOAD_DIRECTORY);
 
         _logger.debug("download_dir " + download_dir);
         if (download_dir == null) {
@@ -675,7 +675,8 @@ public class UserSessionBean extends Object {
             return "message";
         }
 
-        String emailAddress = (String) request.getSession().getAttribute("email");
+        String emailAddress =
+            (String) request.getSession().getAttribute("email");
         _logger.debug("emailAddress: " + emailAddress);
         StandardReportService.generateStandardReport(download_dir,
             _selectedStandardReportTemplate, uid, emailAddress);
@@ -686,8 +687,9 @@ public class UserSessionBean extends Object {
                 + ", in tab-delimited and Microsft Excel formats will be generated and placed in the designated output directory."
                 + " Please review and assign an APPROVED status before making it available to the users.";
         if (emailAddress != null && emailAddress.length() > 0) {
-            message += "\n\nOnce the report is generated, an email notification will be sent to " +
-            emailAddress + ".";
+            message +=
+                "\n\nOnce the report is generated, an email notification will be sent to "
+                    + emailAddress + ".";
         }
         request.getSession().setAttribute("message", message);
         return "message"; // replaced by a messsage page (back button)
@@ -708,8 +710,8 @@ public class UserSessionBean extends Object {
         String download_dir = null;
         try {
             download_dir =
-                AppProperties.getInstance()
-                    .getProperty(AppProperties.REPORT_DOWNLOAD_DIRECTORY);
+                AppProperties.getInstance().getProperty(
+                    AppProperties.REPORT_DOWNLOAD_DIRECTORY);
             // logger.debug("download_dir " + download_dir);
 
         } catch (Exception ex) {
@@ -797,7 +799,7 @@ public class UserSessionBean extends Object {
         }
         return _versionList;
     }
-  
+
     public void setVersionList(List<SelectItem> list) {
         _versionList = list;
     }
@@ -842,7 +844,7 @@ public class UserSessionBean extends Object {
 
     // -------------------------------------------------------------------------
     public String addColumnAction() { // Might not be called.
-        return new ReportColumnRequest().addAction(); 
+        return new ReportColumnRequest().addAction();
     }
 
     public String modifyColumnAction() {
@@ -860,7 +862,7 @@ public class UserSessionBean extends Object {
     public String deleteColumnAction() {
         return new ReportColumnRequest().deleteAction();
     }
-    
+
     public String saveReportColumnAction() {
         return new ReportColumnRequest(_selectedStandardReportTemplate)
             .saveAction();
@@ -879,7 +881,7 @@ public class UserSessionBean extends Object {
     public String clearAccessDenied() {
         return new AccessDeniedRequest().clear();
     }
-    
+
     public String submitContactUs() {
         return new ContactUsRequest().submit();
     }
@@ -890,9 +892,9 @@ public class UserSessionBean extends Object {
 
     public String submitUnlockAccount() {
         return new UserAccountRequest().unlock();
-    }     
+    }
 
     public String clearUnlockAccount() {
         return new UserAccountRequest().clear();
-    }     
+    }
 }

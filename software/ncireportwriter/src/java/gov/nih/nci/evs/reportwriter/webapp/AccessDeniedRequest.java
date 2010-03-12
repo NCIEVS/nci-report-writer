@@ -58,11 +58,10 @@ public class AccessDeniedRequest {
     // -------------------------------------------------------------------------
     private static Logger _logger = Logger.getLogger(AccessDeniedRequest.class);
     private final static String MAIL_SERVER =
-        AppProperties.getInstance()
-            .getProperty(AppProperties.MAIL_SMTP_SERVER);
+        AppProperties.getInstance().getProperty(AppProperties.MAIL_SMTP_SERVER);
     private final static String ACCOUNT_ADMIN_USER_EMAIL =
-        AppProperties.getInstance()
-            .getProperty(AppProperties.ACCOUNT_ADMIN_USER_EMAIL);
+        AppProperties.getInstance().getProperty(
+            AppProperties.ACCOUNT_ADMIN_USER_EMAIL);
 
     // -------------------------------------------------------------------------
     public final static String PROBLEM = "problem";
@@ -142,8 +141,7 @@ public class AccessDeniedRequest {
         }
     }
 
-    private boolean isValidValues(StringBuffer warningMsg,
-        AccessDeniedInfo info) {
+    private boolean isValidValues(StringBuffer warningMsg, AccessDeniedInfo info) {
         info.debug();
 
         if (info.problem == null || info.problem.length() <= 0)
@@ -169,8 +167,9 @@ public class AccessDeniedRequest {
     private void email(AccessDeniedInfo info) throws Exception {
         String from = info.email;
         String recipients = ACCOUNT_ADMIN_USER_EMAIL;
-        String subject = "NCI Report Writer account access problems (for " 
-            + info.loginID + ") ...";
+        String subject =
+            "NCI Report Writer account access problems (for " + info.loginID
+                + ") ...";
         StringBuffer message = new StringBuffer();
         message.append("* Problem: " + info.problem + "\n");
         message.append("* Login ID: " + info.loginID + "\n");
