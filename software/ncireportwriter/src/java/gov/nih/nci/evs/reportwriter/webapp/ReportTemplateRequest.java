@@ -5,7 +5,7 @@ import java.util.*;
 import gov.nih.nci.evs.reportwriter.bean.*;
 import gov.nih.nci.evs.reportwriter.utils.*;
 
-import javax.faces.model.SelectItem;
+import javax.faces.model.*;
 import javax.servlet.http.*;
 
 import org.LexGrid.codingSchemes.*;
