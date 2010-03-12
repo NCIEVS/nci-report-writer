@@ -330,10 +330,8 @@ public class UserSessionBean extends Object {
                 && _standardReportTemplateList_draft.size() > 0) {
                 return "assign_report_status";
             } else {
-                String message = "No draft report is found. ";
                 HttpServletRequest request = SessionUtil.getRequest();
-                request.getSession().setAttribute("message", message);
-                return "message";
+                return HTTPUtils.sessionMsg(request, "No draft report is found.");
             }
         } else if (_selectedTask.compareTo("Retrieve Standard Reports") == 0) {
             HttpServletRequest request = SessionUtil.getRequest();
@@ -349,9 +347,7 @@ public class UserSessionBean extends Object {
                     && _standardReportTemplateList_approved.size() > 0) {
                     return "retrieve_standard_reports";
                 } else {
-                    String message = "No approved report is found. ";
-                    request.getSession().setAttribute("message", message);
-                    return "message";
+                    return HTTPUtils.sessionMsg(request, "No approved report is found. ");
                 }
             }
         } else if (_selectedTask.compareTo("Unlock User Account") == 0) {
@@ -524,22 +520,19 @@ public class UserSessionBean extends Object {
             // logger.debug("download_dir " + download_dir);
 
         } catch (Exception ex) {
-
-            String message =
-                "Unable to download the specified report -- download directory does not exist -- check with system administrator.";
-            request.getSession().setAttribute("message", message);
-            return "message";
+            return HTTPUtils.sessionMsg(request, 
+                "Unable to download the specified report.\n"
+                + "Download directory does not exist.\n"
+                + "Check with your system administrator.");
         }
 
         File dir = new File(download_dir);
         if (!dir.exists()) {
             _logger
                 .debug("Unable to download the specified report -- download directory does not exist. ");
-            String message =
-                "Unable to download " + _selectedStandardReportTemplate
-                    + " -- download directory does not exist. ";
-            request.getSession().setAttribute("message", message);
-            return "message";
+            return HTTPUtils.sessionMsg(request, 
+                "Unable to download " + _selectedStandardReportTemplate + ".\n"
+                + "Download directory does not exist.");
         }
 
         File[] fileList = dir.listFiles();
@@ -552,24 +545,13 @@ public class UserSessionBean extends Object {
             }
         }
 
-        // request.getSession().setAttribute("selectedOntology",
-        // ontologyNameAndVersion);
-        // find available reports in the download directory
-        // Check if selectedStandardReportTemplate has been approved.
-        // to be implemented:
         boolean approved = true;
-        if (approved) {
+        if (approved)
             return "download";
-        } else {
-            String message =
-                "The " + _selectedStandardReportTemplate
-                    + " has not been approved for download.";
-            request.getSession().setAttribute("message", message);
-            return "message";
-        }
-        // if not, display a message page indicating such.
-        // otherwise, route to generate_standard_report
-        // return "generate_standard_report";
+
+        return HTTPUtils.sessionMsg(request, 
+            "The " + _selectedStandardReportTemplate
+            + " has not been approved for download.");
     }
 
     public String saveStatusAction() {
@@ -580,13 +562,9 @@ public class UserSessionBean extends Object {
         StandardReportTemplate standardReportTemplate =
             getStandardReportTemplate(_selectedStandardReportTemplate);
 
-        String message =
+        return HTTPUtils.sessionMsg(request, 
             "The status of the " + standardReportTemplate.getLabel()
-                + " has been updated successfully.";
-
-        request.getSession().setAttribute("message", message);
-
-        return "message"; // replaced by a messsage page (back button)
+            + " has been updated successfully.");
     }
 
     private String _selectedVersion = null;

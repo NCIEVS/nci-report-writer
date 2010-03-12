@@ -124,18 +124,16 @@ public class ReportContentRequest {
 
     public String generateAction() {
         HttpServletRequest request = SessionUtil.getRequest();
-
         String warningMsg = displayCodingSchemeWarning(request);
+        StringBuffer buffer = new StringBuffer();
         if (warningMsg != null)
             return warningMsg;
 
         String templateId =
             (String) request.getSession().getAttribute(
                 "selectedStandardReportTemplate");
-
         _logger.debug("generateStandardReportAction: " + templateId);
 
-        // boolean set_defined_by_code = true;
         String defining_set_desc = null;
         try {
             SDKClientUtil sdkclientutil = new SDKClientUtil();
@@ -161,14 +159,11 @@ public class ReportContentRequest {
                     + version);
 
                 if (!DataUtils.isValidCodingScheme(codingscheme, version)) {
-                    String message =
-                        "Invalid coding scheme name "
-                            + codingscheme
-                            + " or version "
-                            + version
-                            + " -- The report template may be out of date. Please modify it and resubmit.";
-                    request.getSession().setAttribute("message", message);
-                    return "message";
+                    buffer.append("Invalid coding scheme name " + codingscheme);
+                    buffer.append(" or version " + version + ".\n");
+                    buffer.append("The report template may be out of date.  ");
+                    buffer.append("Please modify it and resubmit.");
+                    return HTTPUtils.sessionMsg(request, buffer);
                 }
 
                 defining_set_desc = standardReportTemplate.getRootConceptCode();
@@ -181,12 +176,11 @@ public class ReportContentRequest {
                         DataUtils.getConceptByCode(codingscheme, version, ltag,
                             rootConceptCode);
                     if (rootConcept == null) {
-                        String message =
-                            "Invalid root concept code "
-                                + rootConceptCode
-                                + " -- Please modify the report template and resubmit.";
-                        request.getSession().setAttribute("message", message);
-                        return "message";
+                        buffer.append("Invalid root concept code: ");
+                        buffer.append(rootConceptCode + ".\n");
+                        buffer.append("Please modify the report template");
+                        buffer.append(" and resubmit.");
+                        return HTTPUtils.sessionMsg(request, buffer);
                     }
                     String associationName =
                         standardReportTemplate.getAssociationName();
@@ -195,30 +189,23 @@ public class ReportContentRequest {
                         DataUtils.getSupportedAssociations(
                             DataUtils.AssociationType.Names, key);
                     if (!associationname_vec.contains(associationName)) {
-                        String message =
-                            "Invalid association name "
-                                + associationName
-                                + " -- Please modify the report template and resubmit.";
-                        request.getSession().setAttribute("message", message);
-                        return "message";
+                        buffer.append("Invalid association name: ");
+                        buffer.append(associationName + ".\n");
+                        buffer.append("Please modify the report template");
+                        buffer.append(" and resubmit.");
+                        return HTTPUtils.sessionMsg(request, buffer);
                     }
-                } else {
-                    // set_defined_by_code = false;
                 }
             }
         } catch (Exception ex) {
-            String message =
-                "Exception encountered when generating " + templateId + ".";
-            request.getSession().setAttribute("message", message);
-            return "message";
+            return HTTPUtils.sessionMsg(request,
+                "Exception encountered when generating " + templateId + ".");
         }
 
         String uid = (String) request.getSession().getAttribute("uid");
-        if (uid == null) {
-            String message = "You must first login to perform this function.";
-            request.getSession().setAttribute("message", message);
-            return "message";
-        }
+        if (uid == null)
+            return HTTPUtils.sessionMsg(request,
+                "You must first login to perform this function.");
 
         String reportFormat_value = "Text (tab delimited)";
         String reportStatus_value = "DRAFT";
@@ -226,22 +213,19 @@ public class ReportContentRequest {
         String message =
             StandardReportService.validReport(_selectedStandardReportTemplate,
                 reportFormat_value, reportStatus_value, uid);
-
-        if (message.compareTo("success") != 0) {
-            request.getSession().setAttribute("message", message);
-            return "message";
-        }
+        if (message.compareTo("success") != 0)
+            return HTTPUtils.sessionMsg(request, message);
 
         String download_dir =
             AppProperties.getInstance().getProperty(
                 AppProperties.REPORT_DOWNLOAD_DIRECTORY);
-
         _logger.debug("download_dir " + download_dir);
         if (download_dir == null) {
-            message =
-                "The download directory has not been set up properly -- ask your administrator to check JBoss setting in properties-service.xml.";
-            request.getSession().setAttribute("message", message);
-            return "message";
+            buffer.append("The download directory has not been set");
+            buffer.append(" up properly.\n");
+            buffer.append("Ask your administrator to check the JBoss");
+            buffer.append(" setting in properties-service.xml.");
+            return HTTPUtils.sessionMsg(request, buffer);
         }
 
         String emailAddress =
@@ -249,18 +233,17 @@ public class ReportContentRequest {
         _logger.debug("emailAddress: " + emailAddress);
         StandardReportService.generateStandardReport(download_dir,
             _selectedStandardReportTemplate, uid, emailAddress);
-
-        message =
-            "You request has been received. The report, "
-                + templateId
-                + ", in tab-delimited and Microsft Excel formats will be generated and placed in the designated output directory."
-                + " Please review and assign an APPROVED status before making it available to the users.";
+        buffer.append("Your request has been received.  ");
+        buffer.append("The report, " + templateId + ", in tab-delimited");
+        buffer.append(" and Microsft Excel formats will be generated");
+        buffer.append(" and placed in the designated output directory.  ");
+        buffer.append("Please review and assign an APPROVED status");
+        buffer.append(" before making it available to the users.");
         if (emailAddress != null && emailAddress.length() > 0) {
-            message +=
-                "\n\nOnce the report is generated, an email notification will be sent to "
-                    + emailAddress + ".";
+            buffer.append("\n\nOnce the report is generated,");
+            buffer.append(" an email notification will be sent to");
+            buffer.append(" " + emailAddress + ".");
         }
-        request.getSession().setAttribute("message", message);
-        return "message"; // replaced by a messsage page (back button)
+        return HTTPUtils.sessionMsg(request, buffer);
     }
 }

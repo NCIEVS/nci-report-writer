@@ -253,11 +253,11 @@ public class ReportTemplateRequest {
                 ontologyBean.setSelectedLevel(level.toString());
             }
         } catch (Exception ex) {
-            String message =
-                "Unable to construct available coding scheme version list."
-                    + "\n* Exception: " + ex.getLocalizedMessage();
-            request.getSession().setAttribute("message", message);
-            return "message";
+            StringBuffer buffer = new StringBuffer();
+            buffer.append("Unable to construct available coding scheme");
+            buffer.append(" version list.\n");
+            buffer.append("  * Exception: " + ex.getLocalizedMessage());
+            return HTTPUtils.sessionMsg(request, buffer);
         }
 
         return "modify_standard_report_template";
