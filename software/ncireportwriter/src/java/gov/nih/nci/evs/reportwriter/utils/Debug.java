@@ -52,6 +52,6 @@ import gov.nih.nci.evs.reportwriter.webapp.*;
 
 public class Debug {
     public static void print(ReportColumn col) {
-        ReportColumnRequest.debugFlat(col);
+        ReportColumnRequest.debug(col);
     }
 }

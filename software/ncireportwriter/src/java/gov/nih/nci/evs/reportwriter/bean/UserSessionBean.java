@@ -67,8 +67,6 @@ import org.LexGrid.concepts.*;
 
 public class UserSessionBean extends Object {
     private static Logger _logger = Logger.getLogger(UserSessionBean.class);
-    // private final int COL_NUM = 0;
-    private final int FIELD_NUM = 1;
 
     private Boolean _isAdmin = null;
     private String _selectedTask = null;
@@ -312,7 +310,6 @@ public class UserSessionBean extends Object {
             _selectedStandardReportTemplate_approved);
     }
 
-    // taskSelectionChanged
     public void taskSelectionChanged(ValueChangeEvent event) {
         if (event.getNewValue() == null)
             return;
@@ -367,78 +364,6 @@ public class UserSessionBean extends Object {
         return null;
     }
 
-    private int[] getColumnInfo() throws Exception {
-        HttpServletRequest request = SessionUtil.getRequest();
-        String selectedColumnInfo = request.getParameter("selectedColumnInfo");
-        _logger.debug("Selected Column Info: " + selectedColumnInfo);
-        if (selectedColumnInfo == null)
-            throw new Exception("Please select a column.");
-
-        StringTokenizer tokenizer =
-            new StringTokenizer(selectedColumnInfo, ":");
-        int[] info = new int[tokenizer.countTokens()];
-        int i = 0;
-        while (tokenizer.hasMoreTokens())
-            info[i++] = Integer.parseInt(tokenizer.nextToken());
-        return info;
-    }
-
-    private void initColumnAction() {
-        HttpServletRequest request = SessionUtil.getRequest();
-        request.removeAttribute("warningMsg");
-    }
-
-    public String addColumnAction() {
-        return "add_standard_report_column";
-    }
-
-    public String modifyColumnAction() {
-        HttpServletRequest request = SessionUtil.getRequest();
-        try {
-            initColumnAction();
-            int[] info = getColumnInfo();
-            int fieldNum = info[FIELD_NUM];
-            _logger.debug("Modify column with field number = " + fieldNum);
-
-            ReportColumn reportColumn =
-                ReportColumnRequest.getReportColumn(fieldNum);
-            ReportColumnRequest.debug(reportColumn);
-            request.setAttribute("reportColumn", reportColumn);
-            return "add_standard_report_column";
-        } catch (Exception e) {
-            ExceptionUtils.print(_logger, e);
-            request.setAttribute("warningMsg", e.getMessage());
-            return "standard_report_column";
-        }
-    }
-
-    public String insertBeforeColumnAction() {
-        return "add_standard_report_column";
-    }
-
-    public String insertAfterColumnAction() {
-        return "add_standard_report_column";
-    }
-
-    public String deleteColumnAction() {
-        try {
-            initColumnAction();
-            int info[] = getColumnInfo();
-            int fieldNum = info[FIELD_NUM];
-            _logger.debug("Deleting column with field number = " + fieldNum);
-
-            ReportColumn reportColumn =
-                ReportColumnRequest.getReportColumn(fieldNum);
-            SDKClientUtil sdkclientutil = new SDKClientUtil();
-            sdkclientutil.deleteReportColumn(reportColumn);
-            // setSelectedStandardReportTemplate(label);
-            return "standard_report_column";
-        } catch (Exception e) {
-            SessionUtil.getRequest().setAttribute("warningMsg", e.getMessage());
-            return "standard_report_column";
-        }
-    }
-
     public String getRootConceptCode() {
         return _rootConceptCode;
     }
@@ -463,77 +388,6 @@ public class UserSessionBean extends Object {
             e.printStackTrace();
         }
         return null;
-    }
-
-    public String saveReportColumnAction() {
-        HttpServletRequest request = SessionUtil.getRequest();
-        StringBuffer warningMsg = new StringBuffer();
-        try {
-            ReportColumnRequest rc =
-                new ReportColumnRequest(_selectedStandardReportTemplate,
-                    getStandardReportTemplate(_selectedStandardReportTemplate));
-            if (!rc.isValid(request, warningMsg)
-                || rc.alreadyExists(warningMsg))
-                return HTTPUtils.warningMsg(request, warningMsg);
-
-            SDKClientUtil sdkclientutil = new SDKClientUtil();
-            ReportColumn col =
-                sdkclientutil.createReportColumn(rc.getFieldLabel(), rc
-                    .getColumnNumber(), rc.getFieldType(),
-                    rc.getPropertyType(), rc.getPropertyName(), rc
-                        .isPreferred(), rc.getRepresentationalForm(), rc
-                        .getSource(), rc.getPropertyQualifier(), rc
-                        .getQualifierValue(), rc.delimiter(), rc
-                        .getConditionalColumnId());
-            col.setReportTemplate(rc.getStandardReportTemplate());
-            sdkclientutil.insertReportColumn(col);
-            _logger.debug("Completed insertReportColumn: "
-                + rc.getColumnNumber());
-
-            request.getSession().setAttribute("selectedStandardReportTemplate",
-                _selectedStandardReportTemplate);
-
-        } catch (Exception e) {
-            e.printStackTrace();
-            return HTTPUtils.warningMsg(request, warningMsg, e);
-        }
-        return "standard_report_column";
-    }
-
-    public String saveModifiedReportColumnAction() {
-        HttpServletRequest request = SessionUtil.getRequest();
-        StringBuffer warningMsg = new StringBuffer();
-        request.setAttribute("isModifyReportColumn", Boolean.TRUE);
-        try {
-            ReportColumnRequest rc =
-                new ReportColumnRequest(_selectedStandardReportTemplate,
-                    getStandardReportTemplate(_selectedStandardReportTemplate));
-            if (!rc.isValid(request, warningMsg))
-                return HTTPUtils.warningMsg(request, warningMsg);
-
-            SDKClientUtil sdkclientutil = new SDKClientUtil();
-            ReportColumn col = rc.getReportColumn();
-            col.setColumnNumber(rc.getColumnNumber());
-            col.setLabel(rc.getFieldLabel());
-            col.setFieldId(rc.getFieldType());
-            col.setPropertyType(rc.getPropertyType());
-            col.setPropertyName(rc.getPropertyName());
-            col.setIsPreferred(rc.isPreferred());
-            col.setRepresentationalForm(rc.getRepresentationalForm());
-            col.setSource(rc.getSource());
-            col.setQualifierName(rc.getPropertyQualifier());
-            col.setQualifierValue(rc.getQualifierValue());
-            col.setDelimiter(rc.delimiter());
-            col.setConditionalColumnId(rc.getConditionalColumnId());
-            sdkclientutil.updateReportColumn(col);
-            _logger.debug("Completed updateReportColumn: "
-                + rc.getColumnNumber());
-        } catch (Exception e) {
-            e.printStackTrace();
-            return HTTPUtils.warningMsg(request, warningMsg, e);
-        }
-        request.removeAttribute("isModifyReportColumn");
-        return "standard_report_column";
     }
 
     public List<SelectItem> getReportFormatList() {
@@ -965,6 +819,7 @@ public class UserSessionBean extends Object {
         setSelectedVersion(_selectedVersion);
     }
 
+    // -------------------------------------------------------------------------
     public String addReportTemplateAction() {
         return new ReportTemplateRequest().addAction();
     }
@@ -985,6 +840,38 @@ public class UserSessionBean extends Object {
         return new ReportTemplateRequest().deleteAction();
     }
 
+    // -------------------------------------------------------------------------
+    public String addColumnAction() { // Might not be called.
+        return new ReportColumnRequest().addAction(); 
+    }
+
+    public String modifyColumnAction() {
+        return new ReportColumnRequest().modifyAction();
+    }
+
+    public String insertBeforeColumnAction() {
+        return new ReportColumnRequest().insertBeforeAction();
+    }
+
+    public String insertAfterColumnAction() { // Might not be called.
+        return new ReportColumnRequest().insertAfterAction();
+    }
+
+    public String deleteColumnAction() {
+        return new ReportColumnRequest().deleteAction();
+    }
+    
+    public String saveReportColumnAction() {
+        return new ReportColumnRequest(_selectedStandardReportTemplate)
+            .saveAction();
+    }
+
+    public String saveModifiedReportColumnAction() {
+        return new ReportColumnRequest(_selectedStandardReportTemplate)
+            .saveModifiedAction();
+    }
+
+    // -------------------------------------------------------------------------
     public String submitAccessDenied() {
         return new AccessDeniedRequest().submit();
     }
