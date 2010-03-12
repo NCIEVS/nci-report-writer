@@ -256,7 +256,8 @@ public class ReportColumnRequest {
     public static void debug(ReportColumn col) {
         if (true)
             debugFlat(col);
-        else debugSummary(col);
+        else
+            debugSummary(col);
     }
 
     private static void debugSummary(ReportColumn col) {
@@ -396,12 +397,10 @@ public class ReportColumnRequest {
 
             SDKClientUtil sdkclientutil = new SDKClientUtil();
             ReportColumn col =
-                sdkclientutil.createReportColumn(_fieldLabel,
-                    _columnNumber, _fieldType, _propertyType,
-                    _propertyName, _isPreferred,
-                    _representationalForm, _source,
-                    _propertyQualifier, _qualifierValue, _delimiter,
-                    _conditionalColumnId);
+                sdkclientutil.createReportColumn(_fieldLabel, _columnNumber,
+                    _fieldType, _propertyType, _propertyName, _isPreferred,
+                    _representationalForm, _source, _propertyQualifier,
+                    _qualifierValue, _delimiter, _conditionalColumnId);
             col.setReportTemplate(_standardReportTemplate);
             sdkclientutil.insertReportColumn(col);
             _logger.debug("Completed insertReportColumn: " + _columnNumber);

@@ -328,7 +328,8 @@ public class ReportTemplateRequest {
             standardReportTemplate.setCodingSchemeVersion(_codingSchemeVersion);
             standardReportTemplate.setRootConceptCode(_rootConceptCode);
             standardReportTemplate.setAssociationName(_associationName);
-            standardReportTemplate.setDirection(_direction);            standardReportTemplate.setLevel(_level);
+            standardReportTemplate.setDirection(_direction);
+            standardReportTemplate.setLevel(_level);
             sdkclientutil.updateStandardReportTemplate(standardReportTemplate);
 
             key =
