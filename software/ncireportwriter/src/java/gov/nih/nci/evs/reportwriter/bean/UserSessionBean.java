@@ -443,10 +443,7 @@ public class UserSessionBean extends Object {
     }
 
     public String addStatusAction() {
-        // HttpServletRequest request = (HttpServletRequest) FacesContext
-        // .getCurrentInstance().getExternalContext().getRequest();
-        // String statusValue = (String) request.getParameter("statusValue");
-        return "report_status";
+    	return new AddReportStatusRequest().addAction();
     }
 
     public String assignStatusAction() {
