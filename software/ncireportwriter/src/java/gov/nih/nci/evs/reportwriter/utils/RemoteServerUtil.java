@@ -71,6 +71,8 @@ public class RemoteServerUtil {
 
     public static LexBIGService createLexBIGService(String serviceUrl) 
             throws Exception {
+    	if (true)
+    		throw new Exception("DYEE: Temporary disabled");
         if (_firstTime) {
             _logger.debug(StringUtils.SEPARATOR);
             _logger.debug("serviceUrl: " + serviceUrl);
