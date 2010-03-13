@@ -500,19 +500,6 @@ public class UserSessionBean extends Object {
             + " has not been approved for download.");
     }
 
-    public String saveStatusAction() {
-        HttpServletRequest request = SessionUtil.getRequest();
-        request.getSession().setAttribute("selectedStandardReportTemplate",
-            _selectedStandardReportTemplate);
-
-        StandardReportTemplate standardReportTemplate =
-            getStandardReportTemplate(_selectedStandardReportTemplate);
-
-        return HTTPUtils.sessionMsg(request, 
-            "The status of the " + standardReportTemplate.getLabel()
-            + " has been updated successfully.");
-    }
-
     private String _selectedVersion = null;
     private List<SelectItem> _versionList = null;
     private Vector<String> _versionListData = null;
@@ -624,6 +611,12 @@ public class UserSessionBean extends Object {
 
     public String assignStatusAction() {
     	return new ReportStatusRequest().assignAction();
+    }
+    
+
+    public String saveStatusAction() { // Might not be called.
+        return new ReportStatusRequest().
+            saveAction(_selectedStandardReportTemplate);
     }
     
     // -------------------------------------------------------------------------

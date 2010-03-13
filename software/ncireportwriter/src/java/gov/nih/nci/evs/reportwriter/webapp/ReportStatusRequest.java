@@ -61,6 +61,21 @@ public class ReportStatusRequest {
         return "report_status";
     }
 
+    public String saveAction(String selectedStandardReportTemplate) {
+        HttpServletRequest request = SessionUtil.getRequest();
+        request.getSession().setAttribute("selectedStandardReportTemplate",
+                selectedStandardReportTemplate);
+
+        UserSessionBean userSessionBean = BeanUtils.getUserSessionBean();
+        StandardReportTemplate standardReportTemplate =
+            userSessionBean
+                    .getStandardReportTemplate(selectedStandardReportTemplate);
+
+        return HTTPUtils.sessionMsg(request, "The status of the "
+                + standardReportTemplate.getLabel()
+                + " has been updated successfully.");
+    }
+
     public String assignAction() {
         HttpServletRequest request = SessionUtil.getRequest();
         // save to database
