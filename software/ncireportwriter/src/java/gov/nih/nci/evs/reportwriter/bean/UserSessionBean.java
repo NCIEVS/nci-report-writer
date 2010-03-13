@@ -61,7 +61,6 @@ import org.apache.log4j.*;
 public class UserSessionBean extends Object {
     private static Logger _logger = Logger.getLogger(UserSessionBean.class);
 
-    private Boolean _isAdmin = null;
     private String _selectedTask = null;
 
     // for templates with reports already been generated
@@ -86,14 +85,6 @@ public class UserSessionBean extends Object {
     private String _selectedReportFormat = null;
     private List<SelectItem> _reportFormatList = null;
     private Vector<String> _reportFormatListData = null;
-
-    public void setIsAdmin(Boolean isAdmin) {
-        _isAdmin = isAdmin;
-    }
-
-    public Boolean getIsAdmin() {
-        return _isAdmin;
-    }
 
     public String getSelectedTask() {
         return _selectedTask;
