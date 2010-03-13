@@ -56,7 +56,7 @@ import javax.servlet.http.*;
  * @version 1.0
  */
 
-public class AddReportStatusRequest {
+public class ReportStatusRequest {
     public String addAction() {
         return "report_status";
     }
