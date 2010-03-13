@@ -619,11 +619,11 @@ public class UserSessionBean extends Object {
 
     // -------------------------------------------------------------------------
     public String addStatusAction() {
-    	return new AddReportStatusRequest().addAction();
+    	return new ReportStatusRequest().addAction();
     }
 
     public String assignStatusAction() {
-    	return new AddReportStatusRequest().assignAction();
+    	return new ReportStatusRequest().assignAction();
     }
     
     // -------------------------------------------------------------------------
