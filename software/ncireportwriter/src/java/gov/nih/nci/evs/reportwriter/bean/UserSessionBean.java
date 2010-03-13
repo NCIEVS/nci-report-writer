@@ -61,8 +61,8 @@ import org.apache.log4j.*;
 public class UserSessionBean extends Object {
     private static Logger _logger = Logger.getLogger(UserSessionBean.class);
 
-    private String _selectedTask = null;
-
+    private TaskRequest _taskRequest = new TaskRequest();
+    
     // for templates with reports already been generated
     private List<SelectItem> _standardReportTemplateList_draft =
         new ArrayList<SelectItem>();
@@ -85,14 +85,6 @@ public class UserSessionBean extends Object {
     private String _selectedReportFormat = null;
     private List<SelectItem> _reportFormatList = null;
     private Vector<String> _reportFormatListData = null;
-
-    public String getSelectedTask() {
-        return _selectedTask;
-    }
-
-    public void setSelectedTask(String selectedTask) {
-        _selectedTask = selectedTask;
-    }
 
     public String getSelectedPropertyType() {
         return _selectedPropertyType;
@@ -120,34 +112,9 @@ public class UserSessionBean extends Object {
         _selectedOntology = selectedOntology;
     }
 
-    public List<SelectItem> getTaskList() {
-        HttpServletRequest request = SessionUtil.getRequest();
-        HttpSession session = request.getSession(false);
-
-        Boolean isAdmin = null;
-        if (session != null) {
-            isAdmin =
-                (Boolean) request.getSession(true).getAttribute("isAdmin");
-        }
-
-        List<SelectItem> list = DataUtils.getTaskList(isAdmin);
-        if (list != null) {
-            SelectItem item = (SelectItem) list.get(0);
-            _selectedTask = item.getLabel();
-        }
-        // return DataUtils.getTaskList(isAdmin);
-        return list;
-    }
-
     public List<SelectItem> getPropertyTypeList() {
         List<SelectItem> list = DataUtils.getPropertyTypeList();
         return list;
-    }
-
-    public void changeTaskSelection(ValueChangeEvent vce) {
-        String newValue = (String) vce.getNewValue();
-        // logger.debug("========== changeTaskSelection " + newValue);
-        _selectedTask = newValue;
     }
 
     public void reportSelectionChanged(ValueChangeEvent vce) {
@@ -166,7 +133,6 @@ public class UserSessionBean extends Object {
     }
 
     public List<SelectItem> getStandardReportTemplateList() {
-
         List<SelectItem> list = DataUtils.getStandardReportTemplateList();
         if (_selectedStandardReportTemplate == null) {
             if (list != null && list.size() > 0) {
@@ -248,6 +214,10 @@ public class UserSessionBean extends Object {
             "selectedStandardReportTemplate_draft",
             selectedStandardReportTemplate_draft);
     }
+    
+    public void setStandardReportTemplateList_approved(List<SelectItem> list) {
+        _standardReportTemplateList_approved = list;
+    }
 
     public List<SelectItem> getStandardReportTemplateList_approved() {
         List<SelectItem> list = new ArrayList<SelectItem>();
@@ -303,49 +273,6 @@ public class UserSessionBean extends Object {
             return;
         String task = (String) event.getNewValue();
         setSelectedTask(task);
-    }
-
-    public String performTask() {
-        if (_selectedTask.compareTo("Administer Standard Reports") == 0) {
-            List<SelectItem> list = getStandardReportTemplateList();
-            if (list == null || list.size() == 0) {
-                return "add_standard_report_template";
-            }
-            return "administer_standard_reports";
-        } else if (_selectedTask.compareTo("Maintain Report Status") == 0) {
-            return "report_status";
-        } else if (_selectedTask.compareTo("Assign Report Status") == 0) {
-            // Check if there is any DRAFT report waiting for approval:
-            _standardReportTemplateList_draft =
-                getStandardReportTemplateList_draft();
-            if (_standardReportTemplateList_draft != null
-                && _standardReportTemplateList_draft.size() > 0) {
-                return "assign_report_status";
-            } else {
-                HttpServletRequest request = SessionUtil.getRequest();
-                return HTTPUtils.sessionMsg(request, "No draft report is found.");
-            }
-        } else if (_selectedTask.compareTo("Retrieve Standard Reports") == 0) {
-            HttpServletRequest request = SessionUtil.getRequest();
-            Boolean isAdmin =
-                (Boolean) request.getSession().getAttribute("isAdmin");
-            if (isAdmin != null && isAdmin.equals(Boolean.TRUE)) {
-                return "retrieve_standard_reports";
-            } else {
-                // Check if there is any APPROVED report waiting for approval:
-                _standardReportTemplateList_approved =
-                    getStandardReportTemplateList_approved();
-                if (_standardReportTemplateList_approved != null
-                    && _standardReportTemplateList_approved.size() > 0) {
-                    return "retrieve_standard_reports";
-                } else {
-                    return HTTPUtils.sessionMsg(request, "No approved report is found. ");
-                }
-            }
-        } else if (_selectedTask.compareTo("Unlock User Account") == 0) {
-            return "perform_unlock";
-        }
-        return null;
     }
 
     public String getRootConceptCode() {
@@ -473,7 +400,28 @@ public class UserSessionBean extends Object {
             return;
         setSelectedVersion(_selectedVersion);
     }
+    
+    // -------------------------------------------------------------------------
+    public String performTask() {
+        return _taskRequest.performAction();
+    }
+    
+    public String getSelectedTask() {
+        return _taskRequest.getSelectedTask();
+    }
 
+    public void setSelectedTask(String selectedTask) {
+        _taskRequest.setSelectedTask(selectedTask);
+    }
+
+    public void changeTaskSelection(ValueChangeEvent vce) {
+        _taskRequest.changeTaskSelection(vce);
+    }
+    
+    public List<SelectItem> getTaskList() {
+        return _taskRequest.getTaskList();
+    }
+    
     // -------------------------------------------------------------------------
     public String addReportTemplateAction() {
         return new ReportTemplateRequest().addAction();
