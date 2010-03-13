@@ -1,5 +1,14 @@
 package gov.nih.nci.evs.reportwriter.webapp;
 
+import gov.nih.nci.evs.reportwriter.bean.*;
+import gov.nih.nci.evs.reportwriter.utils.*;
+
+import java.util.Date;
+import java.util.List;
+
+import javax.faces.model.*;
+import javax.servlet.http.*;
+
 /**
  * <!-- LICENSE_TEXT_START -->
  * Copyright 2008,2009 NGIT. This software was developed in conjunction 
@@ -50,5 +59,58 @@ package gov.nih.nci.evs.reportwriter.webapp;
 public class AddReportStatusRequest {
     public String addAction() {
         return "report_status";
+    }
+
+    public String assignAction() {
+        HttpServletRequest request = SessionUtil.getRequest();
+        // save to database
+        String reportTemplate =
+            (String) request.getSession().getAttribute(
+                    "selectedStandardReportTemplate_draft");
+        String statusValue =
+            (String) request.getSession().getAttribute("selectedReportStatus");
+
+        try {
+            SDKClientUtil sdkclientutil = new SDKClientUtil();
+            StandardReportTemplate standardReportTemplate = null;
+            String FQName = "gov.nih.nci.evs.reportwriter.bean.StandardReport";
+            Object[] objs = sdkclientutil.search(FQName);
+            if (objs != null && objs.length > 0) {
+                for (int i = 0; i < objs.length; i++) {
+                    StandardReport standardReport = (StandardReport) objs[i];
+                    standardReportTemplate = standardReport.getTemplate();
+                    if (standardReportTemplate != null) {
+                        if (reportTemplate.compareTo(standardReportTemplate
+                                .getLabel()) == 0) {
+                            FQName =
+                                "gov.nih.nci.evs.reportwriter.bean.ReportStatus";
+                            String methodName = "setLabel";
+                            String key = statusValue;
+
+                            Object status_obj =
+                                sdkclientutil.search(FQName, methodName, key);
+                            if (status_obj != null) {
+                                standardReport
+                                        .setStatus((ReportStatus) status_obj);
+                                java.util.Date lastModified = new Date(); // system
+                                // date
+                                standardReport.setLastModified(lastModified);
+                                sdkclientutil
+                                        .updateStandardReport(standardReport);
+                            }
+                        }
+                    }
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        UserSessionBean userSessionBean = BeanUtils.getUserSessionBean();
+        List<SelectItem> list =
+            userSessionBean.getStandardReportTemplateList_draft();
+        userSessionBean.setStandardReportTemplateList_draft(list);
+
+        return "assign_report_status";
     }
 }

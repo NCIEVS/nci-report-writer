@@ -202,6 +202,10 @@ public class UserSessionBean extends Object {
         request.getSession().setAttribute("selectedStandardReportTemplate",
             selectedStandardReportTemplate);
     }
+    
+    public void setStandardReportTemplateList_draft(List<SelectItem> list) {
+        _standardReportTemplateList_draft = list;
+    }
 
     public List<SelectItem> getStandardReportTemplateList_draft() {
         // Find all templates with reports already been generated
@@ -442,61 +446,6 @@ public class UserSessionBean extends Object {
         setSelectedReportStatus(_selectedReportStatus);
     }
 
-    public String addStatusAction() {
-    	return new AddReportStatusRequest().addAction();
-    }
-
-    public String assignStatusAction() {
-        HttpServletRequest request = SessionUtil.getRequest();
-        // save to database
-        String reportTemplate =
-            (String) request.getSession().getAttribute(
-                "selectedStandardReportTemplate_draft");
-        String statusValue =
-            (String) request.getSession().getAttribute("selectedReportStatus");
-
-        try {
-            SDKClientUtil sdkclientutil = new SDKClientUtil();
-            StandardReportTemplate standardReportTemplate = null;
-            String FQName = "gov.nih.nci.evs.reportwriter.bean.StandardReport";
-            Object[] objs = sdkclientutil.search(FQName);
-            if (objs != null && objs.length > 0) {
-                for (int i = 0; i < objs.length; i++) {
-                    StandardReport standardReport = (StandardReport) objs[i];
-                    standardReportTemplate = standardReport.getTemplate();
-                    if (standardReportTemplate != null) {
-                        if (reportTemplate.compareTo(standardReportTemplate
-                            .getLabel()) == 0) {
-                            FQName =
-                                "gov.nih.nci.evs.reportwriter.bean.ReportStatus";
-                            String methodName = "setLabel";
-                            String key = statusValue;
-
-                            Object status_obj =
-                                sdkclientutil.search(FQName, methodName, key);
-                            if (status_obj != null) {
-                                standardReport
-                                    .setStatus((ReportStatus) status_obj);
-                                java.util.Date lastModified = new Date(); // system
-                                // date
-                                standardReport.setLastModified(lastModified);
-                                sdkclientutil
-                                    .updateStandardReport(standardReport);
-                            }
-                        }
-                    }
-                }
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-        _standardReportTemplateList_draft =
-            getStandardReportTemplateList_draft();
-
-        return "assign_report_status";
-    }
-
     public String downloadReportAction() {
         HttpServletRequest request = SessionUtil.getRequest();
         request.getSession().setAttribute("selectedStandardReportTemplate",
@@ -668,6 +617,15 @@ public class UserSessionBean extends Object {
             .generateAction();
     }
 
+    // -------------------------------------------------------------------------
+    public String addStatusAction() {
+    	return new AddReportStatusRequest().addAction();
+    }
+
+    public String assignStatusAction() {
+    	return new AddReportStatusRequest().assignAction();
+    }
+    
     // -------------------------------------------------------------------------
     public String submitAccessDenied() {
         return new AccessDeniedRequest().submit();
