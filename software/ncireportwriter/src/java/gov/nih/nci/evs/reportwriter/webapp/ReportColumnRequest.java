@@ -77,14 +77,6 @@ public class ReportColumnRequest {
     private int _conditionalColumnId = -1;
 
     // -------------------------------------------------------------------------
-    public ReportColumnRequest() {
-    }
-
-    public ReportColumnRequest(String selectedStandardReportTemplate) {
-        init(selectedStandardReportTemplate);
-    }
-
-    // -------------------------------------------------------------------------
     private void init(String selectedStandardReportTemplate) {
         _selectedStandardReportTemplate = selectedStandardReportTemplate;
         UserSessionBean userSessionBean = BeanUtils.getUserSessionBean();
@@ -388,7 +380,8 @@ public class ReportColumnRequest {
         }
     }
 
-    public String saveAction() {
+    public String saveAction(String selectedStandardReportTemplate) {
+        init(selectedStandardReportTemplate);
         HttpServletRequest request = SessionUtil.getRequest();
         StringBuffer warningMsg = new StringBuffer();
         try {
@@ -407,19 +400,19 @@ public class ReportColumnRequest {
 
             request.getSession().setAttribute("selectedStandardReportTemplate",
                 _selectedStandardReportTemplate);
-
+            return "standard_report_column";
         } catch (Exception e) {
             e.printStackTrace();
             return HTTPUtils.warningMsg(request, warningMsg, e);
         }
-        return "standard_report_column";
     }
 
-    public String saveModifiedAction() {
+    public String saveModifiedAction(String selectedStandardReportTemplate) {
+        init(selectedStandardReportTemplate);
         HttpServletRequest request = SessionUtil.getRequest();
         StringBuffer warningMsg = new StringBuffer();
-        request.setAttribute("isModifyReportColumn", Boolean.TRUE);
         try {
+            request.setAttribute("isModifyReportColumn", Boolean.TRUE);
             if (!isValid(request, warningMsg))
                 return HTTPUtils.warningMsg(request, warningMsg);
 
@@ -439,11 +432,11 @@ public class ReportColumnRequest {
             col.setConditionalColumnId(_conditionalColumnId);
             sdkclientutil.updateReportColumn(col);
             _logger.debug("Completed updateReportColumn: " + _columnNumber);
+            request.removeAttribute("isModifyReportColumn");
+            return "standard_report_column";
         } catch (Exception e) {
             e.printStackTrace();
             return HTTPUtils.warningMsg(request, warningMsg, e);
         }
-        request.removeAttribute("isModifyReportColumn");
-        return "standard_report_column";
     }
 }
