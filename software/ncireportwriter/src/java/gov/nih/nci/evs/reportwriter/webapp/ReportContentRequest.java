@@ -67,10 +67,6 @@ public class ReportContentRequest {
     private String _selectedStandardReportTemplate = null;
 
     // -------------------------------------------------------------------------
-    public ReportContentRequest(String selectedStandardReportTemplate) {
-        init(selectedStandardReportTemplate);
-    }
-
     private void init(String selectedStandardReportTemplate) {
         _selectedStandardReportTemplate = selectedStandardReportTemplate;
         UserSessionBean userSessionBean = BeanUtils.getUserSessionBean();
@@ -108,7 +104,8 @@ public class ReportContentRequest {
     }
 
     // -------------------------------------------------------------------------
-    public String editAction() {
+    public String editAction(String selectedStandardReportTemplate) {
+        init(_selectedStandardReportTemplate);
         HttpServletRequest request = SessionUtil.getRequest();
         request.getSession().setAttribute("selectedStandardReportTemplate",
             _selectedStandardReportTemplate);
@@ -122,7 +119,8 @@ public class ReportContentRequest {
         return warningMsg == null ? "standard_report_column" : warningMsg;
     }
 
-    public String generateAction() {
+    public String generateAction(String selectedStandardReportTemplate) {
+        init(_selectedStandardReportTemplate);
         HttpServletRequest request = SessionUtil.getRequest();
         String warningMsg = displayCodingSchemeWarning(request);
         StringBuffer buffer = new StringBuffer();

@@ -537,7 +537,6 @@ public class UserSessionBean extends Object {
     public void versionSelectionChanged(ValueChangeEvent event) {
         if (event.getNewValue() == null)
             return;
-        // int id = Integer.parseInt((String) event.getNewValue());
         setSelectedVersion(_selectedVersion);
     }
 
@@ -584,24 +583,24 @@ public class UserSessionBean extends Object {
     }
 
     public String saveReportColumnAction() {
-        return new ReportColumnRequest(_selectedStandardReportTemplate)
-            .saveAction();
+        return new ReportColumnRequest()
+            .saveAction(_selectedStandardReportTemplate);
     }
 
     public String saveModifiedReportColumnAction() {
-        return new ReportColumnRequest(_selectedStandardReportTemplate)
-            .saveModifiedAction();
+        return new ReportColumnRequest()
+            .saveModifiedAction(_selectedStandardReportTemplate);
     }
     
     // -------------------------------------------------------------------------
     public String editReportContentAction() {
-        return new ReportContentRequest(_selectedStandardReportTemplate)
-            .editAction();
+        return new ReportContentRequest()
+            .editAction(_selectedStandardReportTemplate);
     }
 
     public String generateStandardReportAction() {
-        return new ReportContentRequest(_selectedStandardReportTemplate)
-            .generateAction();
+        return new ReportContentRequest()
+            .generateAction(_selectedStandardReportTemplate);
     }
 
     // -------------------------------------------------------------------------
