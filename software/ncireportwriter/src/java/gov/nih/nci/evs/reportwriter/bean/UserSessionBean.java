@@ -1,10 +1,7 @@
 package gov.nih.nci.evs.reportwriter.bean;
 
-import java.io.*;
-
 import gov.nih.nci.evs.reportwriter.utils.*;
 import gov.nih.nci.evs.reportwriter.webapp.*;
-import gov.nih.nci.evs.reportwriter.properties.*;
 
 import java.util.*;
 
@@ -446,60 +443,6 @@ public class UserSessionBean extends Object {
         setSelectedReportStatus(_selectedReportStatus);
     }
 
-    public String downloadReportAction() {
-        HttpServletRequest request = SessionUtil.getRequest();
-        request.getSession().setAttribute("selectedStandardReportTemplate",
-            _selectedStandardReportTemplate);
-
-        getStandardReportTemplate(_selectedStandardReportTemplate);
-        // String ontologyNameAndVersion =
-        // standardReportTemplate.getCodingSchemeName() + " (version: " +
-        // standardReportTemplate.getCodingSchemeVersion() + ")";
-
-        _logger.debug("downloading report " + _selectedStandardReportTemplate);
-
-        String download_dir = null;
-        try {
-            download_dir =
-                AppProperties.getInstance().getProperty(
-                    AppProperties.REPORT_DOWNLOAD_DIRECTORY);
-            // logger.debug("download_dir " + download_dir);
-
-        } catch (Exception ex) {
-            return HTTPUtils.sessionMsg(request, 
-                "Unable to download the specified report.\n"
-                + "Download directory does not exist.\n"
-                + "Check with your system administrator.");
-        }
-
-        File dir = new File(download_dir);
-        if (!dir.exists()) {
-            _logger
-                .debug("Unable to download the specified report -- download directory does not exist. ");
-            return HTTPUtils.sessionMsg(request, 
-                "Unable to download " + _selectedStandardReportTemplate + ".\n"
-                + "Download directory does not exist.");
-        }
-
-        File[] fileList = dir.listFiles();
-        int len = fileList.length;
-        while (len > 0) {
-            len--;
-            if (!fileList[len].isDirectory()) {
-                String name = fileList[len].getName();
-                _logger.debug("File found in the download directory: " + name);
-            }
-        }
-
-        boolean approved = true;
-        if (approved)
-            return "download";
-
-        return HTTPUtils.sessionMsg(request, 
-            "The " + _selectedStandardReportTemplate
-            + " has not been approved for download.");
-    }
-
     private String _selectedVersion = null;
     private List<SelectItem> _versionList = null;
     private Vector<String> _versionListData = null;
@@ -612,10 +555,15 @@ public class UserSessionBean extends Object {
     	return new ReportStatusRequest().assignAction();
     }
     
-
     public String saveStatusAction() { // Might not be called.
         return new ReportStatusRequest().
             saveAction(_selectedStandardReportTemplate);
+    }
+    
+    // -------------------------------------------------------------------------
+    public String downloadReportAction() {
+        return new ReportDownloadRequest()
+            .downloadReportAction(_selectedStandardReportTemplate);
     }
     
     // -------------------------------------------------------------------------
