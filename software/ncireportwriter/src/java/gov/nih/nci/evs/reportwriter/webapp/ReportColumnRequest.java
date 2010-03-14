@@ -79,9 +79,9 @@ public class ReportColumnRequest {
     // -------------------------------------------------------------------------
     private void init(String selectedStandardReportTemplate) {
         _selectedStandardReportTemplate = selectedStandardReportTemplate;
-        UserSessionBean userSessionBean = BeanUtils.getUserSessionBean();
+        UserSessionBean usBean = BeanUtils.getUserSessionBean();
         _standardReportTemplate =
-            userSessionBean
+            usBean
                 .getStandardReportTemplate(_selectedStandardReportTemplate);
     }
 

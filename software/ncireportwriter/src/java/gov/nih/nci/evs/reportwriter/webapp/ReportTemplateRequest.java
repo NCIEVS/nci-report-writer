@@ -229,12 +229,12 @@ public class ReportTemplateRequest {
                 _logger.debug("modifyReportTemplateAction" + " "
                     + standardReportTemplate.getCodingSchemeName());
 
-                UserSessionBean userSessionBean =
+                UserSessionBean usBean =
                     BeanUtils.getUserSessionBean();
                 List<SelectItem> versionList =
-                    userSessionBean.getVersionList(standardReportTemplate
+                    usBean.getVersionList(standardReportTemplate
                         .getCodingSchemeName());
-                userSessionBean.setVersionList(versionList);
+                usBean.setVersionList(versionList);
 
                 // StandardReportTemplate standardReportTemplate =
                 // getStandardReportTemplate(selectedStandardReportTemplate);
@@ -289,8 +289,8 @@ public class ReportTemplateRequest {
                 _codingSchemeName, _codingSchemeVersion, _rootConceptCode,
                 _associationName, _direction, _level, _delimiter);
 
-            UserSessionBean userSessionBean = BeanUtils.getUserSessionBean();
-            userSessionBean.setSelectedStandardReportTemplate(_label);
+            UserSessionBean usBean = BeanUtils.getUserSessionBean();
+            usBean.setSelectedStandardReportTemplate(_label);
         } catch (Exception e) {
             e.printStackTrace();
             return HTTPUtils.warningMsg(request, warningMsg, e);
@@ -352,14 +352,14 @@ public class ReportTemplateRequest {
                     "selectedStandardReportTemplate");
             _logger.warn("deleteReportTemplateAction: " + template_label);
 
-            UserSessionBean userSessionBean = BeanUtils.getUserSessionBean();
+            UserSessionBean usBean = BeanUtils.getUserSessionBean();
             StandardReportTemplate template =
-                userSessionBean.getStandardReportTemplate(template_label);
+                usBean.getStandardReportTemplate(template_label);
             SDKClientUtil sdkclientutil = new SDKClientUtil();
             sdkclientutil.deleteStandardReportTemplate(template);
 
             // setSelectedStandardReportTemplate(label);
-            userSessionBean.getStandardReportTemplateList();
+            usBean.getStandardReportTemplateList();
         } catch (Exception e) {
             e.printStackTrace();
         }

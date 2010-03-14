@@ -64,10 +64,9 @@ public class ReportStatusRequest {
         request.getSession().setAttribute("selectedStandardReportTemplate",
                 selectedStandardReportTemplate);
 
-        UserSessionBean userSessionBean = BeanUtils.getUserSessionBean();
+        UserSessionBean usBean = BeanUtils.getUserSessionBean();
         StandardReportTemplate standardReportTemplate =
-            userSessionBean
-                    .getStandardReportTemplate(selectedStandardReportTemplate);
+            usBean.getStandardReportTemplate(selectedStandardReportTemplate);
 
         return HTTPUtils.sessionMsg(request, "The status of the "
                 + standardReportTemplate.getLabel()
@@ -119,8 +118,8 @@ public class ReportStatusRequest {
             e.printStackTrace();
         }
 
-        UserSessionBean userSessionBean = BeanUtils.getUserSessionBean();
-        userSessionBean.getStandardReportTemplateList_draft();
+        UserSessionBean usBean = BeanUtils.getUserSessionBean();
+        usBean.getStandardReportTemplateList_draft();
 
         return "assign_report_status";
     }
