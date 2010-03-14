@@ -105,7 +105,6 @@ public class TaskRequest {
             // Check if there is any DRAFT report waiting for approval:
             List<SelectItem> list =
                 usBean.getStandardReportTemplateList_draft();
-            usBean.setStandardReportTemplateList_draft(list);
             if (list != null && list.size() > 0) {
                 return "assign_report_status";
             } else {
@@ -123,7 +122,6 @@ public class TaskRequest {
                 // Check if there is any APPROVED report waiting for approval:
                 List<SelectItem> list =
                     usBean.getStandardReportTemplateList_approved();
-                usBean.setStandardReportTemplateList_approved(list);
                 if (list != null && list.size() > 0) {
                     return "retrieve_standard_reports";
                 } else {

@@ -60,15 +60,7 @@ import org.apache.log4j.*;
 
 public class UserSessionBean extends Object {
     private static Logger _logger = Logger.getLogger(UserSessionBean.class);
-
     private TaskRequest _taskRequest = new TaskRequest();
-    
-    // for templates with reports already been generated
-    private List<SelectItem> _standardReportTemplateList_draft =
-        new ArrayList<SelectItem>();
-    // for templates with reports already been generated
-    private List<SelectItem> _standardReportTemplateList_approved =
-        new ArrayList<SelectItem>();
 
     private String _selectedStandardReportTemplate = null;
     private String _selectedStandardReportTemplate_draft = null;
@@ -156,10 +148,6 @@ public class UserSessionBean extends Object {
         request.getSession().setAttribute("selectedStandardReportTemplate",
             selectedStandardReportTemplate);
     }
-    
-    public void setStandardReportTemplateList_draft(List<SelectItem> list) {
-        _standardReportTemplateList_draft = list;
-    }
 
     public List<SelectItem> getStandardReportTemplateList_draft() {
         // Find all templates with reports already been generated
@@ -213,10 +201,6 @@ public class UserSessionBean extends Object {
         request.getSession().setAttribute(
             "selectedStandardReportTemplate_draft",
             selectedStandardReportTemplate_draft);
-    }
-    
-    public void setStandardReportTemplateList_approved(List<SelectItem> list) {
-        _standardReportTemplateList_approved = list;
     }
 
     public List<SelectItem> getStandardReportTemplateList_approved() {
