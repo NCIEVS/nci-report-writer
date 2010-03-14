@@ -12,9 +12,11 @@
       criteria and outputs) and custom reports where the user must provide
       the tool with the required search criteria and desired output data.
       <br/><br/>
-      Standard reports can be found
-      <a href="<%= request.getContextPath() %>/pages/main/download_nologin.jsf" >here</a>.
-      &nbsp;No user authentication is required.
+      <b>
+        Standard reports can be found
+        <a href="<%= request.getContextPath() %>/pages/main/download_nologin.jsf" >here</a>.
+        &nbsp;No user authentication is required.
+      </b>
     </td>
   </tr>
 </table>
