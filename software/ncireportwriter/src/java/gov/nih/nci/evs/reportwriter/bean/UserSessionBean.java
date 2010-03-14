@@ -148,43 +148,39 @@ public class UserSessionBean extends Object {
         request.getSession().setAttribute("selectedStandardReportTemplate",
             selectedStandardReportTemplate);
     }
-
-    public List<SelectItem> getStandardReportTemplateList_draft() {
-        // Find all templates with reports already been generated
+    
+    private List<SelectItem> getStandardReportTemplateList(String version) {
         List<SelectItem> list = new ArrayList<SelectItem>();
         HashSet<String> hset = new HashSet<String>();
-        try {
-            SDKClientUtil sdkclientutil = new SDKClientUtil();
-            StandardReportTemplate standardReportTemplate = null;
-            String FQName = "gov.nih.nci.evs.reportwriter.bean.StandardReport";
-            Object[] objs = sdkclientutil.search(FQName);
+        SDKClientUtil sdkclientutil = new SDKClientUtil();
+        StandardReportTemplate standardReportTemplate = null;
+        String FQName = "gov.nih.nci.evs.reportwriter.bean.StandardReport";
+        Object[] objs = sdkclientutil.search(FQName);
 
-            if (objs != null && objs.length > 0) {
-                for (int i = 0; i < objs.length; i++) {
-                    StandardReport standardReport = (StandardReport) objs[i];
-                    ReportStatus rs = standardReport.getStatus();
-                    String status = rs.getLabel();
-                    standardReportTemplate = standardReport.getTemplate();
-                    if (standardReportTemplate != null) {
-                        if (status.compareToIgnoreCase("DRAFT") == 0) {
-                            if (!hset.contains(standardReportTemplate
-                                .getLabel())) {
-                                hset.add(standardReportTemplate.getLabel());
-                                list.add(new SelectItem(standardReportTemplate
-                                    .getLabel()));
-                            }
-                        }
-                    }
-                }
+        if (objs == null || objs.length <= 0)
+            return list;
+        for (int i = 0; i < objs.length; i++) {
+            StandardReport standardReport = (StandardReport) objs[i];
+            ReportStatus rs = standardReport.getStatus();
+            String status = rs.getLabel();
+            standardReportTemplate = standardReport.getTemplate();
+            if (standardReportTemplate == null ||
+                !status.equalsIgnoreCase(version) ||
+                hset.contains(standardReportTemplate.getLabel()))
+                continue;
+            
+            hset.add(standardReportTemplate.getLabel());
+            list.add(new SelectItem(standardReportTemplate
+                .getLabel()));
+        }
+        return list;
+    }
 
-                if (list != null && list.size() > 0) {
-                    SelectItem item = list.get(0);
-                    setSelectedStandardReportTemplate_draft(item.getLabel());
-                }
-
-            }
-        } catch (Exception ex) {
-            ex.printStackTrace();
+    public List<SelectItem> getStandardReportTemplateList_draft() {
+        List<SelectItem> list = getStandardReportTemplateList("DRAFT");
+        if (list != null && list.size() > 0) {
+            SelectItem item = list.get(0);
+            setSelectedStandardReportTemplate_draft(item.getLabel());
         }
         return list;
     }
@@ -204,38 +200,12 @@ public class UserSessionBean extends Object {
     }
 
     public List<SelectItem> getStandardReportTemplateList_approved() {
-        List<SelectItem> list = new ArrayList<SelectItem>();
-        HashSet<String> hset = new HashSet<String>();
-        try {
-            SDKClientUtil sdkclientutil = new SDKClientUtil();
-            StandardReportTemplate standardReportTemplate = null;
-            String FQName = "gov.nih.nci.evs.reportwriter.bean.StandardReport";
-            Object[] objs = sdkclientutil.search(FQName);
-            if (objs != null && objs.length > 0) {
-                for (int i = 0; i < objs.length; i++) {
-                    StandardReport standardReport = (StandardReport) objs[i];
-                    ReportStatus rs = standardReport.getStatus();
-                    String status = rs.getLabel();
-                    if (status.compareTo("APPROVED") == 0) {
-                        standardReportTemplate = standardReport.getTemplate();
-                        if (!hset.contains(standardReportTemplate.getLabel())) {
-                            hset.add(standardReportTemplate.getLabel());
-                            list.add(new SelectItem(standardReportTemplate
-                                .getLabel()));
-                        }
-                    }
-                }
-
-                if (list == null) {
-                    if (list != null && list.size() > 0) {
-                        SelectItem item = list.get(0);
-                        setSelectedStandardReportTemplate_approved(item
-                            .getLabel());
-                    }
-                }
+        List<SelectItem> list = getStandardReportTemplateList("APPROVED");
+        if (list == null) {
+            if (list != null && list.size() > 0) {
+                SelectItem item = list.get(0);
+                setSelectedStandardReportTemplate_approved(item.getLabel());
             }
-        } catch (Exception ex) {
-            ex.printStackTrace();
         }
         return list;
     }
