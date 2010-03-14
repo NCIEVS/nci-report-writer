@@ -3,10 +3,8 @@ package gov.nih.nci.evs.reportwriter.webapp;
 import gov.nih.nci.evs.reportwriter.bean.*;
 import gov.nih.nci.evs.reportwriter.utils.*;
 
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
-import javax.faces.model.*;
 import javax.servlet.http.*;
 
 /**
@@ -122,9 +120,7 @@ public class ReportStatusRequest {
         }
 
         UserSessionBean userSessionBean = BeanUtils.getUserSessionBean();
-        List<SelectItem> list =
-            userSessionBean.getStandardReportTemplateList_draft();
-        userSessionBean.setStandardReportTemplateList_draft(list);
+        userSessionBean.getStandardReportTemplateList_draft();
 
         return "assign_report_status";
     }
