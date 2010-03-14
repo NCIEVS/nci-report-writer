@@ -61,11 +61,9 @@ import org.apache.log4j.*;
 public class UserSessionBean extends Object {
     private static Logger _logger = Logger.getLogger(UserSessionBean.class);
     private TaskRequest _taskRequest = new TaskRequest();
-
-    private String _selectedStandardReportTemplate = null;
-    private String _selectedStandardReportTemplate_draft = null;
-    private String _selectedStandardReportTemplate_approved = null;
-
+    private StandardReportTemplateManager _srtMgr = 
+        new StandardReportTemplateManager();
+    
     private String _selectedPropertyType = null;
     private String _rootConceptCode = null;
     private String _selectedOntology = null;
@@ -124,104 +122,6 @@ public class UserSessionBean extends Object {
         setSelectedStandardReportTemplate_approved(newValue);
     }
 
-    public List<SelectItem> getStandardReportTemplateList() {
-        List<SelectItem> list = DataUtils.getStandardReportTemplateList();
-        if (_selectedStandardReportTemplate == null) {
-            if (list != null && list.size() > 0) {
-                if (getSelectedStandardReportTemplate() == null) {
-                    SelectItem item = (SelectItem) list.get(0);
-                    setSelectedStandardReportTemplate(item.getLabel());
-                }
-            }
-        }
-        return list;
-    }
-
-    public String getSelectedStandardReportTemplate() {
-        return _selectedStandardReportTemplate;
-    }
-
-    public void setSelectedStandardReportTemplate(
-        String selectedStandardReportTemplate) {
-        _selectedStandardReportTemplate = selectedStandardReportTemplate;
-        HttpServletRequest request = SessionUtil.getRequest();
-        request.getSession().setAttribute("selectedStandardReportTemplate",
-            selectedStandardReportTemplate);
-    }
-    
-    private List<SelectItem> getStandardReportTemplateList(String version) {
-        List<SelectItem> list = new ArrayList<SelectItem>();
-        HashSet<String> hset = new HashSet<String>();
-        SDKClientUtil sdkclientutil = new SDKClientUtil();
-        StandardReportTemplate standardReportTemplate = null;
-        String FQName = "gov.nih.nci.evs.reportwriter.bean.StandardReport";
-        Object[] objs = sdkclientutil.search(FQName);
-
-        if (objs == null || objs.length <= 0)
-            return list;
-        for (int i = 0; i < objs.length; i++) {
-            StandardReport standardReport = (StandardReport) objs[i];
-            ReportStatus rs = standardReport.getStatus();
-            String status = rs.getLabel();
-            standardReportTemplate = standardReport.getTemplate();
-            if (standardReportTemplate == null ||
-                !status.equalsIgnoreCase(version) ||
-                hset.contains(standardReportTemplate.getLabel()))
-                continue;
-            
-            hset.add(standardReportTemplate.getLabel());
-            list.add(new SelectItem(standardReportTemplate
-                .getLabel()));
-        }
-        return list;
-    }
-
-    public List<SelectItem> getStandardReportTemplateList_draft() {
-        List<SelectItem> list = getStandardReportTemplateList("DRAFT");
-        if (list != null && list.size() > 0) {
-            SelectItem item = list.get(0);
-            setSelectedStandardReportTemplate_draft(item.getLabel());
-        }
-        return list;
-    }
-
-    public String getSelectedStandardReportTemplate_draft() {
-        return _selectedStandardReportTemplate_draft;
-    }
-
-    public void setSelectedStandardReportTemplate_draft(
-        String selectedStandardReportTemplate_draft) {
-        _selectedStandardReportTemplate_draft =
-            selectedStandardReportTemplate_draft;
-        HttpServletRequest request = SessionUtil.getRequest();
-        request.getSession().setAttribute(
-            "selectedStandardReportTemplate_draft",
-            selectedStandardReportTemplate_draft);
-    }
-
-    public List<SelectItem> getStandardReportTemplateList_approved() {
-        List<SelectItem> list = getStandardReportTemplateList("APPROVED");
-        if (list == null) {
-            if (list != null && list.size() > 0) {
-                SelectItem item = list.get(0);
-                setSelectedStandardReportTemplate_approved(item.getLabel());
-            }
-        }
-        return list;
-    }
-
-    public String getSelectedStandardReportTemplate_approved() {
-        return _selectedStandardReportTemplate_approved;
-    }
-
-    public void setSelectedStandardReportTemplate_approved(
-        String selectedStandardReportTemplate_draft) {
-        HttpServletRequest request = SessionUtil.getRequest();
-        request.getSession().setAttribute(
-            "selectedStandardReportTemplate_approved",
-            _selectedStandardReportTemplate_approved);
-    }
-
     public void taskSelectionChanged(ValueChangeEvent event) {
         if (event.getNewValue() == null)
             return;
@@ -237,22 +137,6 @@ public class UserSessionBean extends Object {
         if (rootConceptCode == null)
             return;
         _rootConceptCode = rootConceptCode;
-    }
-
-    public StandardReportTemplate getStandardReportTemplate(String label) {
-        try {
-            SDKClientUtil sdkclientutil = new SDKClientUtil();
-            String FQName =
-                "gov.nih.nci.evs.reportwriter.bean.StandardReportTemplate";
-            String methodName = "setLabel";
-            Object obj = sdkclientutil.search(FQName, methodName, label);
-            StandardReportTemplate standardReportTemplate =
-                (StandardReportTemplate) obj;
-            return standardReportTemplate;
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return null;
     }
 
     public List<SelectItem> getReportFormatList() {
@@ -315,6 +199,7 @@ public class UserSessionBean extends Object {
         setSelectedReportStatus(_selectedReportStatus);
     }
 
+    // -------------------------------------------------------------------------
     private String _selectedVersion = null;
     private List<SelectItem> _versionList = null;
     private Vector<String> _versionListData = null;
@@ -353,6 +238,52 @@ public class UserSessionBean extends Object {
         if (event.getNewValue() == null)
             return;
         setSelectedVersion(_selectedVersion);
+    }
+    
+    // -------------------------------------------------------------------------
+    public StandardReportTemplate getStandardReportTemplate(String label) {
+        return _srtMgr.getStandardReportTemplate(label);
+    }
+    
+    public List<SelectItem> getStandardReportTemplateList() {
+        return _srtMgr.getStandardReportTemplateList();
+    }
+
+    public String getSelectedStandardReportTemplate() {
+        return _srtMgr.getSelectedStandardReportTemplate();
+    }
+
+    public void setSelectedStandardReportTemplate(
+        String selectedStandardReportTemplate) {
+        _srtMgr.setSelectedStandardReportTemplate(
+            selectedStandardReportTemplate);
+    }
+    public String getSelectedStandardReportTemplate_draft() {
+        return _srtMgr.getSelectedStandardReportTemplate_draft();
+    }
+
+    public void setSelectedStandardReportTemplate_draft(
+        String selectedStandardReportTemplate_draft) {
+        _srtMgr.setSelectedStandardReportTemplate_draft(
+            selectedStandardReportTemplate_draft);
+    }
+    
+    public List<SelectItem> getStandardReportTemplateList_draft() {
+        return _srtMgr.getStandardReportTemplateList_draft();
+    }
+    
+    public String getSelectedStandardReportTemplate_approved() {
+        return _srtMgr.getSelectedStandardReportTemplate_approved();
+    }
+
+    public void setSelectedStandardReportTemplate_approved(
+        String selectedStandardReportTemplate_draft) {
+        _srtMgr.setSelectedStandardReportTemplate_approved(
+            selectedStandardReportTemplate_draft);
+    }
+
+    public List<SelectItem> getStandardReportTemplateList_approved() {
+        return _srtMgr.getStandardReportTemplateList_approved();
     }
     
     // -------------------------------------------------------------------------
@@ -420,23 +351,23 @@ public class UserSessionBean extends Object {
 
     public String saveReportColumnAction() {
         return new ReportColumnRequest()
-            .saveAction(_selectedStandardReportTemplate);
+            .saveAction(_srtMgr.getSelected());
     }
 
     public String saveModifiedReportColumnAction() {
         return new ReportColumnRequest()
-            .saveModifiedAction(_selectedStandardReportTemplate);
+            .saveModifiedAction(_srtMgr.getSelected());
     }
     
     // -------------------------------------------------------------------------
     public String editReportContentAction() {
         return new ReportContentRequest()
-            .editAction(_selectedStandardReportTemplate);
+            .editAction(_srtMgr.getSelected());
     }
 
     public String generateStandardReportAction() {
         return new ReportContentRequest()
-            .generateAction(_selectedStandardReportTemplate);
+            .generateAction(_srtMgr.getSelected());
     }
 
     // -------------------------------------------------------------------------
@@ -450,13 +381,13 @@ public class UserSessionBean extends Object {
     
     public String saveStatusAction() { // Might not be called.
         return new ReportStatusRequest().
-            saveAction(_selectedStandardReportTemplate);
+            saveAction(_srtMgr.getSelected());
     }
     
     // -------------------------------------------------------------------------
     public String downloadReportAction() {
         return new ReportDownloadRequest()
-            .downloadReportAction(_selectedStandardReportTemplate);
+            .downloadReportAction(_srtMgr.getSelected());
     }
     
     // -------------------------------------------------------------------------
