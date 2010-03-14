@@ -66,8 +66,8 @@ public class ReportDownloadRequest {
         request.getSession().setAttribute("selectedStandardReportTemplate",
                 selectedStandardReportTemplate);
 
-        UserSessionBean userSessionBean = BeanUtils.getUserSessionBean();
-        userSessionBean
+        UserSessionBean usBean = BeanUtils.getUserSessionBean();
+        usBean
                 .getStandardReportTemplate(selectedStandardReportTemplate);
         // String ontologyNameAndVersion =
         // standardReportTemplate.getCodingSchemeName() + " (version: " +
