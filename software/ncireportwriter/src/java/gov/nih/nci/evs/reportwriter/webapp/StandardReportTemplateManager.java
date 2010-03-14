@@ -59,6 +59,7 @@ public class StandardReportTemplateManager {
     private String _selectedStandardReportTemplate_draft = null;
     private String _selectedStandardReportTemplate_approved = null;
     
+    // -------------------------------------------------------------------------
     public String getSelected() {
         return _selectedStandardReportTemplate;
     }
@@ -103,33 +104,8 @@ public class StandardReportTemplateManager {
         request.getSession().setAttribute("selectedStandardReportTemplate",
             selectedStandardReportTemplate);
     }   
-
-    public String getSelectedStandardReportTemplate_draft() {
-        return _selectedStandardReportTemplate_draft;
-    }
-
-    public void setSelectedStandardReportTemplate_draft(
-        String selectedStandardReportTemplate_draft) {
-        _selectedStandardReportTemplate_draft =
-            selectedStandardReportTemplate_draft;
-        HttpServletRequest request = SessionUtil.getRequest();
-        request.getSession().setAttribute(
-            "selectedStandardReportTemplate_draft",
-            selectedStandardReportTemplate_draft);
-    }
     
-    public String getSelectedStandardReportTemplate_approved() {
-        return _selectedStandardReportTemplate_approved;
-    }
-
-    public void setSelectedStandardReportTemplate_approved(
-        String selectedStandardReportTemplate_draft) {
-        HttpServletRequest request = SessionUtil.getRequest();
-        request.getSession().setAttribute(
-            "selectedStandardReportTemplate_approved",
-            _selectedStandardReportTemplate_approved);
-    }
-    
+    // -------------------------------------------------------------------------
     private List<SelectItem> getStandardReportTemplateList(String version) {
         List<SelectItem> list = new ArrayList<SelectItem>();
         HashSet<String> hset = new HashSet<String>();
@@ -156,6 +132,21 @@ public class StandardReportTemplateManager {
         }
         return list;
     }
+    
+    // -------------------------------------------------------------------------
+    public String getSelectedStandardReportTemplate_draft() {
+        return _selectedStandardReportTemplate_draft;
+    }
+
+    public void setSelectedStandardReportTemplate_draft(
+        String selectedStandardReportTemplate_draft) {
+        _selectedStandardReportTemplate_draft =
+            selectedStandardReportTemplate_draft;
+        HttpServletRequest request = SessionUtil.getRequest();
+        request.getSession().setAttribute(
+            "selectedStandardReportTemplate_draft",
+            selectedStandardReportTemplate_draft);
+    }
 
     public List<SelectItem> getStandardReportTemplateList_draft() {
         List<SelectItem> list = getStandardReportTemplateList("DRAFT");
@@ -164,6 +155,19 @@ public class StandardReportTemplateManager {
             setSelectedStandardReportTemplate_draft(item.getLabel());
         }
         return list;
+    }
+    
+    // -------------------------------------------------------------------------
+    public String getSelectedStandardReportTemplate_approved() {
+        return _selectedStandardReportTemplate_approved;
+    }
+
+    public void setSelectedStandardReportTemplate_approved(
+        String selectedStandardReportTemplate_draft) {
+        HttpServletRequest request = SessionUtil.getRequest();
+        request.getSession().setAttribute(
+            "selectedStandardReportTemplate_approved",
+            _selectedStandardReportTemplate_approved);
     }
 
     public List<SelectItem> getStandardReportTemplateList_approved() {
