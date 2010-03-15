@@ -11,6 +11,7 @@ import org.LexGrid.concepts.*;
 import org.apache.log4j.*;
 
 import gov.nih.nci.evs.reportwriter.properties.*;
+import gov.nih.nci.evs.utils.*;
 
 /**
  * <!-- LICENSE_TEXT_START -->

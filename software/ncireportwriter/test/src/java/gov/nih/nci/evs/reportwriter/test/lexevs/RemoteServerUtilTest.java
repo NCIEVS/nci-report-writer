@@ -5,6 +5,7 @@ import org.apache.log4j.*;
 
 import gov.nih.nci.evs.reportwriter.test.utils.*;
 import gov.nih.nci.evs.reportwriter.utils.*;
+import gov.nih.nci.evs.utils.*;
 import junit.framework.*;
 
 public class RemoteServerUtilTest extends TestCase {

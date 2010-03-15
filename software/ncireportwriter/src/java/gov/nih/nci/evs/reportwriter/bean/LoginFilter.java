@@ -1,6 +1,6 @@
 package gov.nih.nci.evs.reportwriter.bean;
 
-import gov.nih.nci.evs.reportwriter.utils.*;
+import gov.nih.nci.evs.utils.*;
 
 import java.io.*;
 
