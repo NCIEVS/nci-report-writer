@@ -2,6 +2,7 @@ package gov.nih.nci.evs.reportwriter.bean;
 
 import gov.nih.nci.evs.reportwriter.properties.*;
 import gov.nih.nci.evs.reportwriter.utils.*;
+import gov.nih.nci.evs.utils.*;
 import gov.nih.nci.security.*;
 import gov.nih.nci.security.authentication.*;
 import gov.nih.nci.security.authorization.domainobjects.User;

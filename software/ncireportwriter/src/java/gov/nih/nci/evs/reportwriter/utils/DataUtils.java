@@ -19,6 +19,7 @@ import org.LexGrid.naming.*;
 import org.LexGrid.LexBIG.DataModel.Core.types.*;
 import org.LexGrid.LexBIG.Extensions.Generic.*;
 import gov.nih.nci.evs.reportwriter.properties.*;
+import gov.nih.nci.evs.utils.*;
 
 import org.LexGrid.LexBIG.Exceptions.*;
 import org.apache.log4j.*;
