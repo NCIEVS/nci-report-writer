@@ -83,7 +83,7 @@ public class SpecialCases {
                 DataUtils.getAssociationTargets(scheme, version, node
                     .getEntityCode(), "A10");
             if (v == null || v.size() <= 0)
-                return new CDRHInfo("Not Available");
+                return new CDRHInfo(""); // Previous: Not Available
 
             Concept associated_concept = (Concept) v.elementAt(0);
             return new CDRHInfo(associated_concept);
