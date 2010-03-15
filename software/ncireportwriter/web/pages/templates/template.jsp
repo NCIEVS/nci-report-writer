@@ -1,7 +1,7 @@
 <%@ taglib uri="EVSUIComponents" prefix="ui" %>
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1" pageEncoding="ISO-8859-1"%>
 <%@ page import="gov.nih.nci.evs.reportwriter.properties.*" %>
-<%@ page import="gov.nih.nci.evs.reportwriter.utils.*" %>
+<%@ page import="gov.nih.nci.evs.utils.*" %>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <%!
   private static final String buildInfo = AppProperties.getInstance().

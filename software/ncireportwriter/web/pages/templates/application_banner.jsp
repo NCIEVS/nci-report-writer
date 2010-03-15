@@ -1,4 +1,4 @@
-<%@ page import="gov.nih.nci.evs.reportwriter.utils.*" %>
+<%@ page import="gov.nih.nci.evs.utils.*" %>
 <%
   String basePath = FormUtils.getBasePath(request);
   String imagesPath = FormUtils.getImagesPath(request);
