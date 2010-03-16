@@ -6,6 +6,7 @@ import gov.nih.nci.evs.reportwriter.bean.*;
 import gov.nih.nci.evs.reportwriter.properties.*;
 import gov.nih.nci.evs.reportwriter.service.*;
 import gov.nih.nci.evs.reportwriter.utils.*;
+import gov.nih.nci.evs.utils.*;
 
 import javax.servlet.http.*;
 
