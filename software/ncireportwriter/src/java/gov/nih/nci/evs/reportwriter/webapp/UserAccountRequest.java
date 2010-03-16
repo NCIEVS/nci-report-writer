@@ -1,6 +1,7 @@
 package gov.nih.nci.evs.reportwriter.webapp;
 
 import gov.nih.nci.evs.reportwriter.utils.*;
+import gov.nih.nci.evs.utils.*;
 import gov.nih.nci.security.authentication.*;
 
 import javax.servlet.http.*;
