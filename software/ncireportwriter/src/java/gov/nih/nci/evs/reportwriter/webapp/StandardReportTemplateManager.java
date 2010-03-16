@@ -155,6 +155,7 @@ public class StandardReportTemplateManager {
             SelectItem item = list.get(0);
             setSelectedStandardReportTemplate_draft(item.getLabel());
         }
+        SortUtils.quickSort(list);
         return list;
     }
     
@@ -179,6 +180,7 @@ public class StandardReportTemplateManager {
                 setSelectedStandardReportTemplate_approved(item.getLabel());
             }
         }
+        SortUtils.quickSort(list);
         return list;
     }
 }
