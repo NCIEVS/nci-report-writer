@@ -1,6 +1,10 @@
 <%@ taglib uri="http://java.sun.com/jsf/html" prefix="h" %>
 <%@ taglib uri="http://java.sun.com/jsf/core" prefix="f" %> 
+<%@ page import="gov.nih.nci.evs.utils.*" %>
 
+<%
+  String warningMsg = (String) request.getAttribute("warningMsg");
+%>
 <f:view>
   <h:form id="REPORT_STATUSForm">
     <table summary="" cellpadding="0" cellspacing="0" border="0" 
@@ -10,6 +14,13 @@
           <br>
           <table summary="" cellpadding="0" cellspacing="0" border="0" 
               width="725" class="contentPage"> <!-- Table 2 (Begin) -->
+            <% if (warningMsg != null && warningMsg.trim().length() > 0) { %>
+              <tr><td class="warningMsgColor">
+                Warning:<br/>
+                <%=StringUtils.toHtml(warningMsg)%><br/>
+                <br/>
+              </td></tr>
+            <% } %>
             <tr>
               <td>
                 <table summary="" cellpadding="0" cellspacing="0" border="0">
@@ -42,8 +53,10 @@
                       <table cellpadding="4" cellspacing="0" border="0">
                         <tr>
                           <td><h:commandButton id="add" action="add" value="Add" /></td>
-                          <td><h:commandButton id="activate" action="activate" value="Activate" /></td>
-                          <td><h:commandButton id="inactivate" action="inactivate" value="Inactivate" /></td>
+                          <td><h:commandButton id="activate" value="Activate" 
+                            action="#{userSessionBean.activateStatusAction}" /></td>
+                          <td><h:commandButton id="inactivate" value="Inactivate" 
+                            action="#{userSessionBean.inactivateStatusAction}" /></td>
                           <td><h:commandButton id="back" action="back" value="Back" /></td>
                         </tr>
                       </table>

@@ -375,6 +375,14 @@ public class UserSessionBean extends Object {
     public String addStatusAction() {
     	return new ReportStatusRequest().addAction();
     }
+    
+    public String activateStatusAction () {
+        return new ReportStatusRequest().activateAction();
+    }
+
+    public String inactivateStatusAction () {
+        return new ReportStatusRequest().inactivateAction();
+    }
 
     public String assignStatusAction() {
     	return new ReportStatusRequest().assignAction();

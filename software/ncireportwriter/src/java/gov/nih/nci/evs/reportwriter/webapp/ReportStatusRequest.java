@@ -61,6 +61,16 @@ public class ReportStatusRequest {
         return HTTPUtils.warningMsg(request, "Not Yet Implemented.");
         //return "report_status";
     }
+    
+    public String activateAction() {
+        HttpServletRequest request = SessionUtils.getRequest();
+        return HTTPUtils.warningMsg(request, "Not Yet Implemented.");        
+    }
+
+    public String inactivateAction() {
+        HttpServletRequest request = SessionUtils.getRequest();
+        return HTTPUtils.warningMsg(request, "Not Yet Implemented.");
+    }
 
     public String saveAction(String selectedStandardReportTemplate) {
         HttpServletRequest request = SessionUtils.getRequest();
