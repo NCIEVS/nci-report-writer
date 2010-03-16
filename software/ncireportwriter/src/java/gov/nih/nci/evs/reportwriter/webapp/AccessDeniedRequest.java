@@ -112,7 +112,7 @@ public class AccessDeniedRequest {
     }
 
     public String clear() {
-        HttpServletRequest request = SessionUtil.getRequest();
+        HttpServletRequest request = SessionUtils.getRequest();
         StringBuffer warningMsg = new StringBuffer();
         try {
             AccessDeniedInfo info = new AccessDeniedInfo();
@@ -125,7 +125,7 @@ public class AccessDeniedRequest {
     }
 
     public String submit() {
-        HttpServletRequest request = SessionUtil.getRequest();
+        HttpServletRequest request = SessionUtils.getRequest();
         StringBuffer warningMsg = new StringBuffer();
         try {
             AccessDeniedInfo info = new AccessDeniedInfo();

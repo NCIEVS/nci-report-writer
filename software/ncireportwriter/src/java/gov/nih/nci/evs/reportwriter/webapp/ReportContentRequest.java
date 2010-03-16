@@ -107,7 +107,7 @@ public class ReportContentRequest {
     // -------------------------------------------------------------------------
     public String editAction(String selectedStandardReportTemplate) {
         init(selectedStandardReportTemplate);
-        HttpServletRequest request = SessionUtil.getRequest();
+        HttpServletRequest request = SessionUtils.getRequest();
         request.getSession().setAttribute("selectedStandardReportTemplate",
             _selectedStandardReportTemplate);
 
@@ -122,7 +122,7 @@ public class ReportContentRequest {
 
     public String generateAction(String selectedStandardReportTemplate) {
         init(selectedStandardReportTemplate);
-        HttpServletRequest request = SessionUtil.getRequest();
+        HttpServletRequest request = SessionUtils.getRequest();
         String warningMsg = displayCodingSchemeWarning(request);
         StringBuffer buffer = new StringBuffer();
         if (warningMsg != null)

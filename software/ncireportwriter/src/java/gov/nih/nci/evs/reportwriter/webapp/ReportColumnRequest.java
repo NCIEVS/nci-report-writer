@@ -310,12 +310,12 @@ public class ReportColumnRequest {
 
     // -------------------------------------------------------------------------
     private void initAction() {
-        HttpServletRequest request = SessionUtil.getRequest();
+        HttpServletRequest request = SessionUtils.getRequest();
         request.removeAttribute("warningMsg");
     }
 
     private int[] getColumnInfo() throws Exception {
-        HttpServletRequest request = SessionUtil.getRequest();
+        HttpServletRequest request = SessionUtils.getRequest();
         String selectedColumnInfo = request.getParameter("selectedColumnInfo");
         _logger.debug("Selected Column Info: " + selectedColumnInfo);
         if (selectedColumnInfo == null)
@@ -335,7 +335,7 @@ public class ReportColumnRequest {
     }
 
     public String modifyAction() {
-        HttpServletRequest request = SessionUtil.getRequest();
+        HttpServletRequest request = SessionUtils.getRequest();
         try {
             initAction();
             int[] info = getColumnInfo();
@@ -376,14 +376,14 @@ public class ReportColumnRequest {
             // setSelectedStandardReportTemplate(label);
             return "standard_report_column";
         } catch (Exception e) {
-            SessionUtil.getRequest().setAttribute("warningMsg", e.getMessage());
+            SessionUtils.getRequest().setAttribute("warningMsg", e.getMessage());
             return "standard_report_column";
         }
     }
 
     public String saveAction(String selectedStandardReportTemplate) {
         init(selectedStandardReportTemplate);
-        HttpServletRequest request = SessionUtil.getRequest();
+        HttpServletRequest request = SessionUtils.getRequest();
         StringBuffer warningMsg = new StringBuffer();
         try {
             if (!isValid(request, warningMsg) || alreadyExists(warningMsg))
@@ -410,7 +410,7 @@ public class ReportColumnRequest {
 
     public String saveModifiedAction(String selectedStandardReportTemplate) {
         init(selectedStandardReportTemplate);
-        HttpServletRequest request = SessionUtil.getRequest();
+        HttpServletRequest request = SessionUtils.getRequest();
         StringBuffer warningMsg = new StringBuffer();
         try {
             request.setAttribute("isModifyReportColumn", Boolean.TRUE);

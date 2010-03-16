@@ -61,7 +61,7 @@ public class ReportStatusRequest {
     }
 
     public String saveAction(String selectedStandardReportTemplate) {
-        HttpServletRequest request = SessionUtil.getRequest();
+        HttpServletRequest request = SessionUtils.getRequest();
         request.getSession().setAttribute("selectedStandardReportTemplate",
                 selectedStandardReportTemplate);
 
@@ -75,7 +75,7 @@ public class ReportStatusRequest {
     }
 
     public String assignAction() {
-        HttpServletRequest request = SessionUtil.getRequest();
+        HttpServletRequest request = SessionUtils.getRequest();
         // save to database
         String reportTemplate =
             (String) request.getSession().getAttribute(

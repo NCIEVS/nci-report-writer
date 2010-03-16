@@ -206,7 +206,7 @@ public class ReportTemplateRequest {
     }
 
     public String modifyAction() {
-        HttpServletRequest request = SessionUtil.getRequest();
+        HttpServletRequest request = SessionUtils.getRequest();
         try {
             String templateLabel =
                 (String) request.getSession().getAttribute(
@@ -265,7 +265,7 @@ public class ReportTemplateRequest {
     }
 
     public String saveAction() {
-        HttpServletRequest request = SessionUtil.getRequest();
+        HttpServletRequest request = SessionUtils.getRequest();
         StringBuffer warningMsg = new StringBuffer();
         try {
             if (!isAddValid(request, warningMsg))
@@ -301,7 +301,7 @@ public class ReportTemplateRequest {
     }
 
     public String saveModifiedAction() {
-        HttpServletRequest request = SessionUtil.getRequest();
+        HttpServletRequest request = SessionUtils.getRequest();
         StringBuffer warningMsg = new StringBuffer();
 
         try {
@@ -347,7 +347,7 @@ public class ReportTemplateRequest {
 
     public String deleteAction() {
         try {
-            HttpServletRequest request = SessionUtil.getRequest();
+            HttpServletRequest request = SessionUtils.getRequest();
             String template_label =
                 (String) request.getSession().getAttribute(
                     "selectedStandardReportTemplate");

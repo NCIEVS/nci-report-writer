@@ -87,7 +87,7 @@ public class OntologyBean // extends BaseBean
 
     public void setSelectedOntology(String selectedOntology) {
         _selectedOntology = selectedOntology;
-        HttpServletRequest request = SessionUtil.getRequest();
+        HttpServletRequest request = SessionUtils.getRequest();
         request.getSession().setAttribute("selectedOntology", selectedOntology);
     }
 
@@ -153,13 +153,13 @@ public class OntologyBean // extends BaseBean
         String newValue = (String) vce.getNewValue();
         setSelectedOntology(newValue);
         _associationList = getAssociationList();
-        HttpServletRequest request = SessionUtil.getRequest();
+        HttpServletRequest request = SessionUtils.getRequest();
         request.setAttribute("ValueChangeEvent", vce);
     }
 
     public void setSelectedDirection(String selectedDirection) {
         _selectedDirection = selectedDirection;
-        HttpServletRequest request = SessionUtil.getRequest();
+        HttpServletRequest request = SessionUtils.getRequest();
         request.getSession().setAttribute("selectedDirection",
             selectedDirection);
     }
@@ -241,7 +241,7 @@ public class OntologyBean // extends BaseBean
             _selectedLevel = LEVEL_ALL;
         else
             _selectedLevel = selectedLevel;
-        HttpServletRequest request = SessionUtil.getRequest();
+        HttpServletRequest request = SessionUtils.getRequest();
         request.getSession().setAttribute("selectedLevel", selectedLevel);
     }
 
@@ -263,7 +263,7 @@ public class OntologyBean // extends BaseBean
 
     public void setSelectedAssociation(String selectedAssociation) {
         _selectedAssociation = selectedAssociation;
-        HttpServletRequest request = SessionUtil.getRequest();
+        HttpServletRequest request = SessionUtils.getRequest();
         request.getSession().setAttribute("selectedAssociation",
             selectedAssociation);
     }
@@ -284,7 +284,7 @@ public class OntologyBean // extends BaseBean
     private Vector<String> _propertyNameListData = null;
 
     public List<SelectItem> getPropertyNameList() {
-        HttpServletRequest request = SessionUtil.getRequest();
+        HttpServletRequest request = SessionUtils.getRequest();
         String selectedOntology =
             (String) request.getSession().getAttribute("selectedOntology");
         _propertyNameListData =
@@ -310,7 +310,7 @@ public class OntologyBean // extends BaseBean
 
     public void setSelectedPropertyName(String selectedPropertyName) {
         _selectedPropertyName = selectedPropertyName;
-        HttpServletRequest request = SessionUtil.getRequest();
+        HttpServletRequest request = SessionUtils.getRequest();
         request.getSession().setAttribute("selectedPropertyName",
             selectedPropertyName);
 
@@ -333,7 +333,7 @@ public class OntologyBean // extends BaseBean
 
     public List<SelectItem> getRepresentationalFormList() {
         if (_selectedOntology == null) {
-            HttpServletRequest request = SessionUtil.getRequest();
+            HttpServletRequest request = SessionUtils.getRequest();
             _selectedOntology =
                 (String) request.getSession().getAttribute("selectedOntology");
         }
@@ -353,7 +353,7 @@ public class OntologyBean // extends BaseBean
     public void setSelectedRepresentationalForm(
         String selectedRepresentationalForm) {
         _selectedRepresentationalForm = selectedRepresentationalForm;
-        HttpServletRequest request = SessionUtil.getRequest();
+        HttpServletRequest request = SessionUtils.getRequest();
         request.getSession().setAttribute("selectedRepresentationalForm",
             selectedRepresentationalForm);
     }
@@ -386,7 +386,7 @@ public class OntologyBean // extends BaseBean
 
     public void setSelectedDelimiter(String selectedDelimiter) {
         _selectedDelimiter = selectedDelimiter;
-        HttpServletRequest request = SessionUtil.getRequest();
+        HttpServletRequest request = SessionUtils.getRequest();
         request.getSession().setAttribute("selectedDelimiter",
             selectedDelimiter);
     }
@@ -408,7 +408,7 @@ public class OntologyBean // extends BaseBean
 
     public List<SelectItem> getPropertyQualifierList() {
         if (_selectedOntology == null) {
-            HttpServletRequest request = SessionUtil.getRequest();
+            HttpServletRequest request = SessionUtils.getRequest();
             _selectedOntology =
                 (String) request.getSession().getAttribute("selectedOntology");
         }
@@ -436,7 +436,7 @@ public class OntologyBean // extends BaseBean
 
     public void setSelectedPropertyQualifier(String selectedPropertyQualifier) {
         _selectedPropertyQualifier = selectedPropertyQualifier;
-        HttpServletRequest request = SessionUtil.getRequest();
+        HttpServletRequest request = SessionUtils.getRequest();
         request.getSession().setAttribute("selectedPropertyQualifier",
             selectedPropertyQualifier);
     }
@@ -482,7 +482,7 @@ public class OntologyBean // extends BaseBean
 
     public void setSelectedDataCategory(String selectedDataCategory) {
         _selectedDataCategory = selectedDataCategory;
-        HttpServletRequest request = SessionUtil.getRequest();
+        HttpServletRequest request = SessionUtils.getRequest();
         request.getSession().setAttribute("selectedDataCategory",
             selectedDataCategory);
     }
@@ -503,7 +503,7 @@ public class OntologyBean // extends BaseBean
     private Vector<String> _sourceListData = null;
 
     public List<SelectItem> getSourceList() {
-        HttpServletRequest request = SessionUtil.getRequest();
+        HttpServletRequest request = SessionUtils.getRequest();
         String selectedOntology =
             (String) request.getSession().getAttribute("selectedOntology");
         if (selectedOntology == null) {
@@ -549,7 +549,7 @@ public class OntologyBean // extends BaseBean
 
     public void setSelectedSource(String selectedSource) {
         _selectedSource = selectedSource;
-        HttpServletRequest request = SessionUtil.getRequest();
+        HttpServletRequest request = SessionUtils.getRequest();
         request.getSession().setAttribute("selectedSource", selectedSource);
     }
 
