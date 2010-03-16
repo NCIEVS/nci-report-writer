@@ -1,4 +1,4 @@
-package gov.nih.nci.evs.reportwriter.utils;
+package gov.nih.nci.evs.utils;
 
 /**
  * <!-- LICENSE_TEXT_START -->
