@@ -18,6 +18,7 @@
   StandardReportTemplate standardReportTemplate = (StandardReportTemplate) obj;
   Collection cc = standardReportTemplate.getColumnCollection();
   Object[] objs = cc == null ? null : cc.toArray();
+  boolean rowExists = objs.length > 0;
 %>
 <f:view>
   <h:form id="STANDARD_REPORT_FIELDSForm">
@@ -118,11 +119,19 @@
                         action="#{userSessionBean.insertBeforeColumnAction}" />
                     </td>
                   <% } %>
-                    <td><h:commandButton id="modify" value="Modify" 
-                        action="#{userSessionBean.modifyColumnAction}" /></td>
-                    <td><h:commandButton id="delete" value="Delete" 
-                        action="#{userSessionBean.deleteColumnAction}" 
-                        onclick="if (!confirm('You will lose all data entered. Are you sure?')) return false" /></td>
+                    <% if (rowExists) { %>
+                      <td><h:commandButton id="modify" value="Modify"
+                          action="#{userSessionBean.modifyColumnAction}" /></td>
+                      <td><h:commandButton id="delete" value="Delete" 
+                          action="#{userSessionBean.deleteColumnAction}" 
+                          onclick="if (!confirm('You will lose all data entered. Are you sure?')) return false" /></td>
+                    <% } else { %>
+                      <td><h:commandButton id="modify" value="Modify" disabled="true"
+                          action="#{userSessionBean.modifyColumnAction}" /></td>
+                      <td><h:commandButton id="delete" value="Delete" disabled="true"
+                          action="#{userSessionBean.deleteColumnAction}" 
+                          onclick="if (!confirm('You will lose all data entered. Are you sure?')) return false" /></td>
+                    <% } %>
                     <td><h:commandButton id="back" value="Back" action="back" /></td>
                   </tr>
                 </table>
