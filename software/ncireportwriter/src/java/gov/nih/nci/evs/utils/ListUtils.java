@@ -58,7 +58,7 @@ public class ListUtils {
         Arrays.sort(as);
         return new ArrayList<String>(Arrays.asList(as));
     }
-    
+
     @SuppressWarnings("unchecked")
     public static Enumeration<?> sort(Enumeration<?> enumeration) {
         if (enumeration == null)
@@ -71,7 +71,7 @@ public class ListUtils {
     }
 
     public static void debug(Logger logger, String text, List<?> list) {
-        if (! logger.isDebugEnabled())
+        if (!logger.isDebugEnabled())
             return;
         logger.debug(StringUtils.SEPARATOR);
         if (text != null && text.length() > 0)
@@ -79,12 +79,12 @@ public class ListUtils {
         if (list == null)
             return;
         int n = list.size();
-        for (int i=0; i<n; ++i)
+        for (int i = 0; i < n; ++i)
             logger.debug("  " + (i + 1) + ") " + list.get(i));
     }
 
     public static void debug(Logger logger, String text, String[] list) {
-        if (! logger.isDebugEnabled())
+        if (!logger.isDebugEnabled())
             return;
         logger.debug(StringUtils.SEPARATOR);
         if (text != null && text.length() > 0)

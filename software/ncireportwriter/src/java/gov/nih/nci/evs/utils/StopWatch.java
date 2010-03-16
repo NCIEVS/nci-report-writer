@@ -79,7 +79,7 @@ public class StopWatch {
         double value = timeMS / 3600000.0; // / 1000.0 / 60.0 / 60.0;
         return value;
     }
-    
+
     public static String format(double value) {
         return _doubleFormatter.format(value);
     }

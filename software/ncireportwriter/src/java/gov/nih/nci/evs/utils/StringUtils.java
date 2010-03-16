@@ -53,11 +53,11 @@ import org.apache.log4j.*;
 
 public class StringUtils {
     public static final String SEPARATOR =
-        "----------------------------------------" +
-        "----------------------------------------";
+        "----------------------------------------"
+            + "----------------------------------------";
     public static final String SEPARATOR_EQUAL =
-        "========================================" +
-        "========================================";
+        "========================================"
+            + "========================================";
     public static final String HTML_SPACE = "&nbsp;";
 
     public static String toHtml(String text) {
@@ -83,15 +83,15 @@ public class StringUtils {
             return HTML_SPACE;
         return getSpaceIfBlank(value.toString());
     }
-    
+
     public static void debug(Logger logger, String text, List<?> list) {
         if (text != null && text.length() > 0)
             logger.debug(text);
 
         if (list == null)
             return;
-        
-        int i=0;
+
+        int i = 0;
         Iterator<?> iterator = list.iterator();
         while (iterator.hasNext()) {
             logger.debug("  " + i + ")" + iterator.next().toString());
@@ -99,16 +99,17 @@ public class StringUtils {
         }
     }
 
-    public static void append(StringBuffer buffer, String value, String delimiter) {
+    public static void append(StringBuffer buffer, String value,
+        String delimiter) {
         if (buffer.length() > 0)
             buffer.append(delimiter);
         buffer.append(value);
     }
-    
+
     public static String toString(List<?> list, String delimiter) {
         if (list == null)
             return "";
-        
+
         Iterator<?> iterator = list.iterator();
         StringBuffer buffer = new StringBuffer();
         while (iterator.hasNext()) {
@@ -133,30 +134,31 @@ public class StringUtils {
         }
         logger.debug(buffer.toString());
     }
-    
-    public static void debug(boolean displayInMultipleLines, 
-        Logger logger, String text, List<?> list) {
+
+    public static void debug(boolean displayInMultipleLines, Logger logger,
+        String text, List<?> list) {
         if (displayInMultipleLines)
             debug(logger, text, list);
-        else debugSameLine(logger, text, list);
+        else
+            debugSameLine(logger, text, list);
     }
-    
+
     public static String truncate(int maxChar, String text) {
         if (text.length() <= maxChar)
             return text;
-        
+
         String dots = " ...";
         text = text.substring(0, maxChar - dots.length());
         text += dots;
         return text;
     }
-    
+
     public static String[] toStrings(String value, String delimiter,
         boolean includeDelimiter, boolean trim) {
         ArrayList<String> list = new ArrayList<String>();
         if (value != null) {
-            StringTokenizer tokenizer = new StringTokenizer(value, delimiter,
-                includeDelimiter);
+            StringTokenizer tokenizer =
+                new StringTokenizer(value, delimiter, includeDelimiter);
             while (tokenizer.hasMoreElements()) {
                 String s = tokenizer.nextToken();
                 if (trim)
