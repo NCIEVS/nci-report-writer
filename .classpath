@@ -72,7 +72,7 @@
 	<classpathentry kind="lib" path="software/ncireportwriter/lib/spring.jar"/>
 	<classpathentry kind="lib" path="software/ncireportwriter/lib/standard.jar"/>
 	<classpathentry kind="lib" path="software/ncireportwriter/lib/xercesImpl.jar"/>
-	<classpathentry kind="lib" path="software/ncireportwriter/lib/evs-web-framework-1.0.jar"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+	<classpathentry kind="lib" path="software/ncireportwriter/lib/evs-ui-framework-1.0.jar"/>
 	<classpathentry kind="output" path="software/ncireportwriter/build/web/WEB-INF/classes"/>
 </classpath>
