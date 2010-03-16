@@ -1,6 +1,4 @@
-package gov.nih.nci.evs.reportwriter.utils;
-
-import gov.nih.nci.evs.utils.*;
+package gov.nih.nci.evs.utils;
 
 import java.util.*;
 import java.util.regex.*;
