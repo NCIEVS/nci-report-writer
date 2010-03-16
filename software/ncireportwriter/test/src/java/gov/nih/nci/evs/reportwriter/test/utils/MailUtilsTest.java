@@ -1,7 +1,6 @@
 package gov.nih.nci.evs.reportwriter.test.utils;
 
 import gov.nih.nci.evs.reportwriter.properties.*;
-import gov.nih.nci.evs.reportwriter.utils.*;
 import gov.nih.nci.evs.utils.*;
 
 import org.apache.log4j.*;

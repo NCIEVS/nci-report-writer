@@ -3,7 +3,6 @@ package gov.nih.nci.evs.reportwriter.webapp;
 import javax.servlet.http.*;
 
 import gov.nih.nci.evs.reportwriter.properties.*;
-import gov.nih.nci.evs.reportwriter.utils.*;
 import gov.nih.nci.evs.utils.*;
 
 /**

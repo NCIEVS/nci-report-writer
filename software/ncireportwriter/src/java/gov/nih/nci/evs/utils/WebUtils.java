@@ -1,7 +1,5 @@
 package gov.nih.nci.evs.utils;
 
-import gov.nih.nci.evs.reportwriter.utils.*;
-
 import java.util.*;
 
 import javax.servlet.http.*;
