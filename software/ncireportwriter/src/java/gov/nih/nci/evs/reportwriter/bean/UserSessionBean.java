@@ -83,7 +83,7 @@ public class UserSessionBean extends Object {
 
     public void setSelectedPropertyType(String selectedPropertyType) {
         _selectedPropertyType = selectedPropertyType;
-        HttpServletRequest request = SessionUtil.getRequest();
+        HttpServletRequest request = SessionUtils.getRequest();
         request.getSession().setAttribute("selectedPropertyType",
             selectedPropertyType);
     }
@@ -156,7 +156,7 @@ public class UserSessionBean extends Object {
 
     public void setSelectedReportFormat(String selectedReportFormat) {
         _selectedReportFormat = selectedReportFormat;
-        HttpServletRequest request = SessionUtil.getRequest();
+        HttpServletRequest request = SessionUtils.getRequest();
         request.getSession().setAttribute("selectedReportFormat",
             selectedReportFormat);
     }
@@ -185,7 +185,7 @@ public class UserSessionBean extends Object {
 
     public void setSelectedReportStatus(String selectedReportStatus) {
         _selectedReportStatus = selectedReportStatus;
-        HttpServletRequest request = SessionUtil.getRequest();
+        HttpServletRequest request = SessionUtils.getRequest();
         request.getSession().setAttribute("selectedReportStatus",
             selectedReportStatus);
     }
@@ -227,7 +227,7 @@ public class UserSessionBean extends Object {
 
     public void setSelectedVersion(String selectedVersion) {
         _selectedVersion = selectedVersion;
-        HttpServletRequest request = SessionUtil.getRequest();
+        HttpServletRequest request = SessionUtils.getRequest();
         request.getSession().setAttribute("selectedVersion", selectedVersion);
     }
 

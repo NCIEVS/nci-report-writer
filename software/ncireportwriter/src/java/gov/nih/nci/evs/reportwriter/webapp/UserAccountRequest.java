@@ -61,14 +61,14 @@ public class UserAccountRequest {
     public static final String LOGIN_ID = "loginID";
 
     public String clear() {
-        HttpServletRequest request = SessionUtil.getRequest();
+        HttpServletRequest request = SessionUtils.getRequest();
         request.removeAttribute(LOGIN_ID);
         return "clear";
     }
 
     public String unlock() {
         _logger.debug("Method: UserAccountRequest.unlock");
-        HttpServletRequest request = SessionUtil.getRequest();
+        HttpServletRequest request = SessionUtils.getRequest();
         String userid = HTTPUtils.getParameter(request, LOGIN_ID);
 
         if (userid == null || userid.trim().length() <= 0)

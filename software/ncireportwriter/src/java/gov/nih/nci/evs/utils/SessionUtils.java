@@ -51,7 +51,7 @@ import javax.servlet.http.*;
  * @version 1.0
  */
 
-public class SessionUtil {
+public class SessionUtils {
     public static HttpSession getSession() {
         return (HttpSession) FacesContext.getCurrentInstance()
                 .getExternalContext().getSession(true);

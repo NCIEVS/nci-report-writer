@@ -51,12 +51,12 @@ import gov.nih.nci.evs.utils.*;
 
 public class BeanUtils {
     public static OntologyBean getOntologyBean() {
-        return (OntologyBean) SessionUtil.getBean("ontologyBean",
+        return (OntologyBean) SessionUtils.getBean("ontologyBean",
             "gov.nih.nci.evs.reportwriter.bean.OntologyBean");
     }
 
     public static UserSessionBean getUserSessionBean() {
-        return (UserSessionBean) SessionUtil.getBean("userSessionBean",
+        return (UserSessionBean) SessionUtils.getBean("userSessionBean",
             "gov.nih.nci.evs.reportwriter.bean.UserSessionBean");
     }
 }
