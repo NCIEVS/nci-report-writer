@@ -101,6 +101,10 @@
 		<level value="trace" />
 	</logger>
 -->
+    <logger name="gov.nih.nci.evs">
+        <level value="debug" />
+    </logger>
+
 	<logger name="gov.nih.nci.evs.reportwriter">
 		<level value="debug" />
 	</logger>
