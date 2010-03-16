@@ -53,7 +53,7 @@ public class FormUtils {
     public static String getBasePath(HttpServletRequest request) {
         return request.getContextPath();
     }
-    
+
     public static String getPagesPath(HttpServletRequest request) {
         String basePath = getBasePath(request);
         return basePath + "/pages";

@@ -61,7 +61,7 @@ public class WordUtils {
     }
 
     public static String addEndingSpaceIfNeeded(String value) {
-        if (value == null) 
+        if (value == null)
             return "";
         value = value.trim();
         if (value.length() > 0)

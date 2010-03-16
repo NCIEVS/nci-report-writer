@@ -55,13 +55,13 @@ import org.apache.log4j.*;
 
 public class WebUtils {
     private static Logger _logger = Logger.getLogger(WebUtils.class);
-    
+
     public static void debugHeaders(HttpServletRequest request) {
         ArrayList<String> list = getHeaders(request);
         list = ListUtils.sort(list);
         ListUtils.debug(_logger, "Request Headers", list);
     }
-    
+
     public static ArrayList<String> getHeaders(HttpServletRequest request) {
         Enumeration<?> enumeration = request.getHeaderNames();
         ArrayList<String> list = new ArrayList<String>();
@@ -72,15 +72,15 @@ public class WebUtils {
         }
         return list;
     }
-    
+
     public static boolean isClientBrowser(HttpServletRequest request,
-            String type) {
+        String type) {
         String userAgent = request.getHeader("user-agent");
         if (userAgent == null)
             return false;
         return userAgent.toLowerCase().contains(type);
     }
-    
+
     public static boolean isUsingIE(HttpServletRequest request) {
         return isClientBrowser(request, "msie");
     }

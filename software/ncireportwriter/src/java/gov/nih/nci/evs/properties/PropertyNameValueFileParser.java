@@ -55,17 +55,17 @@ import org.apache.log4j.*;
  */
 
 public class PropertyNameValueFileParser {
-    private static Logger _logger = Logger
-        .getLogger(PropertyNameValueFileParser.class);
+    private static Logger _logger =
+        Logger.getLogger(PropertyNameValueFileParser.class);
     private Properties _properties = new Properties();
 
     protected void loadProperties(String propertyFile) {
         try {
             _logger.info("File location= " + propertyFile);
             if (propertyFile == null || propertyFile.length() <= 0)
-                throw new Exception("Property file not set." + 
-                    "\n  * Property File: " + propertyFile);
-    
+                throw new Exception("Property file not set."
+                    + "\n  * Property File: " + propertyFile);
+
             FileInputStream fis = new FileInputStream(new File(propertyFile));
             _properties.load(fis);
             debugProperties();
@@ -73,7 +73,7 @@ public class PropertyNameValueFileParser {
             ExceptionUtils.print(_logger, e);
         }
     }
-    
+
     protected String fetchProperty(String key) {
         return _properties.getProperty(key);
     }
@@ -125,7 +125,7 @@ public class PropertyNameValueFileParser {
     }
 
     private void debugProperties() {
-        if (! _logger.isDebugEnabled())
+        if (!_logger.isDebugEnabled())
             return;
 
         ArrayList<String> keys = new ArrayList<String>();
@@ -133,9 +133,9 @@ public class PropertyNameValueFileParser {
         while (iterator.hasNext())
             keys.add((String) iterator.next());
         keys = ListUtils.sort(keys);
-        
+
         _logger.debug("List of properties:");
-        for (int i=0; i<keys.size(); ++i) {
+        for (int i = 0; i < keys.size(); ++i) {
             String key = keys.get(i);
             String value = _properties.getProperty(key);
             _logger.debug("  " + i + ") " + key + ": " + value);

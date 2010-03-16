@@ -54,12 +54,12 @@ import javax.servlet.http.*;
 public class SessionUtils {
     public static HttpSession getSession() {
         return (HttpSession) FacesContext.getCurrentInstance()
-                .getExternalContext().getSession(true);
+            .getExternalContext().getSession(true);
     }
 
     public static HttpServletRequest getRequest() {
         return (HttpServletRequest) FacesContext.getCurrentInstance()
-                .getExternalContext().getRequest();
+            .getExternalContext().getRequest();
     }
 
     @SuppressWarnings("unchecked")
@@ -67,7 +67,7 @@ public class SessionUtils {
         try {
             Map<Object, Object> map =
                 FacesContext.getCurrentInstance().getExternalContext()
-                        .getSessionMap();
+                    .getSessionMap();
 
             Object bean = map.get(name);
             if (bean == null) {
