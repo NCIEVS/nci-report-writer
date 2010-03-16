@@ -1,6 +1,10 @@
 <%@ taglib uri="http://java.sun.com/jsf/html" prefix="h" %>
 <%@ taglib uri="http://java.sun.com/jsf/core" prefix="f" %> 
+<%@ page import="gov.nih.nci.evs.utils.*" %>
 
+<%
+  String warningMsg = (String) request.getAttribute("warningMsg");
+%>
 <f:view>
   <h:form id="ADD_REPORT_STATUSForm">
     <table summary="" cellpadding="0" cellspacing="0" border="0" 
@@ -10,6 +14,13 @@
         <br>
           <table summary="" cellpadding="0" cellspacing="0" border="0"
               width="725" class="contentPage"> <!-- Table 2 (Begin) -->
+            <% if (warningMsg != null && warningMsg.trim().length() > 0) { %>
+              <tr><td class="warningMsgColor">
+                Warning:<br/>
+                <%=StringUtils.toHtml(warningMsg)%><br/>
+                <br/>
+              </td></tr>
+            <% } %>
             <tr>
               <td>
                 <table summary="" cellpadding="0" cellspacing="0" border="0">
