@@ -102,7 +102,7 @@ public class HTTPUtils {
 
             HttpSession session = request.getSession();
             Enumeration<?> enumeration =
-                SortUtils.sort(session.getAttributeNames());
+                ListUtils.sort(session.getAttributeNames());
             int i = 0;
             while (enumeration.hasMoreElements()) {
                 String name = (String) enumeration.nextElement();
@@ -128,7 +128,7 @@ public class HTTPUtils {
                     .getExternalContext().getRequest();
 
             Enumeration<?> enumeration =
-                SortUtils.sort(request.getAttributeNames());
+                ListUtils.sort(request.getAttributeNames());
             int i = 0;
             while (enumeration.hasMoreElements()) {
                 String name = (String) enumeration.nextElement();
@@ -154,7 +154,7 @@ public class HTTPUtils {
                     .getExternalContext().getRequest();
 
             Enumeration<?> enumeration =
-                SortUtils.sort(request.getParameterNames());
+                ListUtils.sort(request.getParameterNames());
             int i = 0;
             while (enumeration.hasMoreElements()) {
                 String name = (String) enumeration.nextElement();
