@@ -58,6 +58,17 @@ public class ListUtils {
         Arrays.sort(as);
         return new ArrayList<String>(Arrays.asList(as));
     }
+    
+    @SuppressWarnings("unchecked")
+    public static Enumeration<?> sort(Enumeration<?> enumeration) {
+        if (enumeration == null)
+            return enumeration;
+
+        List keyList = Collections.list(enumeration);
+        Collections.sort(keyList);
+        enumeration = Collections.enumeration(keyList);
+        return enumeration;
+    }
 
     public static void debug(Logger logger, String text, List<?> list) {
         if (! logger.isDebugEnabled())

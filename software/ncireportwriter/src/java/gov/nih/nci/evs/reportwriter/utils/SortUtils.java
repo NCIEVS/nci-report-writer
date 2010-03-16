@@ -1,5 +1,7 @@
 package gov.nih.nci.evs.reportwriter.utils;
 
+import gov.nih.nci.evs.utils.*;
+
 import java.util.*;
 
 /**
@@ -74,14 +76,7 @@ public class SortUtils {
         return quickSort(vector, SortComparator.SortBy.Name);
     }
 
-    @SuppressWarnings("unchecked")
     public static Enumeration<?> sort(Enumeration<?> enumeration) {
-        if (enumeration == null)
-            return enumeration;
-
-        List keyList = Collections.list(enumeration);
-        Collections.sort(keyList);
-        enumeration = Collections.enumeration(keyList);
-        return enumeration;
+        return ListUtils.sort(enumeration);
     }
 }
