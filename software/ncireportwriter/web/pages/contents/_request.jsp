@@ -3,6 +3,7 @@
 <%@ page import="java.util.*"%>
 <%@ page import="gov.nih.nci.evs.reportwriter.utils.*"%>
 <%@ page import="gov.nih.nci.evs.reportwriter.webapp.*"%>
+<%@ page import="gov.nih.nci.evs.utils.*"%>
 <%
   final String PROBLEM = AccessDeniedRequest.PROBLEM;
   final String LOGIN_ID = AccessDeniedRequest.LOGIN_ID;

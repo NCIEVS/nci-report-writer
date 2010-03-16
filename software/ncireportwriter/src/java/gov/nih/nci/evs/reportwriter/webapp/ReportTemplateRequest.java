@@ -4,6 +4,7 @@ import java.util.*;
 
 import gov.nih.nci.evs.reportwriter.bean.*;
 import gov.nih.nci.evs.reportwriter.utils.*;
+import gov.nih.nci.evs.utils.*;
 
 import javax.faces.model.*;
 import javax.servlet.http.*;
