@@ -57,7 +57,9 @@ import javax.servlet.http.*;
 
 public class ReportStatusRequest {
     public String addAction() {
-        return "report_status";
+        HttpServletRequest request = SessionUtils.getRequest();
+        return HTTPUtils.warningMsg(request, "Not Yet Implemented.");
+        //return "report_status";
     }
 
     public String saveAction(String selectedStandardReportTemplate) {
