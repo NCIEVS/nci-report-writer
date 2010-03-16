@@ -1,5 +1,7 @@
 package gov.nih.nci.evs.reportwriter.properties;
 
+import gov.nih.nci.evs.properties.*;
+
 /**
  * <!-- LICENSE_TEXT_START -->
  * Copyright 2008,2009 NGIT. This software was developed in conjunction 
