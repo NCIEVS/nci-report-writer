@@ -1,4 +1,11 @@
-package gov.nih.nci.evs.reportwriter.properties;
+package gov.nih.nci.evs.properties;
+
+import gov.nih.nci.evs.utils.*;
+
+import java.io.*;
+import java.util.*;
+
+import org.apache.log4j.*;
 
 /**
  * <!-- LICENSE_TEXT_START -->
@@ -46,14 +53,6 @@ package gov.nih.nci.evs.reportwriter.properties;
  * @author EVS Team (David Yee)
  * @version 1.0
  */
-
-import gov.nih.nci.evs.reportwriter.utils.*;
-import gov.nih.nci.evs.utils.*;
-
-import java.io.*;
-import java.util.*;
-
-import org.apache.log4j.*;
 
 public class PropertyNameValueFileParser {
     private static Logger _logger = Logger
@@ -133,7 +132,7 @@ public class PropertyNameValueFileParser {
         Iterator<?> iterator = _properties.keySet().iterator();
         while (iterator.hasNext())
             keys.add((String) iterator.next());
-        SortUtils.quickSort(keys);
+        keys = ListUtils.sort(keys);
         
         _logger.debug("List of properties:");
         for (int i=0; i<keys.size(); ++i) {
