@@ -4,6 +4,7 @@
 <%@ page import="java.text.*" %>
 <%@ page import="gov.nih.nci.evs.reportwriter.bean.*" %>
 <%@ page import="gov.nih.nci.evs.reportwriter.utils.*" %>
+<%@ page import="gov.nih.nci.evs.utils.*" %>
 
 <%
   SDKClientUtil sdkclientutil = new SDKClientUtil();

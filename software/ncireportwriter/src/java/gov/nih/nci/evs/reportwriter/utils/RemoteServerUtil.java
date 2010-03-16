@@ -1,6 +1,7 @@
 package gov.nih.nci.evs.reportwriter.utils;
 
 import gov.nih.nci.evs.reportwriter.properties.*;
+import gov.nih.nci.evs.utils.*;
 import gov.nih.nci.system.client.*;
 
 import org.LexGrid.LexBIG.caCore.interfaces.*;

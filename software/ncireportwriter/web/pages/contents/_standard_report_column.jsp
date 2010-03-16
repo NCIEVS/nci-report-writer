@@ -3,6 +3,7 @@
 <%@ page import="java.util.*" %>
 <%@ page import="gov.nih.nci.evs.reportwriter.bean.*" %>
 <%@ page import="gov.nih.nci.evs.reportwriter.utils.*" %>
+<%@ page import="gov.nih.nci.evs.utils.*" %>
 
 <%
   String template_label = (String) request.getSession().

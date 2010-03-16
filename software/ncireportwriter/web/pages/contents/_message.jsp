@@ -1,6 +1,6 @@
 <%@ taglib uri="http://java.sun.com/jsf/html" prefix="h" %>
 <%@ taglib uri="http://java.sun.com/jsf/core" prefix="f" %> 
-<%@ page import="gov.nih.nci.evs.reportwriter.utils.*" %>
+<%@ page import="gov.nih.nci.evs.utils.*" %>
 
 <%
   String message = (String) request.getSession().getAttribute("message");

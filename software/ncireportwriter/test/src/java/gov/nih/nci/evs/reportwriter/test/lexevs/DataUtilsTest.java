@@ -5,6 +5,7 @@ import java.util.*;
 import gov.nih.nci.evs.reportwriter.service.*;
 import gov.nih.nci.evs.reportwriter.test.utils.*;
 import gov.nih.nci.evs.reportwriter.utils.*;
+import gov.nih.nci.evs.utils.*;
 
 import org.LexGrid.concepts.*;
 import org.apache.log4j.*;

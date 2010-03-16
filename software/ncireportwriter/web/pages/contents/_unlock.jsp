@@ -3,6 +3,7 @@
 <%@ page import="java.util.*"%>
 <%@ page import="gov.nih.nci.evs.reportwriter.utils.*"%>
 <%@ page import="gov.nih.nci.evs.reportwriter.webapp.*"%>
+<%@ page import="gov.nih.nci.evs.utils.*"%>
 <%
   String loginID = HTTPUtils.getJspAttributeString(request, UserAccountRequest.LOGIN_ID);
   String warningMsg = HTTPUtils.getJspAttributeString(request, "warningMsg");
