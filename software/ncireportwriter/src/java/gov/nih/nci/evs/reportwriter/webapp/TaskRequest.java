@@ -74,7 +74,7 @@ public class TaskRequest {
     }
 
     public List<SelectItem> getTaskList() {
-        HttpServletRequest request = SessionUtils.getRequest();
+        HttpServletRequest request = HTTPUtils.getRequest();
         HttpSession session = request.getSession(false);
 
         Boolean isAdmin = null;
@@ -109,12 +109,12 @@ public class TaskRequest {
             if (list != null && list.size() > 0) {
                 return "assign_report_status";
             } else {
-                HttpServletRequest request = SessionUtils.getRequest();
+                HttpServletRequest request = HTTPUtils.getRequest();
                 return HTTPUtils.sessionMsg(request,
                         "No draft report is found.");
             }
         } else if (_selectedTask.compareTo("Retrieve Standard Reports") == 0) {
-            HttpServletRequest request = SessionUtils.getRequest();
+            HttpServletRequest request = HTTPUtils.getRequest();
             Boolean isAdmin =
                 (Boolean) request.getSession().getAttribute("isAdmin");
             if (isAdmin != null && isAdmin.equals(Boolean.TRUE)) {

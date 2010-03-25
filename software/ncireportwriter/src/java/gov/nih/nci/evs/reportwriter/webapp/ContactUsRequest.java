@@ -61,7 +61,7 @@ public class ContactUsRequest {
 
     // -------------------------------------------------------------------------
     public String clear() {
-        HttpServletRequest request = SessionUtils.getRequest();
+        HttpServletRequest request = HTTPUtils.getRequest();
         request.removeAttribute(SUBJECT);
         request.removeAttribute(EMAIL_MSG);
         request.removeAttribute(EMAIL_ADDRESS);
@@ -69,7 +69,7 @@ public class ContactUsRequest {
     }
 
     public String submit() {
-        HttpServletRequest request = SessionUtils.getRequest();
+        HttpServletRequest request = HTTPUtils.getRequest();
         AppProperties appProperties = AppProperties.getInstance();
         try {
             String mailServer =

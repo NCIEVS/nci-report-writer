@@ -57,23 +57,23 @@ import javax.servlet.http.*;
 
 public class ReportStatusRequest {
     public String addAction() {
-        HttpServletRequest request = SessionUtils.getRequest();
+        HttpServletRequest request = HTTPUtils.getRequest();
         return HTTPUtils.warningMsg(request, "Not Yet Implemented.");
         //return "report_status";
     }
     
     public String activateAction() {
-        HttpServletRequest request = SessionUtils.getRequest();
+        HttpServletRequest request = HTTPUtils.getRequest();
         return HTTPUtils.warningMsg(request, "Not Yet Implemented.");        
     }
 
     public String inactivateAction() {
-        HttpServletRequest request = SessionUtils.getRequest();
+        HttpServletRequest request = HTTPUtils.getRequest();
         return HTTPUtils.warningMsg(request, "Not Yet Implemented.");
     }
 
     public String saveAction(String selectedStandardReportTemplate) {
-        HttpServletRequest request = SessionUtils.getRequest();
+        HttpServletRequest request = HTTPUtils.getRequest();
         request.getSession().setAttribute("selectedStandardReportTemplate",
                 selectedStandardReportTemplate);
 
@@ -87,7 +87,7 @@ public class ReportStatusRequest {
     }
 
     public String assignAction() {
-        HttpServletRequest request = SessionUtils.getRequest();
+        HttpServletRequest request = HTTPUtils.getRequest();
         // save to database
         String reportTemplate =
             (String) request.getSession().getAttribute(

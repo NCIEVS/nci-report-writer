@@ -62,7 +62,7 @@ public class ReportDownloadRequest {
         Logger.getLogger(ReportDownloadRequest.class);
 
     public String downloadReportAction(String selectedStandardReportTemplate) {
-        HttpServletRequest request = SessionUtils.getRequest();
+        HttpServletRequest request = HTTPUtils.getRequest();
         request.getSession().setAttribute("selectedStandardReportTemplate",
                 selectedStandardReportTemplate);
 

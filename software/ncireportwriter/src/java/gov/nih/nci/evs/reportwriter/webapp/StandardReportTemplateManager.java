@@ -101,7 +101,7 @@ public class StandardReportTemplateManager {
     public void setSelectedStandardReportTemplate(
         String selectedStandardReportTemplate) {
         _selectedStandardReportTemplate = selectedStandardReportTemplate;
-        HttpServletRequest request = SessionUtils.getRequest();
+        HttpServletRequest request = HTTPUtils.getRequest();
         request.getSession().setAttribute("selectedStandardReportTemplate",
             selectedStandardReportTemplate);
     }   
@@ -143,7 +143,7 @@ public class StandardReportTemplateManager {
         String selectedStandardReportTemplate_draft) {
         _selectedStandardReportTemplate_draft =
             selectedStandardReportTemplate_draft;
-        HttpServletRequest request = SessionUtils.getRequest();
+        HttpServletRequest request = HTTPUtils.getRequest();
         request.getSession().setAttribute(
             "selectedStandardReportTemplate_draft",
             selectedStandardReportTemplate_draft);
@@ -166,7 +166,7 @@ public class StandardReportTemplateManager {
 
     public void setSelectedStandardReportTemplate_approved(
         String selectedStandardReportTemplate_draft) {
-        HttpServletRequest request = SessionUtils.getRequest();
+        HttpServletRequest request = HTTPUtils.getRequest();
         request.getSession().setAttribute(
             "selectedStandardReportTemplate_approved",
             _selectedStandardReportTemplate_approved);

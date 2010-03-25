@@ -3,7 +3,7 @@ package gov.nih.nci.evs.reportwriter.test.utils;
 import java.util.*;
 
 public class SetupEnv {
-    private static final String RW_PROPERTY_FILE = 
+    private static final String PROPERTY_FILE = 
         "gov.nih.nci.cacore.ncireportwriterProperties";
     private static String DEFAULT_PROPERTY_FILE =
         "C:/apps/evs/ncireportwriter-webapp/conf/ncireportwriter.properties";
@@ -20,7 +20,7 @@ public class SetupEnv {
     }
     
     public void setup(String propertyFile) {
-        System.setProperty(RW_PROPERTY_FILE, propertyFile);
+        System.setProperty(PROPERTY_FILE, propertyFile);
     }
 
     public String[] parse(String[] args) {

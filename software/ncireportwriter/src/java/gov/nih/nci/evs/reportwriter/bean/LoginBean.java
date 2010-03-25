@@ -188,7 +188,7 @@ public class LoginBean extends Object {
             if (!authenticationManager.login(_userid, _password))
                 throw new Exception("Incorrect login credential.");
 
-            HttpServletRequest request = SessionUtils.getRequest();
+            HttpServletRequest request = HTTPUtils.getRequest();
             HttpSession session = request.getSession(); // true
             if (session != null)
                 session.setAttribute("uid", _userid);
@@ -205,14 +205,14 @@ public class LoginBean extends Object {
                 sdkclientutil.insertUser(_userid);
             }
             session.setAttribute("isSessionValid", Boolean.TRUE);
-            SessionUtils.getRequest().removeAttribute("loginWarning");
+            HTTPUtils.getRequest().removeAttribute("loginWarning");
             return "success";
         } catch (Exception e) {
             String msg = reformatError(e.getMessage());
             _logger.error(StringUtils.SEPARATOR);
             ExceptionUtils
                 .print(_logger, e, "  * Error logging in: " + _userid);
-            SessionUtils.getRequest().setAttribute("loginWarning", msg);
+            HTTPUtils.getRequest().setAttribute("loginWarning", msg);
             return "failure";
         }
     }
