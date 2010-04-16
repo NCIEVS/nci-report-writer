@@ -170,21 +170,31 @@ The following are the "automated" steps to build and deploy the report writer ap
 3. mysql>\. create-db.sql
 
 ===============================================================================
-== AHP2 Instructions                                                         ==
+== Ant Hill Pro 2 Instructions                                               ==
 ===============================================================================
 First time run to deploy the app and create the database
 --------------------------------------------------------
-1. Set database.drop-schema=true in <env>-upgrade.properties
-2. Use "deploy:remote:upgrade" in Ant Target: for AHP2.
-3. Add "-Dupgrade.target=upgrade-ncm:with-dbinstall" to Command Line: in AHP2.
-4. Execute a AHP2 build.
+Release notes:
+  * https://gforge.nci.nih.gov/docman/index.php?group_id=543&selected_doc_group_id=5687&language_id=1
 
-Application upgrades
---------------------
-1. Set database.drop-schema=false in <env>-upgrade.properties
-2. Use "deploy:remote:upgrade" in Ant Target: for AHP2.
-3. Add "-Dupgrade.target=upgrade-ncm" to Command Line: in AHP2.
-4. Execute a AHP2 build.
+1. Update <tier>-upgrade.properties as follows:
+    * From: https://gforge.nci.nih.gov/svnroot/scm-private/trunk/projects/reportwriter/properties
+    * database.drop-schema=true
+2. Execute a AHP2 build with the following settings:
+    * URL: http://ncibuild.nci.nih.gov:19080/AnthillPro/admin/index
+    * Ant Target:
+      -Dupgrade.target=upgrade-ncm:with-dbinstall deploy:remote:upgrade
+
+After the database tables are created, the AHP2 track must be set BDA upgrade mode as follows:
+1. Update <tier>-upgrade.properties as follows:
+    * database.drop-schema=false
+2. And the AntHill track set back to:
+    * Ant Target:
+      deploy:remote:upgrade
+
+(Setting the property file and AntHill back is essential so that the database
+ tables are not deleted in subsequent AHP2 builds, the command line entry must
+ be set as described above.)
 
 --------------------------------------
 URLs
