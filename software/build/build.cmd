@@ -53,11 +53,11 @@ if "%1" == "upgrade:wdbinstall" (
     goto DONE
 )
 if "%1" == "dev" (
-    ant -Dproperties.file=%DEVPROPFILE% deploy:remote:upgrade
+    ant -Dproperties.file=%DEVPROPFILE% -Danthill.build.tag_built=desktop deploy:remote:upgrade
     goto DONE
 )
 if "%1" == "ci" (
-    ant -Dproperties.file=%CIPROPFILE% deploy:remote:upgrade
+    ant -Dproperties.file=%CIPROPFILE% -Danthill.build.tag_built=desktop deploy:remote:upgrade
     goto DONE
 )
 if not "%1" == "dev:wdbinstall" goto d1
@@ -70,15 +70,15 @@ if not "%1" == "dev:wdbinstall" goto d1
         echo.
         goto DONE
     :d2
-    ant -Dproperties.file=%DEVPROPFILE% -Dupgrade.target=upgrade-ncm:with-dbinstall -Ddatabase.re-create=true deploy:remote:upgrade
+    ant -Dproperties.file=%DEVPROPFILE% -Danthill.build.tag_built=desktop -Dupgrade.target=upgrade-ncm:with-dbinstall -Ddatabase.re-create=true deploy:remote:upgrade
     goto DONE
 :d1
 if "%1" == "qa" (
-    ant -Dproperties.file=%QAPROPFILE% deploy:remote:upgrade
+    ant -Dproperties.file=%QAPROPFILE% -Danthill.build.tag_built=desktop deploy:remote:upgrade
     goto DONE
 )
 if "%1" == "data-qa" (
-    ant -Dproperties.file=%DATAQAPROPFILE% deploy:remote:upgrade
+    ant -Dproperties.file=%DATAQAPROPFILE% -Danthill.build.tag_built=desktop deploy:remote:upgrade
     goto DONE
 )
 if not "%1" == "qa:wdbinstall" goto q1
@@ -91,7 +91,7 @@ if not "%1" == "qa:wdbinstall" goto q1
         echo.
         goto DONE
     :q2
-    ant -Dproperties.file=%QAPROPFILE% -Dupgrade.target=upgrade-ncm:with-dbinstall -Ddatabase.re-create=true deploy:remote:upgrade
+    ant -Dproperties.file=%QAPROPFILE% -Danthill.build.tag_built=desktop -Dupgrade.target=upgrade-ncm:with-dbinstall -Ddatabase.re-create=true deploy:remote:upgrade
     goto DONE
 :q1
 if "%1" == "clean" (
