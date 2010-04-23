@@ -21,6 +21,7 @@ if "%1" == ""  (
     echo   upgrade              -- Build and upgrade application
     echo   dev:wdbinstall       -- Builds, upgrades JBoss and installs database on DEV
     echo   dev                  -- Builds, upgrades JBoss on DEV
+    echo   ci:wdbinstall        -- Builds, upgrades JBoss and install database on CI
     echo   ci                   -- Builds, upgrades JBoss on CI
     echo   qa:wdbinstall        -- Builds, upgrades JBoss and install database on QA
     echo   qa                   -- Builds, upgrades JBoss on QA
@@ -56,10 +57,6 @@ if "%1" == "dev" (
     ant -Dproperties.file=%DEVPROPFILE% -Danthill.build.tag_built=desktop deploy:remote:upgrade
     goto DONE
 )
-if "%1" == "ci" (
-    ant -Dproperties.file=%CIPROPFILE% -Danthill.build.tag_built=desktop deploy:remote:upgrade
-    goto DONE
-)
 if not "%1" == "dev:wdbinstall" goto d1
     @rem *** Remember to set database.drop-schema=true in dev-upgrade.properties file ***
     type %DEVPROPFILE% | findstr "database.drop-schema=true" >nul
@@ -71,6 +68,23 @@ if not "%1" == "dev:wdbinstall" goto d1
         goto DONE
     :d2
     ant -Dproperties.file=%DEVPROPFILE% -Danthill.build.tag_built=desktop -Dupgrade.target=upgrade-ncm:with-dbinstall -Ddatabase.re-create=true deploy:remote:upgrade
+    goto DONE
+:d1
+if "%1" == "ci" (
+    ant -Dproperties.file=%CIPROPFILE% -Danthill.build.tag_built=desktop deploy:remote:upgrade
+    goto DONE
+)
+if not "%1" == "ci:wdbinstall" goto c1
+    @rem *** Remember to set database.drop-schema=true in ci-upgrade.properties file ***
+    type %CIPROPFILE% | findstr "database.drop-schema=true" >nul
+    if "%errorlevel%" == "0" goto c2
+        echo Error 1:
+        echo   Please set 'database.drop-schema=true' in 'ci-upgrade.properties' file
+        echo   before running this command.
+        echo.
+        goto DONE
+    :c2
+    ant -Dproperties.file=%CIPROPFILE% -Danthill.build.tag_built=desktop -Dupgrade.target=upgrade-ncm:with-dbinstall -Ddatabase.re-create=true deploy:remote:upgrade
     goto DONE
 :d1
 if "%1" == "qa" (
