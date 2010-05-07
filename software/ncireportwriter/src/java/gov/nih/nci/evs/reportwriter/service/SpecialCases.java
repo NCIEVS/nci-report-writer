@@ -274,7 +274,7 @@ public class SpecialCases {
                 info.extensibleColumnValue);
             subHeader.set(info.codelistNameColumnIndex,
                 values.get(info.codelistNameColumnIndex));
-            pw.println(StringUtils.toString(subHeader, delim));
+            pw.println(StringUtils.toString(subHeader, delim, true));
         }
     }
 }

@@ -465,7 +465,7 @@ public class ReportGenerationThread implements Runnable {
         }
         SpecialCases.CDISC.writeSubheader(_cdiscInfo, this, values, pw, scheme,
             version, defining_root_concept, associated_concept, c, delim, cols);
-        pw.println(StringUtils.toString(values, delim));
+        pw.println(StringUtils.toString(values, delim, true));
 
         _count++;
         if ((_count / 100) * 100 == _count) {
