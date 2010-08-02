@@ -362,7 +362,7 @@ public class ReportGenerationThread implements Runnable {
                     "Text (tab delimited)", "DRAFT", uid);
 
             // convert to Excel
-            bool_obj = FileUtil.convertToExcel(pathname, delimeter_str);
+            bool_obj = new FileUtil().convert(pathname, delimeter_str);
 
             // create xls report record
             pathname =
@@ -1060,7 +1060,7 @@ public class ReportGenerationThread implements Runnable {
                     "Text (tab delimited)", "DRAFT", uid);
 
             // convert to Excel
-            bool_obj = FileUtil.convertToExcel(pathname, delimeter_str);
+            bool_obj = new FileUtil().convert(pathname, delimeter_str);
 
             // create xls report record
             pathname =

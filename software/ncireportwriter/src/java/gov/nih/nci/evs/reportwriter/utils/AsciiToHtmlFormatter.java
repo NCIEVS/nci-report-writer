@@ -50,12 +50,12 @@ import org.apache.poi.hssf.util.*;
  */
 
 /**
- * @author EVS Team (Kim Ong, David Yee)
+ * @author EVS Team (David Yee)
  * @version 1.0
  */
 
-public class FileUtil extends BaseFileFormatter {
-    private static Logger _logger = Logger.getLogger(FileUtil.class);
+public class AsciiToHtmlFormatter extends BaseFileFormatter {
+    private static Logger _logger = Logger.getLogger(AsciiToHtmlFormatter.class);
     private static final int MAX_WIDTH = 30;
     private static final int MAX_CELL_WIDTH = 50;
     private static final int MAX_CODE_WIDTH = 10;
@@ -112,7 +112,7 @@ public class FileUtil extends BaseFileFormatter {
     }
 
     public Boolean convert(String textfile, String delimiter)
-    	throws Exception {
+            throws Exception {
     	return convert2(textfile, "xls", delimiter);
     }
 
@@ -322,7 +322,7 @@ public class FileUtil extends BaseFileFormatter {
         	String infile = dir + "/FDA-SPL_Country_Code_REPORT__10.06e.txt";
             String delimiter = "\t";
             
-            new FileUtil().convert(infile, delimiter);
+            new AsciiToHtmlFormatter().convert(infile, delimiter);
             _logger.debug("Done");
         } catch (Exception e) {
             e.printStackTrace();

@@ -1,0 +1,138 @@
+package gov.nih.nci.evs.reportwriter.utils;
+
+import java.io.*;
+import java.util.*;
+
+import org.apache.log4j.*;
+
+/**
+ * <!-- LICENSE_TEXT_START -->
+ * Copyright 2008,2009 NGIT. This software was developed in conjunction
+ * with the National Cancer Institute, and so to the extent government
+ * employees are co-authors, any rights in such works shall be subject
+ * to Title 17 of the United States Code, section 105.
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions
+ * are met:
+ *   1. Redistributions of source code must retain the above copyright
+ *      notice, this list of conditions and the disclaimer of Article 3,
+ *      below. Redistributions in binary form must reproduce the above
+ *      copyright notice, this list of conditions and the following
+ *      disclaimer in the documentation and/or other materials provided
+ *      with the distribution.
+ *   2. The end-user documentation included with the redistribution,
+ *      if any, must include the following acknowledgment:
+ *      "This product includes software developed by NGIT and the National
+ *      Cancer Institute."   If no such end-user documentation is to be
+ *      included, this acknowledgment shall appear in the software itself,
+ *      wherever such third-party acknowledgments normally appear.
+ *   3. The names "The National Cancer Institute", "NCI" and "NGIT" must
+ *      not be used to endorse or promote products derived from this software.
+ *   4. This license does not authorize the incorporation of this software
+ *      into any third party proprietary programs. This license does not
+ *      authorize the recipient to use any trademarks owned by either NCI
+ *      or NGIT
+ *   5. THIS SOFTWARE IS PROVIDED "AS IS," AND ANY EXPRESSED OR IMPLIED
+ *      WARRANTIES, (INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
+ *      OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE) ARE
+ *      DISCLAIMED. IN NO EVENT SHALL THE NATIONAL CANCER INSTITUTE,
+ *      NGIT, OR THEIR AFFILIATES BE LIABLE FOR ANY DIRECT, INDIRECT,
+ *      INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING,
+ *      BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
+ *      LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
+ *      CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT
+ *      LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN
+ *      ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+ *      POSSIBILITY OF SUCH DAMAGE.
+ * <!-- LICENSE_TEXT_END -->
+ */
+
+/**
+ * @author EVS Team (David Yee)
+ * @version 1.0
+ */
+
+public abstract class BaseFileFormatter {
+	protected static Logger _logger = Logger.getLogger(BaseFileFormatter.class);
+
+	protected Boolean convert2(String textfile, String toExt, String delimiter)
+			throws Exception {
+		int i = textfile.lastIndexOf(".");
+		String excelfile = textfile.substring(0, i) + "." + toExt;
+		return convert(textfile, delimiter, excelfile);
+	}
+
+	protected abstract Boolean convert(String infile, String delimiter,
+			String outfile) throws Exception;
+
+	protected Vector<String> parseData(String line, String tab) {
+		Vector<String> data_vec = new Vector<String>();
+		// Note(GF20743): Delimiters are returned as tokens.
+		// First value could be a tab.
+		StringTokenizer st = new StringTokenizer(line, tab, true);
+		boolean lastWasDelim = true;
+		while (st.hasMoreTokens()) {
+			String value = st.nextToken();
+			if (value.equals(tab)) {
+				if (lastWasDelim) {
+					data_vec.add("");
+				}
+				lastWasDelim = true;
+			} else {
+				data_vec.add(value);
+				lastWasDelim = false;
+			}
+		}
+		return data_vec;
+	}
+
+	protected Vector<String> getColumnHeadings(String textfile, String delimiter)
+			throws Exception {
+		File file = new File(textfile);
+		FileInputStream fis = new FileInputStream(file);
+		BufferedInputStream bis = new BufferedInputStream(fis);
+		BufferedReader br = new BufferedReader(new InputStreamReader(bis));
+
+		String line = br.readLine();
+		Vector<String> v = parseData(line, delimiter);
+		br.close();
+		return v;
+	}
+
+	protected Vector<Integer> getColumnWidths(String textfile, String delimiter)
+			throws Exception {
+		Vector<Integer> width_vec = new Vector<Integer>();
+		File file = new File(textfile);
+
+		FileInputStream fis = new FileInputStream(file);
+		BufferedInputStream bis = new BufferedInputStream(fis);
+		BufferedReader br = new BufferedReader(new InputStreamReader(bis));
+
+		// Header line
+		String line = br.readLine();
+		Vector<String> v = parseData(line, delimiter);
+		for (int i = 0; i < v.size(); i++)
+			width_vec.add(new Integer(0));
+
+		while (true) {
+			line = br.readLine();
+			if (line == null)
+				break;
+			if (line.length() <= 0)
+				continue;
+			v = parseData(line, delimiter);
+			for (int k = 0; k < v.size(); k++) {
+				String s = (String) v.elementAt(k);
+				int len = s.length();
+				Integer max_len_obj = (Integer) width_vec.elementAt(k);
+				int max_len = max_len_obj.intValue();
+				if (max_len < len) {
+					width_vec.setElementAt(new Integer(len), k);
+				}
+			}
+		}
+
+		br.close();
+		return width_vec;
+	}
+}
