@@ -11,7 +11,7 @@ public class FileUtilTest {
             String dir = "C:/apps/evs/ncireportwriter-webapp/downloads";
             String txtFile = dir + "/CDISC_SDTM_Terminology__09.12d.txt";
             String delimiter = "\t";
-            FileUtil.convertToExcel(txtFile, delimiter);
+            new FileUtil().convert(txtFile, delimiter);
             _logger.debug("Done.");
         } catch (Exception e) {
             e.printStackTrace();
