@@ -135,4 +135,79 @@ public abstract class BaseFileFormatter {
 		br.close();
 		return width_vec;
 	}
+	
+    protected Boolean[] findWrappedColumns(String textfile,
+        String delimiter, int maxLength) throws Exception {
+        Boolean[] a = null;
+        File file = new File(textfile);
+        FileInputStream fis = new FileInputStream(file);
+        BufferedInputStream bis = new BufferedInputStream(fis);
+        BufferedReader br = new BufferedReader(new InputStreamReader(bis));
+
+        int rownum = 0;
+        while (true) {
+            String line = br.readLine();
+            if (line == null)
+                break;
+            if (line.length() <= 0)
+                continue;
+            Vector<String> v = parseData(line, delimiter);
+            if (rownum == 0) {
+                a = new Boolean[v.size()];
+                for (int i = 0; i < v.size(); i++) {
+                    a[i] = Boolean.FALSE;
+                }
+            } else {
+                for (int i = 0; i < v.size(); i++) {
+                    String s = (String) v.elementAt(i);
+                    if (s.length() > maxLength && a[i].equals(Boolean.FALSE)) {
+                        a[i] = Boolean.TRUE;
+                    }
+                }
+            }
+            rownum++;
+        }
+        br.close();
+        return a;
+    }
+
+    protected int getHeightInPoints(Vector<String> v, boolean adjustHeight,
+    		int maxCellWidth) {
+        int num_lines = 1;
+        if (! adjustHeight)
+            return num_lines;
+
+        for (int i = 0; i < v.size(); i++) {
+            String s = (String) v.elementAt(i);
+            int len = s.length();
+            int lines = len / maxCellWidth;
+            if (lines > num_lines)
+                num_lines = lines;
+        }
+        return num_lines;
+    }
+
+    protected int findColumnIndicator(Vector<String> headings, String label) {
+        for (int i = 0; i < headings.size(); i++) {
+            String heading = headings.elementAt(i);
+            if (heading.contains(label))
+                return i;
+        }
+        return -1;
+    }
+    
+    protected int getMaxTokenLength(String heading) {
+        if (heading == null || heading.length() == 0)
+            return 0;
+        int max = 0;
+        String delimiter = " ";
+        Vector<String> v = parseData(heading, delimiter);
+        for (int k = 0; k < v.size(); k++) {
+            String s = (String) v.elementAt(k);
+            int len = s.length();
+            if (len > max)
+                max = len;
+        }
+        return max;
+    }
 }

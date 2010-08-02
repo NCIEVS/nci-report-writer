@@ -61,68 +61,9 @@ public class AsciiToHtmlFormatter extends BaseFileFormatter {
     private static final int MAX_CODE_WIDTH = 10;
     private static boolean ADJUST_HEIGHT = false;
 
-    public Boolean[] findWrappedColumns(String textfile,
-        String delimiter, int maxLength) throws Exception {
-        Boolean[] a = null;
-        File file = new File(textfile);
-        FileInputStream fis = new FileInputStream(file);
-        BufferedInputStream bis = new BufferedInputStream(fis);
-        BufferedReader br = new BufferedReader(new InputStreamReader(bis));
-
-        int rownum = 0;
-        while (true) {
-            String line = br.readLine();
-            if (line == null)
-                break;
-            if (line.length() <= 0)
-                continue;
-            Vector<String> v = parseData(line, delimiter);
-            if (rownum == 0) {
-                a = new Boolean[v.size()];
-                for (int i = 0; i < v.size(); i++) {
-                    a[i] = Boolean.FALSE;
-                }
-            } else {
-                for (int i = 0; i < v.size(); i++) {
-                    String s = (String) v.elementAt(i);
-                    if (s.length() > maxLength && a[i].equals(Boolean.FALSE)) {
-                        a[i] = Boolean.TRUE;
-                    }
-                }
-            }
-            rownum++;
-        }
-        br.close();
-        return a;
-    }
-
-    public int getHeightInPoints(Vector<String> v) {
-        int num_lines = 1;
-        if (!ADJUST_HEIGHT)
-            return num_lines;
-
-        for (int i = 0; i < v.size(); i++) {
-            String s = (String) v.elementAt(i);
-            int len = s.length();
-            int lines = len / MAX_CELL_WIDTH;
-            if (lines > num_lines)
-                num_lines = lines;
-        }
-        return num_lines;
-    }
-
     public Boolean convert(String textfile, String delimiter)
             throws Exception {
-    	return convert2(textfile, "xls", delimiter);
-    }
-
-    public int findColumnIndicator(Vector<String> headings, String label) {
-        for (int i = 0; i < headings.size(); i++) {
-            String heading = headings.elementAt(i);
-            if (heading.contains(label))
-                return i;
-        }
-        return -1;
+    	return convert2(textfile, "htm", delimiter);
     }
 
     public Boolean convert(String textfile, String delimiter,
@@ -230,7 +171,8 @@ public class AsciiToHtmlFormatter extends BaseFileFormatter {
             } else {
                 wr.setHeightInPoints(baseline_height);
                 if (ADJUST_HEIGHT) {
-                    int num_lines = getHeightInPoints(v);
+                    int num_lines = getHeightInPoints(v, 
+                    		ADJUST_HEIGHT, MAX_CELL_WIDTH);
                     wr.setHeightInPoints(baseline_height * num_lines);
                 }
             }
@@ -299,21 +241,6 @@ public class AsciiToHtmlFormatter extends BaseFileFormatter {
         wb.write(fout);
         fout.close();
         return Boolean.TRUE;
-    }
-
-    public int getMaxTokenLength(String heading) {
-        if (heading == null || heading.length() == 0)
-            return 0;
-        int max = 0;
-        String delimiter = " ";
-        Vector<String> v = parseData(heading, delimiter);
-        for (int k = 0; k < v.size(); k++) {
-            String s = (String) v.elementAt(k);
-            int len = s.length();
-            if (len > max)
-                max = len;
-        }
-        return max;
     }
 
     public static void main(String[] args) {
