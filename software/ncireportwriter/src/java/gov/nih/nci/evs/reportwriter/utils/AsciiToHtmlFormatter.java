@@ -60,36 +60,29 @@ public class AsciiToHtmlFormatter extends BaseFileFormatter {
     	return convert2(textfile, "htm", delimiter);
     }
     
-    private void write(FileOutputStream fout, String text) throws Exception {
-    	fout.write(text.getBytes());
+    private void header(MyFileOutputStream out, String filename) throws Exception {
+        out.writeln_normal("<html>");
+        out.writeln_indent("<head>");
+        out.writeln_indent("<title>" + filename + "</title>");
+        out.writeln_undent("</head>");
+        out.writeln_normal("<body>");
+        out.writeln_indent("<table border=\"1\" width=\"100%\">");
     }
     
-    private void writeln(FileOutputStream fout, String text) throws Exception {
-    	write(fout, text + "\n");
-    }
-    
-    private void header(FileOutputStream fout, String filename) throws Exception {
-        writeln(fout, "<html>");
-        writeln(fout, "  <head>");
-        writeln(fout, "    <title>" + filename + "</title>");
-        writeln(fout, "  </head>");
-        writeln(fout, "  <body>");
-        writeln(fout, "    <table border=\"1\" width=\"100%\">");
-    }
-    
-    private void footer(FileOutputStream fout) throws Exception {
-        writeln(fout, "    </table>");
-        writeln(fout, "  </body>");
-        writeln(fout, "</html>");
+    private void footer(MyFileOutputStream out) throws Exception {
+        out.writeln_undent("</table>");
+        out.writeln_undent("</body>");
+        out.writeln_undent("</html>");
     }
 
     public Boolean convert(String textfile, String delimiter,
         String outfile) throws Exception {
 		BufferedReader br = getBufferReader(textfile);
-        FileOutputStream fout = new FileOutputStream(outfile);
+        MyFileOutputStream out = new MyFileOutputStream(outfile);
 
-        header(fout, outfile);
+        header(out, outfile);
         int row = 0;
+        out.indent();
         while (true) {
             String line = br.readLine();
             if (line == null)
@@ -98,18 +91,20 @@ public class AsciiToHtmlFormatter extends BaseFileFormatter {
                 continue;
 
             Vector<String> v = parseData(line, delimiter);
-            writeln(fout, "<tr>");
+            out.writeln_normal("<tr>");
+            out.indent();
             for (int col = 0; col < v.size(); col++) {
             	if (row <= 0)
-            		writeln(fout, "  <th>" + v.get(col) + "</th>");
-            	else writeln(fout, "  <td>" + v.get(col) + "</td>");
+            		out.writeln_normal("<th>" + v.get(col) + "</th>");
+            	else out.writeln_normal("<td>" + v.get(col) + "</td>");
             }
-            writeln(fout, "</tr>");
+            out.undent();
+            out.writeln_normal("</tr>");
             row++;
         }
         br.close();
-        footer(fout);
-        fout.close();
+        footer(out);
+        out.close();
         return Boolean.TRUE;
     }
 
