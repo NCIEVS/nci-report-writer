@@ -24,6 +24,17 @@ import gov.nih.nci.evs.utils.*;
 import org.LexGrid.LexBIG.Exceptions.*;
 import org.apache.log4j.*;
 
+
+import org.lexgrid.valuesets.LexEVSValueSetDefinitionServices;
+import org.lexgrid.valuesets.impl.LexEVSValueSetDefinitionServicesImpl;
+
+import org.LexGrid.valueSets.ValueSetDefinition;
+import org.LexGrid.valueSets.types.DefinitionOperator;
+import org.LexGrid.valueSets.DefinitionEntry;
+import org.LexGrid.valueSets.EntityReference;
+import org.lexgrid.valuesets.dto.ResolvedValueSetDefinition;
+
+
 /**
  * <!-- LICENSE_TEXT_START -->
  * Copyright 2008,2009 NGIT. This software was developed in conjunction
@@ -642,7 +653,7 @@ public class DataUtils {
     }
 
     // =========================================================================
-    public static Concept getConceptByCode(String codingSchemeName,
+    public static Entity getConceptByCode(String codingSchemeName,
         String version, String tag, String code) {
         try {
             LexBIGService lbSvc = RemoteServerUtil.createLexBIGService();
@@ -683,7 +694,7 @@ public class DataUtils {
                     (ResolvedConceptReference) matches
                         .enumerateResolvedConceptReference().nextElement();
 
-                Concept entry = ref.getReferencedEntry();
+                Entity entry = ref.getReferencedEntry();
                 return entry;
             }
         } catch (Exception e) {
@@ -707,9 +718,10 @@ public class DataUtils {
         return nvList;
     }
 
-    public static Vector<Concept> getAssociationTargets(String scheme,
+    public static Vector<Entity> getAssociationTargets(String scheme,
         String version, String code, String assocCode) {
-        return getAssociations(true, scheme, version, code, assocCode);
+		boolean targetToSource = false;
+        return getAssociations(targetToSource, scheme, version, code, assocCode);
     }
 
     public static ResolvedConceptReferenceList getNext(
@@ -719,15 +731,15 @@ public class DataUtils {
 
     /**
      * Dump_matches to output, for debug purposes
-     * 
+     *
      * @param iterator
      *            the iterator
      * @param maxToReturn
      *            the max to return
      */
-    public static Vector<Concept> resolveIterator(
+    public static Vector<Entity> resolveIterator(
         ResolvedConceptReferencesIterator iterator, int maxToReturn) {
-        Vector<Concept> v = new Vector<Concept>();
+        Vector<Entity> v = new Vector<Entity>();
         if (iterator == null) {
             _logger.debug("No match.");
             return v;
@@ -742,7 +754,7 @@ public class DataUtils {
                     rcrl.getResolvedConceptReference();
                 for (int i = 0; i < rcra.length; i++) {
                     ResolvedConceptReference rcr = rcra[i];
-                    Concept ce = rcr.getReferencedEntry();
+                    Entity ce = rcr.getReferencedEntry();
                     // _logger.debug("Iteration " + iteration + " " +
                     // ce.getId() + " " +
                     // ce.getEntityDescription().getContent());
@@ -755,18 +767,25 @@ public class DataUtils {
         return v;
     }
 
-    public static Vector<Concept> getAssociationSources(String scheme,
+    public static Vector<Entity> getAssociationSources(String scheme,
         String version, String code, String assocCode) {
-        return getAssociations(false, scheme, version, code, assocCode);
+		boolean targetToSource = true;
+        return getAssociations(targetToSource, scheme, version, code, assocCode);
     }
 
-    public static Vector<Concept> getAssociations(boolean retrieveTargets,
+    public static Vector<Entity> getAssociations(boolean targetToSource,
         String scheme, String version, String code, String assocCode) {
+
+		boolean includeRoot = false;
+		return resolveValueSet(scheme, version, code, targetToSource, assocCode, includeRoot);
+
+
+/*
         CodingSchemeVersionOrTag csvt = new CodingSchemeVersionOrTag();
         if (version != null)
             csvt.setVersion(version);
         ResolvedConceptReferenceList matches = null;
-        Vector<Concept> v = new Vector<Concept>();
+        Vector<Entity> v = new Vector<Entity>();
         try {
             LexBIGService lbSvc = RemoteServerUtil.createLexBIGService();
             CodedNodeGraph cng = lbSvc.getNodeGraph(scheme, csvt, null);
@@ -787,11 +806,12 @@ public class DataUtils {
                     new LocalNameList(), null, null, _maxReturn);
 
             if (matches.getResolvedConceptReferenceCount() > 0) {
-                Enumeration<ResolvedConceptReference> refEnum =
-                    matches.enumerateResolvedConceptReference();
+                 Enumeration refEnum =
+                     matches.enumerateResolvedConceptReference();
 
-                while (refEnum.hasMoreElements()) {
-                    ResolvedConceptReference ref = refEnum.nextElement();
+                 while (refEnum.hasMoreElements()) {
+                     ResolvedConceptReference ref = (ResolvedConceptReference) refEnum.nextElement();
+
                     AssociationList alist =
                         retrieveTargets ? ref.getSourceOf() : ref.getTargetOf();
                     if (alist == null)
@@ -818,15 +838,18 @@ public class DataUtils {
             ex.printStackTrace();
         }
         return v;
+*/
+
     }
 
-    public static Vector<Concept> getAssociationsNew(boolean retrieveTargets,
+/*
+    public static Vector<Entity> getAssociationsNew(boolean retrieveTargets,
         String scheme, String version, String code, String assocCode) {
         _logger.info("Method: getAssociationsNew");
         CodingSchemeVersionOrTag csvt = new CodingSchemeVersionOrTag();
         if (version != null)
             csvt.setVersion(version);
-        Vector<Concept> v = new Vector<Concept>();
+        Vector<Entity> v = new Vector<Entity>();
         try {
             LexBIGService lbSvc = RemoteServerUtil.createLexBIGService();
             CodedNodeGraph cng = lbSvc.getNodeGraph(scheme, csvt, null);
@@ -863,7 +886,7 @@ public class DataUtils {
         }
         return v;
     }
-
+*/
     public static Vector<String> getSubconceptCodes2(String scheme,
         String version, String code) {
         // eturned bar delimited name|code
@@ -995,9 +1018,9 @@ public class DataUtils {
         }
     }
 
-    public static Vector<Concept> resolveIterator(
+    public static Vector<Entity> resolveIterator(
         ResolvedConceptReferencesIterator iterator, int maxToReturn, String code) {
-        Vector<Concept> v = new Vector<Concept>();
+        Vector<Entity> v = new Vector<Entity>();
         if (iterator == null) {
             _logger.info("No match.");
             return v;
@@ -1013,7 +1036,7 @@ public class DataUtils {
                     rcrl.getResolvedConceptReference();
                 for (int i = 0; i < rcra.length; i++) {
                     ResolvedConceptReference rcr = rcra[i];
-                    Concept ce = rcr.getReferencedEntry();
+                    Entity ce = rcr.getReferencedEntry();
                     if (code == null) {
                         v.add(ce);
                     } else if (ce.getEntityCode().compareTo(code) != 0) {
@@ -1029,9 +1052,9 @@ public class DataUtils {
 
     private static final int RESOLVE_ITERATOR_MAX_RETURN = 100;
 
-    public static Vector<Concept> resolveIteratorNew(
+    public static Vector<Entity> resolveIteratorNew(
         ResolvedConceptReferencesIterator iterator) throws Exception {
-        Vector<Concept> list = new Vector<Concept>();
+        Vector<Entity> list = new Vector<Entity>();
         if (iterator == null)
             return list;
 
@@ -1041,7 +1064,7 @@ public class DataUtils {
                 iterator.next(RESOLVE_ITERATOR_MAX_RETURN)
                     .getResolvedConceptReference();
             for (ResolvedConceptReference ref : refs) {
-                Concept ce = ref.getReferencedEntry();
+                Entity ce = ref.getReferencedEntry();
                 list.add(ce);
                 ++lastResolved;
             }
@@ -1062,7 +1085,7 @@ public class DataUtils {
         String hierarchicalAssoName =
             (String) hierarchicalAssoName_vec.elementAt(0);
         // KLO, 01/23/2009
-        // Vector<Concept> superconcept_vec = util.getAssociationSources(scheme,
+        // Vector<Entity> superconcept_vec = util.getAssociationSources(scheme,
         // version, code, hierarchicalAssoName);
         Vector<String> superconcept_vec =
             getAssociationSourceCodes(scheme, version, code,
@@ -1099,11 +1122,19 @@ public class DataUtils {
                     null, null, _maxReturn);
 
             if (matches.getResolvedConceptReferenceCount() > 0) {
+				/*
                 Enumeration<ResolvedConceptReference> refEnum =
                     matches.enumerateResolvedConceptReference();
 
                 while (refEnum.hasMoreElements()) {
                     ResolvedConceptReference ref = refEnum.nextElement();
+                */
+                Enumeration refEnum =
+                    matches.enumerateResolvedConceptReference();
+
+                while (refEnum.hasMoreElements()) {
+                    ResolvedConceptReference ref = (ResolvedConceptReference) refEnum.nextElement();
+
                     AssociationList targetof = ref.getTargetOf();
                     if (targetof == null)
                         continue;
@@ -1417,7 +1448,7 @@ public class DataUtils {
         return nvList;
     }
 
-    public static Vector<org.LexGrid.concepts.Concept> restrictToMatchingProperty(
+    public static Vector<org.LexGrid.concepts.Entity> restrictToMatchingProperty(
         String codingSchemeName, String version, Vector<String> property_vec,
         Vector<String> source_vec, Vector<String> qualifier_name_vec,
         Vector<String> qualifier_value_vec, java.lang.String matchText,
@@ -1436,7 +1467,7 @@ public class DataUtils {
             matchAlgorithm, language, maxToReturn);
     }
 
-    public static Vector<org.LexGrid.concepts.Concept> restrictToProperty(
+    public static Vector<org.LexGrid.concepts.Entity> restrictToProperty(
         String codingSchemeName, String version, Vector<String> property_vec,
         Vector<String> source_vec, Vector<String> qualifier_name_vec,
         Vector<String> qualifier_value_vec, int maxToReturn) {
@@ -1450,15 +1481,15 @@ public class DataUtils {
             propertyTypes, sourceList, qualifierList, maxToReturn);
     }
 
-    public static Vector<org.LexGrid.concepts.Concept> restrictToProperty(
+    public static Vector<org.LexGrid.concepts.Entity> restrictToProperty(
         String codingSchemeName, String version,
 
         LocalNameList propertyList, CodedNodeSet.PropertyType[] propertyTypes,
         LocalNameList sourceList, NameAndValueList qualifierList,
         int maxToReturn) {
         CodedNodeSet cns = null;
-        Vector<org.LexGrid.concepts.Concept> v =
-            new Vector<org.LexGrid.concepts.Concept>();
+        Vector<org.LexGrid.concepts.Entity> v =
+            new Vector<org.LexGrid.concepts.Entity>();
         try {
             CodingSchemeVersionOrTag versionOrTag =
                 new CodingSchemeVersionOrTag();
@@ -1511,15 +1542,15 @@ public class DataUtils {
         return v;
     }
 
-    public static Vector<org.LexGrid.concepts.Concept> restrictToMatchingProperty(
+    public static Vector<org.LexGrid.concepts.Entity> restrictToMatchingProperty(
         String codingSchemeName, String version, LocalNameList propertyList,
         CodedNodeSet.PropertyType[] propertyTypes, LocalNameList sourceList,
         NameAndValueList qualifierList, java.lang.String matchText,
         java.lang.String matchAlgorithm, java.lang.String language,
         int maxToReturn) {
         CodedNodeSet cns = null;
-        Vector<org.LexGrid.concepts.Concept> v =
-            new Vector<org.LexGrid.concepts.Concept>();
+        Vector<org.LexGrid.concepts.Entity> v =
+            new Vector<org.LexGrid.concepts.Entity>();
         try {
             CodingSchemeVersionOrTag versionOrTag =
                 new CodingSchemeVersionOrTag();
@@ -1578,16 +1609,16 @@ public class DataUtils {
         return toConcept(SortUtils.quickSort(v));
     }
 
-    private static Vector<Concept> toConcept(Vector<?> v) {
+    private static Vector<Entity> toConcept(Vector<?> v) {
         Iterator<?> iterator = v.iterator();
-        Vector<Concept> newV = new Vector<Concept>();
+        Vector<Entity> newV = new Vector<Entity>();
         while (iterator.hasNext()) {
-            Concept concept = (Concept) iterator.next();
+            Entity concept = (Entity) iterator.next();
             newV.add(concept);
         }
         return newV;
     }
-    
+
     public static class SynonymInfo {
         public String name = "";
         public String type = "";
@@ -1600,7 +1631,7 @@ public class DataUtils {
         }
     }
 
-    public static Vector<SynonymInfo> getSynonyms(Concept concept) {
+    public static Vector<SynonymInfo> getSynonyms(Entity concept) {
         Vector<SynonymInfo> v = new Vector<SynonymInfo>();
         if (concept == null)
             return v;
@@ -1633,4 +1664,93 @@ public class DataUtils {
         SortUtils.quickSort(v);
         return v;
     }
+
+    //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    // Value Set implementation
+    //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+	private static LexEVSValueSetDefinitionServices getValueSetDefinitionService(){
+		// To be modified for distributed call:
+        return LexEVSValueSetDefinitionServicesImpl.defaultInstance();
+	}
+
+	public static Vector resolveValueSet(String codingScheme, String version, String code, boolean target2Source, String referenceAssociation, boolean includeRoot) {
+		ValueSetDefinition vsd = new ValueSetDefinition();
+		String valueSetDefinitionURI = codingScheme + "_" + code + "_" + referenceAssociation + "_" + target2Source;
+		if (version != null) {
+			valueSetDefinitionURI = codingScheme + "_" + version + "_" + code + "_" + referenceAssociation + "_" + target2Source;
+		}
+		try {
+			vsd.setValueSetDefinitionURI(valueSetDefinitionURI);
+		} catch (Exception e) {
+			e.printStackTrace();
+			System.out.println("ERROR: setValueSetDefinitionURI throws exceptions. ");
+			return null;
+		}
+
+		String valueSetDefinitionName = valueSetDefinitionURI;
+		vsd.setValueSetDefinitionName(valueSetDefinitionName);
+        vsd.setDefaultCodingScheme(codingScheme);
+
+        DefinitionEntry definitionEntry = new DefinitionEntry();
+		definitionEntry.setRuleOrder(new java.lang.Long(1));
+		definitionEntry.setOperator(DefinitionOperator.OR);
+
+		EntityReference entity = new EntityReference();
+		entity.setEntityCode(code);
+		entity.setReferenceAssociation(referenceAssociation);
+
+		Boolean getLeafOnly = Boolean.FALSE;
+		entity.setLeafOnly(getLeafOnly);
+
+		Boolean transitiveClosure = Boolean.FALSE;
+		entity.setTransitiveClosure(transitiveClosure);
+
+		Boolean targetToSource = new Boolean(target2Source);
+		entity.setTargetToSource(targetToSource);
+
+		definitionEntry.setEntityReference(entity);
+		vsd.addDefinitionEntry(definitionEntry);
+
+        if (!includeRoot) {
+			DefinitionEntry definitionEntry_root = new DefinitionEntry();
+			definitionEntry_root.setRuleOrder(new java.lang.Long(2));
+			definitionEntry_root.setOperator(DefinitionOperator.SUBTRACT);
+			EntityReference entity_root = new EntityReference();
+			entity_root.setEntityCode(code);
+			definitionEntry_root.setEntityReference(entity_root);
+			vsd.addDefinitionEntry(definitionEntry_root);
+	    }
+
+
+		Vector v = new Vector();
+        try {
+			AbsoluteCodingSchemeVersionReferenceList csvList = new AbsoluteCodingSchemeVersionReferenceList();
+			csvList.addAbsoluteCodingSchemeVersionReference(Constructors.createAbsoluteCodingSchemeVersionReference(codingScheme, version));
+			ResolvedValueSetDefinition rvdDef = getValueSetDefinitionService().resolveValueSetDefinition(vsd, csvList, null, null);
+
+			if (rvdDef != null) {
+				Set<String> codes = new HashSet<String>();
+				while (rvdDef.getResolvedConceptReferenceIterator().hasNext())
+				{
+					ResolvedConceptReference rcr = rvdDef.getResolvedConceptReferenceIterator().next();
+					Entity concept = rcr.getReferencedEntry();
+					if (concept == null) {
+						System.out.println("rcr.getReferencedEntry() returns NULL");
+					} else {
+					    v.add(concept);
+					}
+				}
+		    } else {
+				System.out.println("Unable to resolveValueSetDefinition??");
+			}
+
+		} catch (Exception ex) {
+			ex.printStackTrace();
+			return null;
+		}
+
+		return v;
+	}
+
+
 }

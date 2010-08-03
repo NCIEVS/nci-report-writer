@@ -13,6 +13,7 @@ import org.apache.log4j.*;
 import gov.nih.nci.evs.reportwriter.properties.*;
 import gov.nih.nci.evs.utils.*;
 
+
 /**
  * <!-- LICENSE_TEXT_START -->
  * Copyright 2008,2009 NGIT. This software was developed in conjunction
@@ -300,7 +301,7 @@ public class ReportGenerationThread implements Runnable {
             version = standardReportTemplate.getCodingSchemeVersion();
 
             String code = standardReportTemplate.getRootConceptCode();
-            Concept defining_root_concept =
+            Entity defining_root_concept =
                 DataUtils.getConceptByCode(codingSchemeName,
                     codingSchemeVersion, null, rootConceptCode);
 
@@ -406,7 +407,7 @@ public class ReportGenerationThread implements Runnable {
     }
 
     private void writeColumnData(PrintWriter pw, String scheme, String version,
-        Concept defining_root_concept, Concept associated_concept, Concept c,
+        Entity defining_root_concept, Entity associated_concept, Entity c,
         String delim, ReportColumn[] cols, boolean firstColRequired) {
 
         if (firstColRequired) {
@@ -444,7 +445,7 @@ public class ReportGenerationThread implements Runnable {
     SpecialCases.CDISCExtensibleInfo _cdiscInfo = null;
 
     private void writeColumnData(PrintWriter pw, String scheme, String version,
-        Concept defining_root_concept, Concept associated_concept, Concept c,
+        Entity defining_root_concept, Entity associated_concept, Entity c,
         String delim, ReportColumn[] cols) {
         Vector<String> values = new Vector<String>();
         _cdiscInfo.isExtensibleValue = false;
@@ -474,13 +475,13 @@ public class ReportGenerationThread implements Runnable {
     }
 
     private void traverse(PrintWriter pw, String scheme, String version,
-        String tag, Concept defining_root_concept, String code,
+        String tag, Entity defining_root_concept, String code,
         String hierarchyAssociationName, String associationCode,
         boolean direction, int level, int maxLevel, ReportColumn[] cols) {
         if (maxLevel != -1 && level > maxLevel)
             return;
 
-        Concept root = DataUtils.getConceptByCode(scheme, version, tag, code);
+        Entity root = DataUtils.getConceptByCode(scheme, version, tag, code);
         if (root == null) {
             _logger.warn("Concept with code " + code + " not found.");
             return;
@@ -491,7 +492,7 @@ public class ReportGenerationThread implements Runnable {
 
         String delim = "\t";
 
-        Vector<Concept> v = new Vector<Concept>();
+        Vector<Entity> v = new Vector<Entity>();
         if (direction) {
             v =
                 DataUtils.getAssociationTargets(scheme, version, root
@@ -508,13 +509,13 @@ public class ReportGenerationThread implements Runnable {
         _logger.debug("Subset size: " + v.size());
         for (int i = 0; i < v.size(); i++) {
             // subset member element
-            Concept c = (Concept) v.elementAt(i);
+            Entity c = (Entity) v.elementAt(i);
             writeColumnData(pw, scheme, version, defining_root_concept, root,
                 c, delim, cols);
         }
 
         // Note: Commented on 2/24/10 (Wed). subconcept_vec size was 0.
-        // Vector<Concept> subconcept_vec =
+        // Vector<Entity> subconcept_vec =
         // DataUtils.getAssociationTargets(scheme, version, root
         // .getEntityCode(), hierarchyAssociationName);
         Vector<String> subconcept_vec =
@@ -525,7 +526,7 @@ public class ReportGenerationThread implements Runnable {
         level++;
         for (int k = 0; k < subconcept_vec.size(); k++) {
             // Note: Commented on 2/24/10 (Wed). subconcept_vec size was 0.
-            // Concept concept = (Concept) subconcept_vec.elementAt(k);
+            // Concept concept = (Entity) subconcept_vec.elementAt(k);
             // String subconcep_code = concept.getEntityCode();
             String subconcep_code = subconcept_vec.elementAt(k);
             traverse(pw, scheme, version, tag, defining_root_concept,
@@ -535,8 +536,8 @@ public class ReportGenerationThread implements Runnable {
     }
 
     public String getReportColumnValue(String scheme, String version,
-        Concept defining_root_concept, Concept associated_concept,
-        Concept node, ReportColumn rc) {
+        Entity defining_root_concept, Entity associated_concept,
+        Entity node, ReportColumn rc) {
         String field_Id = rc.getFieldId();
         String property_name = rc.getPropertyName();
         String qualifier_name = rc.getQualifierName();
@@ -591,7 +592,7 @@ public class ReportGenerationThread implements Runnable {
             return associated_concept.getEntityCode();
         }
 
-        Concept concept = node;
+        Entity concept = node;
         if (property_name != null
             && property_name.compareTo("Contributing_Source") == 0) {
             concept = defining_root_concept;
@@ -1038,7 +1039,7 @@ public class ReportGenerationThread implements Runnable {
             int maxToReturn = 10000;
             String language = null;
 
-            Vector<Concept> concept_vec =
+            Vector<Entity> concept_vec =
                 DataUtils.restrictToMatchingProperty(codingSchemeName, version,
                     property_vec, source_vec, qualifier_name_vec,
                     qualifier_value_vec, matchText, matchAlgorithm, language,
@@ -1046,7 +1047,7 @@ public class ReportGenerationThread implements Runnable {
 
             String delim = "\t";
             for (int i = 0; i < concept_vec.size(); i++) {
-                Concept c = (Concept) concept_vec.elementAt(i);
+                Entity c = (Entity) concept_vec.elementAt(i);
                 writeColumnData(pw, codingSchemeName, version, null, null, c,
                     delim, cols, true);
             }

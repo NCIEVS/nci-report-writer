@@ -13,42 +13,42 @@ import org.apache.log4j.*;
 
 /**
  * <!-- LICENSE_TEXT_START -->
- * Copyright 2008,2009 NGIT. This software was developed in conjunction 
- * with the National Cancer Institute, and so to the extent government 
- * employees are co-authors, any rights in such works shall be subject 
+ * Copyright 2008,2009 NGIT. This software was developed in conjunction
+ * with the National Cancer Institute, and so to the extent government
+ * employees are co-authors, any rights in such works shall be subject
  * to Title 17 of the United States Code, section 105.
- * Redistribution and use in source and binary forms, with or without 
- * modification, are permitted provided that the following conditions 
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions
  * are met:
- *   1. Redistributions of source code must retain the above copyright 
- *      notice, this list of conditions and the disclaimer of Article 3, 
- *      below. Redistributions in binary form must reproduce the above 
- *      copyright notice, this list of conditions and the following 
- *      disclaimer in the documentation and/or other materials provided 
+ *   1. Redistributions of source code must retain the above copyright
+ *      notice, this list of conditions and the disclaimer of Article 3,
+ *      below. Redistributions in binary form must reproduce the above
+ *      copyright notice, this list of conditions and the following
+ *      disclaimer in the documentation and/or other materials provided
  *      with the distribution.
- *   2. The end-user documentation included with the redistribution, 
+ *   2. The end-user documentation included with the redistribution,
  *      if any, must include the following acknowledgment:
- *      "This product includes software developed by NGIT and the National 
+ *      "This product includes software developed by NGIT and the National
  *      Cancer Institute."   If no such end-user documentation is to be
  *      included, this acknowledgment shall appear in the software itself,
  *      wherever such third-party acknowledgments normally appear.
- *   3. The names "The National Cancer Institute", "NCI" and "NGIT" must 
+ *   3. The names "The National Cancer Institute", "NCI" and "NGIT" must
  *      not be used to endorse or promote products derived from this software.
  *   4. This license does not authorize the incorporation of this software
- *      into any third party proprietary programs. This license does not 
- *      authorize the recipient to use any trademarks owned by either NCI 
- *      or NGIT 
- *   5. THIS SOFTWARE IS PROVIDED "AS IS," AND ANY EXPRESSED OR IMPLIED 
- *      WARRANTIES, (INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES 
- *      OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE) ARE 
+ *      into any third party proprietary programs. This license does not
+ *      authorize the recipient to use any trademarks owned by either NCI
+ *      or NGIT
+ *   5. THIS SOFTWARE IS PROVIDED "AS IS," AND ANY EXPRESSED OR IMPLIED
+ *      WARRANTIES, (INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
+ *      OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE) ARE
  *      DISCLAIMED. IN NO EVENT SHALL THE NATIONAL CANCER INSTITUTE,
- *      NGIT, OR THEIR AFFILIATES BE LIABLE FOR ANY DIRECT, INDIRECT, 
- *      INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, 
- *      BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; 
- *      LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER 
- *      CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT 
- *      LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN 
- *      ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE 
+ *      NGIT, OR THEIR AFFILIATES BE LIABLE FOR ANY DIRECT, INDIRECT,
+ *      INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING,
+ *      BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
+ *      LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
+ *      CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT
+ *      LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN
+ *      ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  *      POSSIBILITY OF SUCH DAMAGE.
  * <!-- LICENSE_TEXT_END -->
  */
@@ -63,30 +63,30 @@ public class SpecialCases {
 
     public static class CDRHInfo {
         String value = null;
-        Concept associated_concept = null;
+        Entity associated_concept = null;
 
         public CDRHInfo(String value) {
             this.value = value;
         }
 
-        public CDRHInfo(Concept associated_concept) {
+        public CDRHInfo(Entity associated_concept) {
             this.associated_concept = associated_concept;
         }
     }
 
     public static class CDRH {
         public static CDRHInfo getAssociatedConcept(String label,
-            String scheme, String version, Concept node) {
+            String scheme, String version, Entity node) {
             if (label.indexOf("[CDRH] PARENT") < 0)
                 return null;
 
-            Vector<Concept> v =
+            Vector<Entity> v =
                 DataUtils.getAssociationTargets(scheme, version, node
                     .getEntityCode(), "A10");
             if (v == null || v.size() <= 0)
                 return new CDRHInfo(""); // Previous: Not Available
 
-            Concept associated_concept = (Concept) v.elementAt(0);
+            Entity associated_concept = (Entity) v.elementAt(0);
             return new CDRHInfo(associated_concept);
         }
 
@@ -127,8 +127,8 @@ public class SpecialCases {
         private static final String CODELIST_NAME_LABEL = "Codelist Name";
         private static final String SUBMISSION_LABEL = "Submission";
 
-        public static String getSubmissionValue(String label, Concept node,
-            Concept associated_concept, String delimiter) {
+        public static String getSubmissionValue(String label, Entity node,
+            Entity associated_concept, String delimiter) {
             try {
                 if (!label.contains(SUBMISSION_LABEL))
                     return null;
@@ -146,12 +146,12 @@ public class SpecialCases {
         public static String getPreferredTerm(String codingScheme,
             String version, String code, String associatedCode)
                 throws Exception {
-            Concept concept =
+            Entity concept =
                 DataUtils.getConceptByCode(codingScheme, version, null, code);
             if (concept == null)
                 throw new Exception("Can not retrieve concept from code "
                     + code + ".");
-            Concept associatedConcept =
+            Entity associatedConcept =
                 DataUtils.getConceptByCode(codingScheme, version, null,
                     associatedCode);
             if (associatedConcept == null)
@@ -168,8 +168,8 @@ public class SpecialCases {
             return getPreferredTerm(concept, associatedConcept, "|");
         }
 
-        public static String getPreferredTerm(Concept concept,
-            Concept associated_concept, String delimiter) throws Exception {
+        public static String getPreferredTerm(Entity concept,
+            Entity associated_concept, String delimiter) throws Exception {
             delimiter = "; ";
             String nciABTerm = null;
             Vector<SynonymInfo> v = DataUtils.getSynonyms(associated_concept);
@@ -255,8 +255,8 @@ public class SpecialCases {
             SpecialCases.CDISCExtensibleInfo info,
             ReportGenerationThread reportGenerationThread,
             Vector<String> values, PrintWriter pw, String scheme,
-            String version, Concept defining_root_concept,
-            Concept associated_concept, Concept c, String delim,
+            String version, Entity defining_root_concept,
+            Entity associated_concept, Entity c, String delim,
             ReportColumn[] cols) {
             if (!info.isExtensibleValue)
                 return;
