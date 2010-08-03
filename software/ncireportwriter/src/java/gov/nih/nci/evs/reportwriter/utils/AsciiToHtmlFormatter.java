@@ -59,13 +59,37 @@ public class AsciiToHtmlFormatter extends BaseFileFormatter {
             throws Exception {
     	return convert2(textfile, "htm", delimiter);
     }
+    
+    private void write(FileOutputStream fout, String text) throws Exception {
+    	fout.write(text.getBytes());
+    }
+    
+    private void writeln(FileOutputStream fout, String text) throws Exception {
+    	write(fout, text + "\n");
+    }
+    
+    private void header(FileOutputStream fout, String filename) throws Exception {
+        writeln(fout, "<html>");
+        writeln(fout, "  <head>");
+        writeln(fout, "    <title>" + filename + "</title>");
+        writeln(fout, "  </head>");
+        writeln(fout, "  <body>");
+        writeln(fout, "    <table border=\"1\" width=\"100%\">");
+    }
+    
+    private void footer(FileOutputStream fout) throws Exception {
+        writeln(fout, "    </table>");
+        writeln(fout, "  </body>");
+        writeln(fout, "</html>");
+    }
 
     public Boolean convert(String textfile, String delimiter,
         String outfile) throws Exception {
 		BufferedReader br = getBufferReader(textfile);
         FileOutputStream fout = new FileOutputStream(outfile);
 
-        int rownum = 0;
+        header(fout, outfile);
+        int row = 0;
         while (true) {
             String line = br.readLine();
             if (line == null)
@@ -74,16 +98,17 @@ public class AsciiToHtmlFormatter extends BaseFileFormatter {
                 continue;
 
             Vector<String> v = parseData(line, delimiter);
-            StringBuffer buffer = new StringBuffer();
-            buffer.append("row: " + rownum + ", ");
-            for (int i = 0; i < v.size(); i++) {
-            	buffer.append(i + ":" + v.get(i) + ", ");
+            writeln(fout, "<tr>");
+            for (int col = 0; col < v.size(); col++) {
+            	if (row <= 0)
+            		writeln(fout, "  <th>" + v.get(col) + "</th>");
+            	else writeln(fout, "  <td>" + v.get(col) + "</td>");
             }
-            buffer.append("\n");
-            fout.write(buffer.toString().getBytes());
-            rownum++;
+            writeln(fout, "</tr>");
+            row++;
         }
         br.close();
+        footer(fout);
         fout.close();
         return Boolean.TRUE;
     }
