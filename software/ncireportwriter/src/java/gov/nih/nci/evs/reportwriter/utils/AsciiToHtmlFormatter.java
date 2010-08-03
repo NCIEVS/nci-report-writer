@@ -63,7 +63,7 @@ public class AsciiToHtmlFormatter extends BaseFileFormatter {
     private void header(MyFileOutputStream out, String filename) throws Exception {
         out.writeln_normal("<html>");
         out.writeln_indent("<head>");
-        out.writeln_indent("<title>" + filename + "</title>");
+        out.writeln_indent("<title>" + out.getFilename() + "</title>");
         out.writeln_undent("</head>");
         out.writeln_normal("<body>");
         out.writeln_indent("<table border=\"1\" width=\"100%\">");
