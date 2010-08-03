@@ -53,31 +53,29 @@ import org.apache.log4j.*;
  */
 
 public class AsciiToHtmlFormatter extends BaseFileFormatter {
-    private static Logger _logger = Logger.getLogger(AsciiToHtmlFormatter.class);
+    private static Logger _logger =
+        Logger.getLogger(AsciiToHtmlFormatter.class);
+    private String _ncitUrl = "http://ncit.nci.nih.gov/ncitbrowser/";
+    private Vector<Integer> _codeColumns = new Vector<Integer>();
 
-    public Boolean convert(String textfile, String delimiter)
+    public void addNcitCodeColumn(int column) {
+        if (!_codeColumns.contains(column))
+            _codeColumns.add(column);
+    }
+
+    public void setNcitUrl(String url) {
+        if (url.charAt(url.length() - 1) != '/')
+            url += "/";
+        _ncitUrl = url;
+    }
+
+    public Boolean convert(String textfile, String delimiter) throws Exception {
+        return convert2(textfile, "htm", delimiter);
+    }
+
+    public Boolean convert(String textfile, String delimiter, String outfile)
             throws Exception {
-    	return convert2(textfile, "htm", delimiter);
-    }
-    
-    private void header(MyFileOutputStream out, String filename) throws Exception {
-        out.writeln_normal("<html>");
-        out.writeln_indent("<head>");
-        out.writeln_indent("<title>" + out.getFilename() + "</title>");
-        out.writeln_undent("</head>");
-        out.writeln_normal("<body>");
-        out.writeln_indent("<table border=\"1\" width=\"100%\">");
-    }
-    
-    private void footer(MyFileOutputStream out) throws Exception {
-        out.writeln_undent("</table>");
-        out.writeln_undent("</body>");
-        out.writeln_undent("</html>");
-    }
-
-    public Boolean convert(String textfile, String delimiter,
-        String outfile) throws Exception {
-		BufferedReader br = getBufferReader(textfile);
+        BufferedReader br = getBufferReader(textfile);
         MyFileOutputStream out = new MyFileOutputStream(outfile);
 
         header(out, outfile);
@@ -94,9 +92,13 @@ public class AsciiToHtmlFormatter extends BaseFileFormatter {
             out.writeln_normal("<tr>");
             out.indent();
             for (int col = 0; col < v.size(); col++) {
-            	if (row <= 0)
-            		out.writeln_normal("<th>" + v.get(col) + "</th>");
-            	else out.writeln_normal("<td>" + v.get(col) + "</td>");
+                if (row <= 0)
+                    out.writeln_normal("<th>" + v.get(col) + "</th>");
+                else if (_codeColumns.contains(col))
+                    out.writeln_normal("<td>"
+                        + this.getNCItCodeUrl(v.get(col), false) + "</td>");
+                else
+                    out.writeln_normal("<td>" + v.get(col) + "</td>");
             }
             out.undent();
             out.writeln_normal("</tr>");
@@ -108,13 +110,47 @@ public class AsciiToHtmlFormatter extends BaseFileFormatter {
         return Boolean.TRUE;
     }
 
+    private void header(MyFileOutputStream out, String filename)
+            throws Exception {
+        out.writeln_normal("<html>");
+        out.writeln_indent("<head>");
+        out.writeln_indent("<title>" + out.getFilename() + "</title>");
+        out.writeln_undent("</head>");
+        out.writeln_normal("<body>");
+        out.writeln_indent("<table border=\"1\" width=\"100%\">");
+    }
+
+    private void footer(MyFileOutputStream out) throws Exception {
+        out.writeln_undent("</table>");
+        out.writeln_undent("</body>");
+        out.writeln_undent("</html>");
+    }
+
+    private String getNCItCodeUrl(String code, boolean separateWindow) {
+        String ncitCodeUrl =
+            _ncitUrl + "ConceptReport.jsp?dictionary=NCI%20Thesaurus"
+                + "&code=" + code;
+
+        StringBuffer buffer = new StringBuffer();
+        buffer.append("<a href=\"" + ncitCodeUrl + "\"");
+        if (separateWindow)
+            buffer.append(" target=\"_blank\"");
+        buffer.append(">");
+        buffer.append(code);
+        buffer.append("</a>");
+        return buffer.toString();
+    }
+
     public static void main(String[] args) {
         try {
-        	String dir = "C:/apps/evs/ncireportwriter-webapp/downloads";
-        	String infile = dir + "/FDA-SPL_Country_Code_REPORT__10.06e.txt";
+            String dir = "C:/apps/evs/ncireportwriter-webapp/downloads";
+            String infile = dir + "/FDA-SPL_Country_Code_REPORT__10.06e.txt";
             String delimiter = "\t";
-            
-            new AsciiToHtmlFormatter().convert(infile, delimiter);
+
+            AsciiToHtmlFormatter formatter = new AsciiToHtmlFormatter();
+            formatter.setNcitUrl("http://ncit-dev.nci.nih.gov/ncitbrowser/");
+            formatter.addNcitCodeColumn(1);
+            formatter.convert(infile, delimiter);
             _logger.debug("Done");
         } catch (Exception e) {
             e.printStackTrace();
