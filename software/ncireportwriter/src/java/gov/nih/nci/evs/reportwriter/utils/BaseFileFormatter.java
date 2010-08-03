@@ -99,9 +99,9 @@ public abstract class BaseFileFormatter {
 		return v;
 	}
 
-	protected Vector<Integer> getColumnWidths(String textfile, String delimiter)
+	protected Vector<Integer> getColumnMaxChars(String textfile, String delimiter)
 			throws Exception {
-		Vector<Integer> width_vec = new Vector<Integer>();
+		Vector<Integer> maxChars = new Vector<Integer>();
 		File file = new File(textfile);
 
 		FileInputStream fis = new FileInputStream(file);
@@ -112,7 +112,7 @@ public abstract class BaseFileFormatter {
 		String line = br.readLine();
 		Vector<String> v = parseData(line, delimiter);
 		for (int i = 0; i < v.size(); i++)
-			width_vec.add(new Integer(0));
+			maxChars.add(new Integer(0));
 
 		while (true) {
 			line = br.readLine();
@@ -122,18 +122,17 @@ public abstract class BaseFileFormatter {
 				continue;
 			v = parseData(line, delimiter);
 			for (int k = 0; k < v.size(); k++) {
-				String s = (String) v.elementAt(k);
-				int len = s.length();
-				Integer max_len_obj = (Integer) width_vec.elementAt(k);
-				int max_len = max_len_obj.intValue();
-				if (max_len < len) {
-					width_vec.setElementAt(new Integer(len), k);
+				String s = v.elementAt(k);
+				int numChar = s.length();
+				int maxChar = maxChars.elementAt(k);
+				if (maxChar < numChar) {
+					maxChars.setElementAt(new Integer(numChar), k);
 				}
 			}
 		}
 
 		br.close();
-		return width_vec;
+		return maxChars;
 	}
 	
     protected Boolean[] findWrappedColumns(String textfile,
