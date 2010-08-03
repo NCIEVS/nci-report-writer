@@ -116,10 +116,7 @@ public class AsciiToExcelFormatter extends BaseFileFormatter {
         String pathName = file.getPath();
         _logger.debug("Path: " + pathName);
 
-        FileInputStream fis = new FileInputStream(file);
-        BufferedInputStream bis = new BufferedInputStream(fis);
-        BufferedReader br = new BufferedReader(new InputStreamReader(bis));
-
+		BufferedReader br = getBufferReader(textfile);
         FileOutputStream fout = new FileOutputStream(outfile);
         HSSFWorkbook wb = new HSSFWorkbook();
 

@@ -64,7 +64,15 @@ public abstract class BaseFileFormatter {
 
 	protected abstract Boolean convert(String infile, String delimiter,
 			String outfile) throws Exception;
-
+	
+	protected BufferedReader getBufferReader(String filename) throws Exception {
+		File file = new File(filename);
+		FileInputStream fis = new FileInputStream(file);
+		BufferedInputStream bis = new BufferedInputStream(fis);
+		BufferedReader br = new BufferedReader(new InputStreamReader(bis));
+		return br;
+	}
+	
 	protected Vector<String> parseData(String line, String tab) {
 		Vector<String> data_vec = new Vector<String>();
 		// Note(GF20743): Delimiters are returned as tokens.
@@ -88,11 +96,7 @@ public abstract class BaseFileFormatter {
 
 	protected Vector<String> getColumnHeadings(String textfile, String delimiter)
 			throws Exception {
-		File file = new File(textfile);
-		FileInputStream fis = new FileInputStream(file);
-		BufferedInputStream bis = new BufferedInputStream(fis);
-		BufferedReader br = new BufferedReader(new InputStreamReader(bis));
-
+		BufferedReader br = getBufferReader(textfile);
 		String line = br.readLine();
 		Vector<String> v = parseData(line, delimiter);
 		br.close();
@@ -102,11 +106,7 @@ public abstract class BaseFileFormatter {
 	protected Vector<Integer> getColumnMaxChars(String textfile, String delimiter)
 			throws Exception {
 		Vector<Integer> maxChars = new Vector<Integer>();
-		File file = new File(textfile);
-
-		FileInputStream fis = new FileInputStream(file);
-		BufferedInputStream bis = new BufferedInputStream(fis);
-		BufferedReader br = new BufferedReader(new InputStreamReader(bis));
+		BufferedReader br = getBufferReader(textfile);
 
 		// Header line
 		String line = br.readLine();
@@ -138,10 +138,7 @@ public abstract class BaseFileFormatter {
     protected Boolean[] findWrappedColumns(String textfile,
         String delimiter, int maxLength) throws Exception {
         Boolean[] a = null;
-        File file = new File(textfile);
-        FileInputStream fis = new FileInputStream(file);
-        BufferedInputStream bis = new BufferedInputStream(fis);
-        BufferedReader br = new BufferedReader(new InputStreamReader(bis));
+		BufferedReader br = getBufferReader(textfile);
 
         int rownum = 0;
         while (true) {
