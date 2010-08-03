@@ -8,54 +8,58 @@ public class MyFileOutputStream {
 	private FileOutputStream _out = null;
 	private String _tab = TAB;
 	private String _indentation = "";
-	
+
 	public MyFileOutputStream(String filename) throws Exception {
 		_filename = filename;
 		_out = new FileOutputStream(filename);
 	}
-	
+
 	public String getFilename() {
-        File file = new File(_filename);
-        String name = file.getName();
-        return name;
+		File file = new File(_filename);
+		String name = file.getName();
+		return name;
 	}
 
-    public void close() throws Exception {
-    	_out.close();
-    }
-    
-    public void setTab(String tab) {
-    	_tab = tab;
-    }
+	public void close() throws Exception {
+		_out.close();
+	}
 
-    public void write(String text) throws Exception {
-    	_out.write(text.getBytes());
-    }
-    
-    public void writeln(String text) throws Exception {
-    	write(text + "\n");
-    }
-    
-    public String indent() {
-    	_indentation += _tab;
-    	return _indentation;
-    }
-    
-    public String undent() {
-    	if (_indentation.length() > 0)
-    		_indentation = _indentation.substring(_tab.length());
-    	return _indentation;
-    }
+	public void setTab(String tab) {
+		_tab = tab;
+	}
 
-    public void writeln_indent(String text) throws Exception {
-    	writeln(indent() + text);
-    }
-    
-    public void writeln_undent(String text) throws Exception {
-    	writeln(undent() + text);
-    }
-    
-    public void writeln_normal(String text) throws Exception {
-    	writeln(_indentation + text);
-    }
+	public void write(String text) throws Exception {
+		_out.write(text.getBytes());
+	}
+
+	public void writeln(String text) throws Exception {
+		write(text + "\n");
+	}
+	
+	public void writeln() throws Exception {
+		writeln("");
+	}
+
+	public String indent() {
+		_indentation += _tab;
+		return _indentation;
+	}
+
+	public String undent() {
+		if (_indentation.length() > 0)
+			_indentation = _indentation.substring(_tab.length());
+		return _indentation;
+	}
+
+	public void writeln_indent(String text) throws Exception {
+		writeln(indent() + text);
+	}
+
+	public void writeln_undent(String text) throws Exception {
+		writeln(undent() + text);
+	}
+
+	public void writeln_normal(String text) throws Exception {
+		writeln(_indentation + text);
+	}
 }
