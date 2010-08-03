@@ -67,23 +67,22 @@ public class AsciiToExcelFormatter extends BaseFileFormatter {
     }
 
     public Boolean convert(String textfile, String delimiter,
-        String excelfile) throws Exception {
+        String outfile) throws Exception {
 
         Vector<String> headings = getColumnHeadings(textfile, delimiter);
-        Vector<Integer> width_vec = getColumnWidths(textfile, delimiter);
+        Vector<Integer> maxChars = getColumnMaxChars(textfile, delimiter);
 
         // Note: Special Case for CDISC STDM Terminology report.
         int extensible_col = findColumnIndicator(headings, "Extensible");
 
         int heading_height_multiplier = 1;
-        for (int i = 0; i < width_vec.size(); i++) {
+        for (int i = 0; i < maxChars.size(); i++) {
             String heading = (String) headings.elementAt(i);
-            Integer int_obj = (Integer) width_vec.elementAt(i);
-            int maxCellLen = int_obj.intValue();
+            int maxCellLen = maxChars.elementAt(i);
             int maxTokenLen = getMaxTokenLength(heading);
             if (maxTokenLen > maxCellLen) {
                 maxCellLen = maxTokenLen;
-                width_vec.setElementAt(new Integer(maxCellLen), i);
+                maxChars.setElementAt(new Integer(maxCellLen), i);
             }
             if (maxCellLen < MAX_CODE_WIDTH) {
                 Vector<String> tokens = parseData(heading, " ");
@@ -121,7 +120,7 @@ public class AsciiToExcelFormatter extends BaseFileFormatter {
         BufferedInputStream bis = new BufferedInputStream(fis);
         BufferedReader br = new BufferedReader(new InputStreamReader(bis));
 
-        FileOutputStream fout = new FileOutputStream(excelfile);
+        FileOutputStream fout = new FileOutputStream(outfile);
         HSSFWorkbook wb = new HSSFWorkbook();
 
         HSSFSheet ws = wb.createSheet(workSheetLabel);
@@ -219,7 +218,7 @@ public class AsciiToExcelFormatter extends BaseFileFormatter {
             if (b[i] != 0) {
                 int multiplier = b[i];
                 if (i < headings.size()) {
-                    Integer int_obj = (Integer) width_vec.elementAt(i);
+                    Integer int_obj = (Integer) maxChars.elementAt(i);
                     multiplier = int_obj.intValue();
                 }
 
