@@ -53,8 +53,8 @@ import org.apache.log4j.*;
  */
 
 public class AsciiToHtmlFormatter extends BaseFileFormatter {
-    private static Logger _logger =
-        Logger.getLogger(AsciiToHtmlFormatter.class);
+    private static Logger _logger = Logger
+        .getLogger(AsciiToHtmlFormatter.class);
     private String _ncitUrl = "http://ncit.nci.nih.gov/ncitbrowser/";
     private Vector<Integer> _codeColumns = new Vector<Integer>();
 
@@ -77,6 +77,7 @@ public class AsciiToHtmlFormatter extends BaseFileFormatter {
             throws Exception {
         BufferedReader br = getBufferReader(textfile);
         MyFileOutputStream out = new MyFileOutputStream(outfile);
+        int numHeadings = -1;
 
         header(out, outfile);
         int row = 0;
@@ -89,16 +90,26 @@ public class AsciiToHtmlFormatter extends BaseFileFormatter {
                 continue;
 
             Vector<String> v = parseData(line, delimiter);
+            if (numHeadings < 0)
+                numHeadings = v.size();
+            // Adds cells when current vector size is less than the header.
+            int n = numHeadings - v.size();
+            for (int i = 0; i < n; ++i)
+                v.add(null);
+
             out.writeln_normal("<tr>");
             out.indent();
             for (int col = 0; col < v.size(); col++) {
+                String value = v.get(col);
+                if (value == null || value.length() <= 0)
+                    value = "&nbsp;";
                 if (row <= 0)
-                    out.writeln_normal("<th>" + v.get(col) + "</th>");
+                    out.writeln_normal("<th>" + value + "</th>");
                 else if (_codeColumns.contains(col))
-                    out.writeln_normal("<td>"
-                        + this.getNCItCodeUrl(v.get(col), false) + "</td>");
+                    out.writeln_normal("<td>" + getNCItCodeUrl(value, false)
+                        + "</td>");
                 else
-                    out.writeln_normal("<td>" + v.get(col) + "</td>");
+                    out.writeln_normal("<td>" + value + "</td>");
             }
             out.undent();
             out.writeln_normal("</tr>");
@@ -144,14 +155,27 @@ public class AsciiToHtmlFormatter extends BaseFileFormatter {
     public static void main(String[] args) {
         try {
             String dir = "C:/apps/evs/ncireportwriter-webapp/downloads";
-            String infile = dir + "/FDA-SPL_Country_Code_REPORT__10.06e.txt";
+            Vector<String> infiles = new Vector<String>();
+            infiles.add(dir + "/CDISC_SDTM_Terminology__10.06e.txt");
+            infiles.add(dir + "/CDISC_Subset_REPORT__10.06e.txt");
+            infiles.add(dir + "/CDRH_Subset_REPORT__10.06e.txt");
+            infiles.add(dir + "/FDA-SPL_Country_Code_REPORT__10.06e.txt");
+            infiles.add(dir + "/FDA-UNII_Subset_REPORT__10.06e.txt");
+            infiles.add(dir
+                + "/Individual_Case_Safety_(ICS)_Subset_REPORT__10.06e.txt");
+            infiles.add(dir
+                + "/Structured_Product_Labeling_(SPL)_REPORT__10.06e.txt");
             String delimiter = "\t";
 
-            AsciiToHtmlFormatter formatter = new AsciiToHtmlFormatter();
-            formatter.setNcitUrl("http://ncit-dev.nci.nih.gov/ncitbrowser/");
-            formatter.addNcitCodeColumn(1);
-            formatter.convert(infile, delimiter);
-            _logger.debug("Done");
+            Iterator<String> iterator = infiles.iterator();
+            while (iterator.hasNext()) {
+                String infile = iterator.next();
+                AsciiToHtmlFormatter formatter = new AsciiToHtmlFormatter();
+                // formatter.setNcitUrl("http://ncit-dev.nci.nih.gov/ncitbrowser/");
+                // formatter.addNcitCodeColumn(1);
+                formatter.convert(infile, delimiter);
+                _logger.debug("Done: " + infile);
+            }
         } catch (Exception e) {
             e.printStackTrace();
         }
