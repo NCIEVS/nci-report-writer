@@ -55,29 +55,6 @@ import org.apache.log4j.*;
 public class AsciiToHtmlFormatter extends BaseFileFormatter {
     private static Logger _logger = Logger
         .getLogger(AsciiToHtmlFormatter.class);
-    private String _ncitUrl = "http://ncit.nci.nih.gov/ncitbrowser/";
-    private Vector<Integer> _codeColumns = new Vector<Integer>();
-
-    public void clearNcitCodeColumns() {
-        _codeColumns.clear();
-    }
-    
-    public void addNcitCodeColumn(int column) {
-        if (!_codeColumns.contains(column))
-            _codeColumns.add(column);
-    }
-
-    public void setNcitCodeColumns(int[] columns) {
-        clearNcitCodeColumns();
-        for (int i=0; i<columns.length; ++i)
-            addNcitCodeColumn(columns[i]);
-    }
-    
-    public void setNcitUrl(String url) {
-        if (url.charAt(url.length() - 1) != '/')
-            url += "/";
-        _ncitUrl = url;
-    }
 
     public Boolean convert(String textfile, String delimiter) throws Exception {
         return convert2(textfile, "htm", delimiter);
@@ -115,7 +92,7 @@ public class AsciiToHtmlFormatter extends BaseFileFormatter {
                     value = "&nbsp;";
                 if (row <= 0)
                     out.writeln_normal("<th>" + value + "</th>");
-                else if (_codeColumns.contains(col) && ! value.equals("&nbsp;"))
+                else if (_ncitCodeColumns.contains(col) && ! value.equals("&nbsp;"))
                     out.writeln_normal("<td>" + getNCItCodeUrl(value, false)
                         + "</td>");
                 else
@@ -148,10 +125,7 @@ public class AsciiToHtmlFormatter extends BaseFileFormatter {
     }
 
     private String getNCItCodeUrl(String code, boolean separateWindow) {
-        String ncitCodeUrl =
-            _ncitUrl + "ConceptReport.jsp?dictionary=NCI%20Thesaurus"
-                + "&code=" + code;
-
+        String ncitCodeUrl = super.getNCItCodeUrl(code);
         StringBuffer buffer = new StringBuffer();
         buffer.append("<a href=\"" + ncitCodeUrl + "\"");
         if (separateWindow)

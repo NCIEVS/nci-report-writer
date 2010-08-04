@@ -206,4 +206,36 @@ public abstract class BaseFileFormatter {
         }
         return max;
     }
+    
+    // -------------------------------------------------------------------------
+    protected String _ncitUrl = "http://ncit.nci.nih.gov/ncitbrowser/";
+    protected Vector<Integer> _ncitCodeColumns = new Vector<Integer>();
+
+    public void clearNcitCodeColumns() {
+        _ncitCodeColumns.clear();
+    }
+    
+    public void addNcitCodeColumn(int column) {
+        if (!_ncitCodeColumns.contains(column))
+            _ncitCodeColumns.add(column);
+    }
+
+    public void setNcitCodeColumns(int[] columns) {
+        clearNcitCodeColumns();
+        for (int i=0; i<columns.length; ++i)
+            addNcitCodeColumn(columns[i]);
+    }
+    
+    public void setNcitUrl(String url) {
+        if (url.charAt(url.length() - 1) != '/')
+            url += "/";
+        _ncitUrl = url;
+    }
+    
+    protected String getNCItCodeUrl(String code) {
+        String ncitCodeUrl =
+            _ncitUrl + "ConceptReport.jsp?dictionary=NCI%20Thesaurus"
+                + "&code=" + code;
+        return ncitCodeUrl;
+    }
 }
