@@ -58,11 +58,21 @@ public class AsciiToHtmlFormatter extends BaseFileFormatter {
     private String _ncitUrl = "http://ncit.nci.nih.gov/ncitbrowser/";
     private Vector<Integer> _codeColumns = new Vector<Integer>();
 
+    public void clearNcitCodeColumns() {
+        _codeColumns.clear();
+    }
+    
     public void addNcitCodeColumn(int column) {
         if (!_codeColumns.contains(column))
             _codeColumns.add(column);
     }
 
+    public void setNcitCodeColumns(int[] columns) {
+        clearNcitCodeColumns();
+        for (int i=0; i<columns.length; ++i)
+            addNcitCodeColumn(columns[i]);
+    }
+    
     public void setNcitUrl(String url) {
         if (url.charAt(url.length() - 1) != '/')
             url += "/";
@@ -101,11 +111,11 @@ public class AsciiToHtmlFormatter extends BaseFileFormatter {
             out.indent();
             for (int col = 0; col < v.size(); col++) {
                 String value = v.get(col);
-                if (value == null || value.length() <= 0)
+                if (value == null || value.trim().length() <= 0)
                     value = "&nbsp;";
                 if (row <= 0)
                     out.writeln_normal("<th>" + value + "</th>");
-                else if (_codeColumns.contains(col))
+                else if (_codeColumns.contains(col) && ! value.equals("&nbsp;"))
                     out.writeln_normal("<td>" + getNCItCodeUrl(value, false)
                         + "</td>");
                 else
@@ -155,27 +165,40 @@ public class AsciiToHtmlFormatter extends BaseFileFormatter {
     public static void main(String[] args) {
         try {
             String dir = "C:/apps/evs/ncireportwriter-webapp/downloads";
-            Vector<String> infiles = new Vector<String>();
-            infiles.add(dir + "/CDISC_SDTM_Terminology__10.06e.txt");
-            infiles.add(dir + "/CDISC_Subset_REPORT__10.06e.txt");
-            infiles.add(dir + "/CDRH_Subset_REPORT__10.06e.txt");
-            infiles.add(dir + "/FDA-SPL_Country_Code_REPORT__10.06e.txt");
-            infiles.add(dir + "/FDA-UNII_Subset_REPORT__10.06e.txt");
-            infiles.add(dir
-                + "/Individual_Case_Safety_(ICS)_Subset_REPORT__10.06e.txt");
-            infiles.add(dir
-                + "/Structured_Product_Labeling_(SPL)_REPORT__10.06e.txt");
+            AsciiToHtmlFormatter formatter = new AsciiToHtmlFormatter();
+            formatter.setNcitUrl("http://ncit-dev.nci.nih.gov/ncitbrowser/");
             String delimiter = "\t";
+            String infile;
+            
+            infile = dir + "/CDISC_SDTM_Terminology__10.06e.txt";
+            formatter.setNcitCodeColumns(new int[] {0, 1});
+            formatter.convert(infile, delimiter);
+            
+            infile = dir + "/CDISC_Subset_REPORT__10.06e.txt";
+            formatter.setNcitCodeColumns(new int[] {1, 3});
+            formatter.convert(infile, delimiter);
+            
+            infile = dir + "/CDRH_Subset_REPORT__10.06e.txt";
+            formatter.setNcitCodeColumns(new int[] {1, 3, 9});
+            formatter.convert(infile, delimiter);
+            
+            infile = dir + "/FDA-SPL_Country_Code_REPORT__10.06e.txt";
+            formatter.setNcitCodeColumns(new int[] {1});
+            formatter.convert(infile, delimiter);
+            
+            infile = dir + "/FDA-UNII_Subset_REPORT__10.06e.txt";
+            formatter.setNcitCodeColumns(new int[] {2});
+            formatter.convert(infile, delimiter);
 
-            Iterator<String> iterator = infiles.iterator();
-            while (iterator.hasNext()) {
-                String infile = iterator.next();
-                AsciiToHtmlFormatter formatter = new AsciiToHtmlFormatter();
-                // formatter.setNcitUrl("http://ncit-dev.nci.nih.gov/ncitbrowser/");
-                // formatter.addNcitCodeColumn(1);
-                formatter.convert(infile, delimiter);
-                _logger.debug("Done: " + infile);
-            }
+            infile = dir + "/Individual_Case_Safety_(ICS)_Subset_REPORT__10.06e.txt";
+            formatter.setNcitCodeColumns(new int[] {1, 3});
+            formatter.convert(infile, delimiter);
+            
+            infile = dir + "/Structured_Product_Labeling_(SPL)_REPORT__10.06e.txt";
+            formatter.setNcitCodeColumns(new int[] {1, 3});
+            formatter.convert(infile, delimiter);
+
+            _logger.debug("Done");
         } catch (Exception e) {
             e.printStackTrace();
         }
