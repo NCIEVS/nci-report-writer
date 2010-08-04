@@ -92,7 +92,8 @@ public class AsciiToHtmlFormatter extends BaseFileFormatter {
                     value = "&nbsp;";
                 if (row <= 0)
                     out.writeln_normal("<th>" + value + "</th>");
-                else if (_ncitCodeColumns.contains(col) && ! value.equals("&nbsp;"))
+                else if (_ncitCodeColumns.contains(col)
+                    && !value.equals("&nbsp;"))
                     out.writeln_normal("<td>" + getNCItCodeUrl(value, false)
                         + "</td>");
                 else
@@ -136,45 +137,29 @@ public class AsciiToHtmlFormatter extends BaseFileFormatter {
         return buffer.toString();
     }
 
-    public static void main(String[] args) {
+    public static void test(String textfile, int[] ncitCodeColumns) {
         try {
-            String dir = "C:/apps/evs/ncireportwriter-webapp/downloads";
+            String delimiter = "\t";
             AsciiToHtmlFormatter formatter = new AsciiToHtmlFormatter();
             formatter.setNcitUrl("http://ncit-dev.nci.nih.gov/ncitbrowser/");
-            String delimiter = "\t";
-            String infile;
-            
-            infile = dir + "/CDISC_SDTM_Terminology__10.06e.txt";
-            formatter.setNcitCodeColumns(new int[] {0, 1});
-            formatter.convert(infile, delimiter);
-            
-            infile = dir + "/CDISC_Subset_REPORT__10.06e.txt";
-            formatter.setNcitCodeColumns(new int[] {1, 3});
-            formatter.convert(infile, delimiter);
-            
-            infile = dir + "/CDRH_Subset_REPORT__10.06e.txt";
-            formatter.setNcitCodeColumns(new int[] {1, 3, 9});
-            formatter.convert(infile, delimiter);
-            
-            infile = dir + "/FDA-SPL_Country_Code_REPORT__10.06e.txt";
-            formatter.setNcitCodeColumns(new int[] {1});
-            formatter.convert(infile, delimiter);
-            
-            infile = dir + "/FDA-UNII_Subset_REPORT__10.06e.txt";
-            formatter.setNcitCodeColumns(new int[] {2});
-            formatter.convert(infile, delimiter);
-
-            infile = dir + "/Individual_Case_Safety_(ICS)_Subset_REPORT__10.06e.txt";
-            formatter.setNcitCodeColumns(new int[] {1, 3});
-            formatter.convert(infile, delimiter);
-            
-            infile = dir + "/Structured_Product_Labeling_(SPL)_REPORT__10.06e.txt";
-            formatter.setNcitCodeColumns(new int[] {1, 3});
-            formatter.convert(infile, delimiter);
-
-            _logger.debug("Done");
+            formatter.setNcitCodeColumns(ncitCodeColumns);
+            formatter.convert(textfile, delimiter);
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    public static void main(String[] args) {
+        String dir = "C:/apps/evs/ncireportwriter-webapp/downloads/";
+        test(dir + "CDISC_SDTM_Terminology__10.06e.txt", new int[] { 0, 1 });
+        test(dir + "CDISC_Subset_REPORT__10.06e.txt", new int[] { 1, 3 });
+        test(dir + "CDRH_Subset_REPORT__10.06e.txt", new int[] { 1, 3, 9 });
+        test(dir + "FDA-SPL_Country_Code_REPORT__10.06e.txt", new int[] { 1 });
+        test(dir + "FDA-UNII_Subset_REPORT__10.06e.txt", new int[] { 2 });
+        test(dir + "Individual_Case_Safety_(ICS)_Subset_REPORT__10.06e.txt",
+            new int[] { 1, 3 });
+        test(dir + "Structured_Product_Labeling_(SPL)_REPORT__10.06e.txt",
+            new int[] { 1, 3 });
+        _logger.debug("Done");
     }
 }
