@@ -64,9 +64,23 @@ public class AsciiToHtmlFormatter extends BaseFileFormatter {
             throws Exception {
         BufferedReader br = getBufferReader(textfile);
         MyFileOutputStream out = new MyFileOutputStream(outfile);
-        int numHeadings = -1;
-
         printHeader(out, outfile);
+        
+        // Prints topmost report banner:
+        Vector<String> headings = getColumnHeadings(textfile, delimiter);
+        out.writeln_indent("<tr><td colspan=\"" + (headings.size()+1)
+            + "\" class=\"dataTablePrimaryLabel\" height=\"20\">");
+        out.writeln_inden1("Report: " + getReportName(out.getFilename()));
+        out.writeln_undent("</td></tr>");
+
+        // Prints table heading:
+        headings.add(0, "#");
+        out.writeln_indent("<tr class=\"dataTableHeader\">");
+        for (String heading : headings)
+            out.writeln_inden1("<th class=\"dataCellText\">" + heading + "</th>");
+        out.writeln_undent("</tr>");
+
+        // Prints contents:
         int row = 0;
         while (true) {
             String line = br.readLine();
@@ -76,47 +90,27 @@ public class AsciiToHtmlFormatter extends BaseFileFormatter {
                 continue;
 
             Vector<String> v = parseData(line, delimiter);
-            if (row <= 0)
-                v.add(0, "#");
-            else v.add(0, Integer.toString(row)); 
+            v.add(0, Integer.toString(row)); // From # column
 
-            if (numHeadings < 0)
-                numHeadings = v.size();
-            // Adds cells when current vector size is less than the header.
-            int n = numHeadings - v.size();
-            for (int i = 0; i < n; ++i)
-                v.add(null);
-            
-            if (row <= 0) {
-                out.writeln_indent("<tr><td colspan=\"" + numHeadings
-                    + "\" class=\"dataTablePrimaryLabel\" height=\"20\">");
-                out.writeln_inden1("Report: " + getReportName(out.getFilename()));
-                out.writeln_undent("</td></tr>");
-                out.writeln_indent("<tr class=\"dataTableHeader\">");
-            } else if (row % 2 == 1)
-                out.writeln_indent("<tr class=\"dataRowDark\">");
-            else
-                out.writeln_indent("<tr class=\"dataRowLight\">");
+            String rowColor = row%2==1 ? "dataRowDark" : "dataRowLight";
+            out.writeln_indent("<tr class=\"" + rowColor + "\">");
             for (int col = 0; col < v.size(); col++) {
+                if (row <= 0) // Skip heading row
+                    continue;
                 String value = v.get(col);
                 if (value == null || value.trim().length() <= 0)
                     value = "&nbsp;";
-                if (row <= 0)
-                    out.writeln_inden1("<th class=\"dataCellText\">" + value
-                        + "</th>");
-                else if (_ncitCodeColumns.contains(col - 1) // From # column
-                    && !value.equals("&nbsp;"))
-                    out.writeln_inden1("<td class=\"dataCellText\">"
-                        + getNCItCodeUrl(value, false) + "</td>");
-                else
-                    out.writeln_inden1("<td class=\"dataCellText\">" + value
-                        + "</td>");
+                else if (_ncitCodeColumns.contains(col - 1))
+                    value = getNCItCodeUrl(value, false);
+                out.writeln_inden1("<td class=\"dataCellText\">" + value
+                    + "</td>");
             }
             out.writeln_undent("</tr>");
             row++;
         }
-        br.close();
+        
         printFooter(out);
+        br.close();
         out.close();
         return Boolean.TRUE;
     }
