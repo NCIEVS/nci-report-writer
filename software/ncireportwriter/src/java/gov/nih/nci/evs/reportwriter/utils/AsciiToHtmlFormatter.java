@@ -77,6 +77,10 @@ public class AsciiToHtmlFormatter extends BaseFileFormatter {
                 continue;
 
             Vector<String> v = parseData(line, delimiter);
+            if (row <= 0)
+                v.add(0, "#");
+            else v.add(0, Integer.toString(row)); 
+
             if (numHeadings < 0)
                 numHeadings = v.size();
             // Adds cells when current vector size is less than the header.
@@ -102,7 +106,7 @@ public class AsciiToHtmlFormatter extends BaseFileFormatter {
                 if (row <= 0)
                     out.writeln_normal("<th class=\"dataCellText\">" + value
                         + "</th>");
-                else if (_ncitCodeColumns.contains(col)
+                else if (_ncitCodeColumns.contains(col - 1) // From # column
                     && !value.equals("&nbsp;"))
                     out.writeln_normal("<td class=\"dataCellText\">"
                         + getNCItCodeUrl(value, false) + "</td>");
