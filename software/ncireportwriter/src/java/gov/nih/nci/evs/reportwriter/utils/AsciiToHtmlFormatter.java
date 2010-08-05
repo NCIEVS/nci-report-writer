@@ -83,21 +83,28 @@ public class AsciiToHtmlFormatter extends BaseFileFormatter {
             int n = numHeadings - v.size();
             for (int i = 0; i < n; ++i)
                 v.add(null);
-
-            out.writeln_normal("<tr>");
+            
+            if (row <= 0)
+                out.writeln_normal("<tr class=\"dataTableHeader\">");
+            else if (row % 2 == 1)
+                out.writeln_normal("<tr class=\"dataRowDark\">");
+            else
+                out.writeln_normal("<tr class=\"dataRowLight\">");
             out.indent();
             for (int col = 0; col < v.size(); col++) {
                 String value = v.get(col);
                 if (value == null || value.trim().length() <= 0)
                     value = "&nbsp;";
                 if (row <= 0)
-                    out.writeln_normal("<th>" + value + "</th>");
+                    out.writeln_normal("<th class=\"dataCellText\">" + value
+                        + "</th>");
                 else if (_ncitCodeColumns.contains(col)
                     && !value.equals("&nbsp;"))
-                    out.writeln_normal("<td>" + getNCItCodeUrl(value, false)
-                        + "</td>");
+                    out.writeln_normal("<td class=\"dataCellText\">"
+                        + getNCItCodeUrl(value, false) + "</td>");
                 else
-                    out.writeln_normal("<td>" + value + "</td>");
+                    out.writeln_normal("<td class=\"dataCellText\">" + value
+                        + "</td>");
             }
             out.undent();
             out.writeln_normal("</tr>");
@@ -114,9 +121,56 @@ public class AsciiToHtmlFormatter extends BaseFileFormatter {
         out.writeln_normal("<html>");
         out.writeln_indent("<head>");
         out.writeln_indent("<title>" + out.getFilename() + "</title>");
+
+        out.writeln_normal("<style>");
+        out.writeln_normal("* {");
+        out.writeln_normal("  font-family: Helvetica, Geneva, Times, Verdana, sans-serif;");
+        out.writeln_normal("  font-size: 7pt;");
+        out.writeln_normal("}");
+        out.writeln_normal(".dataTablePrimaryLabel{ /* for the first row */");
+        out.writeln_normal("  font-family:arial,helvetica,verdana,sans-serif;");
+        out.writeln_normal("  font-size:0.9em;");
+        out.writeln_normal("  font-weight:bold;");
+        out.writeln_normal("  background-color:#5C5C5C; /* constant: dark gray */");
+        out.writeln_normal("  color:#FFFFFF; /* constant: white */");
+        out.writeln_normal("  border-top:1px solid #5C5C5C; /* constant: dark gray */");
+        out.writeln_normal("  border-left:1px solid #5C5C5C; /* constant: dark gray */");
+        out.writeln_normal("  border-right:1px solid #5C5C5C; /* constant: dark gray */");
+        out.writeln_normal("  padding-left:0.4em;");
+        out.writeln_normal("}");
+        out.writeln_normal(".dataTable{ /* for the main table below the labels */");
+        out.writeln_normal("  font-family:arial,helvetica,verdana,sans-serif;");
+        out.writeln_normal("  font-size:0.9em;");
+        out.writeln_normal("  color:#000000; /* constant: black */");
+        out.writeln_normal("  border-top:1px solid #5C5C5C; /* constant: dark gray */");
+        out.writeln_normal("  border-left:1px solid #5C5C5C; /* constant: dark gray */");
+        out.writeln_normal("}");
+        out.writeln_normal(".dataTableHeader{ /* for the horizontal column headers */");
+        out.writeln_normal("  font-family:arial,helvetica,verdana,sans-serif;");
+        out.writeln_normal("  background-color:#CCCCCC; /* constant: medium gray */");
+        out.writeln_normal("  color:#000000; /* constant: black */");
+        out.writeln_normal("  font-weight:bold;");
+        out.writeln_normal("  border-right:1px solid #5C5C5C; /* constant: dark gray */");
+        out.writeln_normal("  border-bottom:1px solid #5C5C5C; /* constant: dark gray */");
+        out.writeln_normal("}");
+        out.writeln_normal(".dataCellText{ /* for text output cells */");
+        out.writeln_normal("  border-right:1px solid #5C5C5C; /* constant: dark gray */");
+        out.writeln_normal("  border-bottom:1px solid #5C5C5C; /* constant: dark gray */");
+        out.writeln_normal("  text-align:left;");
+        out.writeln_normal("}");
+        out.writeln_normal(".dataRowLight{ /* for the light color of alternating rows */");
+        out.writeln_normal("  background-color:#FFFFFF; /* constant: white */");
+        out.writeln_normal("  color:#000000; /* constant: black */");
+        out.writeln_normal("}");
+        out.writeln_normal(".dataRowDark{ /* for the dark color of alternating rows */");
+        out.writeln_normal("  background-color:#F4F4F5; /* constant: light gray */");
+        out.writeln_normal("  color:#000000; /* constant: black */");
+        out.writeln_normal("}");
+        out.writeln_normal("</style>");
+
         out.writeln_undent("</head>");
         out.writeln_normal("<body>");
-        out.writeln_indent("<table border=\"1\" width=\"100%\">");
+        out.writeln_indent("<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" class=\"dataTable\" width=\"100%\">");
     }
 
     private void footer(MyFileOutputStream out) throws Exception {
