@@ -84,9 +84,13 @@ public class AsciiToHtmlFormatter extends BaseFileFormatter {
             for (int i = 0; i < n; ++i)
                 v.add(null);
             
-            if (row <= 0)
+            if (row <= 0) {
+                out.writeln_normal("<tr><td colspan=\"" + numHeadings
+                    + "\" class=\"dataTablePrimaryLabel\" height=\"20\">");
+                out.writeln_indent("File: " + outfile);
+                out.writeln_undent("</td></tr>");
                 out.writeln_normal("<tr class=\"dataTableHeader\">");
-            else if (row % 2 == 1)
+            } else if (row % 2 == 1)
                 out.writeln_normal("<tr class=\"dataRowDark\">");
             else
                 out.writeln_normal("<tr class=\"dataRowLight\">");
