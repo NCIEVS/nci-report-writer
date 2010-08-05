@@ -91,7 +91,7 @@ public class AsciiToHtmlFormatter extends BaseFileFormatter {
             if (row <= 0) {
                 out.writeln_normal("<tr><td colspan=\"" + numHeadings
                     + "\" class=\"dataTablePrimaryLabel\" height=\"20\">");
-                out.writeln_indent(getReportTitle(out.getFilename()));
+                out.writeln_indent("Report: " + getReportName(out.getFilename()));
                 out.writeln_undent("</td></tr>");
                 out.writeln_normal("<tr class=\"dataTableHeader\">");
             } else if (row % 2 == 1)
@@ -128,7 +128,7 @@ public class AsciiToHtmlFormatter extends BaseFileFormatter {
             throws Exception {
         out.writeln_normal("<html>");
         out.writeln_indent("<head>");
-        out.writeln_indent("<title>" + out.getFilename() + "</title>");
+        out.writeln_indent("<title>" + getReportName(out.getFilename()) + "</title>");
 
         out.writeln_normal("<style>");
         out.writeln_normal("* {");
@@ -199,10 +199,10 @@ public class AsciiToHtmlFormatter extends BaseFileFormatter {
         return buffer.toString();
     }
     
-    private String getReportTitle(String filename) {
+    private String getReportName(String filename) {
         String reportName = filename.replace("__", " (");
         reportName = reportName.replace(".htm", ")");
-        return "Report: " + reportName;
+        return reportName;
     }
 
     public static void test(String textfile, int[] ncitCodeColumns) {
