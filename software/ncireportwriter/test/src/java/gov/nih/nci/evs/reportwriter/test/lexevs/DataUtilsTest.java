@@ -36,13 +36,13 @@ public class DataUtilsTest {
         _logger.info("  * version: " + version);
         _logger.info("  * code: " + code);
         _logger.info("  * assocName: " + assocName);
-        Vector<Concept> v = DataUtils.getAssociations(
+        Vector<Entity> v = DataUtils.getAssociations(
             retrieveTargets, scheme, version, code, assocName);
         int i=0, n=v.size();
-        Iterator<Concept> iterator = v.iterator();
+        Iterator<Entity> iterator = v.iterator();
         _logger.info("Results: (size=" + n + ")");
         while (iterator.hasNext()) {
-            Concept concept = iterator.next();
+        	Entity concept = iterator.next();
             if (showAll || i%100 == 0 || i+1 == n) {
                 String c_code = concept.getEntityCode();
                 String description = concept.getEntityDescription().getContent();
