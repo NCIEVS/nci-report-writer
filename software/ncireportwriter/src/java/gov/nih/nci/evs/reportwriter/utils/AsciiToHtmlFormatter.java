@@ -242,9 +242,10 @@ public class AsciiToHtmlFormatter extends BaseFileFormatter {
         try {
             String delimiter = "\t";
             AsciiToHtmlFormatter formatter = new AsciiToHtmlFormatter();
-            formatter.setNcitUrl("http://ncit-dev.nci.nih.gov/ncitbrowser/");
+            formatter.setNcitUrl("http://ncit.nci.nih.gov/ncitbrowser/");
             formatter.setNcitCodeColumns(ncitCodeColumns);
-            formatter.setDisplayNCItCodeUrl(DisplayNCItCodeUrl.CurrentWindow);
+            formatter
+                .setDisplayNCItCodeUrl(DisplayNCItCodeUrl.SeparateSingleWindow);
             formatter.convert(textfile, delimiter);
         } catch (Exception e) {
             e.printStackTrace();
