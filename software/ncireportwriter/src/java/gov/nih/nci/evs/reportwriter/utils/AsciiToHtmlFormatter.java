@@ -65,10 +65,10 @@ public class AsciiToHtmlFormatter extends BaseFileFormatter {
         BufferedReader br = getBufferReader(textfile);
         MyFileOutputStream out = new MyFileOutputStream(outfile);
         printHeader(out, outfile);
-        
+
         // Prints topmost report banner:
         Vector<String> headings = getColumnHeadings(textfile, delimiter);
-        out.writeln_indent("<tr><td colspan=\"" + (headings.size()+1)
+        out.writeln_indent("<tr><td colspan=\"" + (headings.size() + 1)
             + "\" class=\"dataTablePrimaryLabel\" height=\"20\">");
         out.writeln_inden1("Report: " + getReportName(out.getFilename()));
         out.writeln_undent("</td></tr>");
@@ -77,8 +77,12 @@ public class AsciiToHtmlFormatter extends BaseFileFormatter {
         headings.add(0, "#");
         out.writeln_indent("<tr class=\"dataTableHeader\">");
         for (String heading : headings)
-            out.writeln_inden1("<th class=\"dataCellText\">" + heading + "</th>");
+            out.writeln_inden1("<th class=\"dataCellText\">" + heading
+                + "</th>");
         out.writeln_undent("</tr>");
+
+        // Note: Special Case for CDISC STDM Terminology report.
+        int extensible_col = findColumnIndicator(headings, "Extensible");
 
         // Prints contents:
         int row = 0;
@@ -90,25 +94,34 @@ public class AsciiToHtmlFormatter extends BaseFileFormatter {
                 continue;
 
             Vector<String> v = parseData(line, delimiter);
-            v.add(0, Integer.toString(row)); // From # column
+            v.add(0, Integer.toString(row)); // From adding # column
 
-            String rowColor = row%2==1 ? "dataRowDark" : "dataRowLight";
+            String rowColor = row % 2 == 1 ? "dataRowDark" : "dataRowLight";
             out.writeln_indent("<tr class=\"" + rowColor + "\">");
+            String bgColor = "";
+            if (extensible_col >= 0) {
+                // Note: Special Case for CDISC STDM Terminology report.
+                String eValue = v.get(extensible_col - 1); // -1 from # column
+                if (eValue == null || eValue.trim().length() <= 0)
+                    bgColor = " bgColor=\"skyblue\"";
+            }
+            
             for (int col = 0; col < v.size(); col++) {
                 if (row <= 0) // Skip heading row
                     continue;
+
                 String value = v.get(col);
                 if (value == null || value.trim().length() <= 0)
                     value = "&nbsp;";
-                else if (_ncitCodeColumns.contains(col - 1))
+                else if (_ncitCodeColumns.contains(col - 1)) // -1 from # column
                     value = getNCItCodeUrl(value, false);
-                out.writeln_inden1("<td class=\"dataCellText\">" + value
-                    + "</td>");
+                out.writeln_inden1("<td class=\"dataCellText\"" + bgColor + ">"
+                    + value + "</td>");
             }
             out.writeln_undent("</tr>");
             row++;
         }
-        
+
         printFooter(out);
         br.close();
         out.close();
@@ -119,7 +132,8 @@ public class AsciiToHtmlFormatter extends BaseFileFormatter {
             throws Exception {
         out.writeln_normal("<html>");
         out.writeln_indent("<head>");
-        out.writeln_inden1("<title>" + getReportName(out.getFilename()) + "</title>");
+        out.writeln_inden1("<title>" + getReportName(out.getFilename())
+            + "</title>");
         printStyles(out);
         out.writeln_undent("</head>");
         out.writeln_indent("<body>");
@@ -131,7 +145,7 @@ public class AsciiToHtmlFormatter extends BaseFileFormatter {
         out.writeln_undent("</body>");
         out.writeln_normal("</html>");
     }
-    
+
     private void printStyles(MyFileOutputStream out) throws Exception {
         out.writeln_indent("<style>");
         out.writeln_normal("  * {");
@@ -191,7 +205,7 @@ public class AsciiToHtmlFormatter extends BaseFileFormatter {
         buffer.append("</a>");
         return buffer.toString();
     }
-    
+
     private String getReportName(String filename) {
         String reportName = filename.replace("__", " (");
         reportName = reportName.replace(".htm", ")");
@@ -212,8 +226,6 @@ public class AsciiToHtmlFormatter extends BaseFileFormatter {
 
     public static void main(String[] args) {
         String dir = "C:/apps/evs/ncireportwriter-webapp/downloads/";
-//        test(dir + "FDA-SPL_Country_Code_REPORT__10.06e.txt", new int[] { 1 });
-        
         test(dir + "CDISC_SDTM_Terminology__10.06e.txt", new int[] { 0, 1 });
         test(dir + "CDISC_Subset_REPORT__10.06e.txt", new int[] { 1, 3 });
         test(dir + "CDRH_Subset_REPORT__10.06e.txt", new int[] { 1, 3, 9 });
