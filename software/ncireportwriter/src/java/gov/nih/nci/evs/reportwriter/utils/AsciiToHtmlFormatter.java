@@ -125,7 +125,7 @@ public class AsciiToHtmlFormatter extends BaseFileFormatter {
                 if (value == null || value.trim().length() <= 0)
                     value = "&nbsp;";
                 else if (_ncitCodeColumns.contains(col - 1)) // -1 from # column
-                    value = getNCItCodeUrl(value, false);
+                    value = getNCItCodeUrl(value);
                 out.writeln_inden1("<td class=\"dataCellText\"" + bgColor + ">"
                     + value + "</td>");
             }
@@ -200,30 +200,51 @@ public class AsciiToHtmlFormatter extends BaseFileFormatter {
         out.writeln_undent("</style>");
     }
 
-    private String getNCItCodeUrl(String code, boolean separateWindow) {
+    // -- NCItCodeUrl ----------------------------------------------------------
+    public enum DisplayNCItCodeUrl {
+        CurrentWindow, SeparateSingleWindow, SeparateMultipleWindows
+    };
+
+    private DisplayNCItCodeUrl _displayNCItCodeUrl =
+        DisplayNCItCodeUrl.CurrentWindow;
+
+    public void setDisplayNCItCodeUrl(DisplayNCItCodeUrl option) {
+        _displayNCItCodeUrl = option;
+    }
+
+    public DisplayNCItCodeUrl getDisplayNCItCodeUrl() {
+        return _displayNCItCodeUrl;
+    }
+
+    protected String getNCItCodeUrl(String code) {
         String ncitCodeUrl = super.getNCItCodeUrl(code);
         StringBuffer buffer = new StringBuffer();
         buffer.append("<a href=\"" + ncitCodeUrl + "\"");
-        if (separateWindow)
+        if (_displayNCItCodeUrl == DisplayNCItCodeUrl.SeparateMultipleWindows)
             buffer.append(" target=\"_blank\"");
+        else if (_displayNCItCodeUrl == DisplayNCItCodeUrl.SeparateSingleWindow)
+            buffer.append(" target=\"rwNcitCodeUrl\"");
         buffer.append(">");
         buffer.append(code);
         buffer.append("</a>");
         return buffer.toString();
     }
 
+    // -- Miscellaneous --------------------------------------------------------
     private String getReportName(String filename) {
         String reportName = filename.replace("__", " (");
         reportName = reportName.replace(".htm", ")");
         return reportName;
     }
 
+    // -- Test Program- --------------------------------------------------------
     public static void test(String textfile, int[] ncitCodeColumns) {
         try {
             String delimiter = "\t";
             AsciiToHtmlFormatter formatter = new AsciiToHtmlFormatter();
             formatter.setNcitUrl("http://ncit-dev.nci.nih.gov/ncitbrowser/");
             formatter.setNcitCodeColumns(ncitCodeColumns);
+            formatter.setDisplayNCItCodeUrl(DisplayNCItCodeUrl.CurrentWindow);
             formatter.convert(textfile, delimiter);
         } catch (Exception e) {
             e.printStackTrace();
