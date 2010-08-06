@@ -62,9 +62,17 @@ public class AsciiToHtmlFormatter extends BaseFileFormatter {
 
     public Boolean convert(String textfile, String delimiter, String outfile)
             throws Exception {
-        BufferedReader br = getBufferReader(textfile);
         MyFileOutputStream out = new MyFileOutputStream(outfile);
-        printHeader(out, outfile);
+        printHeader(out);
+        printContent(out, textfile, delimiter);
+        printFooter(out);
+        out.close();
+        return Boolean.TRUE;
+    }
+
+    private void printContent(MyFileOutputStream out, String textfile,
+        String delimiter) throws Exception {
+        BufferedReader br = getBufferReader(textfile);
 
         // Prints topmost report banner:
         Vector<String> headings = getColumnHeadings(textfile, delimiter);
@@ -95,6 +103,9 @@ public class AsciiToHtmlFormatter extends BaseFileFormatter {
 
             Vector<String> v = parseData(line, delimiter);
             v.add(0, Integer.toString(row)); // From adding # column
+            int numMissingCells = headings.size() - v.size();
+            for (int i = 0; i < numMissingCells; ++i)
+                v.add(null);
 
             String rowColor = row % 2 == 1 ? "dataRowDark" : "dataRowLight";
             out.writeln_indent("<tr class=\"" + rowColor + "\">");
@@ -105,7 +116,7 @@ public class AsciiToHtmlFormatter extends BaseFileFormatter {
                 if (eValue == null || eValue.trim().length() <= 0)
                     bgColor = " bgColor=\"skyblue\"";
             }
-            
+
             for (int col = 0; col < v.size(); col++) {
                 if (row <= 0) // Skip heading row
                     continue;
@@ -121,15 +132,10 @@ public class AsciiToHtmlFormatter extends BaseFileFormatter {
             out.writeln_undent("</tr>");
             row++;
         }
-
-        printFooter(out);
         br.close();
-        out.close();
-        return Boolean.TRUE;
     }
 
-    private void printHeader(MyFileOutputStream out, String filename)
-            throws Exception {
+    private void printHeader(MyFileOutputStream out) throws Exception {
         out.writeln_normal("<html>");
         out.writeln_indent("<head>");
         out.writeln_inden1("<title>" + getReportName(out.getFilename())
