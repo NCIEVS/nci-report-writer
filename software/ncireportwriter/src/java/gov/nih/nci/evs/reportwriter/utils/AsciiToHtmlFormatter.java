@@ -53,36 +53,47 @@ import org.apache.log4j.*;
  */
 
 public class AsciiToHtmlFormatter extends BaseFileFormatter {
-    private static Logger _logger = Logger.getLogger(AsciiToHtmlFormatter.class);
+    private static Logger _logger = Logger
+        .getLogger(AsciiToHtmlFormatter.class);
 
-    public Boolean convert(String textfile, String delimiter)
+    public Boolean convert(String textfile, String delimiter) throws Exception {
+        return convert2(textfile, "htm", delimiter);
+    }
+
+    public Boolean convert(String textfile, String delimiter, String outfile)
             throws Exception {
-    	return convert2(textfile, "htm", delimiter);
-    }
-    
-    private void header(MyFileOutputStream out, String filename) throws Exception {
-        out.writeln_normal("<html>");
-        out.writeln_indent("<head>");
-        out.writeln_indent("<title>" + out.getFilename() + "</title>");
-        out.writeln_undent("</head>");
-        out.writeln_normal("<body>");
-        out.writeln_indent("<table border=\"1\" width=\"100%\">");
-    }
-    
-    private void footer(MyFileOutputStream out) throws Exception {
-        out.writeln_undent("</table>");
-        out.writeln_undent("</body>");
-        out.writeln_undent("</html>");
-    }
-
-    public Boolean convert(String textfile, String delimiter,
-        String outfile) throws Exception {
-		BufferedReader br = getBufferReader(textfile);
         MyFileOutputStream out = new MyFileOutputStream(outfile);
+        printHeader(out);
+        printContent(out, textfile, delimiter);
+        printFooter(out);
+        out.close();
+        return Boolean.TRUE;
+    }
 
-        header(out, outfile);
+    private void printContent(MyFileOutputStream out, String textfile,
+        String delimiter) throws Exception {
+        BufferedReader br = getBufferReader(textfile);
+
+        // Prints topmost report banner:
+        Vector<String> headings = getColumnHeadings(textfile, delimiter);
+        out.writeln_indent("<tr><td colspan=\"" + (headings.size() + 1)
+            + "\" class=\"dataTablePrimaryLabel\" height=\"20\">");
+        out.writeln_inden1("Report: " + getReportName(out.getFilename()));
+        out.writeln_undent("</td></tr>");
+
+        // Prints table heading:
+        headings.add(0, "#");
+        out.writeln_indent("<tr class=\"dataTableHeader\">");
+        for (String heading : headings)
+            out.writeln_inden1("<th class=\"dataCellText\">" + heading
+                + "</th>");
+        out.writeln_undent("</tr>");
+
+        // Note: Special Case for CDISC STDM Terminology report.
+        int extensible_col = findColumnIndicator(headings, "Extensible");
+
+        // Prints contents:
         int row = 0;
-        out.indent();
         while (true) {
             String line = br.readLine();
             if (line == null)
@@ -91,33 +102,167 @@ public class AsciiToHtmlFormatter extends BaseFileFormatter {
                 continue;
 
             Vector<String> v = parseData(line, delimiter);
-            out.writeln_normal("<tr>");
-            out.indent();
-            for (int col = 0; col < v.size(); col++) {
-            	if (row <= 0)
-            		out.writeln_normal("<th>" + v.get(col) + "</th>");
-            	else out.writeln_normal("<td>" + v.get(col) + "</td>");
+            v.add(0, Integer.toString(row)); // From adding # column
+            int numMissingCells = headings.size() - v.size();
+            for (int i = 0; i < numMissingCells; ++i)
+                v.add(null);
+
+            String rowColor = row % 2 == 1 ? "dataRowDark" : "dataRowLight";
+            out.writeln_indent("<tr class=\"" + rowColor + "\">");
+            String bgColor = "";
+            if (extensible_col >= 0) {
+                // Note: Special Case for CDISC STDM Terminology report.
+                String eValue = v.get(extensible_col - 1); // -1 from # column
+                if (eValue == null || eValue.trim().length() <= 0)
+                    bgColor = " bgColor=\"skyblue\"";
             }
-            out.undent();
-            out.writeln_normal("</tr>");
+
+            for (int col = 0; col < v.size(); col++) {
+                if (row <= 0) // Skip heading row
+                    continue;
+
+                String value = v.get(col);
+                if (value == null || value.trim().length() <= 0)
+                    value = "&nbsp;";
+                else if (_ncitCodeColumns.contains(col - 1)) // -1 from # column
+                    value = getNCItCodeUrl(value);
+                out.writeln_inden1("<td class=\"dataCellText\"" + bgColor + ">"
+                    + value + "</td>");
+            }
+            out.writeln_undent("</tr>");
             row++;
         }
         br.close();
-        footer(out);
-        out.close();
-        return Boolean.TRUE;
     }
 
-    public static void main(String[] args) {
+    private void printHeader(MyFileOutputStream out) throws Exception {
+        out.writeln_normal("<html>");
+        out.writeln_indent("<head>");
+        out.writeln_inden1("<title>" + getReportName(out.getFilename())
+            + "</title>");
+        printStyles(out);
+        out.writeln_undent("</head>");
+        out.writeln_indent("<body>");
+        out.writeln_indent("<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" class=\"dataTable\" width=\"100%\">");
+    }
+
+    private void printFooter(MyFileOutputStream out) throws Exception {
+        out.writeln_undent("</table>");
+        out.writeln_undent("</body>");
+        out.writeln_normal("</html>");
+    }
+
+    private void printStyles(MyFileOutputStream out) throws Exception {
+        out.writeln_indent("<style>");
+        out.writeln_normal("  * {");
+        out.writeln_normal("    font-family: Helvetica, Geneva, Times, Verdana, sans-serif;");
+        out.writeln_normal("    font-size: 7pt;");
+        out.writeln_normal("  }");
+        out.writeln_normal("  .dataTablePrimaryLabel{ /* for the first row */");
+        out.writeln_normal("    font-family:arial,helvetica,verdana,sans-serif;");
+        out.writeln_normal("    font-size:0.9em;");
+        out.writeln_normal("    font-weight:bold;");
+        out.writeln_normal("    background-color:#5C5C5C; /* constant: dark gray */");
+        out.writeln_normal("    color:#FFFFFF; /* constant: white */");
+        out.writeln_normal("    border-top:1px solid #5C5C5C; /* constant: dark gray */");
+        out.writeln_normal("    border-left:1px solid #5C5C5C; /* constant: dark gray */");
+        out.writeln_normal("    border-right:1px solid #5C5C5C; /* constant: dark gray */");
+        out.writeln_normal("    padding-left:0.4em;");
+        out.writeln_normal("  }");
+        out.writeln_normal("  .dataTable{ /* for the main table below the labels */");
+        out.writeln_normal("    font-family:arial,helvetica,verdana,sans-serif;");
+        out.writeln_normal("    font-size:0.9em;");
+        out.writeln_normal("    color:#000000; /* constant: black */");
+        out.writeln_normal("    border-top:1px solid #5C5C5C; /* constant: dark gray */");
+        out.writeln_normal("    border-left:1px solid #5C5C5C; /* constant: dark gray */");
+        out.writeln_normal("  }");
+        out.writeln_normal("  .dataTableHeader{ /* for the horizontal column headers */");
+        out.writeln_normal("    font-family:arial,helvetica,verdana,sans-serif;");
+        out.writeln_normal("    background-color:#CCCCCC; /* constant: medium gray */");
+        out.writeln_normal("    color:#000000; /* constant: black */");
+        out.writeln_normal("    font-weight:bold;");
+        out.writeln_normal("    border-right:1px solid #5C5C5C; /* constant: dark gray */");
+        out.writeln_normal("    border-bottom:1px solid #5C5C5C; /* constant: dark gray */");
+        out.writeln_normal("  }");
+        out.writeln_normal("  .dataCellText{ /* for text output cells */");
+        out.writeln_normal("    border-right:1px solid #5C5C5C; /* constant: dark gray */");
+        out.writeln_normal("    border-bottom:1px solid #5C5C5C; /* constant: dark gray */");
+        out.writeln_normal("    text-align:left;");
+        out.writeln_normal("  }");
+        out.writeln_normal("  .dataRowLight{ /* for the light color of alternating rows */");
+        out.writeln_normal("    background-color:#FFFFFF; /* constant: white */");
+        out.writeln_normal("    color:#000000; /* constant: black */");
+        out.writeln_normal("  }");
+        out.writeln_normal("  .dataRowDark{ /* for the dark color of alternating rows */");
+        out.writeln_normal("    background-color:#F4F4F5; /* constant: light gray */");
+        out.writeln_normal("    color:#000000; /* constant: black */");
+        out.writeln_normal("  }");
+        out.writeln_undent("</style>");
+    }
+
+    // -- NCItCodeUrl ----------------------------------------------------------
+    public enum DisplayNCItCodeUrl {
+        CurrentWindow, SeparateSingleWindow, SeparateMultipleWindows
+    };
+
+    private DisplayNCItCodeUrl _displayNCItCodeUrl =
+        DisplayNCItCodeUrl.CurrentWindow;
+
+    public void setDisplayNCItCodeUrl(DisplayNCItCodeUrl option) {
+        _displayNCItCodeUrl = option;
+    }
+
+    public DisplayNCItCodeUrl getDisplayNCItCodeUrl() {
+        return _displayNCItCodeUrl;
+    }
+
+    protected String getNCItCodeUrl(String code) {
+        String ncitCodeUrl = super.getNCItCodeUrl(code);
+        StringBuffer buffer = new StringBuffer();
+        buffer.append("<a href=\"" + ncitCodeUrl + "\"");
+        if (_displayNCItCodeUrl == DisplayNCItCodeUrl.SeparateMultipleWindows)
+            buffer.append(" target=\"_blank\"");
+        else if (_displayNCItCodeUrl == DisplayNCItCodeUrl.SeparateSingleWindow)
+            buffer.append(" target=\"rwNcitCodeUrl\"");
+        buffer.append(">");
+        buffer.append(code);
+        buffer.append("</a>");
+        return buffer.toString();
+    }
+
+    // -- Miscellaneous --------------------------------------------------------
+    private String getReportName(String filename) {
+        String reportName = filename.replace("__", " (");
+        reportName = reportName.replace(".htm", ")");
+        return reportName;
+    }
+
+    // -- Test Program- --------------------------------------------------------
+    public static void test(String textfile, int[] ncitCodeColumns) {
         try {
-        	String dir = "C:/apps/evs/ncireportwriter-webapp/downloads";
-        	String infile = dir + "/FDA-SPL_Country_Code_REPORT__10.06e.txt";
             String delimiter = "\t";
-            
-            new AsciiToHtmlFormatter().convert(infile, delimiter);
-            _logger.debug("Done");
+            AsciiToHtmlFormatter formatter = new AsciiToHtmlFormatter();
+            formatter.setNcitUrl("http://ncit.nci.nih.gov/ncitbrowser/");
+            formatter.setNcitCodeColumns(ncitCodeColumns);
+            formatter
+                .setDisplayNCItCodeUrl(DisplayNCItCodeUrl.SeparateSingleWindow);
+            formatter.convert(textfile, delimiter);
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    public static void main(String[] args) {
+        String dir = "C:/apps/evs/ncireportwriter-webapp/downloads/";
+        test(dir + "CDISC_SDTM_Terminology__10.06e.txt", new int[] { 0, 1 });
+        test(dir + "CDISC_Subset_REPORT__10.06e.txt", new int[] { 1, 3 });
+        test(dir + "CDRH_Subset_REPORT__10.06e.txt", new int[] { 1, 3, 9 });
+        test(dir + "FDA-SPL_Country_Code_REPORT__10.06e.txt", new int[] { 1 });
+        test(dir + "FDA-UNII_Subset_REPORT__10.06e.txt", new int[] { 2 });
+        test(dir + "Individual_Case_Safety_(ICS)_Subset_REPORT__10.06e.txt",
+            new int[] { 1, 3 });
+        test(dir + "Structured_Product_Labeling_(SPL)_REPORT__10.06e.txt",
+            new int[] { 1, 3 });
+        _logger.debug("Done");
     }
 }

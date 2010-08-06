@@ -29,11 +29,15 @@ public class MyFileOutputStream {
 	}
 
 	public void write(String text) throws Exception {
-		_out.write(text.getBytes());
+	    if (text == null)
+	        text = "";
+	    text = _indentation + text;
+	    //text = String.format("%4d: ", _indentation.length()) + text;
+        _out.write(text.getBytes());
 	}
 
 	public void writeln(String text) throws Exception {
-		write(text + "\n");
+	    write(text + "\n");
 	}
 	
 	public void writeln() throws Exception {
@@ -52,14 +56,22 @@ public class MyFileOutputStream {
 	}
 
 	public void writeln_indent(String text) throws Exception {
-		writeln(indent() + text);
+	    indent();
+		writeln(text);
 	}
 
 	public void writeln_undent(String text) throws Exception {
-		writeln(undent() + text);
+		writeln(text);
+        undent();
 	}
 
 	public void writeln_normal(String text) throws Exception {
-		writeln(_indentation + text);
+		writeln(text);
+	}
+	
+	public void writeln_inden1(String text) throws Exception {
+	    indent();
+        writeln(text);
+        undent();
 	}
 }
