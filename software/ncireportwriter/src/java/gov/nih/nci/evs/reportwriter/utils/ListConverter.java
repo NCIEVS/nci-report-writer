@@ -2,6 +2,7 @@ package gov.nih.nci.evs.reportwriter.utils;
 
 import java.util.*;
 import gov.nih.nci.evs.reportwriter.bean.*;
+import gov.nih.nci.evs.reportwriter.service.*;
 
 /**
  * <!-- LICENSE_TEXT_START -->
@@ -54,11 +55,18 @@ public class ListConverter {
     public static class StandardReportSortComparator implements
             Comparator<StandardReport> {
         public int compare(StandardReport obj1, StandardReport obj2) {
-            String pathName1 = obj1.getPathName();
-            String pathName2 = obj2.getPathName();
-            String fileName1 = DataUtils.getFileName(pathName1);
-            String fileName2 = DataUtils.getFileName(pathName2);
-            return fileName1.compareTo(fileName2);
+            String label1 = obj1.getTemplate().getLabel();
+            String label2 = obj2.getTemplate().getLabel();
+            if (! label1.equals(label2))
+                return label1.compareTo(label2);
+            
+            String format1 = obj1.getFormat().getDescription();
+            String format2 = obj2.getFormat().getDescription();
+            ReportGenerationThread.ReportFormatType formatType1 =
+                ReportGenerationThread.ReportFormatType.value_of(format1);
+            ReportGenerationThread.ReportFormatType formatType2 =
+                ReportGenerationThread.ReportFormatType.value_of(format2);
+            return formatType1.compareTo(formatType2);
         }
     }
 
