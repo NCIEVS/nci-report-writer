@@ -30,7 +30,8 @@ INSERT INTO `hi_value` (`next_value`) VALUES
 
 INSERT INTO `REPORT_FORMAT` (`ID`,`DESCRIPTION`) VALUES
  (404,'Text (tab delimited)'),
- (405,'Microsoft Office Excel');
+ (405,'Microsoft Office Excel'),
+ (406,'HyperText Markup Language');
 
 --
 -- Data for table `REPORT_STATUS`
