@@ -6,70 +6,148 @@
 	<classpathentry kind="con" path="org.eclipse.jst.j2ee.internal.web.container"/>
 	<classpathentry kind="con" path="org.eclipse.jst.j2ee.internal.module.container"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.junit.JUNIT_CONTAINER/3"/>
-	<classpathentry kind="lib" path="software/ncireportwriter/lib/acegi-security-1.0.4.jar"/>
-	<classpathentry kind="lib" path="software/ncireportwriter/lib/antlr-2.7.6.jar"/>
-	<classpathentry kind="lib" path="software/ncireportwriter/lib/asm.jar"/>
-	<classpathentry kind="lib" path="software/ncireportwriter/lib/axis.jar"/>
-	<classpathentry kind="lib" path="software/ncireportwriter/lib/c3p0-0.9.0.jar"/>
-	<classpathentry kind="lib" path="software/ncireportwriter/lib/caGrid-CQL-cql.1.0-1.2.jar"/>
-	<classpathentry kind="lib" path="software/ncireportwriter/lib/caGrid-data-common-1.2.jar"/>
-	<classpathentry kind="lib" path="software/ncireportwriter/lib/caGrid-data-utils-1.2.jar"/>
-	<classpathentry kind="lib" path="software/ncireportwriter/lib/caGrid-metadata-data-1.2.jar"/>
-	<classpathentry kind="lib" path="software/ncireportwriter/lib/caGrid-sdkQuery4-beans-1.2.jar"/>
-	<classpathentry kind="lib" path="software/ncireportwriter/lib/caGrid-sdkQuery4-processor-1.2.jar"/>
-	<classpathentry kind="lib" path="software/ncireportwriter/lib/castor-1.0.2.jar"/>
-	<classpathentry kind="lib" path="software/ncireportwriter/lib/castor-1.2-xml.jar"/>
-	<classpathentry kind="lib" path="software/ncireportwriter/lib/castor-1.2.jar"/>
-	<classpathentry kind="lib" path="software/ncireportwriter/lib/castor-bean-serializer.jar"/>
-	<classpathentry kind="lib" path="software/ncireportwriter/lib/cglib-2.1.3.jar"/>
-	<classpathentry kind="lib" path="software/ncireportwriter/lib/clm-4.1.jar"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+	<classpathentry kind="lib" path="software/ncireportwriter/lib/antlr-2.7.7.jar"/>
+	<classpathentry kind="lib" path="software/ncireportwriter/lib/args4j-2.0.12.jar"/>
+	<classpathentry kind="lib" path="software/ncireportwriter/lib/args4j.license.txt"/>
+	<classpathentry kind="lib" path="software/ncireportwriter/lib/arq.jar"/>
+	<classpathentry kind="lib" path="software/ncireportwriter/lib/asm-3.2.jar"/>
+	<classpathentry kind="lib" path="software/ncireportwriter/lib/aspectjrt-1.6.8.jar"/>
+	<classpathentry kind="lib" path="software/ncireportwriter/lib/aspectjweaver-1.6.8.jar"/>
+	<classpathentry kind="lib" path="software/ncireportwriter/lib/BlankAccessDB.jar"/>
+	<classpathentry kind="lib" path="software/ncireportwriter/lib/c3p0-0.9.1.jar"/>
+	<classpathentry kind="lib" path="software/ncireportwriter/lib/c3p0.license.txt"/>
+	<classpathentry kind="lib" path="software/ncireportwriter/lib/castor-1.3.1-core.jar"/>
+	<classpathentry kind="lib" path="software/ncireportwriter/lib/castor-1.3.1.jar"/>
+	<classpathentry kind="lib" path="software/ncireportwriter/lib/castor-codegen-1.3.1.jar"/>
+	<classpathentry kind="lib" path="software/ncireportwriter/lib/castor-codegen-anttask-1.1.jar"/>
+	<classpathentry kind="lib" path="software/ncireportwriter/lib/castor-core-1.3.1.jar"/>
+	<classpathentry kind="lib" path="software/ncireportwriter/lib/castor-xml-1.3.1.jar"/>
+	<classpathentry kind="lib" path="software/ncireportwriter/lib/castor-xml-schema-1.3.1.jar"/>
+	<classpathentry kind="lib" path="software/ncireportwriter/lib/cglib-2.2.jar"/>
+	<classpathentry kind="lib" path="software/ncireportwriter/lib/claml-model.jar"/>
+	<classpathentry kind="lib" path="software/ncireportwriter/lib/commons-beanutils-1.8.0.jar"/>
+	<classpathentry kind="lib" path="software/ncireportwriter/lib/commons-beanutils-1.8.0.license.txt"/>
+	<classpathentry kind="lib" path="software/ncireportwriter/lib/commons-beanutils-1.8.3.jar"/>
+	<classpathentry kind="lib" path="software/ncireportwriter/lib/commons-betwixt-0.8.jar"/>
 	<classpathentry kind="lib" path="software/ncireportwriter/lib/commons-cli-1.0.jar"/>
+	<classpathentry kind="lib" path="software/ncireportwriter/lib/commons-cli-1.0.license.txt"/>
 	<classpathentry kind="lib" path="software/ncireportwriter/lib/commons-codec-1.3.jar"/>
-	<classpathentry kind="lib" path="software/ncireportwriter/lib/commons-collections-3.2.jar"/>
-	<classpathentry kind="lib" path="software/ncireportwriter/lib/commons-discovery-0.2.jar"/>
-	<classpathentry kind="lib" path="software/ncireportwriter/lib/commons-lang-2.2.jar"/>
-	<classpathentry kind="lib" path="software/ncireportwriter/lib/commons-pool-1.3.jar"/>
+	<classpathentry kind="lib" path="software/ncireportwriter/lib/commons-codec-1.3.license.txt"/>
+	<classpathentry kind="lib" path="software/ncireportwriter/lib/commons-collections-3.2.1.jar"/>
+	<classpathentry kind="lib" path="software/ncireportwriter/lib/commons-collections-3.2.1.license.txt"/>
+	<classpathentry kind="lib" path="software/ncireportwriter/lib/commons-dbcp-1.2.2.jar"/>
+	<classpathentry kind="lib" path="software/ncireportwriter/lib/commons-dbcp-1.2.2.license.txt"/>
+	<classpathentry kind="lib" path="software/ncireportwriter/lib/commons-dbcp-1.4.jar"/>
+	<classpathentry kind="lib" path="software/ncireportwriter/lib/commons-digester-1.8.jar"/>
+	<classpathentry kind="lib" path="software/ncireportwriter/lib/commons-discovery-0.4.jar"/>
+	<classpathentry kind="lib" path="software/ncireportwriter/lib/commons-discovery-0.4.license.txt"/>
+	<classpathentry kind="lib" path="software/ncireportwriter/lib/commons-io-1.4.jar"/>
+	<classpathentry kind="lib" path="software/ncireportwriter/lib/commons-lang-2.4.jar"/>
+	<classpathentry kind="lib" path="software/ncireportwriter/lib/commons-lang-2.4.license.txt"/>
+	<classpathentry kind="lib" path="software/ncireportwriter/lib/commons-logging-1.1.1.jar"/>
+	<classpathentry kind="lib" path="software/ncireportwriter/lib/commons-logging-1.1.1.license.txt"/>
+	<classpathentry kind="lib" path="software/ncireportwriter/lib/commons-pool-1.4.jar"/>
+	<classpathentry kind="lib" path="software/ncireportwriter/lib/commons-pool-1.4.license.txt"/>
+	<classpathentry kind="lib" path="software/ncireportwriter/lib/compass-2.2.0.jar"/>
+	<classpathentry kind="lib" path="software/ncireportwriter/lib/concurrent.jar"/>
 	<classpathentry kind="lib" path="software/ncireportwriter/lib/csmapi-4.1.jar"/>
-	<classpathentry kind="lib" path="software/ncireportwriter/lib/ehcache-1.2.2.jar"/>
-	<classpathentry kind="lib" path="software/ncireportwriter/lib/hibernate-annotations-1.0.jar"/>
-	<classpathentry kind="lib" path="software/ncireportwriter/lib/hibernate-commons-annotations.jar"/>
-	<classpathentry kind="lib" path="software/ncireportwriter/lib/hibernate-validator.jar"/>
-	<classpathentry kind="lib" path="software/ncireportwriter/lib/hibernate3.jar"/>
+	<classpathentry kind="lib" path="software/ncireportwriter/lib/dbunit-2.4.7.jar"/>
+	<classpathentry kind="lib" path="software/ncireportwriter/lib/ddlUtils-1.0-PATCHED.jar"/>
+	<classpathentry kind="lib" path="software/ncireportwriter/lib/dom4j-1.6.1.jar"/>
+	<classpathentry kind="lib" path="software/ncireportwriter/lib/dom4j.license.txt"/>
+	<classpathentry kind="lib" path="software/ncireportwriter/lib/easymock-2.4.jar"/>
+	<classpathentry kind="lib" path="software/ncireportwriter/lib/easymock-2.5.1.jar"/>
+	<classpathentry kind="lib" path="software/ncireportwriter/lib/easymockclassextension-2.4.jar"/>
+	<classpathentry kind="lib" path="software/ncireportwriter/lib/easymockclassextension-2.5.1.jar"/>
+	<classpathentry kind="lib" path="software/ncireportwriter/lib/ehcache-core-2.0.1.jar"/>
+	<classpathentry kind="lib" path="software/ncireportwriter/lib/ejb3-persistence-1.0.2.GA.jar"/>
+	<classpathentry kind="lib" path="software/ncireportwriter/lib/evs-ui-framework-1.0.jar"/>
+	<classpathentry kind="lib" path="software/ncireportwriter/lib/GroboUtils-5-core.jar"/>
+	<classpathentry kind="lib" path="software/ncireportwriter/lib/hibernate-annotations-3.4.0.GA.jar"/>
+	<classpathentry kind="lib" path="software/ncireportwriter/lib/hibernate-commons-annotations-3.3.0.ga.jar"/>
+	<classpathentry kind="lib" path="software/ncireportwriter/lib/hibernate-core-3.3.2.GA.jar"/>
+	<classpathentry kind="lib" path="software/ncireportwriter/lib/hsqldb-1.8.0.10.jar"/>
+	<classpathentry kind="lib" path="software/ncireportwriter/lib/ibatis-sqlmap-2.3.4.726.jar"/>
+	<classpathentry kind="lib" path="software/ncireportwriter/lib/icu4j_3_4_4.license.txt"/>
+	<classpathentry kind="lib" path="software/ncireportwriter/lib/icu4j-3_6.jar"/>
+	<classpathentry kind="lib" path="software/ncireportwriter/lib/indexer-6.0.0-SNAPSHOT.jar"/>
+	<classpathentry kind="lib" path="software/ncireportwriter/lib/iri.jar"/>
 	<classpathentry kind="lib" path="software/ncireportwriter/lib/jakarta-regexp-1.4.jar"/>
-	<classpathentry kind="lib" path="software/ncireportwriter/lib/jaxrpc.jar"/>
-	<classpathentry kind="lib" path="software/ncireportwriter/lib/jcs-1.3.jar"/>
-	<classpathentry kind="lib" path="software/ncireportwriter/lib/jdom.jar"/>
-	<classpathentry kind="lib" path="software/ncireportwriter/lib/jstl.jar"/>
-	<classpathentry kind="lib" path="software/ncireportwriter/lib/jta.jar"/>
+	<classpathentry kind="lib" path="software/ncireportwriter/lib/jakarta-regexp-1.4.license.txt"/>
+	<classpathentry kind="lib" path="software/ncireportwriter/lib/javassist-3.8.0.GA.jar"/>
+	<classpathentry kind="lib" path="software/ncireportwriter/lib/javassist.license.txt"/>
+	<classpathentry kind="lib" path="software/ncireportwriter/lib/jaxen-1.1.license.txt"/>
+	<classpathentry kind="lib" path="software/ncireportwriter/lib/jaxen-core-1.1.jar"/>
+	<classpathentry kind="lib" path="software/ncireportwriter/lib/jaxen-jdom-1.1.jar"/>
+	<classpathentry kind="lib" path="software/ncireportwriter/lib/jdom-1.0.jar"/>
+	<classpathentry kind="lib" path="software/ncireportwriter/lib/jdom-1.0.license.txt"/>
+	<classpathentry kind="lib" path="software/ncireportwriter/lib/jdom-1.1.jar"/>
+	<classpathentry kind="lib" path="software/ncireportwriter/lib/jena-2.5.4.jar"/>
+	<classpathentry kind="lib" path="software/ncireportwriter/lib/jettison-1.1.jar"/>
+	<classpathentry kind="lib" path="software/ncireportwriter/lib/jettison-1.1.license"/>
+	<classpathentry kind="lib" path="software/ncireportwriter/lib/jsr250-api-1.0.jar"/>
+	<classpathentry kind="lib" path="software/ncireportwriter/lib/jta-1.1.jar"/>
+	<classpathentry kind="lib" path="software/ncireportwriter/lib/jta.license.txt"/>
+	<classpathentry kind="lib" path="software/ncireportwriter/lib/junit-4.4.jar"/>
 	<classpathentry kind="lib" path="software/ncireportwriter/lib/lexbig.jar"/>
-	<classpathentry kind="lib" path="software/ncireportwriter/lib/lexevsapi51-beans.jar"/>
-	<classpathentry kind="lib" path="software/ncireportwriter/lib/lexevsapi51-framework.jar"/>
+	<classpathentry kind="lib" path="software/ncireportwriter/lib/lexevsapi60-client.jar"/>
 	<classpathentry kind="lib" path="software/ncireportwriter/lib/LexEVSSecurity.jar"/>
-	<classpathentry kind="lib" path="software/ncireportwriter/lib/log4j-1.2.14.jar"/>
-	<classpathentry kind="lib" path="software/ncireportwriter/lib/lucene-core-2.4.0.jar"/>
-	<classpathentry kind="lib" path="software/ncireportwriter/lib/lucene-regex-2.4.0.jar"/>
-	<classpathentry kind="lib" path="software/ncireportwriter/lib/lucene-snowball-2.4.0.jar"/>
+	<classpathentry kind="lib" path="software/ncireportwriter/lib/license.txt"/>
+	<classpathentry kind="lib" path="software/ncireportwriter/lib/log4j-1.2.15.jar"/>
+	<classpathentry kind="lib" path="software/ncireportwriter/lib/log4j-1.2.15.license.txt"/>
+	<classpathentry kind="lib" path="software/ncireportwriter/lib/looks-2.1.3.jar"/>
+	<classpathentry kind="lib" path="software/ncireportwriter/lib/lucene-analyzers-2.4.1.jar"/>
+	<classpathentry kind="lib" path="software/ncireportwriter/lib/lucene-core-2.4.1.jar"/>
+	<classpathentry kind="lib" path="software/ncireportwriter/lib/lucene-queries-2.4.1.jar"/>
+	<classpathentry kind="lib" path="software/ncireportwriter/lib/lucene-regex-2.4.1.jar"/>
+	<classpathentry kind="lib" path="software/ncireportwriter/lib/lucene-snowball-2.4.1.jar"/>
 	<classpathentry kind="lib" path="software/ncireportwriter/lib/mail.jar"/>
 	<classpathentry kind="lib" path="software/ncireportwriter/lib/mail.jar.license.txt"/>
-	<classpathentry kind="lib" path="software/ncireportwriter/lib/mysql-connector-java-5.1.7-bin.jar"/>
-	<classpathentry kind="lib" path="software/ncireportwriter/lib/ojdbc14.jar"/>
+	<classpathentry kind="lib" path="software/ncireportwriter/lib/mysql-connector-java-5.1.10.jar"/>
+	<classpathentry kind="lib" path="software/ncireportwriter/lib/org.eclipse.core.runtime_3.2.0.v20060603.jar"/>
+	<classpathentry kind="lib" path="software/ncireportwriter/lib/org.eclipse.emf.common_2.2.1.v200609210005.jar"/>
 	<classpathentry kind="lib" path="software/ncireportwriter/lib/org.eclipse.emf.ecore_2.2.1.v200609210005.jar"/>
 	<classpathentry kind="lib" path="software/ncireportwriter/lib/org.eclipse.emf.ecore.xmi_2.2.1.v200609210005.jar"/>
+	<classpathentry kind="lib" path="software/ncireportwriter/lib/org.eclipse.equinox.common_3.2.0.v20060603.jar"/>
+	<classpathentry kind="lib" path="software/ncireportwriter/lib/org.eclipse.equinox.preferences_3.2.0.v20060601.jar"/>
+	<classpathentry kind="lib" path="software/ncireportwriter/lib/org.eclipse.osgi_3.2.0.v20060601.jar"/>
+	<classpathentry kind="lib" path="software/ncireportwriter/lib/oro-2.0.8.jar"/>
+	<classpathentry kind="lib" path="software/ncireportwriter/lib/orphanNodesAlg.jar"/>
+	<classpathentry kind="lib" path="software/ncireportwriter/lib/persistence-api-1.0.jar"/>
 	<classpathentry kind="lib" path="software/ncireportwriter/lib/poi-3.2-FINAL-20081019.jar"/>
 	<classpathentry kind="lib" path="software/ncireportwriter/lib/poi-contrib-3.2-FINAL-20081019.jar"/>
 	<classpathentry kind="lib" path="software/ncireportwriter/lib/poi-scratchpad-3.2-FINAL-20081019.jar"/>
+	<classpathentry kind="lib" path="software/ncireportwriter/lib/prefuse-2006.07.15-mod.jar"/>
+	<classpathentry kind="lib" path="software/ncireportwriter/lib/protege-3.4.4.jar"/>
+	<classpathentry kind="lib" path="software/ncireportwriter/lib/protege-owl-3.4.4.jar"/>
 	<classpathentry kind="lib" path="software/ncireportwriter/lib/rwdbserver-beans.jar"/>
 	<classpathentry kind="lib" path="software/ncireportwriter/lib/rwdbserver-orm.jar"/>
+	<classpathentry kind="lib" path="software/ncireportwriter/lib/saxpath-1.1.jar"/>
+	<classpathentry kind="lib" path="software/ncireportwriter/lib/saxpath-1.1.license.txt"/>
 	<classpathentry kind="lib" path="software/ncireportwriter/lib/sdk-client-framework.jar"/>
 	<classpathentry kind="lib" path="software/ncireportwriter/lib/sdk-core.jar"/>
 	<classpathentry kind="lib" path="software/ncireportwriter/lib/sdk-grid-remoting.jar"/>
 	<classpathentry kind="lib" path="software/ncireportwriter/lib/sdk-security.jar"/>
 	<classpathentry kind="lib" path="software/ncireportwriter/lib/sdk-writable-client-framework.jar"/>
 	<classpathentry kind="lib" path="software/ncireportwriter/lib/sdk-writable-core.jar"/>
-	<classpathentry kind="lib" path="software/ncireportwriter/lib/spring.jar"/>
-	<classpathentry kind="lib" path="software/ncireportwriter/lib/standard.jar"/>
-	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
-	<classpathentry kind="lib" path="software/ncireportwriter/lib/evs-ui-framework-1.0.jar"/>
+	<classpathentry kind="lib" path="software/ncireportwriter/lib/slf4j-api-1.5.6.jar"/>
+	<classpathentry kind="lib" path="software/ncireportwriter/lib/slf4j-log4j12-1.5.6.jar"/>
+	<classpathentry kind="lib" path="software/ncireportwriter/lib/slf4j.license.txt"/>
+	<classpathentry kind="lib" path="software/ncireportwriter/lib/spring-2.5.6.jar"/>
+	<classpathentry kind="lib" path="software/ncireportwriter/lib/spring-aop-2.5.6.jar"/>
+	<classpathentry kind="lib" path="software/ncireportwriter/lib/spring-aspects-2.5.6.jar"/>
+	<classpathentry kind="lib" path="software/ncireportwriter/lib/spring-batch-core-2.1.0.RELEASE.jar"/>
+	<classpathentry kind="lib" path="software/ncireportwriter/lib/spring-batch-infrastructure-2.1.0.RELEASE.jar"/>
+	<classpathentry kind="lib" path="software/ncireportwriter/lib/spring-oxm-1.5.7.jar"/>
+	<classpathentry kind="lib" path="software/ncireportwriter/lib/spring-test-2.5.6.jar"/>
+	<classpathentry kind="lib" path="software/ncireportwriter/lib/spring-xml-1.5.7.jar"/>
+	<classpathentry kind="lib" path="software/ncireportwriter/lib/stax-1.2.0.jar"/>
+	<classpathentry kind="lib" path="software/ncireportwriter/lib/stax-api-1.0.1.jar"/>
+	<classpathentry kind="lib" path="software/ncireportwriter/lib/stax-license.txt"/>
+	<classpathentry kind="lib" path="software/ncireportwriter/lib/velocity-1.6.jar"/>
+	<classpathentry kind="lib" path="software/ncireportwriter/lib/xstream-1.3.1.jar"/>
+	<classpathentry kind="lib" path="software/ncireportwriter/lib/xstream.license.txt"/>
 	<classpathentry kind="lib" path="software/ncireportwriter/extlib/jsf-api.jar"/>
 	<classpathentry kind="lib" path="software/ncireportwriter/extlib/jsf-impl.jar"/>
 	<classpathentry kind="lib" path="software/ncireportwriter/extlib/servlet-api.jar"/>
