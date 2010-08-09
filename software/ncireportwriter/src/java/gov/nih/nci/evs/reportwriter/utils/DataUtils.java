@@ -34,6 +34,9 @@ import org.LexGrid.valueSets.DefinitionEntry;
 import org.LexGrid.valueSets.EntityReference;
 import org.lexgrid.valuesets.dto.ResolvedValueSetDefinition;
 
+import org.LexGrid.valueSets.PropertyReference;
+import org.LexGrid.valueSets.PropertyMatchValue;
+
 
 /**
  * <!-- LICENSE_TEXT_START -->
@@ -1542,6 +1545,7 @@ public class DataUtils {
         return v;
     }
 
+/*
     public static Vector<org.LexGrid.concepts.Entity> restrictToMatchingProperty(
         String codingSchemeName, String version, LocalNameList propertyList,
         CodedNodeSet.PropertyType[] propertyTypes, LocalNameList sourceList,
@@ -1608,6 +1612,99 @@ public class DataUtils {
 
         return toConcept(SortUtils.quickSort(v));
     }
+*/
+
+   public static Vector<org.LexGrid.concepts.Entity> restrictToMatchingProperty(
+	   String codingSchemeName, String version, LocalNameList propertyList,
+	   CodedNodeSet.PropertyType[] propertyTypes, LocalNameList sourceList,
+	   NameAndValueList qualifierList, java.lang.String matchText,
+	   java.lang.String matchAlgorithm, java.lang.String language,
+	   int maxToReturn) {
+	   CodedNodeSet cns = null;
+	   Vector<org.LexGrid.concepts.Entity> v =
+		   new Vector<org.LexGrid.concepts.Entity>();
+	   try {
+		   CodingSchemeVersionOrTag versionOrTag =
+			   new CodingSchemeVersionOrTag();
+		   if (version != null) versionOrTag.setVersion(version);
+
+		   LexBIGService lbSvc = RemoteServerUtil.createLexBIGService();
+
+		   if (lbSvc == null) {
+			   //_logger.error("lbSvc == null???");
+			   return null;
+		   }
+  		} catch (Exception e) {
+  			e.printStackTrace();
+  			return null;
+  		}
+
+  		ValueSetDefinition vsd = new ValueSetDefinition();
+  		String valueSetDefinitionURI = codingSchemeName + "_" + matchText + "_" + matchAlgorithm;
+  		if (version != null) {
+  			valueSetDefinitionURI = codingSchemeName + "_" + version + "_" + matchText + "_" + matchAlgorithm;
+  		}
+  		try {
+  			vsd.setValueSetDefinitionURI(valueSetDefinitionURI);
+  		} catch (Exception e) {
+  			e.printStackTrace();
+  			System.out.println("ERROR: setValueSetDefinitionURI throws exceptions. ");
+  			return null;
+  		}
+
+  		String valueSetDefinitionName = valueSetDefinitionURI;
+  		vsd.setValueSetDefinitionName(valueSetDefinitionName);
+        vsd.setDefaultCodingScheme(codingSchemeName);
+
+        DefinitionEntry definitionEntry = new DefinitionEntry();
+  		definitionEntry.setRuleOrder(new java.lang.Long(1));
+  		definitionEntry.setOperator(DefinitionOperator.OR);
+
+        //org.LexGrid.valueSets.PropertyReference _propertyReference
+        PropertyReference _propertyReference = new PropertyReference();
+        _propertyReference.setCodingScheme(codingSchemeName);
+        String propertyName = null;
+        if (propertyList != null && propertyList.getEntryCount() > 0) {
+			propertyName = propertyList.getEntry(0);
+			_propertyReference.setPropertyName(propertyName);
+		}
+		PropertyMatchValue _propertyMatchValue = new PropertyMatchValue();
+		_propertyMatchValue.setMatchAlgorithm(matchAlgorithm);
+		_propertyMatchValue.setContent(matchText);
+		_propertyReference.setPropertyMatchValue(_propertyMatchValue);
+        definitionEntry.setPropertyReference(_propertyReference);
+		vsd.addDefinitionEntry(definitionEntry);
+
+        try {
+			AbsoluteCodingSchemeVersionReferenceList csvList = new AbsoluteCodingSchemeVersionReferenceList();
+			csvList.addAbsoluteCodingSchemeVersionReference(Constructors.createAbsoluteCodingSchemeVersionReference(codingSchemeName, version));
+			ResolvedValueSetDefinition rvdDef = getValueSetDefinitionService().resolveValueSetDefinition(vsd, csvList, null, null);
+
+			if (rvdDef != null) {
+				Set<String> codes = new HashSet<String>();
+				while (rvdDef.getResolvedConceptReferenceIterator().hasNext())
+				{
+					ResolvedConceptReference rcr = rvdDef.getResolvedConceptReferenceIterator().next();
+					Entity concept = rcr.getReferencedEntry();
+					if (concept == null) {
+						System.out.println("rcr.getReferencedEntry() returns NULL");
+					} else {
+					    v.add(concept);
+					}
+				}
+		    } else {
+				System.out.println("Unable to resolveValueSetDefinition??");
+			}
+
+		} catch (Exception ex) {
+			ex.printStackTrace();
+			return null;
+		}
+
+		return v;
+	}
+
+
 
     private static Vector<Entity> toConcept(Vector<?> v) {
         Iterator<?> iterator = v.iterator();
