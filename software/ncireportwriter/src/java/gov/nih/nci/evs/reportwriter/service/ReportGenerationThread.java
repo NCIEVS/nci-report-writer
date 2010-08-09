@@ -13,7 +13,6 @@ import org.apache.log4j.*;
 import gov.nih.nci.evs.reportwriter.properties.*;
 import gov.nih.nci.evs.utils.*;
 
-
 /**
  * <!-- LICENSE_TEXT_START -->
  * Copyright 2008,2009 NGIT. This software was developed in conjunction
@@ -62,8 +61,8 @@ import gov.nih.nci.evs.utils.*;
  */
 
 public class ReportGenerationThread implements Runnable {
-    private static Logger _logger =
-        Logger.getLogger(ReportGenerationThread.class);
+    private static Logger _logger = Logger
+        .getLogger(ReportGenerationThread.class);
 
     private String _outputDir = null;
     private String _standardReportLabel = null;
@@ -168,8 +167,8 @@ public class ReportGenerationThread implements Runnable {
             message.append("  * In minutes: "
                 + StopWatch.format(StopWatch.timeInMinutes(runTime)) + "\n");
             boolean send = true;
-            MailUtils.postMail(mailServer, from, recipients, subject, message
-                .toString(), send);
+            MailUtils.postMail(mailServer, from, recipients, subject,
+                message.toString(), send);
         } catch (Exception e) {
             ExceptionUtils.print(_logger, e);
             e.printStackTrace();
@@ -346,38 +345,10 @@ public class ReportGenerationThread implements Runnable {
             closePrintWriter(pw);
 
             _logger.debug("Total number of concepts processed: " + _count);
-
-            // convert to Excel:
-
-            // createStandardReport -- need user's loginName
-            // StandardReport extends Report
-            // private StandardReportTemplate template;
-
             _logger.debug("Output file " + pathname + " generated.");
 
-            // convert tab-delimited file to Excel
-
-            Boolean bool_obj =
-                StandardReportService.createStandardReport(standardReportLabel
-                    + ".txt", pathname, standardReportTemplate.getLabel(),
-                    "Text (tab delimited)", "DRAFT", uid);
-
-            // convert to Excel
-            bool_obj = createOtherFiles(pathname, delimeter_str);
-
-            // create xls report record
-            pathname =
-                outputDir + File.separator + standardReportLabel + "__"
-                    + version + ".xls";
-            pathname = pathname.replaceAll(" ", "_");
-            _logger.debug("Full path name: " + pathname);
-
-            bool_obj =
-                StandardReportService.createStandardReport(standardReportLabel
-                    + ".xls", pathname, standardReportTemplate.getLabel(),
-                    "Microsoft Office Excel", "DRAFT", uid);
-
-            return bool_obj;
+            return createStandardReports(outputDir, standardReportLabel, uid,
+                standardReportTemplate, pathname, version, delimeter_str);
         } catch (Exception e) {
             return warningMsg(warningMsg, ExceptionUtils.getStackTrace(e));
         }
@@ -495,12 +466,12 @@ public class ReportGenerationThread implements Runnable {
         Vector<Entity> v = new Vector<Entity>();
         if (direction) {
             v =
-                DataUtils.getAssociationTargets(scheme, version, root
-                    .getEntityCode(), associationCode);
+                DataUtils.getAssociationTargets(scheme, version,
+                    root.getEntityCode(), associationCode);
         } else {
             v =
-                DataUtils.getAssociationSources(scheme, version, root
-                    .getEntityCode(), associationCode);
+                DataUtils.getAssociationSources(scheme, version,
+                    root.getEntityCode(), associationCode);
         }
 
         // associated concepts (i.e., concepts in subset)
@@ -526,7 +497,7 @@ public class ReportGenerationThread implements Runnable {
         level++;
         for (int k = 0; k < subconcept_vec.size(); k++) {
             // Note: Commented on 2/24/10 (Wed). subconcept_vec size was 0.
-            // Concept concept = (Entity) subconcept_vec.elementAt(k);
+            // Entity concept = (Entity) subconcept_vec.elementAt(k);
             // String subconcep_code = concept.getEntityCode();
             String subconcep_code = subconcept_vec.elementAt(k);
             traverse(pw, scheme, version, tag, defining_root_concept,
@@ -614,8 +585,8 @@ public class ReportGenerationThread implements Runnable {
             // Vector superconcept_vec = new DataUtils().getParentCodes(scheme,
             // version, node.getId());
             Vector<String> superconcept_vec =
-                DataUtils.getAssociationSourceCodes(scheme, version, node
-                    .getEntityCode(), _hierarchicalAssoName);
+                DataUtils.getAssociationSourceCodes(scheme, version,
+                    node.getEntityCode(), _hierarchicalAssoName);
             if (superconcept_vec != null && superconcept_vec.size() > 0
                 && field_Id.indexOf("1st Parent") != -1) {
                 String superconceptCode =
@@ -1054,37 +1025,54 @@ public class ReportGenerationThread implements Runnable {
 
             closePrintWriter(pw);
             _logger.debug("Generated output file: " + pathname);
-
-            Boolean bool_obj =
-                StandardReportService.createStandardReport(standardReportLabel
-                    + ".txt", pathname, standardReportTemplate.getLabel(),
-                    "Text (tab delimited)", "DRAFT", uid);
-
-            // convert to Excel
-            bool_obj = createOtherFiles(pathname, delimeter_str);
-
-            // create xls report record
-            pathname =
-                outputDir + File.separator + standardReportLabel + "__"
-                    + version + ".xls";
-            pathname = pathname.replaceAll(" ", "_");
-            _logger.debug("Full path name: " + pathname);
-
-            bool_obj =
-                StandardReportService.createStandardReport(standardReportLabel
-                    + ".xls", pathname, standardReportTemplate.getLabel(),
-                    "Microsoft Office Excel", "DRAFT", uid);
-            return bool_obj;
+            return createStandardReports(outputDir, standardReportLabel, uid,
+                standardReportTemplate, pathname, version, delimeter_str);
         } catch (Exception e) {
             return warningMsg(warningMsg, ExceptionUtils.getStackTrace(e));
         }
     }
 
-    private Boolean createOtherFiles(String textfile, String delimiter) throws Exception {
-        Boolean successful = false;
-        successful &= new AsciiToExcelFormatter().convert(textfile, delimiter);
-        successful &= new AsciiToHtmlFormatter().convert(textfile, delimiter);
-        // successful &= new AsciiToTextFormatter().convert(textfile, delimiter);
-        return successful;
+    private String getPathname(String outputDir, String standardReportLabel,
+        String version, String extension) {
+        String pathname =
+            outputDir + File.separator + standardReportLabel + "__" + version
+                + extension;
+        pathname = pathname.replaceAll(" ", "_");
+        _logger.debug("Full path name: " + pathname);
+        return pathname;
+    }
+
+    private Boolean createStandardReports(String outputDir,
+        String standardReportLabel, String uid,
+        StandardReportTemplate standardReportTemplate, String textfile,
+        String version, String delimiter) throws Exception {
+        // Version: Text
+        String label = standardReportLabel + ".txt";
+        String pathname = textfile;
+        String templateLabel = standardReportTemplate.getLabel();
+        String format = "Text (tab delimited)";
+        String status = "DRAFT";
+        Boolean bool_obj =
+            StandardReportService.createStandardReport(label, textfile,
+                templateLabel, format, status, uid);
+
+        // Version: Excel
+        bool_obj &= new AsciiToExcelFormatter().convert(textfile, delimiter);
+        label = standardReportLabel + ".xls";
+        pathname = getPathname(outputDir, standardReportLabel, version, ".xls");
+        format = "Microsoft Office Excel";
+        bool_obj &=
+            StandardReportService.createStandardReport(label, pathname,
+                templateLabel, format, status, uid);
+
+        // Version: Html
+        bool_obj &= new AsciiToHtmlFormatter().convert(textfile, delimiter);
+        label = standardReportLabel + ".htm";
+        pathname = getPathname(outputDir, standardReportLabel, version, ".htm");
+        format = "HyperText Markup Language";
+        bool_obj &=
+            StandardReportService.createStandardReport(label, pathname,
+                templateLabel, format, status, uid);
+        return bool_obj;
     }
 }
