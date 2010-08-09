@@ -363,7 +363,7 @@ public class ReportGenerationThread implements Runnable {
                     "Text (tab delimited)", "DRAFT", uid);
 
             // convert to Excel
-            bool_obj = new AsciiToExcelFormatter().convert(pathname, delimeter_str);
+            bool_obj = createOtherFiles(pathname, delimeter_str);
 
             // create xls report record
             pathname =
@@ -1061,7 +1061,7 @@ public class ReportGenerationThread implements Runnable {
                     "Text (tab delimited)", "DRAFT", uid);
 
             // convert to Excel
-            bool_obj = new AsciiToExcelFormatter().convert(pathname, delimeter_str);
+            bool_obj = createOtherFiles(pathname, delimeter_str);
 
             // create xls report record
             pathname =
@@ -1078,5 +1078,13 @@ public class ReportGenerationThread implements Runnable {
         } catch (Exception e) {
             return warningMsg(warningMsg, ExceptionUtils.getStackTrace(e));
         }
+    }
+
+    private Boolean createOtherFiles(String textfile, String delimiter) throws Exception {
+        Boolean successful = false;
+        successful &= new AsciiToExcelFormatter().convert(textfile, delimiter);
+        successful &= new AsciiToHtmlFormatter().convert(textfile, delimiter);
+        // successful &= new AsciiToTextFormatter().convert(textfile, delimiter);
+        return successful;
     }
 }
