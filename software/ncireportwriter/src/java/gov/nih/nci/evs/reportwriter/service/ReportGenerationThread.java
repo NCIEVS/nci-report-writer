@@ -1042,6 +1042,48 @@ public class ReportGenerationThread implements Runnable {
         return pathname;
     }
 
+    public static enum ReportFormatType implements Comparator<ReportFormatType> {
+        Text("Text (tab delimited)", 0),
+        Excel("Microsoft Office Excel", 1),
+        Html("HyperText Markup Language", 2);
+        
+        private static HashMap<String, ReportFormatType> _map =
+            new HashMap<String, ReportFormatType>();
+        private String _name = "";
+        private int _sortValue = -1;
+
+        ReportFormatType(String name, int sortValue) {
+            _name = name;
+            _sortValue = sortValue;
+        }
+        
+        public String getName() {
+            return _name;
+        }
+
+        public int getSortValue() {
+            return _sortValue;
+        }
+
+        public int compare(ReportFormatType obj1, ReportFormatType obj2) {
+            int sortValue1 = obj1.getSortValue();
+            int sortValue2 = obj2.getSortValue();
+            if (sortValue1 == sortValue2)
+                return obj1.getName().compareTo(obj2.getName());
+            return obj1.getSortValue() - obj2.getSortValue();
+        }
+        
+        public static ReportFormatType value_of(String name) {
+            return _map.get(name);
+        }
+        
+        static {
+            for (ReportFormatType type : ReportFormatType.values()) {
+                _map.put(type.getName(), type);
+            }
+        }
+    }
+
     private Boolean createStandardReports(String outputDir,
         String standardReportLabel, String uid,
         StandardReportTemplate standardReportTemplate, String textfile,
@@ -1050,7 +1092,7 @@ public class ReportGenerationThread implements Runnable {
         String label = standardReportLabel + ".txt";
         String pathname = textfile;
         String templateLabel = standardReportTemplate.getLabel();
-        String format = "Text (tab delimited)";
+        String format = ReportFormatType.Text.getName();
         String status = "DRAFT";
         Boolean bool_obj =
             StandardReportService.createStandardReport(label, textfile,
@@ -1060,7 +1102,7 @@ public class ReportGenerationThread implements Runnable {
         bool_obj &= new AsciiToExcelFormatter().convert(textfile, delimiter);
         label = standardReportLabel + ".xls";
         pathname = getPathname(outputDir, standardReportLabel, version, ".xls");
-        format = "Microsoft Office Excel";
+        format = ReportFormatType.Excel.getName();
         bool_obj &=
             StandardReportService.createStandardReport(label, pathname,
                 templateLabel, format, status, uid);
@@ -1069,7 +1111,7 @@ public class ReportGenerationThread implements Runnable {
         bool_obj &= new AsciiToHtmlFormatter().convert(textfile, delimiter);
         label = standardReportLabel + ".htm";
         pathname = getPathname(outputDir, standardReportLabel, version, ".htm");
-        format = "HyperText Markup Language";
+        format = ReportFormatType.Html.getName();
         bool_obj &=
             StandardReportService.createStandardReport(label, pathname,
                 templateLabel, format, status, uid);
