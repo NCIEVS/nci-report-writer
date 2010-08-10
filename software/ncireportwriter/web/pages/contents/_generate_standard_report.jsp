@@ -38,7 +38,7 @@
                       <table cellpadding="4" cellspacing="0" border="0">
                         <tr>
                           <td><h:commandButton id="generate" value="Generate" 
-                              action="#{userSessionBean.startReportGenerationAction}" /></td>
+                              action="#{userSessionBean.generateStandardReportAction}" /></td>
                           <td><h:commandButton id="back" value="Back" action="back" /></td>
                         </tr>
                       </table>
