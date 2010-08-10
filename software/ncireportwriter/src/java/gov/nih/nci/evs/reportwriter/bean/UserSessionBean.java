@@ -324,6 +324,10 @@ public class UserSessionBean extends Object {
     public String saveModifiedTemplateAction() {
         return new ReportTemplateRequest().saveModifiedAction();
     }
+    
+    public String selectGenerateReportOptionAction() {
+        return "selectGenerateReportOption";
+    }
 
     public String deleteReportTemplateAction() {
         return new ReportTemplateRequest().deleteAction();

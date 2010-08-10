@@ -165,11 +165,11 @@
       <from-outcome>back</from-outcome>
       <to-view-id>/pages/main/task.jsp</to-view-id>
     </navigation-case>
-
+    
     <navigation-case>
-      <from-action>#{userSessionBean.generateStandardReportAction}</from-action>
-      <from-outcome>message</from-outcome>
-      <to-view-id>/pages/main/message.jsp</to-view-id>
+      <from-action>#{userSessionBean.selectGenerateReportOptionAction}</from-action>
+      <from-outcome>selectGenerateReportOption</from-outcome>
+      <to-view-id>/pages/main/generate_standard_report.jsp</to-view-id>
     </navigation-case>
    
     <navigation-case>
@@ -324,6 +324,16 @@
     <navigation-case>
       <from-outcome>back</from-outcome>
       <to-view-id>/pages/main/standard_report_template.jsp</to-view-id>
+    </navigation-case>
+  </navigation-rule>
+  
+  <!-- ===================================================================== -->
+  <navigation-rule>
+    <from-view-id>/pages/main/generate_standard_report.jsp</from-view-id>
+    <navigation-case>
+      <from-action>#{userSessionBean.generateStandardReportAction}</from-action>
+      <from-outcome>message</from-outcome>
+      <to-view-id>/pages/main/message.jsp</to-view-id>
     </navigation-case>
   </navigation-rule>
 

@@ -68,7 +68,7 @@
                           <td><h:commandButton id="edit" value="Edit Content" 
                               action="#{userSessionBean.editReportContentAction}" /></td>
                           <td><h:commandButton id="generate" value="Generate" 
-                              action="#{userSessionBean.generateStandardReportAction}" /></td>
+                              action="#{userSessionBean.selectGenerateReportOptionAction}" /></td>
                           <!-- <td><h:commandButton id="review" value="Review" action="review" /></td> -->
                           <td><h:commandButton id="delete" value="Delete" 
                               action="#{userSessionBean.deleteReportTemplateAction}" 
