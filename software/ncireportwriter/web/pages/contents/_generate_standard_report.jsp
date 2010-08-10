@@ -39,7 +39,8 @@
                         <tr>
                           <td><h:commandButton id="generate" value="Generate" 
                               action="#{userSessionBean.generateStandardReportAction}" /></td>
-                          <td><h:commandButton id="back" value="Back" action="back" /></td>
+                          <td><h:commandButton id="back" value="Back"
+                              action="#{userSessionBean.displayStandardReportTemplateAction}" /></td>
                         </tr>
                       </table>
                     </td>

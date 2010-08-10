@@ -374,6 +374,10 @@ public class UserSessionBean extends Object {
         return new ReportContentRequest()
             .generateAction(_srtMgr.getSelected());
     }
+    
+    public String displayStandardReportTemplateAction() {
+        return "standard_report_template";
+    }
 
     // -------------------------------------------------------------------------
     public String addStatusAction() {
