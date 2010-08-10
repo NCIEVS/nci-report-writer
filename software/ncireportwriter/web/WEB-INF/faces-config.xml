@@ -335,6 +335,11 @@
       <from-outcome>message</from-outcome>
       <to-view-id>/pages/main/message.jsp</to-view-id>
     </navigation-case>
+
+    <navigation-case>
+      <from-outcome>standard_report_template</from-outcome>
+      <to-view-id>/pages/main/standard_report_template.jsp</to-view-id>
+    </navigation-case>
   </navigation-rule>
 
   <!-- ===================================================================== -->
