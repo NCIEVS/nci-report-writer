@@ -35,7 +35,7 @@
                 <tr><td>
                   Please select the following report columns that contain NCI Thesaurus (NCIt) codes.<br/>
                   In some of the generated report types, this will allow NCI Report Writer to make the<br/>
-                  NCIt codes hyper-linkable to
+                  NCIt codes hyper-linkable to:
                   <ul><li>
                     <a href="<%=ncitUrl%>" target="_blank"><%=ncitUrl%></a>
                   </li></ul><br/>
@@ -60,7 +60,7 @@
                             ReportColumn c = (ReportColumn) objs[i];
                         %>
                             <tr class="dataRowLight">
-                              <td class="dataCellText"></td>
+                              <td class="dataCellText"><input type="checkbox" name="selectedColumns" value="<%=i%>"></td>
                               <td class="dataCellNumerical"><%= c.getColumnNumber() %></td>
                               <td class="dataCellText"><%= StringUtils.getSpaceIfBlank(c.getLabel()) %></td>
                               <td class="dataCellText"><%= StringUtils.getSpaceIfBlank(c.getFieldId()) %></td>

@@ -7,6 +7,8 @@ import org.apache.log4j.*;
 import org.apache.poi.hssf.usermodel.*;
 import org.apache.poi.hssf.util.*;
 
+import gov.nih.nci.evs.utils.*;
+
 /**
  * <!-- LICENSE_TEXT_START -->
  * Copyright 2008,2009 NGIT. This software was developed in conjunction
@@ -55,19 +57,19 @@ import org.apache.poi.hssf.util.*;
  */
 
 public class AsciiToExcelFormatter extends BaseFileFormatter {
-    private static Logger _logger = Logger.getLogger(AsciiToExcelFormatter.class);
+    private static Logger _logger = Logger
+        .getLogger(AsciiToExcelFormatter.class);
     private static final int MAX_WIDTH = 30;
     private static final int MAX_CELL_WIDTH = 50;
     private static final int MAX_CODE_WIDTH = 10;
     private static boolean ADJUST_HEIGHT = false;
 
-    public Boolean convert(String textfile, String delimiter)
-    	throws Exception {
-    	return convert2(textfile, "xls", delimiter);
+    public Boolean convert(String textfile, String delimiter) throws Exception {
+        return convert2(textfile, "xls", delimiter);
     }
 
-    public Boolean convert(String textfile, String delimiter,
-        String outfile) throws Exception {
+    public Boolean convert(String textfile, String delimiter, String outfile)
+            throws Exception {
 
         Vector<String> headings = getColumnHeadings(textfile, delimiter);
         Vector<Integer> maxChars = getColumnMaxChars(textfile, delimiter);
@@ -116,7 +118,7 @@ public class AsciiToExcelFormatter extends BaseFileFormatter {
         String pathName = file.getPath();
         _logger.debug("Path: " + pathName);
 
-		BufferedReader br = getBufferReader(textfile);
+        BufferedReader br = getBufferReader(textfile);
         FileOutputStream fout = new FileOutputStream(outfile);
         HSSFWorkbook wb = new HSSFWorkbook();
 
@@ -167,8 +169,8 @@ public class AsciiToExcelFormatter extends BaseFileFormatter {
             } else {
                 wr.setHeightInPoints(baseline_height);
                 if (ADJUST_HEIGHT) {
-                    int num_lines = getHeightInPoints(v, 
-                    		ADJUST_HEIGHT, MAX_CELL_WIDTH);
+                    int num_lines =
+                        getHeightInPoints(v, ADJUST_HEIGHT, MAX_CELL_WIDTH);
                     wr.setHeightInPoints(baseline_height * num_lines);
                 }
             }
@@ -204,10 +206,19 @@ public class AsciiToExcelFormatter extends BaseFileFormatter {
                 if (s.equals("")) {
                     s = null;
                 }
-                
-                wc.setCellValue(s); 
-                if (_ncitCodeColumns.contains(i) && rownum > 0 && s != null && s.length() > 0)
-                    wc.setCellFormula("HYPERLINK(\"" + getNCItCodeUrl(s) + "\", \"" + s + "\")");
+
+                wc.setCellValue(s);
+                if (_ncitCodeColumns.contains(i) && rownum > 0 && s != null
+                    && s.length() > 0) {
+                    try {
+                        wc.setCellFormula("HYPERLINK(\"" + getNCItCodeUrl(s)
+                            + "\", \"" + s + "\")");
+                    } catch (Exception e) {
+                        ExceptionUtils.print(_logger, e,
+                            "The following string is too large to be a "
+                                + "valid NCIt code (" + outfile + "): " + s);
+                    }
+                }
             }
             rownum++;
         }
@@ -240,7 +251,7 @@ public class AsciiToExcelFormatter extends BaseFileFormatter {
         fout.close();
         return Boolean.TRUE;
     }
-    
+
     public static void test(String textfile, int[] ncitCodeColumns) {
         try {
             String delimiter = "\t";

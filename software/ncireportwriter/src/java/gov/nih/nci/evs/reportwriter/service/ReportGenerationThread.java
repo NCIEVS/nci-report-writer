@@ -68,16 +68,18 @@ public class ReportGenerationThread implements Runnable {
     private String _standardReportLabel = null;
     private String _uid = null;
     private String _emailAddress = null;
+    private int[] _ncitColumns = new int[] { };
 
     private int _count = 0;
     private String _hierarchicalAssoName = null;
 
     public ReportGenerationThread(String outputDir, String standardReportLabel,
-        String uid, String emailAddress) {
+        String uid, String emailAddress, int[] ncitColumns) {
         _outputDir = outputDir;
         _standardReportLabel = standardReportLabel;
         _uid = uid;
         _emailAddress = emailAddress;
+        _ncitColumns = ncitColumns;
 
         _count = 0;
     }
@@ -1099,7 +1101,9 @@ public class ReportGenerationThread implements Runnable {
                 templateLabel, format, status, uid);
 
         // Version: Excel
-        bool_obj &= new AsciiToExcelFormatter().convert(textfile, delimiter);
+        BaseFileFormatter formatter = new AsciiToExcelFormatter();
+        formatter.setNcitCodeColumns(_ncitColumns);
+        bool_obj &= formatter.convert(textfile, delimiter);
         label = standardReportLabel + ".xls";
         pathname = getPathname(outputDir, standardReportLabel, version, ".xls");
         format = ReportFormatType.Excel.getName();
@@ -1108,7 +1112,9 @@ public class ReportGenerationThread implements Runnable {
                 templateLabel, format, status, uid);
 
         // Version: Html
-        bool_obj &= new AsciiToHtmlFormatter().convert(textfile, delimiter);
+        formatter = new AsciiToHtmlFormatter();
+        formatter.setNcitCodeColumns(_ncitColumns);
+        bool_obj &= formatter.convert(textfile, delimiter);
         label = standardReportLabel + ".htm";
         pathname = getPathname(outputDir, standardReportLabel, version, ".htm");
         format = ReportFormatType.Html.getName();

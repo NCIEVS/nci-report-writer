@@ -64,8 +64,9 @@ public class DataUtilsTest {
         _logger.info("  * uid: " + uid);
 
         StringBuffer warningMsg = new StringBuffer();
+        int[] ncitColumns = new int[] { };
         ReportGenerationThread thread = new ReportGenerationThread(
-            outputDir, standardReportLabel, uid, emailAddress);
+            outputDir, standardReportLabel, uid, emailAddress, ncitColumns);
         Boolean successful = thread.generateStandardReport(outputDir,
             standardReportLabel, uid, warningMsg);
         _logger.info("  * successful: " + successful);
