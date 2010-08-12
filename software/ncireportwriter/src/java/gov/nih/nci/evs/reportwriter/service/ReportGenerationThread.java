@@ -68,7 +68,7 @@ public class ReportGenerationThread implements Runnable {
     private String _standardReportLabel = null;
     private String _uid = null;
     private String _emailAddress = null;
-    private int[] _ncitColumns = new int[] { };
+    private int[] _ncitColumns = new int[] {};
 
     private int _count = 0;
     private String _hierarchicalAssoName = null;
@@ -1043,12 +1043,11 @@ public class ReportGenerationThread implements Runnable {
         _logger.debug("Full path name: " + pathname);
         return pathname;
     }
-    
+
     public static enum ReportFormatType implements Comparator<ReportFormatType> {
-        Text("Text (tab delimited)", 0),
-        Excel("Microsoft Office Excel", 1),
-        Html("HyperText Markup Language", 2);
-        
+        Text("Text (tab delimited)", 0), Excel("Microsoft Office Excel", 1), Html(
+                "HyperText Markup Language", 2);
+
         private static HashMap<String, ReportFormatType> _map =
             new HashMap<String, ReportFormatType>();
         private String _name = "";
@@ -1058,7 +1057,7 @@ public class ReportGenerationThread implements Runnable {
             _name = name;
             _sortValue = sortValue;
         }
-        
+
         public String getName() {
             return _name;
         }
@@ -1074,11 +1073,11 @@ public class ReportGenerationThread implements Runnable {
                 return obj1.getName().compareTo(obj2.getName());
             return obj1.getSortValue() - obj2.getSortValue();
         }
-        
+
         public static ReportFormatType value_of(String name) {
             return _map.get(name);
         }
-        
+
         static {
             for (ReportFormatType type : ReportFormatType.values()) {
                 _map.put(type.getName(), type);
@@ -1086,24 +1085,37 @@ public class ReportGenerationThread implements Runnable {
         }
     }
 
+    private Boolean createStandardReports(String textfile, String delimiter)
+            throws Exception {
+        BaseFileFormatter[] formatters =
+            new BaseFileFormatter[] { new AsciiToExcelFormatter(),
+                new AsciiToHtmlFormatter(), };
+
+        Boolean bool_obj = true;
+        for (BaseFileFormatter formatter : formatters) {
+            formatter.setNcitCodeColumns(_ncitColumns);
+            bool_obj &= formatter.convert(textfile, delimiter);
+        }
+        return bool_obj;
+    }
+
     private Boolean createStandardReports(String outputDir,
         String standardReportLabel, String uid,
         StandardReportTemplate standardReportTemplate, String textfile,
         String version, String delimiter) throws Exception {
+        Boolean bool_obj = createStandardReports(textfile, delimiter);
+
         // Version: Text
         String label = standardReportLabel + ".txt";
         String pathname = textfile;
         String templateLabel = standardReportTemplate.getLabel();
         String format = ReportFormatType.Text.getName();
         String status = "DRAFT";
-        Boolean bool_obj =
+        bool_obj &=
             StandardReportService.createStandardReport(label, textfile,
                 templateLabel, format, status, uid);
 
         // Version: Excel
-        BaseFileFormatter formatter = new AsciiToExcelFormatter();
-        formatter.setNcitCodeColumns(_ncitColumns);
-        bool_obj &= formatter.convert(textfile, delimiter);
         label = standardReportLabel + ".xls";
         pathname = getPathname(outputDir, standardReportLabel, version, ".xls");
         format = ReportFormatType.Excel.getName();
@@ -1112,9 +1124,6 @@ public class ReportGenerationThread implements Runnable {
                 templateLabel, format, status, uid);
 
         // Version: Html
-        formatter = new AsciiToHtmlFormatter();
-        formatter.setNcitCodeColumns(_ncitColumns);
-        bool_obj &= formatter.convert(textfile, delimiter);
         label = standardReportLabel + ".htm";
         pathname = getPathname(outputDir, standardReportLabel, version, ".htm");
         format = ReportFormatType.Html.getName();
