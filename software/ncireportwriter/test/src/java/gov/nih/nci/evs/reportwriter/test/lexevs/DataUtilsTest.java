@@ -42,7 +42,7 @@ public class DataUtilsTest {
         Iterator<Entity> iterator = v.iterator();
         _logger.info("Results: (size=" + n + ")");
         while (iterator.hasNext()) {
-        	Entity concept = iterator.next();
+            Entity concept = iterator.next();
             if (showAll || i%100 == 0 || i+1 == n) {
                 String c_code = concept.getEntityCode();
                 String description = concept.getEntityDescription().getContent();
@@ -64,8 +64,9 @@ public class DataUtilsTest {
         _logger.info("  * uid: " + uid);
 
         StringBuffer warningMsg = new StringBuffer();
+        int[] ncitColumns = new int[] { };
         ReportGenerationThread thread = new ReportGenerationThread(
-            outputDir, standardReportLabel, uid, emailAddress);
+            outputDir, standardReportLabel, uid, emailAddress, ncitColumns);
         Boolean successful = thread.generateStandardReport(outputDir,
             standardReportLabel, uid, warningMsg);
         _logger.info("  * successful: " + successful);

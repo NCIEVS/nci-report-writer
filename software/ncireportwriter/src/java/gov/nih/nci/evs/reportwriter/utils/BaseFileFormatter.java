@@ -55,6 +55,9 @@ import org.apache.log4j.*;
 public abstract class BaseFileFormatter {
 	protected static Logger _logger = Logger.getLogger(BaseFileFormatter.class);
 
+    public abstract Boolean convert(String textfile, String delimiter)
+        throws Exception;
+	
 	protected Boolean convert2(String textfile, String toExt, String delimiter)
 			throws Exception {
 		int i = textfile.lastIndexOf(".");
