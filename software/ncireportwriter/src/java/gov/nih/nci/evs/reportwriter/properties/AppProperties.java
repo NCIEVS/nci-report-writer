@@ -65,6 +65,7 @@ public class AppProperties extends PropertyNameValueFileParser {
     public static final String CSM_ALLOWED_ATTEMPTS = "CSM_ALLOWED_ATTEMPTS";
     public static final String CONTACT_US_EMAIL = "CONTACT_US_EMAIL";
     public static final String ACCOUNT_ADMIN_USER_EMAIL = "ACCOUNT_ADMIN_USER_EMAIL";
+    public static final String NCIT_URL = "NCIT_URL";
     
     // -------------------------------------------------------------------------
     private final String PROPERTY_FILE_ENV =

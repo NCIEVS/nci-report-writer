@@ -1087,12 +1087,21 @@ public class ReportGenerationThread implements Runnable {
 
     private Boolean createStandardReports(String textfile, String delimiter)
             throws Exception {
+        String ncitUrl =
+            AppProperties.getInstance().getProperty(AppProperties.NCIT_URL);
+
+        AsciiToHtmlFormatter htmlFormatter = new AsciiToHtmlFormatter();
+        htmlFormatter
+            .setDisplayNCItCodeUrl(AsciiToHtmlFormatter.DisplayNCItCodeUrl
+                .SeparateSingleWindow);
+
         BaseFileFormatter[] formatters =
             new BaseFileFormatter[] { new AsciiToExcelFormatter(),
-                new AsciiToHtmlFormatter(), };
+                htmlFormatter };
 
         Boolean bool_obj = true;
         for (BaseFileFormatter formatter : formatters) {
+            formatter.setNcitUrl(ncitUrl);
             formatter.setNcitCodeColumns(_ncitColumns);
             bool_obj &= formatter.convert(textfile, delimiter);
         }
