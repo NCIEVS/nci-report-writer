@@ -486,7 +486,6 @@
 
         <filterset id="embedded.filterset">
             <filter token="mail.smtp.server" value="${mail.smtp.server}"/>
-            <filter token="debug.on" value="${debug.on}"/>
             <filter token="lex.evs.api.url" value="${lex.evs.api.url}"/>
             <filter token="application.version" value="${application.version}"/>
             <filter token="ncireportwriter.build.info" value="Built: ${BUILD_DATE}"/>
@@ -508,6 +507,7 @@
             <filter token="csm.allowed.attempts" value="${csm.allowed.attempts}"/>
             <filter token="contact.us.email" value="${contact.us.email}"/>
             <filter token="account.admin.user.email" value="${account.admin.user.email}"/>
+            <filter token="ncit.url" value="${ncit.url}"/>
         </filterset>
 
         <mkdir dir="${application.data.path}/${ncireportwriter.conf.path}" />

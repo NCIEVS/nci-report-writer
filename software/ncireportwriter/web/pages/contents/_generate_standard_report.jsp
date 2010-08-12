@@ -2,11 +2,13 @@
 <%@ taglib uri="http://java.sun.com/jsf/core" prefix="f" %> 
 <%@ page import="java.util.*" %>
 <%@ page import="gov.nih.nci.evs.reportwriter.bean.*" %>
+<%@ page import="gov.nih.nci.evs.reportwriter.properties.*" %>
 <%@ page import="gov.nih.nci.evs.reportwriter.utils.*" %>
 <%@ page import="gov.nih.nci.evs.utils.*" %>
 
 <%
-  String ncitUrl = "http://ncit.nci.nih.gov/ncitbrowser/";
+  String ncitUrl = AppProperties.getInstance().getProperty(
+      AppProperties.NCIT_URL);
   String template_label = (String) request.getSession().
     getAttribute("selectedStandardReportTemplate");
 
