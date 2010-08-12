@@ -1087,13 +1087,13 @@ public class ReportGenerationThread implements Runnable {
 
     private Boolean createStandardReports(String textfile, String delimiter)
             throws Exception {
-        String ncitUrl =
-            AppProperties.getInstance().getProperty(AppProperties.NCIT_URL);
+        AppProperties appProperties = AppProperties.getInstance();
+        String ncitUrl = appProperties.getProperty(AppProperties.NCIT_URL);
+        String displayNCItCodeUrl =
+            appProperties.getProperty(AppProperties.DISPLAY_NCIT_CODE_URL);
 
         AsciiToHtmlFormatter htmlFormatter = new AsciiToHtmlFormatter();
-        htmlFormatter
-            .setDisplayNCItCodeUrl(AsciiToHtmlFormatter.DisplayNCItCodeUrl
-                .SeparateSingleWindow);
+        htmlFormatter.setDisplayNCItCodeUrl(displayNCItCodeUrl);
 
         BaseFileFormatter[] formatters =
             new BaseFileFormatter[] { new AsciiToExcelFormatter(),
