@@ -508,6 +508,7 @@
             <filter token="contact.us.email" value="${contact.us.email}"/>
             <filter token="account.admin.user.email" value="${account.admin.user.email}"/>
             <filter token="ncit.url" value="${ncit.url}"/>
+            <filter token="display.ncit.code.url" value="${display.ncit.code.url}"/>
         </filterset>
 
         <mkdir dir="${application.data.path}/${ncireportwriter.conf.path}" />

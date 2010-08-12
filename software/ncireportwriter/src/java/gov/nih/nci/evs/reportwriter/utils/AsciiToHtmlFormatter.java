@@ -202,14 +202,30 @@ public class AsciiToHtmlFormatter extends BaseFileFormatter {
 
     // -- NCItCodeUrl ----------------------------------------------------------
     public enum DisplayNCItCodeUrl {
-        CurrentWindow, SeparateSingleWindow, SeparateMultipleWindows
+        CurrentWindow, SeparateSingleWindow, SeparateMultipleWindows;
+
+        public static DisplayNCItCodeUrl value_of(String text) {
+            for (DisplayNCItCodeUrl v : values()) {
+                if (v.name().equalsIgnoreCase(text))
+                    return v;
+            }
+
+            DisplayNCItCodeUrl value = SeparateSingleWindow;
+            _logger.warn("No matching enum for: " + text);
+            _logger.warn("  * Defaulting to: " + value);
+            return value;
+        }
     };
 
     private DisplayNCItCodeUrl _displayNCItCodeUrl =
         DisplayNCItCodeUrl.CurrentWindow;
 
-    public void setDisplayNCItCodeUrl(DisplayNCItCodeUrl option) {
-        _displayNCItCodeUrl = option;
+    public void setDisplayNCItCodeUrl(DisplayNCItCodeUrl displayNCItCodeUrl) {
+        _displayNCItCodeUrl = displayNCItCodeUrl;
+    }
+
+    public void setDisplayNCItCodeUrl(String displayNCItCodeUrl) {
+        _displayNCItCodeUrl = DisplayNCItCodeUrl.value_of(displayNCItCodeUrl);
     }
 
     public DisplayNCItCodeUrl getDisplayNCItCodeUrl() {
