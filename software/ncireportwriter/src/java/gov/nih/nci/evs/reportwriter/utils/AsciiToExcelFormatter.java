@@ -216,7 +216,7 @@ public class AsciiToExcelFormatter extends BaseFileFormatter {
                     } catch (Exception e) {
                         ExceptionUtils.print(_logger, e,
                             "The following string is too large to be a "
-                                + "valid NCIt code (" + outfile + "): " + s);
+                                + "valid NCIt code (" + filename + "): " + s);
                     }
                 }
             }
