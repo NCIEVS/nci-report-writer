@@ -221,7 +221,8 @@ public class DataUtils {
                         }
                         break;
                     } catch (Exception e) {
-                        // ExceptionUtils.print(_logger, e);
+                        ExceptionUtils.print(_logger, e);
+                        e.printStackTrace();
                     }
                     j++;
                 }
@@ -1848,6 +1849,4 @@ public class DataUtils {
 
 		return v;
 	}
-
-
 }
