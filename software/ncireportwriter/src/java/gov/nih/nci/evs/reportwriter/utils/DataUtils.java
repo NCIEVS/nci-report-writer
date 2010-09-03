@@ -14,12 +14,14 @@ import org.LexGrid.commonTypes.*;
 import org.LexGrid.concepts.*;
 import org.LexGrid.LexBIG.DataModel.InterfaceElements.*;
 import org.LexGrid.LexBIG.Utility.Iterators.*;
+import org.LexGrid.LexBIG.caCore.interfaces.*;
 import org.LexGrid.codingSchemes.*;
 import org.LexGrid.naming.*;
 import org.LexGrid.LexBIG.DataModel.Core.types.*;
 import org.LexGrid.LexBIG.Extensions.Generic.*;
 import gov.nih.nci.evs.reportwriter.properties.*;
 import gov.nih.nci.evs.utils.*;
+import gov.nih.nci.system.client.*;
 
 import org.LexGrid.LexBIG.Exceptions.*;
 import org.apache.log4j.*;
@@ -1763,12 +1765,19 @@ public class DataUtils {
         return v;
     }
 
-    //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    // Value Set implementation
-    //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-	private static LexEVSValueSetDefinitionServices getValueSetDefinitionService(){
-		// To be modified for distributed call:
-        return LexEVSValueSetDefinitionServicesImpl.defaultInstance();
+    // -------------------------------------------------------------------------
+    // Value Set Implementation:
+    // -------------------------------------------------------------------------
+	private static LexEVSValueSetDefinitionServices getValueSetDefinitionService()
+	    throws Exception {
+        String serviceUrl = AppProperties.getInstance()
+            .getProperty(AppProperties.EVS_SERVICE_URL);
+        LexEVSDistributed distributed = 
+            (LexEVSDistributed) ApplicationServiceProvider
+                .getApplicationServiceFromUrl(serviceUrl, "EvsServiceInfo");
+        LexEVSValueSetDefinitionServices service = 
+            distributed.getLexEVSValueSetDefinitionServices();
+        return service;
 	}
 
 	public static Vector resolveValueSet(String codingScheme, String version, String code, boolean target2Source, String referenceAssociation, boolean includeRoot) {
