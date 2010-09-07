@@ -39,6 +39,7 @@ import org.lexgrid.valuesets.dto.ResolvedValueSetDefinition;
 import org.LexGrid.valueSets.PropertyReference;
 import org.LexGrid.valueSets.PropertyMatchValue;
 
+import org.LexGrid.LexBIG.Utility.Iterators.ResolvedConceptReferencesIterator;
 
 /**
  * <!-- LICENSE_TEXT_START -->
@@ -1617,30 +1618,19 @@ public class DataUtils {
     }
 */
 
-   public static Vector<org.LexGrid.concepts.Entity> restrictToMatchingProperty(
+    public static Vector<org.LexGrid.concepts.Entity> restrictToMatchingProperty(
 	   String codingSchemeName, String version, LocalNameList propertyList,
 	   CodedNodeSet.PropertyType[] propertyTypes, LocalNameList sourceList,
 	   NameAndValueList qualifierList, java.lang.String matchText,
 	   java.lang.String matchAlgorithm, java.lang.String language,
 	   int maxToReturn) {
 	   CodedNodeSet cns = null;
+
+	   long ms = System.currentTimeMillis();
+       long delay = ms;
+
 	   Vector<org.LexGrid.concepts.Entity> v =
 		   new Vector<org.LexGrid.concepts.Entity>();
-	   try {
-		   CodingSchemeVersionOrTag versionOrTag =
-			   new CodingSchemeVersionOrTag();
-		   if (version != null) versionOrTag.setVersion(version);
-
-		   LexBIGService lbSvc = RemoteServerUtil.createLexBIGService();
-
-		   if (lbSvc == null) {
-			   //_logger.error("lbSvc == null???");
-			   return null;
-		   }
-  		} catch (Exception e) {
-  			e.printStackTrace();
-  			return null;
-  		}
 
   		ValueSetDefinition vsd = new ValueSetDefinition();
   		String valueSetDefinitionURI = codingSchemeName + "_" + matchText + "_" + matchAlgorithm;
@@ -1681,13 +1671,22 @@ public class DataUtils {
         try {
 			AbsoluteCodingSchemeVersionReferenceList csvList = new AbsoluteCodingSchemeVersionReferenceList();
 			csvList.addAbsoluteCodingSchemeVersionReference(Constructors.createAbsoluteCodingSchemeVersionReference(codingSchemeName, version));
+
+			ms = System.currentTimeMillis();
 			ResolvedValueSetDefinition rvdDef = getValueSetDefinitionService().resolveValueSetDefinition(vsd, csvList, null, null);
+			delay = System.currentTimeMillis() - ms;
+			System.out.println("resolveValueSetDefinition delay: " + delay + " milli-seconds.");
+
+			ms = System.currentTimeMillis();
+			ResolvedConceptReferencesIterator iterator = rvdDef.getResolvedConceptReferenceIterator();
+			delay = System.currentTimeMillis() - ms;
+			System.out.println("getResolvedConceptReferenceIterator delay: " + delay + " milli-seconds.");
 
 			if (rvdDef != null) {
 				Set<String> codes = new HashSet<String>();
-				while (rvdDef.getResolvedConceptReferenceIterator().hasNext())
+				while (iterator.hasNext())
 				{
-					ResolvedConceptReference rcr = rvdDef.getResolvedConceptReferenceIterator().next();
+					ResolvedConceptReference rcr = iterator.next();
 					Entity concept = rcr.getReferencedEntry();
 					if (concept == null) {
 						System.out.println("rcr.getReferencedEntry() returns NULL");
@@ -1772,10 +1771,10 @@ public class DataUtils {
 	    throws Exception {
         String serviceUrl = AppProperties.getInstance()
             .getProperty(AppProperties.EVS_SERVICE_URL);
-        LexEVSDistributed distributed = 
+        LexEVSDistributed distributed =
             (LexEVSDistributed) ApplicationServiceProvider
                 .getApplicationServiceFromUrl(serviceUrl, "EvsServiceInfo");
-        LexEVSValueSetDefinitionServices service = 
+        LexEVSValueSetDefinitionServices service =
             distributed.getLexEVSValueSetDefinitionServices();
         return service;
 	}
