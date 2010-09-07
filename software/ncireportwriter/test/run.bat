@@ -17,6 +17,8 @@ set java=%JAVA_HOME%\bin\java
 set javaArgs=-Xms256m -Xmx512m
 set class=gov.nih.nci.evs.reportwriter.test.lexevs.DataUtilsTest
 set class=gov.nih.nci.evs.reportwriter.test.lexevs.RemoteServerUtilTest
+set class=gov.nih.nci.evs.reportwriter.test.lexevs.DistributedValueSetTest
+set class=gov.nih.nci.evs.reportwriter.test.lexevs.Test
 set args=-propertyFile C:/apps/evs/ncireportwriter-webapp/conf/ncireportwriter.properties
 
 rem ---------------------------------------------------------------------------
