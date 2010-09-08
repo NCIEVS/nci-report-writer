@@ -247,7 +247,7 @@ public class RestrictToMatchingProperty
 
        long ms = System.currentTimeMillis();
 
-       //DYEE: v = restrictToMatchingProperty(
+       //DYEE v = restrictToMatchingProperty(
        v = gov.nih.nci.evs.reportwriter.utils.DataUtils.restrictToMatchingProperty(
                codingSchemeName, version, propertyList,
                propertyTypes, sourceList,
@@ -265,7 +265,7 @@ public class RestrictToMatchingProperty
     public static void main(String[] args)
     {
         args = SetupEnv.getInstance().parse(args);
-        Test test = new Test();
+        RestrictToMatchingProperty test = new RestrictToMatchingProperty();
         test.run();
     }
 }
