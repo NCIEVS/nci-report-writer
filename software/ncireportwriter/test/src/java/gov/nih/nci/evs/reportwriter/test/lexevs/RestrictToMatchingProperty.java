@@ -1,144 +1,37 @@
 package gov.nih.nci.evs.reportwriter.test.lexevs;
 
-import edu.mayo.informatics.lexgrid.convert.exporters.xml.lgxml.constants.LexGridConstants;
-import edu.mayo.informatics.lexgrid.convert.formats.Option;
-import edu.mayo.informatics.lexgrid.convert.options.BooleanOption;
+import gov.nih.nci.evs.reportwriter.test.utils.SetupEnv;
+import gov.nih.nci.evs.reportwriter.utils.DataUtils;
+import gov.nih.nci.system.client.ApplicationServiceProvider;
 
-
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.PrintWriter;
-import java.io.Serializable;
-import java.net.URI;
-import java.net.URISyntaxException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Comparator;
-import java.util.Date;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
-import java.util.List;
-import java.util.ListIterator;
-import java.util.Map;
 import java.util.Set;
 import java.util.Vector;
 
-
-
 import org.LexGrid.LexBIG.DataModel.Collections.AbsoluteCodingSchemeVersionReferenceList;
-import org.LexGrid.LexBIG.DataModel.Collections.CodingSchemeRenderingList;
-import org.LexGrid.LexBIG.DataModel.Collections.ConceptReferenceList;
 import org.LexGrid.LexBIG.DataModel.Collections.LocalNameList;
-import org.LexGrid.LexBIG.DataModel.Collections.ResolvedConceptReferenceList;
-import org.LexGrid.LexBIG.DataModel.Collections.SortOptionList;
-import org.LexGrid.LexBIG.DataModel.Core.AbsoluteCodingSchemeVersionReference;
-import org.LexGrid.LexBIG.DataModel.Core.CodingSchemeSummary;
-import org.LexGrid.LexBIG.DataModel.Core.CodingSchemeVersionOrTag;
-import org.LexGrid.LexBIG.DataModel.Core.ConceptReference;
-import org.LexGrid.LexBIG.DataModel.Core.LogEntry;
+import org.LexGrid.LexBIG.DataModel.Collections.NameAndValueList;
 import org.LexGrid.LexBIG.DataModel.Core.ResolvedConceptReference;
-import org.LexGrid.LexBIG.DataModel.InterfaceElements.CodingSchemeRendering;
-import org.LexGrid.LexBIG.DataModel.InterfaceElements.ExportStatus;
-import org.LexGrid.LexBIG.DataModel.InterfaceElements.LoadStatus;
-import org.LexGrid.LexBIG.DataModel.InterfaceElements.types.ProcessState;
-import org.LexGrid.LexBIG.Exceptions.LBException;
-import org.LexGrid.LexBIG.Exceptions.LBInvocationException;
-import org.LexGrid.LexBIG.Exceptions.LBParameterException;
-import org.LexGrid.LexBIG.Exceptions.LBResourceUnavailableException;
-import org.LexGrid.LexBIG.Extensions.Export.Exporter;
-import org.LexGrid.LexBIG.Extensions.Export.LexGrid_Exporter;
-import org.LexGrid.LexBIG.Extensions.Load.Loader;
-import org.LexGrid.LexBIG.Impl.LexBIGServiceImpl;
-import org.LexGrid.LexBIG.Impl.loaders.LexGridMultiLoaderImpl;
-import org.LexGrid.LexBIG.Impl.loaders.MessageDirector;
-import org.LexGrid.LexBIG.LexBIGService.CodedNodeGraph;
-import org.LexGrid.LexBIG.LexBIGService.CodedNodeSet.ActiveOption;
-import org.LexGrid.LexBIG.LexBIGService.CodedNodeSet.PropertyType;
 import org.LexGrid.LexBIG.LexBIGService.CodedNodeSet;
-import org.LexGrid.LexBIG.LexBIGService.LexBIGService;
-import org.LexGrid.LexBIG.LexBIGService.LexBIGServiceManager;
 import org.LexGrid.LexBIG.Utility.Constructors;
-import org.LexGrid.LexBIG.Utility.ConvenienceMethods;
-import org.LexGrid.LexBIG.Utility.Iterators.ResolvedConceptReferencesIterator;
-import org.LexGrid.LexBIG.Utility.LBConstants.MatchAlgorithms;
-import org.LexGrid.LexBIG.Utility.logging.LgLoggerIF;
-import org.LexGrid.LexBIG.Utility.logging.LgMessageDirectorIF;
-import org.LexGrid.annotations.LgAdminFunction;
-import org.LexGrid.annotations.LgClientSideSafe;
-import org.LexGrid.commonTypes.Source;
-import org.LexGrid.commonTypes.Text;
+import org.LexGrid.LexBIG.caCore.interfaces.LexEVSDistributed;
 import org.LexGrid.concepts.Entity;
-import org.LexGrid.concepts.Presentation;
-import org.LexGrid.naming.Mappings;
-import org.LexGrid.naming.SupportedAssociation;
-import org.LexGrid.naming.SupportedCodingScheme;
-import org.LexGrid.naming.SupportedNamespace;
-import org.LexGrid.util.sql.lgTables.SQLTableConstants;
 import org.LexGrid.valueSets.DefinitionEntry;
-import org.LexGrid.valueSets.EntityReference;
-import org.LexGrid.valueSets.PickListDefinition;
-import org.LexGrid.valueSets.PickListEntry;
-import org.LexGrid.valueSets.PickListEntryExclusion;
-import org.LexGrid.valueSets.PickListEntryNode;
 import org.LexGrid.valueSets.PropertyMatchValue;
 import org.LexGrid.valueSets.PropertyReference;
 import org.LexGrid.valueSets.ValueSetDefinition;
 import org.LexGrid.valueSets.types.DefinitionOperator;
-import org.apache.commons.cli.BasicParser;
-import org.apache.commons.cli.CommandLine;
-import org.apache.commons.cli.HelpFormatter;
-//import org.apache.commons.cli.Option;
-import org.apache.commons.cli.Options;
-import org.apache.commons.lang.BooleanUtils;
-import org.apache.commons.lang.StringUtils;
-import org.apache.log4j.Logger;
-import org.lexevs.dao.database.service.DatabaseServiceManager;
-import org.lexevs.dao.database.service.valuesets.PickListDefinitionService;
-import org.lexevs.dao.database.service.valuesets.ValueSetDefinitionService;
-import org.lexevs.locator.LexEvsServiceLocator;
-import org.lexevs.logging.LoggerFactory;
-import org.lexevs.system.service.LexEvsResourceManagingService;
-import org.lexevs.system.service.SystemResourceService;
-import org.lexgrid.valuesets.LexEVSPickListDefinitionServices;
-import org.lexgrid.valuesets.LexEVSValueSetDefinitionServices;
-import org.lexgrid.valuesets.admin.Util;
-import org.lexgrid.valuesets.dto.ResolvedPickListEntry;
-import org.lexgrid.valuesets.dto.ResolvedPickListEntryList;
-import org.lexgrid.valuesets.dto.ResolvedValueSetCodedNodeSet;
-import org.lexgrid.valuesets.dto.ResolvedValueSetDefinition;
-import org.lexgrid.valuesets.helper.PLEntryNodeSortUtil;
-import org.lexgrid.valuesets.helper.VSDServiceHelper;
-import org.lexgrid.valuesets.impl.LexEVSPickListDefinitionServicesImpl;
-import org.lexgrid.valuesets.impl.LexEVSValueSetDefinitionServicesImpl;
-
-import gov.nih.nci.evs.reportwriter.test.utils.SetupEnv;
-import gov.nih.nci.system.client.ApplicationServiceProvider;
-
-import org.LexGrid.LexBIG.DataModel.Collections.AbsoluteCodingSchemeVersionReferenceList;
-import org.LexGrid.LexBIG.Utility.Constructors;
-import org.LexGrid.LexBIG.Utility.Iterators.ResolvedConceptReferencesIterator;
-import org.LexGrid.LexBIG.caCore.interfaces.LexEVSDistributed;
-import org.LexGrid.util.PrintUtility;
-import org.LexGrid.valueSets.DefinitionEntry;
-import org.LexGrid.valueSets.EntityReference;
-import org.LexGrid.valueSets.ValueSetDefinition;
-import org.LexGrid.valueSets.types.DefinitionOperator;
 import org.lexgrid.valuesets.LexEVSValueSetDefinitionServices;
 import org.lexgrid.valuesets.dto.ResolvedValueSetDefinition;
-
-import org.LexGrid.LexBIG.DataModel.Collections.NameAndValueList;
-
 
 public class RestrictToMatchingProperty
 {
-    public LexEVSValueSetDefinitionServices vds_ = null;
-
-    public RestrictToMatchingProperty()
-    {
-
-    }
+    private final static String SEPARATOR = 
+        "----------------------------------------" +
+        "----------------------------------------";
+    
+    private LexEVSValueSetDefinitionServices vds_ = null;
 
     private static LexEVSValueSetDefinitionServices getValueSetDefinitionService()
         throws Exception {
@@ -244,29 +137,38 @@ public class RestrictToMatchingProperty
        String matchAlgorithm = "contains";
        String language = null;
        int maxToReturn = -1;
+       
+       boolean test = true;
+       if (test) {
+           propertyList = new LocalNameList();
+           propertyList.addEntry("Semantic_Type");
+           //matchText = "Geographic Area (label: Semantic_Type)";
+           matchText = "Geographic";
+           //matchAlgorithm = "exactMatch";
+       }
 
        long ms = System.currentTimeMillis();
 
-       //DYEE v = restrictToMatchingProperty(
-       v = gov.nih.nci.evs.reportwriter.utils.DataUtils.restrictToMatchingProperty(
+       //v = restrictToMatchingProperty(
+       v = DataUtils.restrictToMatchingProperty(
                codingSchemeName, version, propertyList,
                propertyTypes, sourceList,
                qualifierList,  matchText,
                matchAlgorithm, language,
                maxToReturn);
-
+       
+       System.out.println(SEPARATOR);
        long delay = System.currentTimeMillis() - ms;
        System.out.println("Run time (ms): " + delay + " milli-seconds.");
-       System.out.println("Number of matches: " + v.size());
+       int size = v != null ? v.size() : -1;
+       System.out.println("Number of matches: " + size);
     }
-
-
+    
 
     public static void main(String[] args)
     {
         args = SetupEnv.getInstance().parse(args);
-        RestrictToMatchingProperty test = new RestrictToMatchingProperty();
-        test.run();
+        RestrictToMatchingProperty.run();
     }
 }
 
