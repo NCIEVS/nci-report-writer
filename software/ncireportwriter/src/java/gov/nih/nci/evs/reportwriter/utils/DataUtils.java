@@ -1783,11 +1783,13 @@ public class DataUtils {
 	}
 
 	public static Vector resolveValueSet(String codingScheme, String version, String code, boolean target2Source, String referenceAssociation, boolean includeRoot) {
+	    codingScheme = TempFix.modifyCodingSchemeName(codingScheme);
 		ValueSetDefinition vsd = new ValueSetDefinition();
 		String valueSetDefinitionURI = codingScheme + "_" + code + "_" + referenceAssociation + "_" + target2Source;
 		if (version != null) {
 			valueSetDefinitionURI = codingScheme + "_" + version + "_" + code + "_" + referenceAssociation + "_" + target2Source;
 		}
+		valueSetDefinitionURI = TempFix.modifyValueSetDefinitionURI(valueSetDefinitionURI);
 		try {
 			vsd.setValueSetDefinitionURI(valueSetDefinitionURI);
 		} catch (Exception e) {
