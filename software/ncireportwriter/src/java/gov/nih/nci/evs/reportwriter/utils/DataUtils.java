@@ -726,9 +726,9 @@ public class DataUtils {
     }
 
     public static Vector<Entity> getAssociationTargets(String scheme,
-        String version, String code, String assocCode) {
+        String version, String code, String assocName) {
 		boolean targetToSource = false;
-        return getAssociations(targetToSource, scheme, version, code, assocCode);
+        return getAssociations(targetToSource, scheme, version, code, assocName);
     }
 
     public static ResolvedConceptReferenceList getNext(
@@ -775,16 +775,17 @@ public class DataUtils {
     }
 
     public static Vector<Entity> getAssociationSources(String scheme,
-        String version, String code, String assocCode) {
+        String version, String code, String assocName) {
 		boolean targetToSource = true;
-        return getAssociations(targetToSource, scheme, version, code, assocCode);
+        return getAssociations(targetToSource, scheme, version, code, assocName);
     }
 
     public static Vector<Entity> getAssociations(boolean targetToSource,
-        String scheme, String version, String code, String assocCode) {
+        String scheme, String version, String code, String assocName) {
 
 		boolean includeRoot = false;
-		return resolveValueSet(scheme, version, code, targetToSource, assocCode, includeRoot);
+		return resolveValueSet(scheme, version, code, targetToSource, 
+		    assocName, includeRoot);
 
 
 /*

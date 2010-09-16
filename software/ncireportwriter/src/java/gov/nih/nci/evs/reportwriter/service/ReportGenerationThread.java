@@ -342,7 +342,7 @@ public class ReportGenerationThread implements Runnable {
             }
             _cdiscInfo = new SpecialCases.CDISCExtensibleInfo(cols);
             traverse(pw, scheme, version, tag, defining_root_concept, code,
-                _hierarchicalAssoName, associationCode, direction, curr_level,
+                _hierarchicalAssoName, associationName, direction, curr_level,
                 max_level, cols);
             closePrintWriter(pw);
 
@@ -449,7 +449,7 @@ public class ReportGenerationThread implements Runnable {
 
     private void traverse(PrintWriter pw, String scheme, String version,
         String tag, Entity defining_root_concept, String code,
-        String hierarchyAssociationName, String associationCode,
+        String hierarchyAssociationName, String associationName,
         boolean direction, int level, int maxLevel, ReportColumn[] cols) {
         if (maxLevel != -1 && level > maxLevel)
             return;
@@ -469,11 +469,11 @@ public class ReportGenerationThread implements Runnable {
         if (direction) {
             v =
                 DataUtils.getAssociationTargets(scheme, version,
-                    root.getEntityCode(), associationCode);
+                    root.getEntityCode(), associationName);
         } else {
             v =
                 DataUtils.getAssociationSources(scheme, version,
-                    root.getEntityCode(), associationCode);
+                    root.getEntityCode(), associationName);
         }
 
         // associated concepts (i.e., concepts in subset)
@@ -503,7 +503,7 @@ public class ReportGenerationThread implements Runnable {
             // String subconcep_code = concept.getEntityCode();
             String subconcep_code = subconcept_vec.elementAt(k);
             traverse(pw, scheme, version, tag, defining_root_concept,
-                subconcep_code, hierarchyAssociationName, associationCode,
+                subconcep_code, hierarchyAssociationName, associationName,
                 direction, level, maxLevel, cols);
         }
     }
