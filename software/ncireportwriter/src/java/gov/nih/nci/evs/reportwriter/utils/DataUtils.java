@@ -1624,7 +1624,9 @@ public class DataUtils {
 	   NameAndValueList qualifierList, java.lang.String matchText,
 	   java.lang.String matchAlgorithm, java.lang.String language,
 	   int maxToReturn) {
-	   CodedNodeSet cns = null;
+        
+        codingSchemeName = TempFix.modifyCodingSchemeName(codingSchemeName);
+        CodedNodeSet cns = null;
 
 	   long ms = System.currentTimeMillis();
        long delay = ms;
@@ -1637,7 +1639,9 @@ public class DataUtils {
   		if (version != null) {
   			valueSetDefinitionURI = codingSchemeName + "_" + version + "_" + matchText + "_" + matchAlgorithm;
   		}
-  		try {
+  		valueSetDefinitionURI = TempFix.modifyValueSetDefinitionURI(valueSetDefinitionURI);
+
+        try {
   			vsd.setValueSetDefinitionURI(valueSetDefinitionURI);
   		} catch (Exception e) {
   			e.printStackTrace();
@@ -1703,10 +1707,9 @@ public class DataUtils {
 			return null;
 		}
 
+		TempFix.debugList(v); //DYEE
 		return v;
 	}
-
-
 
     private static Vector<Entity> toConcept(Vector<?> v) {
         Iterator<?> iterator = v.iterator();
@@ -1773,7 +1776,7 @@ public class DataUtils {
             .getProperty(AppProperties.EVS_SERVICE_URL);
         LexEVSDistributed distributed =
             (LexEVSDistributed) ApplicationServiceProvider
-                .getApplicationServiceFromUrl(serviceUrl, "EvsServiceInfo");
+                .getApplicationServiceFromUrl(serviceUrl, "EvsServiceInfo");    
         LexEVSValueSetDefinitionServices service =
             distributed.getLexEVSValueSetDefinitionServices();
         return service;

@@ -143,8 +143,8 @@ public class RestrictToMatchingProperty
            propertyList = new LocalNameList();
            propertyList.addEntry("Semantic_Type");
            //matchText = "Geographic Area (label: Semantic_Type)";
-           matchText = "Geographic";
-           //matchAlgorithm = "exactMatch";
+           matchText = "Geographic Area";
+           matchAlgorithm = "exactMatch";
        }
 
        long ms = System.currentTimeMillis();

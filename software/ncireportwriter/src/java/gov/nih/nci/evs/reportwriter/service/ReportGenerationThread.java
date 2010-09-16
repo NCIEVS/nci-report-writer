@@ -741,7 +741,8 @@ public class ReportGenerationThread implements Runnable {
             for (int i = 0; i < properties.length; i++) {
                 boolean match = false;
                 org.LexGrid.commonTypes.Property p = properties[i];
-                if (p.getPropertyName().compareTo(property_name) == 0) // focus
+                String propertyName = p.getPropertyName();
+                if (propertyName.compareTo(property_name) == 0) // focus
                 // on
                 // matching
                 // property
@@ -767,8 +768,8 @@ public class ReportGenerationThread implements Runnable {
                             if (representational_form != null
                                 && p instanceof Presentation) {
                                 Presentation presentation = (Presentation) p;
-                                if (presentation.getRepresentationalForm()
-                                    .compareTo(representational_form) != 0) {
+                                String representationalForm = presentation.getRepresentationalForm();
+                                if (representationalForm.compareTo(representational_form) != 0) {
                                     match = false;
                                 }
                             }
@@ -1017,6 +1018,7 @@ public class ReportGenerationThread implements Runnable {
                     property_vec, source_vec, qualifier_name_vec,
                     qualifier_value_vec, matchText, matchAlgorithm, language,
                     maxToReturn);
+            _logger.debug("concept_vec.size(): " + concept_vec.size());
 
             String delim = "\t";
             for (int i = 0; i < concept_vec.size(); i++) {
