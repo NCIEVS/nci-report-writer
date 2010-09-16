@@ -984,7 +984,7 @@ public class DataUtils {
         } catch (Exception ex) {
             ex.printStackTrace();
         }
-        System.out.println("Run time (milliseconds) getSubconcepts: "
+        _logger.debug("Run time (milliseconds) getSubconcepts: "
             + (System.currentTimeMillis() - ms) + " to resolve ");
         SortUtils.quickSort(list);
         return list;
@@ -1646,7 +1646,7 @@ public class DataUtils {
   			vsd.setValueSetDefinitionURI(valueSetDefinitionURI);
   		} catch (Exception e) {
   			e.printStackTrace();
-  			System.out.println("ERROR: setValueSetDefinitionURI throws exceptions. ");
+  			_logger.error("ERROR: setValueSetDefinitionURI throws exceptions. ");
   			return null;
   		}
 
@@ -1680,12 +1680,12 @@ public class DataUtils {
 			ms = System.currentTimeMillis();
 			ResolvedValueSetDefinition rvdDef = getValueSetDefinitionService().resolveValueSetDefinition(vsd, csvList, null, null);
 			delay = System.currentTimeMillis() - ms;
-			System.out.println("resolveValueSetDefinition delay: " + delay + " milli-seconds.");
+			_logger.debug("resolveValueSetDefinition delay: " + delay + " milli-seconds.");
 
 			ms = System.currentTimeMillis();
 			ResolvedConceptReferencesIterator iterator = rvdDef.getResolvedConceptReferenceIterator();
 			delay = System.currentTimeMillis() - ms;
-			System.out.println("getResolvedConceptReferenceIterator delay: " + delay + " milli-seconds.");
+			_logger.debug("getResolvedConceptReferenceIterator delay: " + delay + " milli-seconds.");
 
 			if (rvdDef != null) {
 				Set<String> codes = new HashSet<String>();
@@ -1694,21 +1694,19 @@ public class DataUtils {
 					ResolvedConceptReference rcr = iterator.next();
 					Entity concept = rcr.getReferencedEntry();
 					if (concept == null) {
-						System.out.println("rcr.getReferencedEntry() returns NULL");
+						_logger.warn("rcr.getReferencedEntry() returns NULL");
 					} else {
 					    v.add(concept);
 					}
 				}
 		    } else {
-				System.out.println("Unable to resolveValueSetDefinition??");
+		        _logger.error("Unable to resolveValueSetDefinition??");
 			}
 
 		} catch (Exception ex) {
 			ex.printStackTrace();
 			return null;
 		}
-
-		TempFix.debugList(v); //DYEE
 		return v;
 	}
 
@@ -1795,7 +1793,7 @@ public class DataUtils {
 			vsd.setValueSetDefinitionURI(valueSetDefinitionURI);
 		} catch (Exception e) {
 			e.printStackTrace();
-			System.out.println("ERROR: setValueSetDefinitionURI throws exceptions. ");
+			_logger.error("setValueSetDefinitionURI throws exceptions.");
 			return null;
 		}
 
@@ -1847,13 +1845,13 @@ public class DataUtils {
 					ResolvedConceptReference rcr = rvdDef.getResolvedConceptReferenceIterator().next();
 					Entity concept = rcr.getReferencedEntry();
 					if (concept == null) {
-						System.out.println("rcr.getReferencedEntry() returns NULL");
+					    _logger.warn("rcr.getReferencedEntry() returns NULL");
 					} else {
 					    v.add(concept);
 					}
 				}
 		    } else {
-				System.out.println("Unable to resolveValueSetDefinition??");
+		        _logger.error("Unable to resolveValueSetDefinition??");
 			}
 
 		} catch (Exception ex) {
