@@ -10,11 +10,11 @@
     getAttribute("selectedStandardReportTemplate");
   String warningMsg = (String) request.getAttribute("warningMsg");
   
-  String templatLabel = (String) request.getSession().getAttribute("selectedStandardReportTemplate");
+  String templateLabel = (String) request.getSession().getAttribute("selectedStandardReportTemplate");
   SDKClientUtil sdkclientutil = new SDKClientUtil();
   String FQName = "gov.nih.nci.evs.reportwriter.bean.StandardReportTemplate";
   String methodName = "setLabel";
-  Object obj = sdkclientutil.search(FQName, methodName, templatLabel);
+  Object obj = sdkclientutil.search(FQName, methodName, templateLabel);
   StandardReportTemplate standardReportTemplate = (StandardReportTemplate) obj;
   Collection cc = standardReportTemplate.getColumnCollection();
   Object[] objs = cc == null ? null : cc.toArray();

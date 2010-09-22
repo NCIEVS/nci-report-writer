@@ -1,5 +1,8 @@
 package gov.nih.nci.evs.reportwriter.test.lexevs;
 
+import org.LexGrid.LexBIG.DataModel.Collections.*;
+import org.LexGrid.LexBIG.DataModel.Core.*;
+import org.LexGrid.LexBIG.DataModel.InterfaceElements.*;
 import org.LexGrid.LexBIG.LexBIGService.*;
 import org.apache.log4j.*;
 
@@ -26,11 +29,24 @@ public class RemoteServerUtilTest extends TestCase {
         try {
             LexBIGService server =
                 RemoteServerUtil.createLexBIGService();
-            _logger.info("server: " + server);
+            simpleTest(server);
             assertTrue(server != null);
         } catch (Exception e) {
             ExceptionUtils.print(_logger, e);
             assertTrue(false);
+        }
+    }
+    
+    private static void simpleTest(LexBIGService lbSvc) throws Exception {
+        CodingSchemeRenderingList csrl = lbSvc.getSupportedCodingSchemes();
+        CodingSchemeRendering[] csrs = csrl.getCodingSchemeRendering();
+        _logger.debug("List of coding schemes:");
+        for (int i = 0; i < csrs.length; i++) {
+            CodingSchemeRendering csr = csrs[i];
+            CodingSchemeSummary css = csr.getCodingSchemeSummary();
+            String name = css.getFormalName();
+            String version = css.getRepresentsVersion();
+            _logger.debug("  " + i + ") " + name + "(version: " + version + ")");
         }
     }
 }

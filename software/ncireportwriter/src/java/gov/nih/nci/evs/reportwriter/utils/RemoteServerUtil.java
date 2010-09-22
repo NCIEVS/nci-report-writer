@@ -63,6 +63,7 @@ public class RemoteServerUtil {
     private static Logger _logger = Logger
         .getLogger(RemoteServerUtil.class);
     private static boolean _firstTime = true;
+    private static boolean _firstTimeSimpleTest = true;
     
     public static LexBIGService createLexBIGService() throws Exception {
         String serviceUrl = AppProperties.getInstance()
@@ -103,10 +104,11 @@ public class RemoteServerUtil {
     private static void simpleTest(LexBIGService lbSvc) throws Exception {
         CodingSchemeRenderingList csrl = lbSvc.getSupportedCodingSchemes();
 
-        boolean debug = false;
-        if (! debug)
+        if (! _firstTimeSimpleTest)
             return;
+        _firstTimeSimpleTest = false;
 
+        _logger.debug(StringUtils.SEPARATOR);
         CodingSchemeRendering[] csrs = csrl.getCodingSchemeRendering();
         _logger.debug("List of coding schemes:");
         for (int i = 0; i < csrs.length; i++) {

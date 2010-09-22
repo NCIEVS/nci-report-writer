@@ -11,6 +11,7 @@
   StandardReportTemplate standardReportTemplate = null;
   String FQName = "gov.nih.nci.evs.reportwriter.bean.StandardReport";
   Object[] objs = sdkclientutil.search(FQName);
+  Vector<StandardReport> vector = ListConverter.toStandardReport(objs, true);
   SimpleDateFormat formatter = new SimpleDateFormat("MM/dd/yyyy");
 %>
 
@@ -52,53 +53,54 @@
                   </tr>
 
                   <%
-                    if (objs != null && objs.length > 0) {
-                      for (int i=0; i<objs.length; i++) {
-                        StandardReport standardReport = (StandardReport) objs[i];
-                        ReportFormat reportFormat = standardReport.getFormat();
-                        ReportStatus reportStatus = standardReport.getStatus();
-                        standardReportTemplate = standardReport.getTemplate();
-                        if (reportFormat == null || standardReportTemplate == null 
-                            || reportStatus == null)
-                          continue;
-                        String label = standardReportTemplate.getLabel();
-                        String format = reportFormat.getDescription();
-                        String codingScheme = standardReportTemplate.getCodingSchemeName();
-                        String version = standardReportTemplate.getCodingSchemeVersion();
-                        Date lastModified = standardReport.getLastModified();
-                        String status = reportStatus.getLabel();
-                        String pathname = standardReport.getPathName();
-                        String filename = DataUtils.getFileName(pathname);
-                        gov.nih.nci.evs.reportwriter.bean.User user = standardReport.getCreatedBy();
-                        String loginName = user.getLoginName();
-                        String date_str = lastModified == null ? null : formatter.format(lastModified);
-                        String dataRowColor = i%2==0 ? "dataRowLight" : "dataRowDark";
-                        Integer id = standardReportTemplate.getId();
-                        String templateId = id.toString();
-                        Integer format_id = reportFormat.getId();
-                        String formatId = format_id.toString();
-                        String labelUrl = null;
-                        if (status.compareToIgnoreCase("APPROVED") == 0)
-                          labelUrl = request.getContextPath() + "/fileServlet?template=" +
-                            templateId + "&format=" + formatId;
-                        %>
+                    int i=0;
+                    Iterator<StandardReport> iterator = vector.iterator();
+                    while (iterator.hasNext()) {
+                      StandardReport standardReport = iterator.next();
+                      ReportFormat reportFormat = standardReport.getFormat();
+                      ReportStatus reportStatus = standardReport.getStatus();
+                      standardReportTemplate = standardReport.getTemplate();
+                      if (reportFormat == null || standardReportTemplate == null 
+                          || reportStatus == null)
+                        continue;
+                      String label = standardReportTemplate.getLabel();
+                      String format = reportFormat.getDescription();
+                      String codingScheme = standardReportTemplate.getCodingSchemeName();
+                      String version = standardReportTemplate.getCodingSchemeVersion();
+                      Date lastModified = standardReport.getLastModified();
+                      String status = reportStatus.getLabel();
+                      String pathname = standardReport.getPathName();
+                      String filename = DataUtils.getFileName(pathname);
+                      gov.nih.nci.evs.reportwriter.bean.User user = standardReport.getCreatedBy();
+                      String loginName = user.getLoginName();
+                      String date_str = lastModified == null ? null : formatter.format(lastModified);
+                      String dataRowColor = i%2==0 ? "dataRowLight" : "dataRowDark";
+                      Integer id = standardReportTemplate.getId();
+                      String templateId = id.toString();
+                      Integer format_id = reportFormat.getId();
+                      String formatId = format_id.toString();
+                      String labelUrl = null;
+                      if (status.compareToIgnoreCase("APPROVED") == 0)
+                        labelUrl = request.getContextPath() + "/fileServlet?template=" +
+                          templateId + "&format=" + formatId;
+                      %>
 
-                        <tr class="<%=dataRowColor%>">
-                        <% if (labelUrl != null) { %>
-                          <td class="dataCellText"><a href="<%=labelUrl%>"><%=label%></a></td>
-                        <% } else { %>
-                          <td class="dataCellText"><%=StringUtils.getSpaceIfBlank(label)%></td>
-                        <% } %>
-                          <td class="dataCellText"><%=StringUtils.getSpaceIfBlank(filename)%></td>
-                          <td class="dataCellText"><%=StringUtils.getSpaceIfBlank(format)%></td>
-                          <td class="dataCellText"><%=StringUtils.getSpaceIfBlank(codingScheme)%></td>
-                          <td class="dataCellText"><%=StringUtils.getSpaceIfBlank(version)%></td>
-                          <td class="dataCellText"><%=StringUtils.getSpaceIfBlank(loginName)%></td>
-                          <td class="dataCellText"><%=StringUtils.getSpaceIfBlank(date_str)%></td>
-                          <td class="dataCellText"><%=StringUtils.getSpaceIfBlank(status)%></td>
-                        </tr>
+                      <tr class="<%=dataRowColor%>">
+                      <% if (labelUrl != null) { %>
+                        <td class="dataCellText"><a href="<%=labelUrl%>"><%=label%></a></td>
+                      <% } else { %>
+                        <td class="dataCellText"><%=StringUtils.getSpaceIfBlank(label)%></td>
+                      <% } %>
+                        <td class="dataCellText"><%=StringUtils.getSpaceIfBlank(filename)%></td>
+                        <td class="dataCellText"><%=StringUtils.getSpaceIfBlank(format)%></td>
+                        <td class="dataCellText"><%=StringUtils.getSpaceIfBlank(codingScheme)%></td>
+                        <td class="dataCellText"><%=StringUtils.getSpaceIfBlank(version)%></td>
+                        <td class="dataCellText"><%=StringUtils.getSpaceIfBlank(loginName)%></td>
+                        <td class="dataCellText"><%=StringUtils.getSpaceIfBlank(date_str)%></td>
+                        <td class="dataCellText"><%=StringUtils.getSpaceIfBlank(status)%></td>
+                      </tr>
                   <%
-                      }
+                      ++i;
                     }
                   %>
                 </table>
