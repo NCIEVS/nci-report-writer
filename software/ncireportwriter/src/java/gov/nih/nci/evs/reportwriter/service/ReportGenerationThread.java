@@ -61,23 +61,25 @@ import gov.nih.nci.evs.utils.*;
  */
 
 public class ReportGenerationThread implements Runnable {
-    private static Logger _logger =
-        Logger.getLogger(ReportGenerationThread.class);
+    private static Logger _logger = Logger
+        .getLogger(ReportGenerationThread.class);
 
     private String _outputDir = null;
     private String _standardReportLabel = null;
     private String _uid = null;
     private String _emailAddress = null;
+    private int[] _ncitColumns = new int[] {};
 
     private int _count = 0;
     private String _hierarchicalAssoName = null;
 
     public ReportGenerationThread(String outputDir, String standardReportLabel,
-        String uid, String emailAddress) {
+        String uid, String emailAddress, int[] ncitColumns) {
         _outputDir = outputDir;
         _standardReportLabel = standardReportLabel;
         _uid = uid;
         _emailAddress = emailAddress;
+        _ncitColumns = ncitColumns;
 
         _count = 0;
     }
@@ -167,8 +169,8 @@ public class ReportGenerationThread implements Runnable {
             message.append("  * In minutes: "
                 + StopWatch.format(StopWatch.timeInMinutes(runTime)) + "\n");
             boolean send = true;
-            MailUtils.postMail(mailServer, from, recipients, subject, message
-                .toString(), send);
+            MailUtils.postMail(mailServer, from, recipients, subject,
+                message.toString(), send);
         } catch (Exception e) {
             ExceptionUtils.print(_logger, e);
             e.printStackTrace();
@@ -300,7 +302,7 @@ public class ReportGenerationThread implements Runnable {
             version = standardReportTemplate.getCodingSchemeVersion();
 
             String code = standardReportTemplate.getRootConceptCode();
-            Concept defining_root_concept =
+            Entity defining_root_concept =
                 DataUtils.getConceptByCode(codingSchemeName,
                     codingSchemeVersion, null, rootConceptCode);
 
@@ -340,43 +342,15 @@ public class ReportGenerationThread implements Runnable {
             }
             _cdiscInfo = new SpecialCases.CDISCExtensibleInfo(cols);
             traverse(pw, scheme, version, tag, defining_root_concept, code,
-                _hierarchicalAssoName, associationCode, direction, curr_level,
+                _hierarchicalAssoName, associationName, direction, curr_level,
                 max_level, cols);
             closePrintWriter(pw);
 
             _logger.debug("Total number of concepts processed: " + _count);
-
-            // convert to Excel:
-
-            // createStandardReport -- need user's loginName
-            // StandardReport extends Report
-            // private StandardReportTemplate template;
-
             _logger.debug("Output file " + pathname + " generated.");
 
-            // convert tab-delimited file to Excel
-
-            Boolean bool_obj =
-                StandardReportService.createStandardReport(standardReportLabel
-                    + ".txt", pathname, standardReportTemplate.getLabel(),
-                    "Text (tab delimited)", "DRAFT", uid);
-
-            // convert to Excel
-            bool_obj = FileUtil.convertToExcel(pathname, delimeter_str);
-
-            // create xls report record
-            pathname =
-                outputDir + File.separator + standardReportLabel + "__"
-                    + version + ".xls";
-            pathname = pathname.replaceAll(" ", "_");
-            _logger.debug("Full path name: " + pathname);
-
-            bool_obj =
-                StandardReportService.createStandardReport(standardReportLabel
-                    + ".xls", pathname, standardReportTemplate.getLabel(),
-                    "Microsoft Office Excel", "DRAFT", uid);
-
-            return bool_obj;
+            return createStandardReports(outputDir, standardReportLabel, uid,
+                standardReportTemplate, pathname, version, delimeter_str);
         } catch (Exception e) {
             return warningMsg(warningMsg, ExceptionUtils.getStackTrace(e));
         }
@@ -406,7 +380,7 @@ public class ReportGenerationThread implements Runnable {
     }
 
     private void writeColumnData(PrintWriter pw, String scheme, String version,
-        Concept defining_root_concept, Concept associated_concept, Concept c,
+        Entity defining_root_concept, Entity associated_concept, Entity c,
         String delim, ReportColumn[] cols, boolean firstColRequired) {
 
         if (firstColRequired) {
@@ -444,7 +418,7 @@ public class ReportGenerationThread implements Runnable {
     SpecialCases.CDISCExtensibleInfo _cdiscInfo = null;
 
     private void writeColumnData(PrintWriter pw, String scheme, String version,
-        Concept defining_root_concept, Concept associated_concept, Concept c,
+        Entity defining_root_concept, Entity associated_concept, Entity c,
         String delim, ReportColumn[] cols) {
         Vector<String> values = new Vector<String>();
         _cdiscInfo.isExtensibleValue = false;
@@ -474,13 +448,13 @@ public class ReportGenerationThread implements Runnable {
     }
 
     private void traverse(PrintWriter pw, String scheme, String version,
-        String tag, Concept defining_root_concept, String code,
-        String hierarchyAssociationName, String associationCode,
+        String tag, Entity defining_root_concept, String code,
+        String hierarchyAssociationName, String associationName,
         boolean direction, int level, int maxLevel, ReportColumn[] cols) {
         if (maxLevel != -1 && level > maxLevel)
             return;
 
-        Concept root = DataUtils.getConceptByCode(scheme, version, tag, code);
+        Entity root = DataUtils.getConceptByCode(scheme, version, tag, code);
         if (root == null) {
             _logger.warn("Concept with code " + code + " not found.");
             return;
@@ -491,15 +465,15 @@ public class ReportGenerationThread implements Runnable {
 
         String delim = "\t";
 
-        Vector<Concept> v = new Vector<Concept>();
+        Vector<Entity> v = new Vector<Entity>();
         if (direction) {
             v =
-                DataUtils.getAssociationTargets(scheme, version, root
-                    .getEntityCode(), associationCode);
+                DataUtils.getAssociationTargets(scheme, version,
+                    root.getEntityCode(), associationName);
         } else {
             v =
-                DataUtils.getAssociationSources(scheme, version, root
-                    .getEntityCode(), associationCode);
+                DataUtils.getAssociationSources(scheme, version,
+                    root.getEntityCode(), associationName);
         }
 
         // associated concepts (i.e., concepts in subset)
@@ -508,13 +482,13 @@ public class ReportGenerationThread implements Runnable {
         _logger.debug("Subset size: " + v.size());
         for (int i = 0; i < v.size(); i++) {
             // subset member element
-            Concept c = (Concept) v.elementAt(i);
+            Entity c = (Entity) v.elementAt(i);
             writeColumnData(pw, scheme, version, defining_root_concept, root,
                 c, delim, cols);
         }
 
         // Note: Commented on 2/24/10 (Wed). subconcept_vec size was 0.
-        // Vector<Concept> subconcept_vec =
+        // Vector<Entity> subconcept_vec =
         // DataUtils.getAssociationTargets(scheme, version, root
         // .getEntityCode(), hierarchyAssociationName);
         Vector<String> subconcept_vec =
@@ -525,18 +499,18 @@ public class ReportGenerationThread implements Runnable {
         level++;
         for (int k = 0; k < subconcept_vec.size(); k++) {
             // Note: Commented on 2/24/10 (Wed). subconcept_vec size was 0.
-            // Concept concept = (Concept) subconcept_vec.elementAt(k);
+            // Entity concept = (Entity) subconcept_vec.elementAt(k);
             // String subconcep_code = concept.getEntityCode();
             String subconcep_code = subconcept_vec.elementAt(k);
             traverse(pw, scheme, version, tag, defining_root_concept,
-                subconcep_code, hierarchyAssociationName, associationCode,
+                subconcep_code, hierarchyAssociationName, associationName,
                 direction, level, maxLevel, cols);
         }
     }
 
     public String getReportColumnValue(String scheme, String version,
-        Concept defining_root_concept, Concept associated_concept,
-        Concept node, ReportColumn rc) {
+        Entity defining_root_concept, Entity associated_concept,
+        Entity node, ReportColumn rc) {
         String field_Id = rc.getFieldId();
         String property_name = rc.getPropertyName();
         String qualifier_name = rc.getQualifierName();
@@ -591,7 +565,7 @@ public class ReportGenerationThread implements Runnable {
             return associated_concept.getEntityCode();
         }
 
-        Concept concept = node;
+        Entity concept = node;
         if (property_name != null
             && property_name.compareTo("Contributing_Source") == 0) {
             concept = defining_root_concept;
@@ -613,8 +587,8 @@ public class ReportGenerationThread implements Runnable {
             // Vector superconcept_vec = new DataUtils().getParentCodes(scheme,
             // version, node.getId());
             Vector<String> superconcept_vec =
-                DataUtils.getAssociationSourceCodes(scheme, version, node
-                    .getEntityCode(), _hierarchicalAssoName);
+                DataUtils.getAssociationSourceCodes(scheme, version,
+                    node.getEntityCode(), _hierarchicalAssoName);
             if (superconcept_vec != null && superconcept_vec.size() > 0
                 && field_Id.indexOf("1st Parent") != -1) {
                 String superconceptCode =
@@ -767,7 +741,8 @@ public class ReportGenerationThread implements Runnable {
             for (int i = 0; i < properties.length; i++) {
                 boolean match = false;
                 org.LexGrid.commonTypes.Property p = properties[i];
-                if (p.getPropertyName().compareTo(property_name) == 0) // focus
+                String propertyName = p.getPropertyName();
+                if (propertyName.compareTo(property_name) == 0) // focus
                 // on
                 // matching
                 // property
@@ -793,8 +768,8 @@ public class ReportGenerationThread implements Runnable {
                             if (representational_form != null
                                 && p instanceof Presentation) {
                                 Presentation presentation = (Presentation) p;
-                                if (presentation.getRepresentationalForm()
-                                    .compareTo(representational_form) != 0) {
+                                String representationalForm = presentation.getRepresentationalForm();
+                                if (representationalForm.compareTo(representational_form) != 0) {
                                     match = false;
                                 }
                             }
@@ -1038,44 +1013,134 @@ public class ReportGenerationThread implements Runnable {
             int maxToReturn = 10000;
             String language = null;
 
-            Vector<Concept> concept_vec =
+            Vector<Entity> concept_vec =
                 DataUtils.restrictToMatchingProperty(codingSchemeName, version,
                     property_vec, source_vec, qualifier_name_vec,
                     qualifier_value_vec, matchText, matchAlgorithm, language,
                     maxToReturn);
+            _logger.debug("concept_vec.size(): " + concept_vec.size());
 
             String delim = "\t";
             for (int i = 0; i < concept_vec.size(); i++) {
-                Concept c = (Concept) concept_vec.elementAt(i);
+                Entity c = (Entity) concept_vec.elementAt(i);
                 writeColumnData(pw, codingSchemeName, version, null, null, c,
                     delim, cols, true);
             }
 
             closePrintWriter(pw);
             _logger.debug("Generated output file: " + pathname);
-
-            Boolean bool_obj =
-                StandardReportService.createStandardReport(standardReportLabel
-                    + ".txt", pathname, standardReportTemplate.getLabel(),
-                    "Text (tab delimited)", "DRAFT", uid);
-
-            // convert to Excel
-            bool_obj = FileUtil.convertToExcel(pathname, delimeter_str);
-
-            // create xls report record
-            pathname =
-                outputDir + File.separator + standardReportLabel + "__"
-                    + version + ".xls";
-            pathname = pathname.replaceAll(" ", "_");
-            _logger.debug("Full path name: " + pathname);
-
-            bool_obj =
-                StandardReportService.createStandardReport(standardReportLabel
-                    + ".xls", pathname, standardReportTemplate.getLabel(),
-                    "Microsoft Office Excel", "DRAFT", uid);
-            return bool_obj;
+            return createStandardReports(outputDir, standardReportLabel, uid,
+                standardReportTemplate, pathname, version, delimeter_str);
         } catch (Exception e) {
             return warningMsg(warningMsg, ExceptionUtils.getStackTrace(e));
         }
+    }
+
+    private String getPathname(String outputDir, String standardReportLabel,
+        String version, String extension) {
+        String pathname =
+            outputDir + File.separator + standardReportLabel + "__" + version
+                + extension;
+        pathname = pathname.replaceAll(" ", "_");
+        _logger.debug("Full path name: " + pathname);
+        return pathname;
+    }
+
+    public static enum ReportFormatType implements Comparator<ReportFormatType> {
+        Text("Text (tab delimited)", 0), Excel("Microsoft Office Excel", 1), Html(
+                "HyperText Markup Language", 2);
+
+        private static HashMap<String, ReportFormatType> _map =
+            new HashMap<String, ReportFormatType>();
+        private String _name = "";
+        private int _sortValue = -1;
+
+        ReportFormatType(String name, int sortValue) {
+            _name = name;
+            _sortValue = sortValue;
+        }
+
+        public String getName() {
+            return _name;
+        }
+
+        public int getSortValue() {
+            return _sortValue;
+        }
+
+        public int compare(ReportFormatType obj1, ReportFormatType obj2) {
+            int sortValue1 = obj1.getSortValue();
+            int sortValue2 = obj2.getSortValue();
+            if (sortValue1 == sortValue2)
+                return obj1.getName().compareTo(obj2.getName());
+            return obj1.getSortValue() - obj2.getSortValue();
+        }
+
+        public static ReportFormatType value_of(String name) {
+            return _map.get(name);
+        }
+
+        static {
+            for (ReportFormatType type : ReportFormatType.values()) {
+                _map.put(type.getName(), type);
+            }
+        }
+    }
+
+    private Boolean createStandardReports(String textfile, String delimiter)
+            throws Exception {
+        AppProperties appProperties = AppProperties.getInstance();
+        String ncitUrl = appProperties.getProperty(AppProperties.NCIT_URL);
+        String displayNCItCodeUrl =
+            appProperties.getProperty(AppProperties.DISPLAY_NCIT_CODE_URL);
+
+        AsciiToHtmlFormatter htmlFormatter = new AsciiToHtmlFormatter();
+        htmlFormatter.setDisplayNCItCodeUrl(displayNCItCodeUrl);
+
+        BaseFileFormatter[] formatters =
+            new BaseFileFormatter[] { new AsciiToExcelFormatter(),
+                htmlFormatter };
+
+        Boolean bool_obj = true;
+        for (BaseFileFormatter formatter : formatters) {
+            formatter.setNcitUrl(ncitUrl);
+            formatter.setNcitCodeColumns(_ncitColumns);
+            bool_obj &= formatter.convert(textfile, delimiter);
+        }
+        return bool_obj;
+    }
+
+    private Boolean createStandardReports(String outputDir,
+        String standardReportLabel, String uid,
+        StandardReportTemplate standardReportTemplate, String textfile,
+        String version, String delimiter) throws Exception {
+        Boolean bool_obj = createStandardReports(textfile, delimiter);
+
+        // Version: Text
+        String label = standardReportLabel + ".txt";
+        String pathname = textfile;
+        String templateLabel = standardReportTemplate.getLabel();
+        String format = ReportFormatType.Text.getName();
+        String status = "DRAFT";
+        bool_obj &=
+            StandardReportService.createStandardReport(label, textfile,
+                templateLabel, format, status, uid);
+
+        // Version: Excel
+        label = standardReportLabel + ".xls";
+        pathname = getPathname(outputDir, standardReportLabel, version, ".xls");
+        format = ReportFormatType.Excel.getName();
+        bool_obj &=
+            StandardReportService.createStandardReport(label, pathname,
+                templateLabel, format, status, uid);
+
+        // Version: Html
+        label = standardReportLabel + ".htm";
+        pathname = getPathname(outputDir, standardReportLabel, version, ".htm");
+        format = ReportFormatType.Html.getName();
+        bool_obj &=
+            StandardReportService.createStandardReport(label, pathname,
+                templateLabel, format, status, uid);
+        return bool_obj;
     }
 }

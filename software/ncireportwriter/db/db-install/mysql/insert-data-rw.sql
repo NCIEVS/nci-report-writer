@@ -30,7 +30,8 @@ INSERT INTO `hi_value` (`next_value`) VALUES
 
 INSERT INTO `REPORT_FORMAT` (`ID`,`DESCRIPTION`) VALUES
  (404,'Text (tab delimited)'),
- (405,'Microsoft Office Excel');
+ (405,'Microsoft Office Excel'),
+ (406,'HyperText Markup Language');
 
 --
 -- Data for table `REPORT_STATUS`
@@ -45,13 +46,13 @@ INSERT INTO `REPORT_STATUS` (`ID`,`LABEL`,`DESCRIPTION`,`ACTIVE`) VALUES
 --
 
 INSERT INTO `STANDARD_REPORT_TEMPLATE` (`ID`,`LABEL`,`ROOT_CONCEPT_CODE`,`ASSOCIATION_NAME`,`DIRECTION`,`CODING_SCHEME_NAME`,`CODING_SCHEME_VERSION`,`LEVEL`,`DELIMITER`) VALUES
- (202,'FDA-UNII Subset REPORT','C63923','Concept_In_Subset',0,'NCI Thesaurus','10.04f',-1,'$'),
- (2323,'Individual Case Safety (ICS) Subset REPORT','C54447','Concept_In_Subset',0,'NCI Thesaurus','10.04f',-1,'$'),
- (3535,'Structured Product Labeling (SPL) REPORT','C54452','Concept_In_Subset',0,'NCI Thesaurus','10.04f',-1,'$'),
- (4040,'CDISC Subset REPORT ','C61410','Concept_In_Subset',0,'NCI Thesaurus','10.04f',-1,'$'),
- (4646,'CDRH Subset REPORT','C62596','Concept_In_Subset',0,'NCI Thesaurus','10.04f',-1,'$'),
- (6060,'FDA-SPL Country Code REPORT','Semantic_Type|null|null|null|Geographic Area|exactMatch','',0,'NCI Thesaurus','10.04f',-1,'$'),
- (6868,'CDISC SDTM Terminology','C61410','Concept_In_Subset',0,'NCI Thesaurus','10.04f',-1,'$');
+ (202,'FDA-UNII Subset REPORT','C63923','Concept_In_Subset',0,'NCI Thesaurus','10.07e',-1,'$'),
+ (2323,'Individual Case Safety (ICS) Subset REPORT','C54447','Concept_In_Subset',0,'NCI Thesaurus','10.07e',-1,'$'),
+ (3535,'Structured Product Labeling (SPL) REPORT','C54452','Concept_In_Subset',0,'NCI Thesaurus','10.07e',-1,'$'),
+ (4040,'CDISC Subset REPORT ','C61410','Concept_In_Subset',0,'NCI Thesaurus','10.07e',-1,'$'),
+ (4646,'CDRH Subset REPORT','C62596','Concept_In_Subset',0,'NCI Thesaurus','10.07e',-1,'$'),
+ (6060,'FDA-SPL Country Code REPORT','Semantic_Type|null|null|null|Geographic Area|exactMatch','',0,'NCI Thesaurus','10.07e',-1,'$'),
+ (6868,'CDISC SDTM Terminology','C61410','Concept_In_Subset',0,'NCI Thesaurus','10.07e',-1,'$');
 
 --
 -- Data for table `REPORT_COLUMN`

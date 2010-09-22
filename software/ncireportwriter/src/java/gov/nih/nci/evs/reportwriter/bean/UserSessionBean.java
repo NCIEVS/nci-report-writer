@@ -324,6 +324,10 @@ public class UserSessionBean extends Object {
     public String saveModifiedTemplateAction() {
         return new ReportTemplateRequest().saveModifiedAction();
     }
+    
+    public String selectGenerateReportOptionAction() {
+        return "selectGenerateReportOption";
+    }
 
     public String deleteReportTemplateAction() {
         return new ReportTemplateRequest().deleteAction();
@@ -369,6 +373,10 @@ public class UserSessionBean extends Object {
     public String generateStandardReportAction() {
         return new ReportContentRequest()
             .generateAction(_srtMgr.getSelected());
+    }
+    
+    public String displayStandardReportTemplateAction() {
+        return "standard_report_template";
     }
 
     // -------------------------------------------------------------------------

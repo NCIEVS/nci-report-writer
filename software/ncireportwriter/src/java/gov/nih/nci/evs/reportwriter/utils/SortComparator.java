@@ -71,7 +71,7 @@ public class SortComparator implements Comparator<Object> {
     private String getKey(Object object, SortBy sortBy) {
         if (object == null)
             return "NULL";
-        if (object instanceof Concept) 
+        if (object instanceof Entity)
             return getConceptValue(object, sortBy);
         if (object instanceof AssociatedConcept)
             return getAssociatedConceptValue(object, sortBy);
@@ -83,24 +83,24 @@ public class SortComparator implements Comparator<Object> {
     }
 
     private String getConceptValue(Object object, SortBy sortBy) {
-        Concept value = (Concept) object;
+        Entity value = (Entity) object;
         if (sortBy == SortBy.Code)
             return value.getEntityCode();
         return value.getEntityDescription().getContent();
     }
-    
+
     private String getAssociatedConceptValue(Object object, SortBy sortBy) {
         AssociatedConcept value = (AssociatedConcept) object;
         if (sortBy == SortBy.Code)
             return value.getConceptCode();
         return value.getEntityDescription().getContent();
     }
-    
+
     private String getSelectItemValue(Object object, SortBy sortBy) {
         SelectItem value = (SelectItem) object;
         return value.getValue().toString();
     }
-    
+
     private String getStringValue(Object object, SortBy sortBy) {
         String value = (String) object;
         return value;
