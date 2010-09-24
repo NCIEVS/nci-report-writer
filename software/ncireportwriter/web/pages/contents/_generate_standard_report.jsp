@@ -20,6 +20,8 @@
   StandardReportTemplate standardReportTemplate = (StandardReportTemplate) obj;
   Collection cc = standardReportTemplate.getColumnCollection();
   Object[] objs = cc == null ? null : cc.toArray();
+  
+  String warningMsg = (String) request.getAttribute("warningMsg");
 %>
 
 <f:view>
@@ -31,6 +33,13 @@
           <br>
           <table summary="" cellpadding="0" cellspacing="0" border="0" 
               width="725" class="contentPage"> <!-- Table 2 (Begin) -->  
+            <% if (warningMsg != null && warningMsg.trim().length() > 0) { %>
+              <tr><td class="warningMsgColor">
+                Warning:<br/>
+                <%=StringUtils.toHtml(warningMsg)%><br/>
+                <br/>
+              </td></tr>
+            <% } %>              
             <tr>
               <td>
                 <table summary="" cellpadding="0" cellspacing="0" border="0"> <!-- Table 3 (Begin) -->  
