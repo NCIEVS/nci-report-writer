@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
 	<classpathentry kind="src" path="software/ncireportwriter/src/java"/>
-	<classpathentry kind="src" path="software/ncireportwriter/test/src/java"/>
 	<classpathentry kind="src" path="software/ncireportwriter/web/pages"/>
+	<classpathentry kind="src" path="software/ncireportwriter/test/src/java"/>
 	<classpathentry kind="con" path="org.eclipse.jst.j2ee.internal.web.container"/>
 	<classpathentry kind="con" path="org.eclipse.jst.j2ee.internal.module.container"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.junit.JUNIT_CONTAINER/3"/>

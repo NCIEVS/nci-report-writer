@@ -4,9 +4,6 @@ import gov.nih.nci.evs.reportwriter.test.utils.SetupEnv;
 import gov.nih.nci.evs.reportwriter.utils.DataUtils;
 import gov.nih.nci.system.client.ApplicationServiceProvider;
 
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.Set;
 import java.util.Vector;
 
 import org.LexGrid.LexBIG.DataModel.Collections.AbsoluteCodingSchemeVersionReferenceList;
@@ -31,7 +28,7 @@ public class RestrictToMatchingProperty
         "----------------------------------------" +
         "----------------------------------------";
     
-    private LexEVSValueSetDefinitionServices vds_ = null;
+    //private LexEVSValueSetDefinitionServices vds_ = null;
 
     private static LexEVSValueSetDefinitionServices getValueSetDefinitionService()
         throws Exception {
@@ -54,7 +51,7 @@ public class RestrictToMatchingProperty
        NameAndValueList qualifierList, java.lang.String matchText,
        java.lang.String matchAlgorithm, java.lang.String language,
        int maxToReturn) {
-       CodedNodeSet cns = null;
+       //CodedNodeSet cns = null;
        Vector<org.LexGrid.concepts.Entity> v =
            new Vector<org.LexGrid.concepts.Entity>();
 
@@ -100,7 +97,7 @@ public class RestrictToMatchingProperty
             ResolvedValueSetDefinition rvdDef = getValueSetDefinitionService().resolveValueSetDefinition(vsd, csvList, null, null);
 
             if (rvdDef != null) {
-                Set<String> codes = new HashSet<String>();
+                //Set<String> codes = new HashSet<String>();
                 while (rvdDef.getResolvedConceptReferenceIterator().hasNext())
                 {
                     ResolvedConceptReference rcr = rvdDef.getResolvedConceptReferenceIterator().next();
