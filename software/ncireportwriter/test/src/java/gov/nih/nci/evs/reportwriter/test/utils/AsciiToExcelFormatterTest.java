@@ -1,6 +1,6 @@
 package gov.nih.nci.evs.reportwriter.test.utils;
 
-import gov.nih.nci.evs.reportwriter.utils.*;
+import gov.nih.nci.evs.reportwriter.formatter.*;
 import org.apache.log4j.*;
 
 public class AsciiToExcelFormatterTest {
