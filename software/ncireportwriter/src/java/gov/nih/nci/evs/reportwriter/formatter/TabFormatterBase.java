@@ -1,4 +1,4 @@
-package gov.nih.nci.evs.reportwriter.utils;
+package gov.nih.nci.evs.reportwriter.formatter;
 
 public class TabFormatterBase {
     private static final String TAB = "  ";
