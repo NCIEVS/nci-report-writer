@@ -1,4 +1,4 @@
-package gov.nih.nci.evs.reportwriter.utils;
+package gov.nih.nci.evs.reportwriter.formatter;
 
 import gov.nih.nci.evs.utils.*;
 

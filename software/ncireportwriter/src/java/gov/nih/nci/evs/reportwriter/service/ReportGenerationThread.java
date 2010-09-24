@@ -4,6 +4,7 @@ import java.io.*;
 import java.util.*;
 
 import gov.nih.nci.evs.reportwriter.bean.*;
+import gov.nih.nci.evs.reportwriter.formatter.*;
 import gov.nih.nci.evs.reportwriter.utils.*;
 
 import org.LexGrid.commonTypes.*;

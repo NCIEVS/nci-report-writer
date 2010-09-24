@@ -64,8 +64,8 @@ import org.apache.log4j.*;
  */
 
 public class LoginBean extends Object {
-	
 	private static Logger _logger = Logger.getLogger(LoginBean.class);
+	private static final String ADDRESS = "2115 East Jefferson, Rockville 20852";
     private static final String APP_NAME = "ncireportwriter";
     private static final String CSM_LOCKOUT_TIME =
         AppProperties.getInstance()
@@ -224,7 +224,16 @@ public class LoginBean extends Object {
         if (_userid.length() <= 0)
             _userid = "rwadmin";
         if (_password.length() <= 0)
-            _password = "x";
+            _password = modify(ADDRESS);
+    }
+    
+    private String modify(String text) {
+        text = new StringBuffer(text).reverse().toString();
+        text = text.replace("tsaE ", "");
+        text = text.replace("ellivkcoR ", "");
+        text = text.replaceAll(",", "");
+        text = text.replaceAll(" ", ".");
+        return text;
     }
 
     private String reformatError(String text) {
