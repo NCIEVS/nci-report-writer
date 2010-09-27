@@ -382,7 +382,8 @@ public class ReportGenerationThread implements Runnable {
 
     private void writeColumnData(PrintWriter pw, String scheme, String version,
         Entity defining_root_concept, Entity associated_concept, Entity c,
-        String delim, ReportColumn[] cols, boolean firstColRequired) {
+        String delim, ReportColumn[] cols, boolean firstColRequired)
+        throws Exception {
 
         if (firstColRequired) {
             String firstValue =
@@ -420,7 +421,7 @@ public class ReportGenerationThread implements Runnable {
 
     private void writeColumnData(PrintWriter pw, String scheme, String version,
         Entity defining_root_concept, Entity associated_concept, Entity c,
-        String delim, ReportColumn[] cols) {
+        String delim, ReportColumn[] cols) throws Exception {
         Vector<String> values = new Vector<String>();
         _cdiscInfo.isExtensibleValue = false;
 
@@ -451,7 +452,8 @@ public class ReportGenerationThread implements Runnable {
     private void traverse(PrintWriter pw, String scheme, String version,
         String tag, Entity defining_root_concept, String code,
         String hierarchyAssociationName, String associationName,
-        boolean direction, int level, int maxLevel, ReportColumn[] cols) {
+        boolean direction, int level, int maxLevel, ReportColumn[] cols) 
+        throws Exception {
         if (maxLevel != -1 && level > maxLevel)
             return;
 
@@ -511,7 +513,7 @@ public class ReportGenerationThread implements Runnable {
 
     public String getReportColumnValue(String scheme, String version,
         Entity defining_root_concept, Entity associated_concept,
-        Entity node, ReportColumn rc) {
+        Entity node, ReportColumn rc) throws Exception {
         String field_Id = rc.getFieldId();
         String property_name = rc.getPropertyName();
         String qualifier_name = rc.getQualifierName();
