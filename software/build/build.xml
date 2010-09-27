@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8" ?>
 
-<!-- bda-build-templage verison 1.5.13 -->
+<!-- bda-build-templage verison 1.1.1 -->
 
-<project name="build-bda-template" default="usage" basedir="." xmlns:ivy="antlib:org.apache.ivy.ant" xmlns:cs="antlib:com.puppycrawl.tools.checkstyle">
+<project name="build" default="usage" basedir="." xmlns:ivy="antlib:org.apache.ivy.ant" xmlns:cs="antlib:com.puppycrawl.tools.checkstyle">
 
     <description>
         This build file is part of the bda-build-template project. This is the master build file for the project.
@@ -25,7 +25,6 @@
     <property name="upgrade.properties.file" value="upgrade.properties"/>
     <echo message="Using properties file of ${properties.file}." />
     <available file="${properties.file}" property="properties.file.exists" />
-    <fail unless="properties.file.exists" message="The properties.file ${properties.file} does not exist, please make sure that you pass in an accurate file name with the 'ant -Dproperties.file=somepath/somefile', otherwise the build will fail." />
     <replaceregexp file="${properties.file}" byline="true" match="^([\w\d.]+)=(.*[\w\d\/\{\}\\]+)[ \t]+\r*$" replace="\1=\2" />
     <replaceregexp file="${properties.file}" byline="true" match="^([\w\d.]+)=[ \t]+(.*[\w\d\/\{\}\\]+)\r*$" replace="\1=\2" />
     <property file="${properties.file}" />
@@ -353,7 +352,8 @@
     <target name="dist:tools:retrieve" description="Downloads binary applications from commonlibrary repository" depends="
         init,
         dist:tools:retrieve:jboss,
-        dist:tools:retrieve:jbosscp
+        dist:tools:retrieve:jbosscp,
+        dist:tools:retrieve:cgmm
         " >
     </target>
 
@@ -368,6 +368,18 @@
                 <echo message="jbosscp.src.url not set skipping download of jboss cumulative patch"/>
             </else>
         </if>
+    </target>
+
+    <target name="dist:tools:retrieve:cgmm" if="jboss.cgmm.enable">
+        <ivy-retrieve-cgmm ivy.dir="${bda-utils.dir}/resource/ivy"
+            />
+        <copy todir="${dist.exploded.dir}/cgmm-libs">
+            <fileset dir="${lib.dir}">
+                <include name="cgmm/*"/>
+                <include name="jboss-default-lib/*"/>
+                <include name="jbossweb-tomcat55-sar-jars/*"/>
+            </fileset>
+        </copy>
     </target>
 
     <target name="dist:tools:retrieve:jboss" unless="jboss.tools.exists" description="Downloads JBOSS from binary repository and verifies checksum">
@@ -579,6 +591,23 @@
         <remote-ssh remotesshcommand=". .bash_profile;cd ${ssh.dir.temp}; ant -Dproperties.file=${properties.file.name} -Dforce.reinstall=true ${install.target}" />
     </target>
 
+    <target name="deploy:remote:upgrade:ahp" description="Installs and configures the application and required binaries and re-creates the datbase  on a remote machine. Used for NCI tiers (dev, qa, stg, prod)" >
+        <!--
+          * Will use the target from install.xml specified in ${upgrade.target} (defaults to upgrade unless passed in on command line).
+          * Requires specifying -Dproperties.file=@file@ on the command line to point installer to correct enviornment to install into.
+          * Calls ant from exec task to ensure properties are do not carry over from current ant runtime and also to emulate a manual install, if you want properties to be used at install time they must be included in a proeprties file.
+        -->
+        <!-- Call macro to deploy files on desired server -->
+        <echoproperties  prefix="ssh"> <propertyset negate="yes" > <propertyref regex="passw" /> </propertyset> </echoproperties>
+        <deploy-files dist.file="${ncireportwriter-webapp.upgrade.zip.file}" />
+        <override-properties-prep
+            override.properties="@{override.properties}"
+            override.properties.string.property.name="override.properties.string"
+            />
+        <!-- SSH to machine ant run ant command line to install application -->
+        <remote-ssh remotesshcommand=". .bash_profile;cd ${ssh.dir.temp}; ant -Dproperties.file=${properties.file.name} -Dforce.reinstall=true ${override.properties.string} ${upgrade.target}" />
+    </target>
+
     <target name="deploy:remote:upgrade" description="Installs and configures the application and required binaries and re-creates the datbase  on a remote machine. Used for NCI tiers (dev, qa, stg, prod)" depends="
         build:all,
         dist:upgrader
@@ -770,34 +799,137 @@
         <util-dot-on-dir dot-file.dir="target/reports/ivy" />
     </target>
 
-    <target name="deploy:hot" depends="build:all,dist:installer:prep" description="Hot deploys the deployment artifact">
-        <deploy-local
-            target.name="install:hot"
-        />
+    <target name="deploy:hot" depends="build:all, set:jboss.war.temp.dir.location" description="Hot deploys the deployment artifact">
+
+        <echo message="       Bin: ${application.base.path}/${jboss.binaries.relative.dir}/bin"/>
+        <echo message="    Target: ${jboss.deploy.dir}"/>
+
+        <osfamily property="os.family"/>
+        <if>
+            <equals arg1="${os.family}" arg2="windows"/>
+            <then>
+
+                <fail unless="jboss.war.temp.dir.location" message="Unable to locate JBoss temp war directory!" />
+
+                <echo message="JBoss temp: ${jboss.war.temp.dir.location}"/>
+
+                <echo message="Stopping: ${ncireportwriter-webapp.file.name}" />
+                <exec executable="cmd" failonerror="true">
+                    <arg value="/c"/>
+                    <arg value='${application.base.path}/${jboss.binaries.relative.dir}/bin/twiddle.bat -s ${jboss.server.hostname}:${jboss.server.jndi.port} invoke "jboss.web.deployment:war=/${project.name}" stop'/>
+                </exec>
+
+                <copy
+                    file="${ncireportwriter-webapp.dist.dir}/${ncireportwriter-webapp.file.name}"
+                    tofile="${jboss.deploy.dir}/${ncireportwriter-webapp.file.name}"
+                    overwrite="true"
+                    />
+
+                <unzip src="${jboss.deploy.dir}/${ncireportwriter-webapp.file.name}"
+                       dest="${jboss.war.temp.dir.location}">
+                </unzip>
+
+                <echo message="Starting: ${ncireportwriter-webapp.file.name}" />
+                <exec executable="cmd" failonerror="true">
+                    <arg value="/c"/>
+                    <arg value='${application.base.path}/${jboss.binaries.relative.dir}/bin/twiddle.bat -s ${jboss.server.hostname}:${jboss.server.jndi.port} invoke "jboss.web.deployment:war=/${project.name}" start'/>
+                </exec>
+
+            </then>
+            <else>
+                <echo message="deploy:hot is not configured for Unix systems."/>
+            </else>
+        </if>
     </target>
 
-    <target name="deploy:hot:jsp" description="Copies all current JSP code to the deployed application for quick update">
-        <for param="toDir">
-            <path>
-                <dirset dir="${jboss.deploy.dir}/../tmp/deploy" includes="tmp*${ncireportwriter-webapp.name}*" />
-            </path>
-            <sequential>
-                <copy todir="@{toDir}" overwrite="true">
-                    <fileset dir="${ncireportwriter-webapp.src.dir}">
-                        <include name="**/*.jsp" />
-                        <include name="**/*.jspf" />
-                        <include name="**/*.css" />
-                        <include name="**/*.js" />
-                        <include name="**/*.jpg" />
-                        <include name="**/*.gif" />
-                        <include name="**/*.png" />
-                        <include name="**/*.faces" />
-                        <include name="**/*.tag" />
-                        <include name="**/*.tagf" />
-                    </fileset>
-                </copy>
-            </sequential>
-        </for>
+    <target name="deploy:hot:jsp" depends="set:jboss.war.temp.dir.location">
+
+        <osfamily property="os.family"/>
+        <if>
+            <equals arg1="${os.family}" arg2="windows"/>
+            <then>
+
+                <fail unless="jboss.war.temp.dir.location" message="Unable to locate JBoss temp war directory!" />
+                <echo message="JBoss temp: ${jboss.war.temp.dir.location}"/>
+                <echo message="    Source: ${ncireportwriter-webapp.src.dir}"/>
+
+                <echo message="Stopping: ${ncireportwriter-webapp.file.name}" />
+                <exec executable="cmd" failonerror="true">
+                    <arg value="/c"/>
+                    <arg value='${application.base.path}/${jboss.binaries.relative.dir}/bin/twiddle.bat -s ${jboss.server.hostname}:${jboss.server.jndi.port} invoke "jboss.web.deployment:war=/${project.name}" stop'/>
+                </exec>
+
+                <sequential>
+                    <copy todir="${jboss.war.temp.dir.location}" overwrite="true">
+                        <fileset dir="${ncireportwriter-webapp.src.dir}">
+                            <include name="**/*.jsp" />
+                            <include name="**/*.jspf" />
+                            <include name="**/*.css" />
+                            <include name="**/*.js" />
+                            <include name="**/*.jpg" />
+                            <include name="**/*.gif" />
+                            <include name="**/*.png" />
+                            <include name="**/*.faces" />
+                            <include name="**/*.tag" />
+                            <include name="**/*.tagf" />
+                        </fileset>
+                    </copy>
+                </sequential>
+
+                <echo message="Starting: ${ncireportwriter-webapp.file.name}" />
+                <exec executable="cmd" failonerror="true">
+                    <arg value="/c"/>
+                    <arg value='${application.base.path}/${jboss.binaries.relative.dir}/bin/twiddle.bat -s ${jboss.server.hostname}:${jboss.server.jndi.port} invoke "jboss.web.deployment:war=/${project.name}" start'/>
+                </exec>
+
+            </then>
+            <else>
+                <echo message="deploy:hot:jsp is not configured for Unix systems."/>
+            </else>
+        </if>
+
+    </target>
+
+    <target name="deploy:stop">
+
+        <osfamily property="os.family"/>
+        <if>
+            <equals arg1="${os.family}" arg2="windows"/>
+            <then>
+
+                <echo message="Stopping: ${ncireportwriter-webapp.file.name}" />
+                <exec executable="cmd" failonerror="true">
+                    <arg value="/c"/>
+                    <arg value='${application.base.path}/${jboss.binaries.relative.dir}/bin/twiddle.bat -s ${jboss.server.hostname}:${jboss.server.jndi.port} invoke "jboss.web.deployment:war=/${project.name}" stop'/>
+                </exec>
+
+            </then>
+            <else>
+                <echo message="deploy:stop is not configured for Unix systems."/>
+            </else>
+        </if>
+
+    </target>
+
+    <target name="deploy:start">
+
+        <osfamily property="os.family"/>
+        <if>
+            <equals arg1="${os.family}" arg2="windows"/>
+            <then>
+
+                <echo message="Starting: ${ncireportwriter-webapp.file.name}" />
+                <exec executable="cmd" failonerror="true">
+                    <arg value="/c"/>
+                    <arg value='${application.base.path}/${jboss.binaries.relative.dir}/bin/twiddle.bat -s ${jboss.server.hostname}:${jboss.server.jndi.port} invoke "jboss.web.deployment:war=/${project.name}" start'/>
+                </exec>
+
+            </then>
+            <else>
+                <echo message="deploy:start is not configured for Unix systems."/>
+            </else>
+        </if>
+
     </target>
 
     <target name="test:acceptance:fitnesse" description="Runs fitnesse acceptance tests">
@@ -930,6 +1062,32 @@
                     </filterchain>
             </loadfile>
             <echo message="${file.contents}"/>
+    </target>
+
+    <target name="set:jboss.war.temp.dir.location">
+
+            <!-- Locate JBoss temp war directory -->
+            <script language="javascript">
+                <![CDATA[
+                    importClass(java.io.File);
+                    echo = build.createTask("echo");
+                    path = project.getProperty("application.base.path")
+                        + "/" + project.getProperty("jboss.binaries.relative.dir")
+                        + "/server/" + project.getProperty("jboss.server.name")
+                        + "/tmp";
+
+                    dir = new File(path);
+                    srcFiles = dir.list();
+
+                    for (i=0; i<srcFiles.length; i++) {
+                        filename = dir + "/" + srcFiles[i] + "/" + project.getProperty("ncireportwriter-webapp.file.name");
+                        if (exists = (new File(filename)).exists()) {
+                            project.setProperty("jboss.war.temp.dir.location",filename);
+                        }
+                    }
+                ]]>
+            </script>
+
     </target>
 
 </project>
