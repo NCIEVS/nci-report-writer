@@ -257,7 +257,7 @@ public class SpecialCases {
             Vector<String> values, PrintWriter pw, String scheme,
             String version, Entity defining_root_concept,
             Entity associated_concept, Entity c, String delim,
-            ReportColumn[] cols) {
+            ReportColumn[] cols) throws Exception {
             if (!info.isExtensibleValue)
                 return;
 

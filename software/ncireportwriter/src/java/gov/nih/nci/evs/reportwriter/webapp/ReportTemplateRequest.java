@@ -115,62 +115,70 @@ public class ReportTemplateRequest {
     }
 
     private boolean isValid(HttpServletRequest request, StringBuffer warningMsg) {
-        _logger.debug(StringUtils.SEPARATOR);
-        _logger.debug("Method: isValid");
-
-        _logger.debug("* label: " + _label);
-        if (_label == null || _label.length() <= 0)
-            warningMsg.append("\n    * Label");
-
-        _logger.debug("* codingSchemeName: " + _codingSchemeName);
-        if (_codingSchemeName == null || _codingSchemeName.length() <= 0)
-            warningMsg.append("\n    * Coding Scheme");
-
-        _logger.debug("* codingSchemeVersion: " + _codingSchemeVersion);
-        if (_codingSchemeVersion == null || _codingSchemeVersion.length() <= 0)
-            warningMsg.append("\n    * Version");
-
-        _logger.debug("* rootConceptCode: " + _rootConceptCode);
-        if (_rootConceptCode == null || _rootConceptCode.length() <= 0)
-            warningMsg.append("\n    * Root Concept Code");
-
-        _logger.debug("* associationName: " + _associationName);
-        if (_associationName == null || _associationName.length() <= 0)
-            warningMsg.append("\n    * Association name");
-
-        _logger.debug("* direction_str: " + _direction_str);
-        _direction = new Boolean(_direction_str.compareTo("source") != 0);
-        request.setAttribute("direction", _direction);
-
-        _logger.debug("* level_str: " + _level_str);
-        if (_level_str == null || _level_str.length() <= 0)
-            warningMsg.append("\n    * Level");
-
-        if (warningMsg.length() > 0) {
-            warningMsg.insert(0, "Please enter the following value(s):");
+        try {
+            _logger.debug(StringUtils.SEPARATOR);
+            _logger.debug("Method: isValid");
+    
+            _logger.debug("* label: " + _label);
+            if (_label == null || _label.length() <= 0)
+                warningMsg.append("\n    * Label");
+    
+            _logger.debug("* codingSchemeName: " + _codingSchemeName);
+            if (_codingSchemeName == null || _codingSchemeName.length() <= 0)
+                warningMsg.append("\n    * Coding Scheme");
+    
+            _logger.debug("* codingSchemeVersion: " + _codingSchemeVersion);
+            if (_codingSchemeVersion == null || _codingSchemeVersion.length() <= 0)
+                warningMsg.append("\n    * Version");
+    
+            _logger.debug("* rootConceptCode: " + _rootConceptCode);
+            if (_rootConceptCode == null || _rootConceptCode.length() <= 0)
+                warningMsg.append("\n    * Root Concept Code");
+    
+            _logger.debug("* associationName: " + _associationName);
+            if (_associationName == null || _associationName.length() <= 0)
+                warningMsg.append("\n    * Association name");
+    
+            _logger.debug("* direction_str: " + _direction_str);
+            _direction = new Boolean(_direction_str.compareTo("source") != 0);
+            request.setAttribute("direction", _direction);
+    
+            _logger.debug("* level_str: " + _level_str);
+            if (_level_str == null || _level_str.length() <= 0)
+                warningMsg.append("\n    * Level");
+    
+            if (warningMsg.length() > 0) {
+                warningMsg.insert(0, "Please enter the following value(s):");
+                return false;
+            }
+    
+            if (!isValidCodingScheme(warningMsg, _codingSchemeName,
+                _codingSchemeVersion))
+                return false;
+    
+            Entity rootConcept =
+                DataUtils.getConceptByCode(_codingSchemeName, _codingSchemeVersion,
+                    null, _rootConceptCode);
+            if (rootConcept == null && !_rootConceptCode.contains("|"))
+                warningMsg
+                    .append("\n    * Root Concept Code (check case sensitivity)");
+    
+            _level = OntologyBean.levelToInt(_level_str);
+            if (_level < -1)
+                warningMsg.append("\n    * Level");
+    
+            if (warningMsg.length() > 0) {
+                warningMsg.insert(0, "The following value(s) are invalid:");
+                return false;
+            }
+            return true;
+        } catch (Exception e) {
+            String trace = ExceptionUtils.getStackTrace(e);
+            warningMsg.append("Please report the following exception:\n");
+            warningMsg.append(trace);
+            e.printStackTrace();
             return false;
         }
-
-        if (!isValidCodingScheme(warningMsg, _codingSchemeName,
-            _codingSchemeVersion))
-            return false;
-
-        Entity rootConcept =
-            DataUtils.getConceptByCode(_codingSchemeName, _codingSchemeVersion,
-                null, _rootConceptCode);
-        if (rootConcept == null && !_rootConceptCode.contains("|"))
-            warningMsg
-                .append("\n    * Root Concept Code (check case sensitivity)");
-
-        _level = OntologyBean.levelToInt(_level_str);
-        if (_level < -1)
-            warningMsg.append("\n    * Level");
-
-        if (warningMsg.length() > 0) {
-            warningMsg.insert(0, "The following value(s) are invalid:");
-            return false;
-        }
-        return true;
     }
 
     // -------------------------------------------------------------------------

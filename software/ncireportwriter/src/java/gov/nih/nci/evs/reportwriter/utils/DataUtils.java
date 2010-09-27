@@ -659,52 +659,47 @@ public class DataUtils {
 
     // =========================================================================
     public static Entity getConceptByCode(String codingSchemeName,
-        String version, String tag, String code) {
+        String version, String tag, String code) throws Exception {
+        LexBIGService lbSvc = RemoteServerUtil.createLexBIGService();
+        if (lbSvc == null)
+            throw new Exception("lbSvc == null???");
+
+        CodingSchemeVersionOrTag vtag = new CodingSchemeVersionOrTag();
+        vtag.setVersion(version);
+
+        ConceptReferenceList crefs =
+            createConceptReferenceList(new String[] { code },
+                codingSchemeName);
+
+        CodedNodeSet cns = null;
         try {
-            LexBIGService lbSvc = RemoteServerUtil.createLexBIGService();
-            if (lbSvc == null)
-                throw new Exception("lbSvc == null???");
+            cns = lbSvc.getCodingSchemeConcepts(codingSchemeName, vtag);
+        } catch (Exception e1) {
+            _logger.debug("Method: getConceptByCode");
+            _logger.debug("  * codingSchemeName: " + codingSchemeName);
+            _logger.debug("  * version: " + version);
+            _logger.debug("  * tag: " + tag);
+            _logger.debug("  * code: " + code);
+            throw new Exception(
+                "lbSvc.getCodingSchemeConcepts threw exception??? " + code);
+        }
 
-            CodingSchemeVersionOrTag vtag = new CodingSchemeVersionOrTag();
-            vtag.setVersion(version);
+        cns = cns.restrictToCodes(crefs);
+        ResolvedConceptReferenceList matches =
+            cns.resolveToList(null, null, null, 1);
 
-            ConceptReferenceList crefs =
-                createConceptReferenceList(new String[] { code },
-                    codingSchemeName);
-
-            CodedNodeSet cns = null;
-            try {
-                cns = lbSvc.getCodingSchemeConcepts(codingSchemeName, vtag);
-            } catch (Exception e1) {
-                _logger.debug("Method: getConceptByCode");
-                _logger.debug("  * codingSchemeName: " + codingSchemeName);
-                _logger.debug("  * version: " + version);
-                _logger.debug("  * tag: " + tag);
-                _logger.debug("  * code: " + code);
-                throw new Exception(
-                    "lbSvc.getCodingSchemeConcepts threw exception??? " + code);
-            }
-
-            cns = cns.restrictToCodes(crefs);
-            ResolvedConceptReferenceList matches =
-                cns.resolveToList(null, null, null, 1);
-
-            if (matches == null) {
-                _logger.warn("Concept not found for " + code + ".");
-                return null;
-            }
-
-            if (matches.getResolvedConceptReferenceCount() > 0) {
-                ResolvedConceptReference ref =
-                    (ResolvedConceptReference) matches
-                        .enumerateResolvedConceptReference().nextElement();
-
-                Entity entry = ref.getReferencedEntry();
-                return entry;
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
+        if (matches == null) {
+            _logger.warn("Concept not found for " + code + ".");
             return null;
+        }
+
+        if (matches.getResolvedConceptReferenceCount() > 0) {
+            ResolvedConceptReference ref =
+                (ResolvedConceptReference) matches
+                    .enumerateResolvedConceptReference().nextElement();
+
+            Entity entry = ref.getReferencedEntry();
+            return entry;
         }
         return null;
     }
