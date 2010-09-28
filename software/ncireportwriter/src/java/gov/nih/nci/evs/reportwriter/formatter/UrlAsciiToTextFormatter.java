@@ -5,18 +5,10 @@ import java.net.*;
 
 import org.apache.log4j.*;
 
-public class UrlAsciiToTextFormatter extends AsciiToTextFormatter {
+public class UrlAsciiToTextFormatter extends AsciiToTextFormatter implements
+        FormatterConstant {
     private static Logger _logger = Logger
         .getLogger(UrlAsciiToTextFormatter.class);
-    private static final String FTP_URL = "http://evs.nci.nih.gov/ftp1";
-    private static final String CDISC_SDTM_REPORT_URL = FTP_URL
-        + "/CDISC/SDTM/SDTM%20Terminology.txt";
-    private static final String CDRH_REPORT_URL = FTP_URL
-        + "/FDA/CDRH/FDA-CDRH_NCIt_Subsets.txt";
-    private static final String FDA_SPL_REPORT_URL = FTP_URL
-        + "/FDA/SPL/FDA-SPL_Country_Codes.txt";
-    private static final String FDA_UNII_REPORT_URL = FTP_URL
-        + "/FDA/UNII/FDA-UNII_NCIt_Subsets.txt";
 
     protected Boolean convert2(String textfile, String toExt, String delimiter)
             throws Exception {
@@ -49,11 +41,11 @@ public class UrlAsciiToTextFormatter extends AsciiToTextFormatter {
     }
 
     public static void main(String[] args) {
-        test(CDISC_SDTM_REPORT_URL, new int[] { 0, 1 });
+        test(CDISC_SDTM_REPORT_URL, CDISC_SDTM_NCIT_COLUMNS);
         // test(dir + "CDISC_Subset_REPORT__10.06e.txt", new int[] { 1, 3 });
-        test(CDRH_REPORT_URL, new int[] { 1, 3, 9 });
-        test(FDA_SPL_REPORT_URL, new int[] { 1 });
-        test(FDA_UNII_REPORT_URL, new int[] { 2 });
+        test(CDRH_REPORT_URL, CDRH_COLUMNS);
+        test(FDA_SPL_REPORT_URL, FDA_SPL_NCIT_COLUMNS);
+        test(FDA_UNII_REPORT_URL, FDA_UNII_NCIT_COLUMNS);
         // test(dir + "Individual_Case_Safety_(ICS)_Subset_REPORT__10.06e.txt",
         // new int[] { 1, 3 });
         // test(dir + "Structured_Product_Labeling_(SPL)_REPORT__10.06e.txt",
