@@ -61,8 +61,8 @@ public abstract class FileFormatterBase {
     protected Boolean convert2(String textfile, String toExt, String delimiter)
             throws Exception {
         int i = textfile.lastIndexOf(".");
-        String excelfile = textfile.substring(0, i) + "." + toExt;
-        return convert(textfile, delimiter, excelfile);
+        String outfile = textfile.substring(0, i) + "." + toExt;
+        return convert(textfile, delimiter, outfile);
     }
 
     protected abstract Boolean convert(String infile, String delimiter,
