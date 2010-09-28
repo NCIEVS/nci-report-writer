@@ -72,7 +72,7 @@ public class AsciiToHtmlFormatter extends FileFormatterBase
         return Boolean.TRUE;
     }
 
-    private void printContent(TabFormatterFileOutputStream out, String textfile,
+    protected void printContent(TabFormatterInterface out, String textfile,
         String delimiter) throws Exception {
         BufferedReader br = getBufferReader(textfile);
 
@@ -137,7 +137,7 @@ public class AsciiToHtmlFormatter extends FileFormatterBase
         br.close();
     }
 
-    private void printHeader(TabFormatterFileOutputStream out) throws Exception {
+    protected void printHeader(TabFormatterInterface out) throws Exception {
         out.writeln_normal("<html>");
         out.writeln_indent("<head>");
         out.writeln_inden1("<title>" + getReportName(out.getFilename())
@@ -148,13 +148,13 @@ public class AsciiToHtmlFormatter extends FileFormatterBase
         out.writeln_indent("<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" class=\"dataTable\" width=\"100%\">");
     }
 
-    private void printFooter(TabFormatterFileOutputStream out) throws Exception {
+    protected void printFooter(TabFormatterInterface out) throws Exception {
         out.writeln_undent("</table>");
         out.writeln_undent("</body>");
         out.writeln_normal("</html>");
     }
 
-    private void printStyles(TabFormatterFileOutputStream out) throws Exception {
+    private void printStyles(TabFormatterInterface out) throws Exception {
         out.writeln_indent("<style>");
         out.writeln_normal("  * {");
         out.writeln_normal("    font-family: Helvetica, Geneva, Times, Verdana, sans-serif;");
@@ -249,7 +249,7 @@ public class AsciiToHtmlFormatter extends FileFormatterBase
     }
 
     // -- Miscellaneous --------------------------------------------------------
-    private String getReportName(String filename) {
+    protected String getReportName(String filename) {
         String reportName = filename.replace("__", " (");
         reportName = reportName.replace(".htm", ")");
         return reportName;
