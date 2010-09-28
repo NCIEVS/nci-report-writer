@@ -65,7 +65,7 @@ public class AsciiToTextFormatter extends FileFormatterBase {
 	public Boolean convert(String textfile, String delimiter, String outfile)
 			throws Exception {
 		BufferedReader br = getBufferReader(textfile);
-		MyFileOutputStream out = new MyFileOutputStream(outfile);
+		TabFormatterFileOutputStream out = new TabFormatterFileOutputStream(outfile);
 		Vector<String> headings = getColumnHeadings(textfile, delimiter);
 
 		int row = 0;
