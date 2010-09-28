@@ -1100,12 +1100,12 @@ public class ReportGenerationThread implements Runnable {
         AsciiToHtmlFormatter htmlFormatter = new AsciiToHtmlFormatter();
         htmlFormatter.setDisplayNCItCodeUrl(displayNCItCodeUrl);
 
-        BaseFileFormatter[] formatters =
-            new BaseFileFormatter[] { new AsciiToExcelFormatter(),
+        FileFormatterBase[] formatters =
+            new FileFormatterBase[] { new AsciiToExcelFormatter(),
                 htmlFormatter };
 
         Boolean bool_obj = true;
-        for (BaseFileFormatter formatter : formatters) {
+        for (FileFormatterBase formatter : formatters) {
             formatter.setNcitUrl(ncitUrl);
             formatter.setNcitCodeColumns(_ncitColumns);
             bool_obj &= formatter.convert(textfile, delimiter);

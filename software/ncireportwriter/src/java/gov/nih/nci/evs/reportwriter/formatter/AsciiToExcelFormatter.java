@@ -56,7 +56,7 @@ import gov.nih.nci.evs.utils.*;
  * @version 1.0
  */
 
-public class AsciiToExcelFormatter extends BaseFileFormatter {
+public class AsciiToExcelFormatter extends FileFormatterBase {
     private static Logger _logger = Logger
         .getLogger(AsciiToExcelFormatter.class);
     private static final int MAX_WIDTH = 30;

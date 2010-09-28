@@ -54,7 +54,7 @@ import org.apache.log4j.*;
  * @version 1.0
  */
 
-public class AsciiToTextFormatter extends BaseFileFormatter {
+public class AsciiToTextFormatter extends FileFormatterBase {
 	private static Logger _logger = Logger
 			.getLogger(AsciiToTextFormatter.class);
 
