@@ -53,7 +53,7 @@ import org.apache.log4j.*;
  * @version 1.0
  */
 
-public class AsciiToHtmlFormatter extends BaseFileFormatter {
+public class AsciiToHtmlFormatter extends FileFormatterBase {
     private static Logger _logger = Logger
         .getLogger(AsciiToHtmlFormatter.class);
 
