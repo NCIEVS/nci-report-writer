@@ -83,10 +83,14 @@ public class ReportDownloadRequest {
             // logger.debug("download_dir " + download_dir);
 
         } catch (Exception ex) {
+            String trace = ExceptionUtils.getStackTrace(ex);
+            ex.printStackTrace();
             return HTTPUtils.sessionMsg(request,
-                    "Unable to download the specified report.\n"
-                            + "Download directory does not exist.\n"
-                            + "Check with your system administrator.");
+                "Unable to download the specified report.\n"
+                    + "Download directory does not exist.\n"
+                    + "Check with your system administrator."
+                    + "\n\nPlease report the following exception:\n"
+                    + trace);
         }
 
         File dir = new File(download_dir);

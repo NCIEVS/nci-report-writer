@@ -197,8 +197,12 @@ public class ReportContentRequest {
                 }
             }
         } catch (Exception ex) {
+            ex.printStackTrace();
+            String trace = ExceptionUtils.getStackTrace(ex);
             return HTTPUtils.sessionMsg(request,
-                "Exception encountered when generating " + templateId + ".");
+                "Exception encountered when generating " + templateId + "."
+                + "\n\nPlease report the following exception:\n"
+                + trace);
         }
 
         String uid = (String) request.getSession().getAttribute("uid");
