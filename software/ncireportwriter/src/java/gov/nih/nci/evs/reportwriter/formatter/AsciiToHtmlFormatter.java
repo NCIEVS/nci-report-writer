@@ -63,7 +63,7 @@ public class AsciiToHtmlFormatter extends FileFormatterBase {
 
     public Boolean convert(String textfile, String delimiter, String outfile)
             throws Exception {
-        MyFileOutputStream out = new MyFileOutputStream(outfile);
+        TabFormatterFileOutputStream out = new TabFormatterFileOutputStream(outfile);
         printHeader(out);
         printContent(out, textfile, delimiter);
         printFooter(out);
@@ -71,7 +71,7 @@ public class AsciiToHtmlFormatter extends FileFormatterBase {
         return Boolean.TRUE;
     }
 
-    private void printContent(MyFileOutputStream out, String textfile,
+    private void printContent(TabFormatterFileOutputStream out, String textfile,
         String delimiter) throws Exception {
         BufferedReader br = getBufferReader(textfile);
 
@@ -136,7 +136,7 @@ public class AsciiToHtmlFormatter extends FileFormatterBase {
         br.close();
     }
 
-    private void printHeader(MyFileOutputStream out) throws Exception {
+    private void printHeader(TabFormatterFileOutputStream out) throws Exception {
         out.writeln_normal("<html>");
         out.writeln_indent("<head>");
         out.writeln_inden1("<title>" + getReportName(out.getFilename())
@@ -147,13 +147,13 @@ public class AsciiToHtmlFormatter extends FileFormatterBase {
         out.writeln_indent("<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" class=\"dataTable\" width=\"100%\">");
     }
 
-    private void printFooter(MyFileOutputStream out) throws Exception {
+    private void printFooter(TabFormatterFileOutputStream out) throws Exception {
         out.writeln_undent("</table>");
         out.writeln_undent("</body>");
         out.writeln_normal("</html>");
     }
 
-    private void printStyles(MyFileOutputStream out) throws Exception {
+    private void printStyles(TabFormatterFileOutputStream out) throws Exception {
         out.writeln_indent("<style>");
         out.writeln_normal("  * {");
         out.writeln_normal("    font-family: Helvetica, Geneva, Times, Verdana, sans-serif;");
