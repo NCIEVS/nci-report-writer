@@ -109,7 +109,7 @@ if not "%1" == "ci:wdbinstall" goto c1
     :c2
     ant -Dproperties.file=%CIPROPFILE% -Dupgrade.target=upgrade-ncm:with-dbinstall -Ddatabase.re-create=true %TAG% %DEBUG% deploy:remote:upgrade
     goto DONE
-:d1
+:c1
 if "%1" == "qa" (
     ant -Dproperties.file=%QAPROPFILE% %TAG% %DEBUG% deploy:remote:upgrade
     goto DONE
