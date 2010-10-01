@@ -447,19 +447,17 @@
         <copy file="${ncireportwriter-webapp.dir.dist}/${ncireportwriter-webapp.war.file}"
              todir="${jboss.home}/server/${jboss.server.name}/deploy"
              overwrite="true"
-		>
+        >
         </copy>
         <!--  Many NCI applications require clm for csm, so you can point this to where you have the version you want to use -->
         <copy file="${ncireportwriter-webapp.dir.dist}/deploy/clm.jar"
             todir="${jboss.home}/server/${jboss.server.name}/lib"
             overwrite="true">
         </copy>
-        <!-- Omit UPT until we get a version for JBoss 5.1
         <copy file="${ncireportwriter-webapp.dir.dist}/upt.war"
              todir="${jboss.home}/server/${jboss.server.name}/deploy"
              overwrite="true">
          </copy>
-         -->
         <!-- Copy datbase driver -->
         <copy file="${database.driver.file}" todir="${jboss.home}/server/${jboss.server.name}/lib" overwrite="true" />
     </target>
