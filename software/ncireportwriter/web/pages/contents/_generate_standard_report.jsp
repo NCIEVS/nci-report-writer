@@ -52,7 +52,7 @@
                   </li></ul><br/>
                 </td></tr>
                   <tr>
-                    <td class="dataTablePrimaryLabel" height="20">GENERATE REPORT</td>
+                    <td class="dataTablePrimaryLabel" height="20">GENERATE REPORT: <%=templateLabel%></td>
                   </tr>
                   <tr>
                     <td>
