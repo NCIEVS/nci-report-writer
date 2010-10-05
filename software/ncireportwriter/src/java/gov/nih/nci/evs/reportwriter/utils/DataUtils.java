@@ -209,7 +209,12 @@ public class DataUtils {
                     try {
                         switch (j) {
                         case 0:
-                            scheme = lbSvc.resolveCodingScheme(formalName, vt);
+                            try {
+                                scheme = lbSvc.resolveCodingScheme(formalName, vt);
+                            } catch (Exception e) {
+                                _logger.warn("Possible security token needed for: " + formalName);
+                                ExceptionUtils.print(_logger, e);
+                            }
                             break;
                         case 1:
                             String urn = css.getCodingSchemeURI();
@@ -223,7 +228,7 @@ public class DataUtils {
                         break;
                     } catch (Exception e) {
                         ExceptionUtils.print(_logger, e);
-                        e.printStackTrace();
+                        // e.printStackTrace();
                     }
                     j++;
                 }
@@ -719,7 +724,7 @@ public class DataUtils {
     }
 
     public static Vector<Entity> getAssociationTargets(String scheme,
-        String version, String code, String assocName) {
+        String version, String code, String assocName) throws Exception {
         boolean targetToSource = false;
         return getAssociations(targetToSource, scheme, version, code, assocName);
     }
@@ -768,13 +773,14 @@ public class DataUtils {
     }
 
     public static Vector<Entity> getAssociationSources(String scheme,
-        String version, String code, String assocName) {
+        String version, String code, String assocName) throws Exception {
         boolean targetToSource = true;
         return getAssociations(targetToSource, scheme, version, code, assocName);
     }
 
     public static Vector<Entity> getAssociations(boolean targetToSource,
-        String scheme, String version, String code, String assocName) {
+        String scheme, String version, String code, String assocName) 
+        throws Exception {
 
         boolean includeRoot = false;
         return resolveValueSet(scheme, version, code, targetToSource,
@@ -1790,7 +1796,16 @@ public class DataUtils {
 
     public static Vector resolveValueSet(String codingScheme, String version,
         String code, boolean target2Source, String referenceAssociation,
-        boolean includeRoot) {
+        boolean includeRoot) throws Exception {
+        
+        _logger.debug(StringUtils.SEPARATOR);
+        _logger.debug("Method: DataUtils.resolveValueSet");
+        _logger.debug("  * codingScheme: " + codingScheme);
+        _logger.debug("  * version: " + version);
+        _logger.debug("  * code: " + code);
+        _logger.debug("  * target2Source: " + target2Source);
+        _logger.debug("  * referenceAssociation: " + referenceAssociation);
+        _logger.debug("  * includeRoot: " + includeRoot);
         codingScheme = TempFix.modifyCodingSchemeName(codingScheme);
         ValueSetDefinition vsd = new ValueSetDefinition();
         String valueSetDefinitionURI =
@@ -1803,13 +1818,7 @@ public class DataUtils {
         }
         valueSetDefinitionURI =
             TempFix.modifyValueSetDefinitionURI(valueSetDefinitionURI);
-        try {
-            vsd.setValueSetDefinitionURI(valueSetDefinitionURI);
-        } catch (Exception e) {
-            e.printStackTrace();
-            _logger.error("setValueSetDefinitionURI throws exceptions.");
-            return null;
-        }
+        vsd.setValueSetDefinitionURI(valueSetDefinitionURI);
 
         String valueSetDefinitionName = valueSetDefinitionURI;
         vsd.setValueSetDefinitionName(valueSetDefinitionName);
@@ -1846,37 +1855,30 @@ public class DataUtils {
         }
 
         Vector v = new Vector();
-        try {
-            AbsoluteCodingSchemeVersionReferenceList csvList =
-                new AbsoluteCodingSchemeVersionReferenceList();
-            csvList.addAbsoluteCodingSchemeVersionReference(Constructors
-                .createAbsoluteCodingSchemeVersionReference(codingScheme,
-                    version));
-            ResolvedValueSetDefinition rvdDef =
-                getValueSetDefinitionService().resolveValueSetDefinition(vsd,
-                    csvList, null, null);
+        AbsoluteCodingSchemeVersionReferenceList csvList =
+            new AbsoluteCodingSchemeVersionReferenceList();
+        csvList.addAbsoluteCodingSchemeVersionReference(Constructors
+            .createAbsoluteCodingSchemeVersionReference(codingScheme,
+                version));
+        ResolvedValueSetDefinition rvdDef =
+            getValueSetDefinitionService().resolveValueSetDefinition(vsd,
+                csvList, null, null);
 
-            if (rvdDef != null) {
-                Set<String> codes = new HashSet<String>();
-                while (rvdDef.getResolvedConceptReferenceIterator().hasNext()) {
-                    ResolvedConceptReference rcr =
-                        rvdDef.getResolvedConceptReferenceIterator().next();
-                    Entity concept = rcr.getReferencedEntry();
-                    if (concept == null) {
-                        _logger.warn("rcr.getReferencedEntry() returns NULL");
-                    } else {
-                        v.add(concept);
-                    }
+        if (rvdDef != null) {
+            Set<String> codes = new HashSet<String>();
+            while (rvdDef.getResolvedConceptReferenceIterator().hasNext()) {
+                ResolvedConceptReference rcr =
+                    rvdDef.getResolvedConceptReferenceIterator().next();
+                Entity concept = rcr.getReferencedEntry();
+                if (concept == null) {
+                    _logger.warn("rcr.getReferencedEntry() returns NULL");
+                } else {
+                    v.add(concept);
                 }
-            } else {
-                _logger.error("Unable to resolveValueSetDefinition??");
             }
-
-        } catch (Exception ex) {
-            ex.printStackTrace();
-            return null;
+        } else {
+            _logger.error("Unable to resolveValueSetDefinition??");
         }
-
         return v;
     }
 }

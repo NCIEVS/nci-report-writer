@@ -76,7 +76,7 @@ public class SpecialCases {
 
     public static class CDRH {
         public static CDRHInfo getAssociatedConcept(String label,
-            String scheme, String version, Entity node) {
+            String scheme, String version, Entity node) throws Exception {
             if (label.indexOf("[CDRH] PARENT") < 0)
                 return null;
 

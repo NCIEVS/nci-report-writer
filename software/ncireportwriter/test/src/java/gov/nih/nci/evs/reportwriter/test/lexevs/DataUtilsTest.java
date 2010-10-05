@@ -13,14 +13,14 @@ import org.apache.log4j.*;
 public class DataUtilsTest {
     private static Logger _logger = Logger.getLogger(DataUtilsTest.class);
     
-    public static void main(String[] args) {
+    public static void main(String[] args) throws Exception {
         args = SetupEnv.getInstance().parse(args);
         DataUtilsTest test = new DataUtilsTest();
         test.getAssociations();
         //test.generateStandardReport();
     }
     
-    public void getAssociations() {
+    public void getAssociations() throws Exception {
         String scheme = "NCI Thesaurus";
         String version = "09.12d";
         String code = "C74456";  // CDISC SDTM Anatomical Location Terminology

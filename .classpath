@@ -29,14 +29,11 @@
 	<classpathentry kind="lib" path="software/ncireportwriter/lib/castor-1.3.1.jar"/>
 	<classpathentry kind="lib" path="software/ncireportwriter/lib/castor-codegen-1.3.1.jar"/>
 	<classpathentry kind="lib" path="software/ncireportwriter/lib/castor-codegen-anttask-1.1.jar"/>
-	<classpathentry kind="lib" path="software/ncireportwriter/lib/castor-core-1.3.1.jar"/>
 	<classpathentry kind="lib" path="software/ncireportwriter/lib/castor-xml-1.3.1.jar"/>
 	<classpathentry kind="lib" path="software/ncireportwriter/lib/castor-xml-schema-1.3.1.jar"/>
 	<classpathentry kind="lib" path="software/ncireportwriter/lib/cglib-2.2.jar"/>
 	<classpathentry kind="lib" path="software/ncireportwriter/lib/claml-model.jar"/>
 	<classpathentry kind="lib" path="software/ncireportwriter/lib/clm-4.1.jar"/>
-	<classpathentry kind="lib" path="software/ncireportwriter/lib/commons-beanutils-1.8.0.jar"/>
-	<classpathentry kind="lib" path="software/ncireportwriter/lib/commons-beanutils-1.8.0.license.txt"/>
 	<classpathentry kind="lib" path="software/ncireportwriter/lib/commons-beanutils-1.8.3.jar"/>
 	<classpathentry kind="lib" path="software/ncireportwriter/lib/commons-betwixt-0.8.jar"/>
 	<classpathentry kind="lib" path="software/ncireportwriter/lib/commons-cli-1.0.jar"/>
@@ -45,8 +42,6 @@
 	<classpathentry kind="lib" path="software/ncireportwriter/lib/commons-codec-1.3.license.txt"/>
 	<classpathentry kind="lib" path="software/ncireportwriter/lib/commons-collections-3.2.1.jar"/>
 	<classpathentry kind="lib" path="software/ncireportwriter/lib/commons-collections-3.2.1.license.txt"/>
-	<classpathentry kind="lib" path="software/ncireportwriter/lib/commons-dbcp-1.2.2.jar"/>
-	<classpathentry kind="lib" path="software/ncireportwriter/lib/commons-dbcp-1.2.2.license.txt"/>
 	<classpathentry kind="lib" path="software/ncireportwriter/lib/commons-dbcp-1.4.jar"/>
 	<classpathentry kind="lib" path="software/ncireportwriter/lib/commons-digester-1.8.jar"/>
 	<classpathentry kind="lib" path="software/ncireportwriter/lib/commons-discovery-0.4.jar"/>
@@ -65,13 +60,11 @@
 	<classpathentry kind="lib" path="software/ncireportwriter/lib/ddlUtils-1.0-PATCHED.jar"/>
 	<classpathentry kind="lib" path="software/ncireportwriter/lib/dom4j-1.6.1.jar"/>
 	<classpathentry kind="lib" path="software/ncireportwriter/lib/dom4j.license.txt"/>
-	<classpathentry kind="lib" path="software/ncireportwriter/lib/easymock-2.4.jar"/>
 	<classpathentry kind="lib" path="software/ncireportwriter/lib/easymock-2.5.1.jar"/>
-	<classpathentry kind="lib" path="software/ncireportwriter/lib/easymockclassextension-2.4.jar"/>
 	<classpathentry kind="lib" path="software/ncireportwriter/lib/easymockclassextension-2.5.1.jar"/>
 	<classpathentry kind="lib" path="software/ncireportwriter/lib/ehcache-core-2.0.1.jar"/>
 	<classpathentry kind="lib" path="software/ncireportwriter/lib/ejb3-persistence-1.0.2.GA.jar"/>
-	<classpathentry kind="lib" path="software/ncireportwriter/lib/evs-ui-framework-1.0.jar" sourcepath="C:/src/browsers/evs-web-app-framework/software/ui/src/java"/>
+	<classpathentry kind="lib" path="software/ncireportwriter/lib/evs-ui-framework-1.0.jar"/>
 	<classpathentry kind="lib" path="software/ncireportwriter/lib/GroboUtils-5-core.jar"/>
 	<classpathentry kind="lib" path="software/ncireportwriter/lib/hibernate-annotations-1.0.jar"/>
 	<classpathentry kind="lib" path="software/ncireportwriter/lib/hibernate-commons-annotations.jar"/>
@@ -91,8 +84,6 @@
 	<classpathentry kind="lib" path="software/ncireportwriter/lib/jaxen-core-1.1.jar"/>
 	<classpathentry kind="lib" path="software/ncireportwriter/lib/jaxen-jdom-1.1.jar"/>
 	<classpathentry kind="lib" path="software/ncireportwriter/lib/jaxrpc.jar"/>
-	<classpathentry kind="lib" path="software/ncireportwriter/lib/jdom-1.0.jar"/>
-	<classpathentry kind="lib" path="software/ncireportwriter/lib/jdom-1.0.license.txt"/>
 	<classpathentry kind="lib" path="software/ncireportwriter/lib/jdom-1.1.jar"/>
 	<classpathentry kind="lib" path="software/ncireportwriter/lib/jena-2.5.4.jar"/>
 	<classpathentry kind="lib" path="software/ncireportwriter/lib/jettison-1.1.jar"/>
