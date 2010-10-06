@@ -156,10 +156,12 @@ public class ResolveValueSetTest2 {
     public static void run() throws Exception {
         String codingScheme = "NCI Thesaurus";
         String version = "10.08e";
-        String code = "C62596";
+        String code = "C62596"; // CDRH Report
         boolean target2Source = true;
         String referenceAssociation = "Concept_In_Subset";
         boolean includeRoot = false;
+        
+        code = "C54452"; // SPL Report
         resolveValueSet(codingScheme, version, code, target2Source,
             referenceAssociation, includeRoot);
     }
