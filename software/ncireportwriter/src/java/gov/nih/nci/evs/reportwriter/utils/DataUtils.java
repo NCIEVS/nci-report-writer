@@ -212,8 +212,10 @@ public class DataUtils {
                             try {
                                 scheme = lbSvc.resolveCodingScheme(formalName, vt);
                             } catch (Exception e) {
-                                _logger.warn("Possible security token needed for: " + formalName);
-                                ExceptionUtils.print(_logger, e);
+                                _logger.warn(e.getClass().getSimpleName() + ": "
+                                    + e.getMessage());
+                                _logger.warn("Possible security token needed for: ");
+                                _logger.warn("  * " + formalName);
                             }
                             break;
                         case 1:
