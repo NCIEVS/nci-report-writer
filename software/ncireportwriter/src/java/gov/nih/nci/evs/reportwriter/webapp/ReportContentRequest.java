@@ -117,7 +117,8 @@ public class ReportContentRequest {
         request.getSession().setAttribute("selectedOntology", csnv);
 
         String warningMsg = displayCodingSchemeWarning(request);
-        return warningMsg == null ? "standard_report_column" : warningMsg;
+        //return warningMsg == null ? "standard_report_column" : warningMsg;
+        return "standard_report_column";
     }
 
     public String generateAction(String selectedStandardReportTemplate) {
