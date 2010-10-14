@@ -725,10 +725,13 @@ public class DataUtils {
         return nvList;
     }
 
-    public static Vector<Entity> getAssociationTargets(String scheme,
+    public static Vector<Entity> getAssociationTargets(
+        LexEVSValueSetDefinitionServices definitionServices,
+        String uri, String scheme,
         String version, String code, String assocName) throws Exception {
         boolean targetToSource = false;
-        return getAssociations(targetToSource, scheme, version, code, assocName);
+        return getAssociations(definitionServices, uri, 
+            targetToSource, scheme, version, code, assocName);
     }
 
     public static ResolvedConceptReferenceList getNext(
@@ -774,19 +777,24 @@ public class DataUtils {
         return v;
     }
 
-    public static Vector<Entity> getAssociationSources(String scheme,
+    public static Vector<Entity> getAssociationSources(
+        LexEVSValueSetDefinitionServices definitionServices,
+        String uri, String scheme,
         String version, String code, String assocName) throws Exception {
         boolean targetToSource = true;
-        return getAssociations(targetToSource, scheme, version, code, assocName);
+        return getAssociations(definitionServices, uri,
+            targetToSource, scheme, version, code, assocName);
     }
 
-    public static Vector<Entity> getAssociations(boolean targetToSource,
+    public static Vector<Entity> getAssociations(
+        LexEVSValueSetDefinitionServices definitionServices,
+        String uri, boolean targetToSource,
         String scheme, String version, String code, String assocName)
         throws Exception {
 
         boolean includeRoot = false;
-        return resolveValueSet(scheme, version, code, targetToSource,
-            assocName, includeRoot);
+        return resolveValueSet(definitionServices, uri, scheme, version, code,
+            targetToSource, assocName, includeRoot);
 
         // CodingSchemeVersionOrTag csvt = new CodingSchemeVersionOrTag();
         // if (version != null)
@@ -1783,7 +1791,7 @@ public class DataUtils {
     // -------------------------------------------------------------------------
     // Value Set Implementation:
     // -------------------------------------------------------------------------
-    private static LexEVSValueSetDefinitionServices getValueSetDefinitionService()
+    public static LexEVSValueSetDefinitionServices getValueSetDefinitionService()
             throws Exception {
         String serviceUrl =
             AppProperties.getInstance().getProperty(
@@ -1796,7 +1804,9 @@ public class DataUtils {
         return service;
     }
 
-    public static Vector resolveValueSet(String codingScheme, String version,
+    public static Vector resolveValueSet(
+        LexEVSValueSetDefinitionServices definitionServices,
+        String uri, String codingScheme, String version,
         String code, boolean target2Source, String referenceAssociation,
         boolean includeRoot) throws Exception {
 
@@ -1898,7 +1908,8 @@ public class DataUtils {
         return cs;
     }
 
-    protected static String codingSchemeName2URI(String codingSchemeName, String version) {
+    public static String codingSchemeName2URI(String codingSchemeName, String version) 
+        throws Exception {
 		CodingSchemeVersionOrTag versionOrTag = new CodingSchemeVersionOrTag();
 		if (version != null) versionOrTag.setVersion(version);
 		CodingScheme cs = getCodingScheme(codingSchemeName, versionOrTag);

@@ -153,20 +153,48 @@ public class ResolveValueSetTest2 {
         }
     }
     
-    public static void run() throws Exception {
+    public static void run_cdrh_1() throws Exception {
         String codingScheme = "NCI Thesaurus";
         String version = "10.08e";
         String code = "C62596"; // CDRH Report
         boolean target2Source = true;
         String referenceAssociation = "Concept_In_Subset";
         boolean includeRoot = false;
+
+        resolveValueSet(codingScheme, version, code, target2Source,
+            referenceAssociation, includeRoot);
+    }
+
+    public static void run_spl_1() throws Exception {
+        String codingScheme = "NCI Thesaurus";
+        String version = "10.08e";
+        String code = "C62596"; // CDRH Report
+        boolean target2Source = true;
+        String referenceAssociation = "Concept_In_Subset";
+        boolean includeRoot = false;
+
+        // SPL Report:
+        code = "C54452";
         
-        code = "C54452"; // SPL Report
+        resolveValueSet(codingScheme, version, code, target2Source,
+            referenceAssociation, includeRoot);
+    }
+    
+    public static void run_cdrh_2() throws Exception {
+        String codingScheme = "NCI Thesaurus";
+        String version = "10.08e";
+        String code = "C50721";
+        boolean target2Source = false;
+        String referenceAssociation = "A10";
+        boolean includeRoot = false;
+        
+        
+        referenceAssociation = "Concept_In_Subset";
         resolveValueSet(codingScheme, version, code, target2Source,
             referenceAssociation, includeRoot);
     }
 
     public static void main(String[] args) throws Exception {
-        ResolveValueSetTest2.run();
+        ResolveValueSetTest2.run_cdrh_2();
     }
 }

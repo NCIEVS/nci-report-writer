@@ -10,6 +10,7 @@ import java.util.*;
 
 import org.LexGrid.concepts.*;
 import org.apache.log4j.*;
+import org.lexgrid.valuesets.*;
 
 /**
  * <!-- LICENSE_TEXT_START -->
@@ -80,9 +81,18 @@ public class SpecialCases {
             if (label.indexOf("[CDRH] PARENT") < 0)
                 return null;
 
+            //DYEE (Begin) : Not sure if this is the correct location
+            LexEVSValueSetDefinitionServices definitionServices =
+                DataUtils.getValueSetDefinitionService();
+            String uri = DataUtils.codingSchemeName2URI(scheme, version);
+            //DYEE (End)
+            
+            _logger.debug("");
+            _logger.debug("-----------------------------------");
+            _logger.debug("Replaced A10 with Concept_In_Subset");
             Vector<Entity> v =
-                DataUtils.getAssociationTargets(scheme, version, node
-                    .getEntityCode(), "A10");
+                DataUtils.getAssociationTargets(definitionServices, uri, 
+                    scheme, version, node.getEntityCode(), "Concept_In_Subset");
             if (v == null || v.size() <= 0)
                 return new CDRHInfo(""); // Previous: Not Available
 

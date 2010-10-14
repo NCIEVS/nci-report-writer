@@ -10,6 +10,7 @@ import gov.nih.nci.evs.reportwriter.utils.*;
 import org.LexGrid.commonTypes.*;
 import org.LexGrid.concepts.*;
 import org.apache.log4j.*;
+import org.lexgrid.valuesets.*;
 
 import gov.nih.nci.evs.reportwriter.properties.*;
 import gov.nih.nci.evs.utils.*;
@@ -342,7 +343,10 @@ public class ReportGenerationThread implements Runnable {
                         + " - could not map association name to its corresponding code.");
             }
             _cdiscInfo = new SpecialCases.CDISCExtensibleInfo(cols);
-            traverse(pw, scheme, version, tag, defining_root_concept, code,
+            LexEVSValueSetDefinitionServices definitionServices =
+                DataUtils.getValueSetDefinitionService();
+            String uri = DataUtils.codingSchemeName2URI(scheme, version);
+            traverse(definitionServices, uri, pw, scheme, version, tag, defining_root_concept, code,
                 _hierarchicalAssoName, associationName, direction, curr_level,
                 max_level, cols);
             closePrintWriter(pw);
@@ -449,7 +453,8 @@ public class ReportGenerationThread implements Runnable {
         }
     }
 
-    private void traverse(PrintWriter pw, String scheme, String version,
+    private void traverse(LexEVSValueSetDefinitionServices definitionServices,
+        String uri, PrintWriter pw, String scheme, String version,
         String tag, Entity defining_root_concept, String code,
         String hierarchyAssociationName, String associationName,
         boolean direction, int level, int maxLevel, ReportColumn[] cols) 
@@ -471,12 +476,12 @@ public class ReportGenerationThread implements Runnable {
         Vector<Entity> v = new Vector<Entity>();
         if (direction) {
             v =
-                DataUtils.getAssociationTargets(scheme, version,
-                    root.getEntityCode(), associationName);
+                DataUtils.getAssociationTargets(definitionServices, uri, 
+                    scheme, version, root.getEntityCode(), associationName);
         } else {
             v =
-                DataUtils.getAssociationSources(scheme, version,
-                    root.getEntityCode(), associationName);
+                DataUtils.getAssociationSources(definitionServices, uri, 
+                    scheme, version, root.getEntityCode(), associationName);
         }
 
         // associated concepts (i.e., concepts in subset)
@@ -505,7 +510,7 @@ public class ReportGenerationThread implements Runnable {
             // Entity concept = (Entity) subconcept_vec.elementAt(k);
             // String subconcep_code = concept.getEntityCode();
             String subconcep_code = subconcept_vec.elementAt(k);
-            traverse(pw, scheme, version, tag, defining_root_concept,
+            traverse(definitionServices, uri, pw, scheme, version, tag, defining_root_concept,
                 subconcep_code, hierarchyAssociationName, associationName,
                 direction, level, maxLevel, cols);
         }

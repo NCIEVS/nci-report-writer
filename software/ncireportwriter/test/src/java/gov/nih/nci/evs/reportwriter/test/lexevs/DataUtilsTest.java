@@ -9,6 +9,7 @@ import gov.nih.nci.evs.utils.*;
 
 import org.LexGrid.concepts.*;
 import org.apache.log4j.*;
+import org.lexgrid.valuesets.*;
 
 public class DataUtilsTest {
     private static Logger _logger = Logger.getLogger(DataUtilsTest.class);
@@ -21,8 +22,11 @@ public class DataUtilsTest {
     }
     
     public void getAssociations() throws Exception {
+        LexEVSValueSetDefinitionServices definitionServices =
+            DataUtils.getValueSetDefinitionService();
         String scheme = "NCI Thesaurus";
         String version = "09.12d";
+        String uri = DataUtils.codingSchemeName2URI(scheme, version);
         String code = "C74456";  // CDISC SDTM Anatomical Location Terminology
         code = "C63923"; // FDA Established Names and Unique Ingredient Identifier Codes Terminology
         String assocName = "A8";
@@ -36,7 +40,7 @@ public class DataUtilsTest {
         _logger.info("  * version: " + version);
         _logger.info("  * code: " + code);
         _logger.info("  * assocName: " + assocName);
-        Vector<Entity> v = DataUtils.getAssociations(
+        Vector<Entity> v = DataUtils.getAssociations(definitionServices, uri,
             retrieveTargets, scheme, version, code, assocName);
         int i=0, n=v.size();
         Iterator<Entity> iterator = v.iterator();
