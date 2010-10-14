@@ -738,7 +738,7 @@ public class DataUtils {
 
     /**
      * Dump_matches to output, for debug purposes
-     * 
+     *
      * @param iterator
      *            the iterator
      * @param maxToReturn
@@ -781,7 +781,7 @@ public class DataUtils {
     }
 
     public static Vector<Entity> getAssociations(boolean targetToSource,
-        String scheme, String version, String code, String assocName) 
+        String scheme, String version, String code, String assocName)
         throws Exception {
 
         boolean includeRoot = false;
@@ -1133,7 +1133,7 @@ public class DataUtils {
                 /*
                  * Enumeration<ResolvedConceptReference> refEnum =
                  * matches.enumerateResolvedConceptReference();
-                 * 
+                 *
                  * while (refEnum.hasMoreElements()) { ResolvedConceptReference
                  * ref = refEnum.nextElement();
                  */
@@ -1799,7 +1799,7 @@ public class DataUtils {
     public static Vector resolveValueSet(String codingScheme, String version,
         String code, boolean target2Source, String referenceAssociation,
         boolean includeRoot) throws Exception {
-        
+
         _logger.debug(StringUtils.SEPARATOR);
         _logger.debug("Method: DataUtils.resolveValueSet");
         _logger.debug("  * codingScheme: " + codingScheme);
@@ -1859,8 +1859,9 @@ public class DataUtils {
         Vector v = new Vector();
         AbsoluteCodingSchemeVersionReferenceList csvList =
             new AbsoluteCodingSchemeVersionReferenceList();
-        csvList.addAbsoluteCodingSchemeVersionReference(Constructors
-            .createAbsoluteCodingSchemeVersionReference(codingScheme,
+        csvList.addAbsoluteCodingSchemeVersionReference(
+			//Constructors.createAbsoluteCodingSchemeVersionReference(codingScheme,
+			Constructors.createAbsoluteCodingSchemeVersionReference(codingSchemeName2URI(codingScheme,version),
                 version));
         ResolvedValueSetDefinition rvdDef =
             getValueSetDefinitionService().resolveValueSetDefinition(vsd,
@@ -1883,4 +1884,26 @@ public class DataUtils {
         }
         return v;
     }
+
+    protected static CodingScheme getCodingScheme(String codingScheme,
+        CodingSchemeVersionOrTag versionOrTag) throws LBException {
+
+        CodingScheme cs = null;
+        try {
+            LexBIGService lbSvc = RemoteServerUtil.createLexBIGService();
+            cs = lbSvc.resolveCodingScheme(codingScheme, versionOrTag);
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+        return cs;
+    }
+
+    protected static String codingSchemeName2URI(String codingSchemeName, String version) {
+		CodingSchemeVersionOrTag versionOrTag = new CodingSchemeVersionOrTag();
+		if (version != null) versionOrTag.setVersion(version);
+		CodingScheme cs = getCodingScheme(codingSchemeName, versionOrTag);
+		if (cs == null) return null;
+		return cs.getCodingSchemeURI();
+	}
+
 }
