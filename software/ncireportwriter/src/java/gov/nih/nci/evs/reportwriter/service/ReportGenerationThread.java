@@ -384,14 +384,16 @@ public class ReportGenerationThread implements Runnable {
         pw.println(columnHeadings);
     }
 
-    private void writeColumnData(PrintWriter pw, String scheme, String version,
+    private void writeColumnData(LexEVSValueSetDefinitionServices definitionServices,
+        String uri, PrintWriter pw, String scheme, String version,
         Entity defining_root_concept, Entity associated_concept, Entity c,
         String delim, ReportColumn[] cols, boolean firstColRequired)
         throws Exception {
 
         if (firstColRequired) {
             String firstValue =
-                getReportColumnValue(scheme, version, defining_root_concept,
+                getReportColumnValue(definitionServices, uri,
+                    scheme, version, defining_root_concept,
                     associated_concept, c, cols[0]);
             if (firstValue == null)
                 return;
@@ -404,7 +406,8 @@ public class ReportGenerationThread implements Runnable {
         for (int i = 0; i < cols.length; i++) {
             ReportColumn rc = (ReportColumn) cols[i];
             String s =
-                getReportColumnValue(scheme, version, defining_root_concept,
+                getReportColumnValue(definitionServices, uri,
+                    scheme, version, defining_root_concept,
                     associated_concept, c, rc);
             if (i == 0) {
                 output_line = s;
@@ -423,7 +426,8 @@ public class ReportGenerationThread implements Runnable {
 
     SpecialCases.CDISCExtensibleInfo _cdiscInfo = null;
 
-    private void writeColumnData(PrintWriter pw, String scheme, String version,
+    private void writeColumnData(LexEVSValueSetDefinitionServices definitionServices,
+        String uri, PrintWriter pw, String scheme, String version,
         Entity defining_root_concept, Entity associated_concept, Entity c,
         String delim, ReportColumn[] cols) throws Exception {
         Vector<String> values = new Vector<String>();
@@ -432,7 +436,8 @@ public class ReportGenerationThread implements Runnable {
         for (int i = 0; i < cols.length; i++) {
             ReportColumn rc = (ReportColumn) cols[i];
             String value =
-                getReportColumnValue(scheme, version, defining_root_concept,
+                getReportColumnValue(definitionServices, uri,
+                    scheme, version, defining_root_concept,
                     associated_concept, c, rc);
 
             if (SpecialCases.CDISC.writeExtensibleColumnData(_cdiscInfo, rc,
@@ -443,7 +448,9 @@ public class ReportGenerationThread implements Runnable {
             }
             values.add(value);
         }
-        SpecialCases.CDISC.writeSubheader(_cdiscInfo, this, values, pw, scheme,
+        SpecialCases.CDISC.writeSubheader(
+            definitionServices, uri,
+            _cdiscInfo, this, values, pw, scheme,
             version, defining_root_concept, associated_concept, c, delim, cols);
         pw.println(StringUtils.toString(values, delim, true));
 
@@ -491,7 +498,8 @@ public class ReportGenerationThread implements Runnable {
         for (int i = 0; i < v.size(); i++) {
             // subset member element
             Entity c = (Entity) v.elementAt(i);
-            writeColumnData(pw, scheme, version, defining_root_concept, root,
+            writeColumnData(definitionServices, uri,
+                pw, scheme, version, defining_root_concept, root,
                 c, delim, cols);
         }
 
@@ -516,7 +524,8 @@ public class ReportGenerationThread implements Runnable {
         }
     }
 
-    public String getReportColumnValue(String scheme, String version,
+    public String getReportColumnValue(LexEVSValueSetDefinitionServices definitionServices,
+        String uri, String scheme, String version,
         Entity defining_root_concept, Entity associated_concept,
         Entity node, ReportColumn rc) throws Exception {
         String field_Id = rc.getFieldId();
@@ -553,7 +562,8 @@ public class ReportGenerationThread implements Runnable {
         String label = rc.getLabel().toUpperCase();
         SpecialCases.CDRHInfo cdrhInfo =
             SpecialCases.CDRH
-                .getAssociatedConcept(label, scheme, version, node);
+                .getAssociatedConcept(definitionServices, uri, 
+                    label, scheme, version, node);
         if (cdrhInfo != null && cdrhInfo.value != null)
             return cdrhInfo.value;
         if (cdrhInfo != null && cdrhInfo.associated_concept != null)
@@ -1029,9 +1039,13 @@ public class ReportGenerationThread implements Runnable {
             _logger.debug("concept_vec.size(): " + concept_vec.size());
 
             String delim = "\t";
+            LexEVSValueSetDefinitionServices definitionServices = 
+                DataUtils.getValueSetDefinitionService();
+            String uri = DataUtils.codingSchemeName2URI(codingSchemeName, version);
             for (int i = 0; i < concept_vec.size(); i++) {
                 Entity c = (Entity) concept_vec.elementAt(i);
-                writeColumnData(pw, codingSchemeName, version, null, null, c,
+                writeColumnData(definitionServices, uri,
+                    pw, codingSchemeName, version, null, null, c,
                     delim, cols, true);
             }
 

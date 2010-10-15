@@ -76,20 +76,13 @@ public class SpecialCases {
     }
 
     public static class CDRH {
-        public static CDRHInfo getAssociatedConcept(String label,
+        public static CDRHInfo getAssociatedConcept(
+            LexEVSValueSetDefinitionServices definitionServices,
+            String uri, String label,
             String scheme, String version, Entity node) throws Exception {
             if (label.indexOf("[CDRH] PARENT") < 0)
                 return null;
 
-            //DYEE (Begin) : Not sure if this is the correct location
-            LexEVSValueSetDefinitionServices definitionServices =
-                DataUtils.getValueSetDefinitionService();
-            String uri = DataUtils.codingSchemeName2URI(scheme, version);
-            //DYEE (End)
-            
-            _logger.debug("");
-            _logger.debug("-----------------------------------");
-            _logger.debug("Replaced A10 with Concept_In_Subset");
             Vector<Entity> v =
                 DataUtils.getAssociationTargets(definitionServices, uri, 
                     scheme, version, node.getEntityCode(), "Concept_In_Subset");
@@ -262,7 +255,8 @@ public class SpecialCases {
         }
 
         public static void writeSubheader(
-            SpecialCases.CDISCExtensibleInfo info,
+            LexEVSValueSetDefinitionServices definitionServices,
+            String uri, SpecialCases.CDISCExtensibleInfo info,
             ReportGenerationThread reportGenerationThread,
             Vector<String> values, PrintWriter pw, String scheme,
             String version, Entity defining_root_concept,
@@ -275,7 +269,8 @@ public class SpecialCases {
             for (int i = 0; i < cols.length; i++) {
                 ReportColumn rc = (ReportColumn) cols[i];
                 String value =
-                    reportGenerationThread.getReportColumnValue(scheme,
+                    reportGenerationThread.getReportColumnValue(
+                        definitionServices, uri, scheme,
                         version, defining_root_concept, null,
                         associated_concept, rc);
                 subHeader.add(value);

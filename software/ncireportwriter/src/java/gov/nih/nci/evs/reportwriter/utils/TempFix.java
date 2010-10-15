@@ -56,27 +56,32 @@ import org.apache.log4j.*;
 
 public class TempFix {
     private static Logger _logger = Logger.getLogger(TempFix.class);
+    private static boolean _debug = false;
 
     public static String modifyCodingSchemeName(String codingSchemeName) {
-        _logger.debug("Replaced codingSchemeName(orig): "
-            + codingSchemeName);
+        if (_debug)
+            _logger.debug("Replaced codingSchemeName(orig): "
+                + codingSchemeName);
         codingSchemeName = codingSchemeName.replaceAll(" ", "_");
-        _logger.debug("Replaced codingSchemeName(curr): "
-            + codingSchemeName);
+        if (_debug)
+            _logger.debug("Replaced codingSchemeName(curr): "
+                + codingSchemeName);
         return codingSchemeName;
     }
 
     public static String modifyValueSetDefinitionURI(
         String valueSetDefinitionURI) {
-        _logger.debug("Replaced valueSetDefinitionURI(orig): "
-            + valueSetDefinitionURI);
+        if (_debug)
+            _logger.debug("Replaced valueSetDefinitionURI(orig): "
+                + valueSetDefinitionURI);
         valueSetDefinitionURI = valueSetDefinitionURI.replaceAll("\\.", "_");
         valueSetDefinitionURI = valueSetDefinitionURI.replaceAll(" ", "_");
-        _logger.debug("Replaced valueSetDefinitionURI(curr): "
-            + valueSetDefinitionURI);
+        if (_debug)
+            _logger.debug("Replaced valueSetDefinitionURI(curr): "
+                + valueSetDefinitionURI);
         return valueSetDefinitionURI;
     }
-    
+
     public static void debugList(Vector<Entity> list) {
         _logger.debug(StringUtils.SEPARATOR);
         if (list == null) {
@@ -85,7 +90,7 @@ public class TempFix {
         }
 
         Iterator<Entity> iterator = list.iterator();
-        int i=0;
+        int i = 0;
         _logger.debug("List: ");
         while (iterator.hasNext()) {
             Entity entity = iterator.next();

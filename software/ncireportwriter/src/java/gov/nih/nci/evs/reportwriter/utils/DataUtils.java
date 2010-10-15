@@ -1871,10 +1871,9 @@ public class DataUtils {
             new AbsoluteCodingSchemeVersionReferenceList();
         csvList.addAbsoluteCodingSchemeVersionReference(
 			//Constructors.createAbsoluteCodingSchemeVersionReference(codingScheme,
-			Constructors.createAbsoluteCodingSchemeVersionReference(codingSchemeName2URI(codingScheme,version),
-                version));
+			Constructors.createAbsoluteCodingSchemeVersionReference(uri, version));
         ResolvedValueSetDefinition rvdDef =
-            getValueSetDefinitionService().resolveValueSetDefinition(vsd,
+            definitionServices.resolveValueSetDefinition(vsd,
                 csvList, null, null);
 
         if (rvdDef != null) {
