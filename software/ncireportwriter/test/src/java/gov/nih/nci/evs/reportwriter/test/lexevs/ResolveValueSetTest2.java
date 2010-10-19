@@ -3,6 +3,7 @@ package gov.nih.nci.evs.reportwriter.test.lexevs;
 import gov.nih.nci.system.client.ApplicationServiceProvider;
 
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.Set;
 import java.util.Vector;
 
@@ -22,7 +23,7 @@ import org.lexgrid.valuesets.dto.ResolvedValueSetDefinition;
 public class ResolveValueSetTest2 {
     private static Logger _logger = Logger
         .getLogger(ResolveValueSetTest2.class);
-    
+
     public static Vector resolveValueSet(String codingScheme, String version,
         String code, boolean target2Source, String referenceAssociation,
         boolean includeRoot) throws Exception {
@@ -152,7 +153,7 @@ public class ResolveValueSetTest2 {
             return valueSetDefinitionURI;
         }
     }
-    
+
     public static void run_cdrh_1() throws Exception {
         String codingScheme = "NCI Thesaurus";
         String version = "10.08e";
@@ -161,8 +162,10 @@ public class ResolveValueSetTest2 {
         String referenceAssociation = "Concept_In_Subset";
         boolean includeRoot = false;
 
-        resolveValueSet(codingScheme, version, code, target2Source,
-            referenceAssociation, includeRoot);
+        Vector v =
+            resolveValueSet(codingScheme, version, code, target2Source,
+                referenceAssociation, includeRoot);
+        print(v);
     }
 
     public static void run_spl_1() throws Exception {
@@ -175,23 +178,42 @@ public class ResolveValueSetTest2 {
 
         // SPL Report:
         code = "C54452";
-        
-        resolveValueSet(codingScheme, version, code, target2Source,
-            referenceAssociation, includeRoot);
+
+        Vector v =
+            resolveValueSet(codingScheme, version, code, target2Source,
+                referenceAssociation, includeRoot);
+        print(v);
     }
-    
+
     public static void run_cdrh_2() throws Exception {
         String codingScheme = "NCI Thesaurus";
         String version = "10.08e";
-        String code = "C50721";
+        String code = "C50743";
         boolean target2Source = false;
-        String referenceAssociation = "A10";
+        String referenceAssociation = "Concept_In_Subset";
         boolean includeRoot = false;
-        
-        
+
         referenceAssociation = "Concept_In_Subset";
-        resolveValueSet(codingScheme, version, code, target2Source,
-            referenceAssociation, includeRoot);
+        Vector v =
+            resolveValueSet(codingScheme, version, code, target2Source,
+                referenceAssociation, includeRoot);
+        print(v);
+    }
+
+    private static void print(Vector vector) {
+        if (vector == null || vector.size() <= 0) {
+            System.out.println("Empty.");
+            return;
+        }
+
+        int i = 0;
+        Iterator iterator = vector.iterator();
+        while (iterator.hasNext()) {
+            Entity entity = (Entity) iterator.next();
+            System.out.println(++i + ") "
+                + entity.getEntityDescription().getContent() + ":"
+                + entity.getEntityCode());
+        }
     }
 
     public static void main(String[] args) throws Exception {

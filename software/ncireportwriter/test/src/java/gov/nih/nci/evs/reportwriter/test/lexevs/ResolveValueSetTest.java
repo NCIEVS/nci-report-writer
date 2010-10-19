@@ -1,5 +1,9 @@
 package gov.nih.nci.evs.reportwriter.test.lexevs;
 
+import java.util.Iterator;
+import java.util.Vector;
+
+import org.LexGrid.concepts.Entity;
 import org.lexgrid.valuesets.*;
 
 import gov.nih.nci.evs.reportwriter.test.utils.*;
@@ -16,13 +20,37 @@ public class ResolveValueSetTest {
         boolean target2Source = true;
         String referenceAssociation = "Concept_In_Subset";
         boolean includeRoot = false;
-        DataUtils.resolveValueSet(definitionServices, uri, codingScheme,
+        
+        code = "C50743";
+        target2Source = false;
+        includeRoot = false;
+        System.out.println("--------------------------------------------------");
+        Vector v = DataUtils.resolveValueSet(definitionServices, uri, codingScheme,
             version, code, target2Source,
             referenceAssociation, includeRoot);
+        print(v);
     }
+    
+    private static void print(Vector vector) {
+        if (vector == null || vector.size() <= 0) {
+            System.out.println("Empty.");
+            return;
+        }
 
+        int i = 0;
+        Iterator iterator = vector.iterator();
+        while (iterator.hasNext()) {
+            Entity entity = (Entity) iterator.next();
+            System.out.println(++i + ") "
+                + entity.getEntityDescription().getContent() + ":"
+                + entity.getEntityCode());
+        }
+    }
+    
     public static void main(String[] args) throws Exception {
         args = SetupEnv.getInstance().parse(args);
-        ResolveValueSetTest.run();
+        while (true) {
+            ResolveValueSetTest.run();
+        }
     }
 }
