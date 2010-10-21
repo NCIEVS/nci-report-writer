@@ -28,6 +28,7 @@
     <replaceregexp file="${properties.file}" byline="true" match="^([\w\d.]+)=(.*[\w\d\/\{\}\\]+)[ \t]+\r*$" replace="\1=\2" />
     <replaceregexp file="${properties.file}" byline="true" match="^([\w\d.]+)=[ \t]+(.*[\w\d\/\{\}\\]+)\r*$" replace="\1=\2" />
     <property file="${properties.file}" />
+    <property name="override.properties.delimiter" value=","/>
 
     <!-- Set application.base.path based on platform -->
     <condition property="application.base.path" value="${application.base.path.linux}">
@@ -309,7 +310,7 @@
                 <property name="commonlibrary.dir" value="" />
         </ant>
         <!--
-        <ant inheritAll="false" inheritRefs="false" antfile="${bda-blueprints-webapp.build.file}" target="ivy-clean" dir="${bda-blueprints-webapp.base.dir}" />
+        <ant inheritAll="false" inheritRefs="false" antfile="${ncireportwriter-webapp.build.file}" target="ivy-clean" dir="${bda-blueprints-webapp.base.dir}" />
         -->
     </target>
 
@@ -812,46 +813,83 @@
         <if>
             <equals arg1="${os.family}" arg2="windows"/>
             <then>
+                <property name="is.windows" value="true" />
                 <property name="shell" value="cmd" />
                 <property name="option" value="/c" />
                 <property name="twiddle" value="twiddle.bat" />
+                <property name="file" value="file:///" />
             </then>
             <else>
+                <property name="is.windows" value="false" />
                 <property name="shell" value="/bin/bash" />
                 <property name="option" value="-c" />
                 <property name="twiddle" value="twiddle.sh" />
+                <property name="file" value="file:" />
             </else>
         </if>
 
-        <fail unless="jboss.war.temp.dir.location" message="Unable to locate JBoss temp war directory!" />
+        <if>
+            <!-- Hot deployment of classes does not work on Jboss 5.1 / Windows XP
+                   so we default to just deploying JSP files
+              -->
+            <equals arg1="${is.windows}" arg2="true"/>
+            <then>
+                <echo message=""/>
+                <echo message="*** Hot deployment of classes does not work on Jboss 5.1 and Windows. ***"/>
+                <echo message="*** Will use 'deploy:hot:jsp' instead. ***"/>
+                <echo message=""/>
+                <antcall target="deploy:hot:jsp" />
+            </then>
+            <else>
 
-        <echo message="JBoss temp: ${jboss.war.temp.dir.location}"/>
+                <if>
+                    <isset property="jboss.war.temp.dir.location" />
+                    <then>
+                        <echo message="JBoss temp: ${jboss.war.temp.dir.location}"/>
+                        <echo message="Stopping: ${ncireportwriter-webapp.file.name}" />
+                        <exec executable="${shell}" failonerror="true">
+                            <arg value="${option}"/>
+                            <arg value='${application.base.path}/${jboss.binaries.relative.dir}/bin/${twiddle} -s ${jboss.server.hostname}:${jboss.server.jndi.port} invoke "jboss.web.deployment:war=/${project.name}" stop'/>
+                        </exec>
+                    </then>
+                </if>
 
-        <echo message="Stopping: ${ncireportwriter-webapp.file.name}" />
-        <exec executable="${shell}" failonerror="true">
-            <arg value="${option}"/>
-            <arg value='${application.base.path}/${jboss.binaries.relative.dir}/bin/${twiddle} -s ${jboss.server.hostname}:${jboss.server.jndi.port} invoke "jboss.web.deployment:war=/${project.name}" stop'/>
-        </exec>
+                <!-- Copy the war file -->
+                <sequential>
+                    <copy
+                        file="${ncireportwriter-webapp.dist.dir}/${ncireportwriter-webapp.file.name}"
+                        tofile="${jboss.deploy.dir}/${ncireportwriter-webapp.file.name}"
+                        overwrite="true"
+                        />
+                </sequential>
 
-        <sequential>
-            <copy
-                file="${ncireportwriter-webapp.dist.dir}/${ncireportwriter-webapp.file.name}"
-                tofile="${jboss.deploy.dir}/${ncireportwriter-webapp.file.name}"
-                overwrite="true"
-                />
-        </sequential>
+                <!-- Restart or re-deploy the war -->
+                <if>
+                    <isset property="jboss.war.temp.dir.location" />
+                    <then>
+                        <echo message="Starting: ${ncireportwriter-webapp.file.name}" />
+                        <exec executable="${shell}" failonerror="true">
+                            <arg value="${option}"/>
+                            <arg value='${application.base.path}/${jboss.binaries.relative.dir}/bin/${twiddle} -s ${jboss.server.hostname}:${jboss.server.jndi.port} invoke "jboss.web.deployment:war=/${project.name}" start'/>
+                        </exec>
 
-        <echo message="Starting: ${ncireportwriterr-webapp.file.name}" />
-        <exec executable="${shell}" failonerror="true">
-            <arg value="${option}"/>
-            <arg value='${application.base.path}/${jboss.binaries.relative.dir}/bin/${twiddle} -s ${jboss.server.hostname}:${jboss.server.jndi.port} invoke "jboss.web.deployment:war=/${project.name}" start'/>
-        </exec>
+                        <echo message="Redeploying: ${ncireportwriter-webapp.file.name}" />
+                        <exec executable="${shell}" failonerror="true">
+                            <arg value="${option}"/>
+                            <arg value='${application.base.path}/${jboss.binaries.relative.dir}/bin/${twiddle} -s ${jboss.server.hostname}:${jboss.server.jndi.port} invoke "jboss.system:service=MainDeployer" redeploy ${file}${jboss.deploy.dir}/${ncireportwriter-webapp.file.name}'/>
+                        </exec>
+                    </then>
+                    <else>
+                        <echo message="Deploying: ${ncireportwriter-webapp.file.name}" />
+                        <exec executable="${shell}" failonerror="true">
+                            <arg value="${option}"/>
+                            <arg value='${application.base.path}/${jboss.binaries.relative.dir}/bin/${twiddle} -s ${jboss.server.hostname}:${jboss.server.jndi.port} invoke "jboss.system:service=MainDeployer" deploy ${file}${jboss.deploy.dir}/${ncireportwriter-webapp.file.name}'/>
+                        </exec>
+                    </else>
+                </if>
 
-        <echo message="Redeploying: ${ncireportwriter-webapp.file.name}" />
-        <exec executable="${shell}" failonerror="true">
-            <arg value="${option}"/>
-            <arg value='${application.base.path}/${jboss.binaries.relative.dir}/bin/${twiddle} -s ${jboss.server.hostname}:${jboss.server.jndi.port} invoke "jboss.system:service=MainDeployer" redeploy file:${jboss.deploy.dir}/${ncireportwriter-webapp.file.name}'/>
-        </exec>
+            </else>
+        </if>
 
     </target>
 
@@ -911,42 +949,52 @@
     <target name="deploy:stop">
 
         <osfamily property="os.family"/>
+
         <if>
             <equals arg1="${os.family}" arg2="windows"/>
             <then>
-
-                <echo message="Stopping: ${ncireportwriter-webapp.file.name}" />
-                <exec executable="cmd" failonerror="true">
-                    <arg value="/c"/>
-                    <arg value='${application.base.path}/${jboss.binaries.relative.dir}/bin/twiddle.bat -s ${jboss.server.hostname}:${jboss.server.jndi.port} invoke "jboss.web.deployment:war=/${project.name}" stop'/>
-                </exec>
-
+                <property name="shell" value="cmd" />
+                <property name="option" value="/c" />
+                <property name="twiddle" value="twiddle.bat" />
             </then>
             <else>
-                <echo message="deploy:stop is not configured for Unix systems."/>
+                <property name="shell" value="/bin/bash" />
+                <property name="option" value="-c" />
+                <property name="twiddle" value="twiddle.sh" />
             </else>
         </if>
+
+        <echo message="Stopping: ${ncireportwriter-webapp.file.name}" />
+        <exec executable="${shell}" failonerror="true">
+            <arg value="${option}"/>
+            <arg value='${application.base.path}/${jboss.binaries.relative.dir}/bin/${twiddle} -s ${jboss.server.hostname}:${jboss.server.jndi.port} invoke "jboss.web.deployment:war=/${project.name}" stop'/>
+        </exec>
 
     </target>
 
     <target name="deploy:start">
 
         <osfamily property="os.family"/>
+
         <if>
             <equals arg1="${os.family}" arg2="windows"/>
             <then>
-
-                <echo message="Starting: ${ncireportwriter-webapp.file.name}" />
-                <exec executable="cmd" failonerror="true">
-                    <arg value="/c"/>
-                    <arg value='${application.base.path}/${jboss.binaries.relative.dir}/bin/twiddle.bat -s ${jboss.server.hostname}:${jboss.server.jndi.port} invoke "jboss.web.deployment:war=/${project.name}" start'/>
-                </exec>
-
+                <property name="shell" value="cmd" />
+                <property name="option" value="/c" />
+                <property name="twiddle" value="twiddle.bat" />
             </then>
             <else>
-                <echo message="deploy:start is not configured for Unix systems."/>
+                <property name="shell" value="/bin/bash" />
+                <property name="option" value="-c" />
+                <property name="twiddle" value="twiddle.sh" />
             </else>
         </if>
+
+        <echo message="Starting: ${ncireportwriter-webapp.file.name}" />
+        <exec executable="${shell}" failonerror="true">
+            <arg value="${option}"/>
+            <arg value='${application.base.path}/${jboss.binaries.relative.dir}/bin/${twiddle} -s ${jboss.server.hostname}:${jboss.server.jndi.port} invoke "jboss.web.deployment:war=/${project.name}" start'/>
+        </exec>
 
     </target>
 
