@@ -464,7 +464,7 @@ public class ReportGenerationThread implements Runnable {
         String uri, PrintWriter pw, String scheme, String version,
         String tag, Entity defining_root_concept, String code,
         String hierarchyAssociationName, String associationName,
-        boolean direction, int level, int maxLevel, ReportColumn[] cols) 
+        boolean direction, int level, int maxLevel, ReportColumn[] cols)
         throws Exception {
         if (maxLevel != -1 && level > maxLevel)
             return;
@@ -480,16 +480,22 @@ public class ReportGenerationThread implements Runnable {
 
         String delim = "\t";
 
+/*
         Vector<Entity> v = new Vector<Entity>();
         if (direction) {
             v =
-                DataUtils.getAssociationTargets(definitionServices, uri, 
+                DataUtils.getAssociationTargets(definitionServices, uri,
                     scheme, version, root.getEntityCode(), associationName);
         } else {
             v =
-                DataUtils.getAssociationSources(definitionServices, uri, 
+                DataUtils.getAssociationSources(definitionServices, uri,
                     scheme, version, root.getEntityCode(), associationName);
         }
+*/
+
+		//Boolean isForwardNavigable = DataUtils.getIsForwardNavigable(scheme, version);
+		//String[] asso_array = DataUtils.getHierarchyAssociations(scheme, version);
+        Vector<Entity> v = DataUtils.getSubconcepts(scheme, version, root.getEntityCode());
 
         // associated concepts (i.e., concepts in subset)
         if (v == null)
@@ -562,7 +568,7 @@ public class ReportGenerationThread implements Runnable {
         String label = rc.getLabel().toUpperCase();
         SpecialCases.CDRHInfo cdrhInfo =
             SpecialCases.CDRH
-                .getAssociatedConcept(definitionServices, uri, 
+                .getAssociatedConcept(definitionServices, uri,
                     label, scheme, version, node);
         if (cdrhInfo != null && cdrhInfo.value != null)
             return cdrhInfo.value;
@@ -1039,7 +1045,7 @@ public class ReportGenerationThread implements Runnable {
             _logger.debug("concept_vec.size(): " + concept_vec.size());
 
             String delim = "\t";
-            LexEVSValueSetDefinitionServices definitionServices = 
+            LexEVSValueSetDefinitionServices definitionServices =
                 DataUtils.getValueSetDefinitionService();
             String uri = DataUtils.codingSchemeName2URI(codingSchemeName, version);
             for (int i = 0; i < concept_vec.size(); i++) {
