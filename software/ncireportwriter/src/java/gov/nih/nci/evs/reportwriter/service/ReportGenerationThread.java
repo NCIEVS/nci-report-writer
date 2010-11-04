@@ -512,22 +512,22 @@ public class ReportGenerationThread implements Runnable {
         // Vector<Entity> subconcept_vec =
         // DataUtils.getAssociationTargets(scheme, version, root
         // .getEntityCode(), hierarchyAssociationName);
-        /*
+
         Vector<String> subconcept_vec =
             DataUtils
                 .getSubconceptCodes2(scheme, version, root.getEntityCode());
-        */
 
-        Vector<Entity> subconcept_vec = DataUtils.getSubconcepts(scheme, version, code);
+
+        //Vector<Entity> subconcept_vec = DataUtils.getSubconcepts(scheme, version, code);
         if (subconcept_vec == null | subconcept_vec.size() == 0)
             return;
         level++;
         for (int k = 0; k < subconcept_vec.size(); k++) {
             // Note: Commented on 2/24/10 (Wed). subconcept_vec size was 0.
             // Entity concept = (Entity) subconcept_vec.elementAt(k);
-            // String subconcep_code = concept.getEntityCode();
-            Entity e = (Entity) subconcept_vec.elementAt(k);
-            String subconcep_code = e.getEntityCode();//subconcept_vec.elementAt(k);
+            String subconcep_code = concept.getEntityCode();
+            //Entity e = (Entity) subconcept_vec.elementAt(k);
+            //String subconcep_code = e.getEntityCode();//subconcept_vec.elementAt(k);
             traverse(definitionServices, uri, pw, scheme, version, tag, defining_root_concept,
                 subconcep_code, hierarchyAssociationName, associationName,
                 direction, level, maxLevel, cols);
