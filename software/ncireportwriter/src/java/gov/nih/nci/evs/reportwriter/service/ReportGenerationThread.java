@@ -525,9 +525,9 @@ public class ReportGenerationThread implements Runnable {
         for (int k = 0; k < subconcept_vec.size(); k++) {
             // Note: Commented on 2/24/10 (Wed). subconcept_vec size was 0.
             // Entity concept = (Entity) subconcept_vec.elementAt(k);
-            String subconcep_code = concept.getEntityCode();
+            //String subconcep_code = concept.getEntityCode();
             //Entity e = (Entity) subconcept_vec.elementAt(k);
-            //String subconcep_code = e.getEntityCode();//subconcept_vec.elementAt(k);
+            String subconcep_code = subconcept_vec.elementAt(k);
             traverse(definitionServices, uri, pw, scheme, version, tag, defining_root_concept,
                 subconcep_code, hierarchyAssociationName, associationName,
                 direction, level, maxLevel, cols);
