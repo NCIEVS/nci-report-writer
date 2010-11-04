@@ -730,7 +730,7 @@ public class DataUtils {
         String uri, String scheme,
         String version, String code, String assocName) throws Exception {
         boolean targetToSource = false;
-        return getAssociations(definitionServices, uri, 
+        return getAssociations(definitionServices, uri,
             targetToSource, scheme, version, code, assocName);
     }
 
@@ -1793,15 +1793,22 @@ public class DataUtils {
     // -------------------------------------------------------------------------
     public static LexEVSValueSetDefinitionServices getValueSetDefinitionService()
             throws Exception {
+/*
         String serviceUrl =
             AppProperties.getInstance().getProperty(
                 AppProperties.EVS_SERVICE_URL);
         LexEVSDistributed distributed =
             (LexEVSDistributed) ApplicationServiceProvider
                 .getApplicationServiceFromUrl(serviceUrl, "EvsServiceInfo");
+
+        LexEVSDistributed distributed = getLexEVSDistributedService();
         LexEVSValueSetDefinitionServices service =
             distributed.getLexEVSValueSetDefinitionServices();
+
         return service;
+*/
+        return RemoteServerUtil.getValueSetDefinitionService();
+
     }
 
     public static Vector resolveValueSet(
@@ -1907,13 +1914,152 @@ public class DataUtils {
         return cs;
     }
 
-    public static String codingSchemeName2URI(String codingSchemeName, String version) 
+    public static String codingSchemeName2URI(String codingSchemeName, String version)
         throws Exception {
 		CodingSchemeVersionOrTag versionOrTag = new CodingSchemeVersionOrTag();
 		if (version != null) versionOrTag.setVersion(version);
 		CodingScheme cs = getCodingScheme(codingSchemeName, versionOrTag);
 		if (cs == null) return null;
 		return cs.getCodingSchemeURI();
+	}
+
+
+
+    public static Boolean getIsForwardNavigable(String scheme, String version) {
+
+        Vector association_vec = new Vector();
+        try {
+            LexBIGService lbSvc = RemoteServerUtil.createLexBIGService();
+
+            // Will handle secured ontologies later.
+            CodingSchemeVersionOrTag versionOrTag =
+                new CodingSchemeVersionOrTag();
+            versionOrTag.setVersion(version);
+            CodingScheme cs = lbSvc.resolveCodingScheme(scheme, versionOrTag);
+            Mappings mappings = cs.getMappings();
+            SupportedHierarchy[] hierarchies = mappings.getSupportedHierarchy();
+            Boolean forwardNavigable = hierarchies[0].getIsForwardNavigable();
+			return forwardNavigable;
+
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+        return null;
+    }
+
+
+    public static String[] getHierarchyAssociations(String scheme, String version) {
+        String[] asso_array = null;
+        Vector association_vec = new Vector();
+        try {
+            LexBIGService lbSvc = RemoteServerUtil.createLexBIGService();
+            CodingSchemeVersionOrTag versionOrTag =
+                new CodingSchemeVersionOrTag();
+            versionOrTag.setVersion(version);
+
+            CodingScheme cs = lbSvc.resolveCodingScheme(scheme, versionOrTag);
+            Mappings mappings = cs.getMappings();
+            SupportedHierarchy[] hierarchies = mappings.getSupportedHierarchy();
+            for (int k=0; k<hierarchies.length; k++) {
+				java.lang.String[] ids = hierarchies[k].getAssociationNames();
+				for (int i = 0; i < ids.length; i++) {
+					if (!association_vec.contains(ids[i])) {
+						association_vec.add(ids[i]);
+					}
+				}
+			}
+			asso_array = new String[association_vec.size()];
+			for (int i=0; i<association_vec.size(); i++) {
+				String name = (String) association_vec.elementAt(i);
+				asso_array[i] = name;
+			}
+
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+        return asso_array;
+    }
+
+
+    public static Vector getSubconcepts(String scheme,
+                                 String version,
+                                 String code
+                                 ) {
+		Boolean isForwardNavigable = getIsForwardNavigable(scheme, version);
+		String[] asso_array = getHierarchyAssociations(scheme, version);
+        return getSubconcepts(scheme,
+                              version,
+                              code,
+                              isForwardNavigable,
+                              asso_array);
+	}
+
+
+    public static Vector getSubconcepts(String scheme,
+                                 String version,
+                                 String code,
+                                 Boolean isForwardNavigable,
+                                 String[] asso_array
+                                 ) {
+
+        Vector v = new Vector();
+        boolean direction = true;
+		if (isForwardNavigable == null) return null;
+        if (isForwardNavigable.equals(Boolean.FALSE)) {
+			direction = !direction;
+		}
+
+        CodingSchemeVersionOrTag csvt = new CodingSchemeVersionOrTag();
+        if (version != null) csvt.setVersion(version);
+
+        try {
+			LexBIGService lbSvc = RemoteServerUtil.createLexBIGService();
+			CodedNodeGraph cng = lbSvc.getNodeGraph(scheme, csvt, null);
+
+           // resolveAsList
+			ResolvedConceptReferenceList matches = cng.resolveAsList(ConvenienceMethods.createConceptReference(code, scheme),
+			        direction, !direction, 1, 1,
+					new LocalNameList(), null, null, -1);
+
+			if (asso_array != null) {
+				NameAndValue nv = new NameAndValue();
+				NameAndValueList nvList = new NameAndValueList();
+				for (int i=0; i<asso_array.length; i++) {
+					nv.setName(asso_array[i]);
+					nvList.addNameAndValue(nv);
+				}
+				cng = cng.restrictToAssociations(nvList, null);
+			}
+
+			// Analyze the result ...
+			if (matches.getResolvedConceptReferenceCount() > 0) {
+				ResolvedConceptReference ref = (ResolvedConceptReference) matches.enumerateResolvedConceptReference()
+						.nextElement();
+
+				AssociationList sourceof = null;
+				if (direction) {
+					sourceof = ref.getSourceOf();
+				} else {
+					sourceof = ref.getTargetOf();
+				}
+
+				if (sourceof != null) {
+					Association[] associations = sourceof.getAssociation();
+					for (int i = 0; i < associations.length; i++) {
+						Association assoc = associations[i];
+						AssociatedConcept[] acl = assoc.getAssociatedConcepts().getAssociatedConcept();
+						for (int j = 0; j < acl.length; j++) {
+							AssociatedConcept ac = acl[j];
+							v.add(ac.getReferencedEntry());
+     					}
+					}
+			    }
+			}
+			return v;
+		} catch (Exception ex) {
+			ex.printStackTrace();
+		}
+		return null;
 	}
 
 }

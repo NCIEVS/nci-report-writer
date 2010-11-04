@@ -12,6 +12,9 @@ import org.LexGrid.LexBIG.Impl.*;
 import org.LexGrid.LexBIG.LexBIGService.*;
 import org.apache.log4j.*;
 
+import org.lexgrid.valuesets.LexEVSValueSetDefinitionServices;
+import org.lexgrid.valuesets.impl.LexEVSValueSetDefinitionServicesImpl;
+
 /**
  * <!-- LICENSE_TEXT_START -->
  * Copyright 2008,2009 NGIT. This software was developed in conjunction
@@ -64,14 +67,14 @@ public class RemoteServerUtil {
         .getLogger(RemoteServerUtil.class);
     private static boolean _firstTime = true;
     private static boolean _firstTimeSimpleTest = true;
-    
+
     public static LexBIGService createLexBIGService() throws Exception {
         String serviceUrl = AppProperties.getInstance()
             .getProperty(AppProperties.EVS_SERVICE_URL);
         return createLexBIGService(serviceUrl);
     }
 
-    public static LexBIGService createLexBIGService(String serviceUrl) 
+    public static LexBIGService createLexBIGService(String serviceUrl)
             throws Exception {
         if (_firstTime) {
             _logger.debug(StringUtils.SEPARATOR);
@@ -87,20 +90,49 @@ public class RemoteServerUtil {
                 .getApplicationServiceFromUrl(serviceUrl, "EvsServiceInfo");
         return (LexBIGService) lexevsService;
     }
-    
+
+
+    public static LexEVSDistributed getLexEVSDistributedService() throws Exception {
+        String serviceUrl = AppProperties.getInstance()
+            .getProperty(AppProperties.EVS_SERVICE_URL);
+        return getLexEVSDistributedService(serviceUrl);
+    }
+
+	public static LexEVSDistributed getLexEVSDistributedService(String serviceUrl) {
+		LexEVSDistributed distributed = null;
+		try {
+			distributed =
+				(LexEVSDistributed) ApplicationServiceProvider
+					.getApplicationServiceFromUrl(serviceUrl, "EvsServiceInfo");
+		} catch (Exception e) {
+			System.out.println("Unable to instantiate LexEVSDistributedService " + serviceUrl);
+			e.printStackTrace();
+		}
+		return distributed;
+    }
+
+    public static LexEVSValueSetDefinitionServices getValueSetDefinitionService()
+            throws Exception {
+        LexEVSDistributed distributed = getLexEVSDistributedService();
+        LexEVSValueSetDefinitionServices service =
+            distributed.getLexEVSValueSetDefinitionServices();
+        return service;
+    }
+
+
     public static boolean isRunning(StringBuffer warningMsg) {
         try {
             LexBIGService lbsvr = createLexBIGService();
             simpleTest(lbsvr);
         } catch (Exception e) {
-            warningMsg.append("LexEVS is currently down." + 
+            warningMsg.append("LexEVS is currently down." +
                 "  Please report the following problem:");
             warningMsg.append("\n    * " + e.getMessage());
             return false;
         }
         return true;
     }
-    
+
     private static void simpleTest(LexBIGService lbSvc) throws Exception {
         CodingSchemeRenderingList csrl = lbSvc.getSupportedCodingSchemes();
 
