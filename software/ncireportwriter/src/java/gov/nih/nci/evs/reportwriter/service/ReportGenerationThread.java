@@ -480,7 +480,7 @@ public class ReportGenerationThread implements Runnable {
 
         String delim = "\t";
 
-/*
+
         Vector<Entity> v = new Vector<Entity>();
         if (direction) {
             v =
@@ -491,11 +491,10 @@ public class ReportGenerationThread implements Runnable {
                 DataUtils.getAssociationSources(definitionServices, uri,
                     scheme, version, root.getEntityCode(), associationName);
         }
-*/
 
 		//Boolean isForwardNavigable = DataUtils.getIsForwardNavigable(scheme, version);
 		//String[] asso_array = DataUtils.getHierarchyAssociations(scheme, version);
-        Vector<Entity> v = DataUtils.getSubconcepts(scheme, version, root.getEntityCode());
+        //Vector<Entity> v = DataUtils.getSubconcepts(scheme, version, code);
 
         // associated concepts (i.e., concepts in subset)
         if (v == null)
@@ -513,9 +512,13 @@ public class ReportGenerationThread implements Runnable {
         // Vector<Entity> subconcept_vec =
         // DataUtils.getAssociationTargets(scheme, version, root
         // .getEntityCode(), hierarchyAssociationName);
+        /*
         Vector<String> subconcept_vec =
             DataUtils
                 .getSubconceptCodes2(scheme, version, root.getEntityCode());
+        */
+
+        Vector<Entity> subconcept_vec = DataUtils.getSubconcepts(scheme, version, code);
         if (subconcept_vec == null | subconcept_vec.size() == 0)
             return;
         level++;
@@ -523,7 +526,8 @@ public class ReportGenerationThread implements Runnable {
             // Note: Commented on 2/24/10 (Wed). subconcept_vec size was 0.
             // Entity concept = (Entity) subconcept_vec.elementAt(k);
             // String subconcep_code = concept.getEntityCode();
-            String subconcep_code = subconcept_vec.elementAt(k);
+            Entity e = (Entity) subconcept_vec.elementAt(k);
+            String subconcep_code = e.getEntityCode();//subconcept_vec.elementAt(k);
             traverse(definitionServices, uri, pw, scheme, version, tag, defining_root_concept,
                 subconcep_code, hierarchyAssociationName, associationName,
                 direction, level, maxLevel, cols);
