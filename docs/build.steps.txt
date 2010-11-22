@@ -1,0 +1,11 @@
+Copy the following file:
+  * From: [RW_HOME]/doc/example.local.properties
+  * To: [RW_HOME]/software/build/local.properties
+
+Edit local.properties file to match your environment:
+  * cd [RW_HOME]/software/build
+  * Edit local.properties to your environment
+
+To build:
+  * ant deploy:local:install  # build the first time
+  * ant deploy:hot            # quick build all other times
