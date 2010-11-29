@@ -89,7 +89,7 @@ INSERT INTO `REPORT_COLUMN` (`ID`,`COLUMN_NUMBER`,`LABEL`,`FIELD_ID`,`PROPERTY_T
  (4750,4,'NCIt Concept Code','Code','','',NULL,'',' ','','','|',-1,4646),
  (4848,5,'FDA Source Code','Property Qualifier','PRESENTATION','FULL_SYN',NULL,'PT','FDA','source-code','CDRH','|',-1,4646),
  (4849,6,'FDA Source PT','Property','PRESENTATION','FULL_SYN',NULL,'PT','FDA','subsource-name','CDRH','|',-1,4646),
- (4850,7,'FDA Source Synonym(s)','Property','PRESENTATION','FULL_SYN',NULL,'SY','FDA','','','|',-1,4646),
+ (4850,7,'FDA Source Synonym(s)','Property','PRESENTATION','FULL_SYN',NULL,'SY','FDA','subsource-name','CDRH','|',-1,4646),
  (4851,8,'FDA Source Definition','Property','DEFINITION','ALT_DEFINITION',NULL,'','FDA','','','|',-1,4646),
  (4852,9,'NCIt Definition','Property','DEFINITION','DEFINITION',NULL,'',' ','','','|',-1,4646),
  (4853,10,'[CDRH] Parent Concept''s NCIt Concept Code','Associated Concept Code','','',NULL,'','','','','|',-1,4646),
