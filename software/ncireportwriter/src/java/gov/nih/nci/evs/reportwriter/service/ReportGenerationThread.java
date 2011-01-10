@@ -123,21 +123,23 @@ public class ReportGenerationThread implements Runnable {
                 generateStandardReport(_outputDir, _standardReportLabel, _uid,
                     warningMsg);
             long runTime = stopWatch.getDuration();
-            emailNotification(successful, warningMsg, startDate, new Date(),
-                runTime);
+            emailNotification(successful, _standardReportLabel, 
+                warningMsg, startDate, new Date(), runTime);
             _logger.info("Report " + _standardReportLabel + " generated.");
             _logger.info("  * Start time: " + startDate);
             _logger.info("  * Run time: " + stopWatch.getResult(runTime));
         } catch (Exception e) {
             warningMsg.append("\n" + ExceptionUtils.getStackTrace(e));
             long runTime = stopWatch.getDuration();
-            emailNotification(false, warningMsg, startDate, new Date(), runTime);
+            emailNotification(false, _standardReportLabel, 
+                warningMsg, startDate, new Date(), runTime);
             ExceptionUtils.print(_logger, e, "* In ReportGenerationThread.run");
             e.printStackTrace();
         }
     }
 
-    private void emailNotification(boolean successful, StringBuffer warningMsg,
+    private void emailNotification(boolean successful, String standardReportLabel,
+        StringBuffer warningMsg,
         Date startDate, Date endDate, long runTime) {
         try {
             if (_emailAddress == null || _emailAddress.length() <= 0) {
@@ -161,8 +163,11 @@ public class ReportGenerationThread implements Runnable {
                 subject = "Failed generating: " + _standardReportLabel + "...";
                 message.append(warningMsg + "\n");
             }
+
             message.append("\n");
             message.append(StringUtils.SEPARATOR + "\n");
+            message.append("LexEVS: " + AppProperties.getInstance().getProperty(
+                AppProperties.EVS_SERVICE_URL) + "\n");
             message.append("Started:   " + startDate + "\n");
             message.append("Completed: " + endDate + "\n");
             message.append("Report generation time: \n");
@@ -170,6 +175,35 @@ public class ReportGenerationThread implements Runnable {
                 + StopWatch.format(StopWatch.timeInHours(runTime)) + "\n");
             message.append("  * In minutes: "
                 + StopWatch.format(StopWatch.timeInMinutes(runTime)) + "\n");
+            message.append("Total number of concepts processed: " + _count + "\n");
+
+            message.append("\n");
+            message.append(StringUtils.SEPARATOR + "\n");
+            message.append("Report Template Parameters:\n");
+            try {
+                StandardReportTemplate standardReportTemplate = null;
+                standardReportTemplate = getStandardReportTemplate(
+                    standardReportLabel, warningMsg);
+                message.append("  * Label: " + 
+                    standardReportTemplate.getLabel() + "\n");
+                message.append("  * Coding Scheme Name: " + 
+                    standardReportTemplate.getCodingSchemeName() + "\n");
+                message.append("  * Coding Scheme Version: " + 
+                    standardReportTemplate.getCodingSchemeVersion() + "\n");
+                message.append("  * Root Concept Code: " + 
+                    standardReportTemplate.getRootConceptCode() + "\n");
+                message.append("  * Association Name: " + 
+                    standardReportTemplate.getAssociationName() + "\n");
+                Boolean dirValue = standardReportTemplate.getDirection();
+                String dirStr = dirValue ? "Target" : "Source";
+                message.append("  * Direction: " + dirStr + 
+                    "(" + dirValue + ")" + "\n");
+                message.append("  * Level: " + 
+                    standardReportTemplate.getLevel() + "\n");
+            } catch (Exception e) {
+                message.append("  * Exception: " + e.getMessage() + "\n");
+            }
+
             boolean send = true;
             MailUtils.postMail(mailServer, from, recipients, subject,
                 message.toString(), send);
@@ -178,25 +212,30 @@ public class ReportGenerationThread implements Runnable {
             e.printStackTrace();
         }
     }
+    
+    private StandardReportTemplate getStandardReportTemplate(
+        String standardReportLabel, StringBuffer warningMsg) throws Exception {
+        StandardReportTemplate standardReportTemplate = null;
+        SDKClientUtil sdkclientutil = new SDKClientUtil();
+        String FQName =
+            "gov.nih.nci.evs.reportwriter.bean.StandardReportTemplate";
+        String methodName = "setLabel";
+        Object obj =
+            sdkclientutil.search(FQName, methodName, standardReportLabel);
+        standardReportTemplate = (StandardReportTemplate) obj;
+        _logger.debug("standardReportTemplate ID: "
+            + standardReportTemplate.getId());
+        _logger.debug("standardReportTemplate label: "
+            + standardReportTemplate.getLabel());
+        return standardReportTemplate;
+    }
 
     public Boolean generateStandardReport(String outputDir,
         String standardReportLabel, String uid, StringBuffer warningMsg) {
         StandardReportTemplate standardReportTemplate = null;
         try {
-            SDKClientUtil sdkclientutil = new SDKClientUtil();
-            String FQName =
-                "gov.nih.nci.evs.reportwriter.bean.StandardReportTemplate";
-            String methodName = "setLabel";
-            Object obj =
-                sdkclientutil.search(FQName, methodName, standardReportLabel);
-            standardReportTemplate = (StandardReportTemplate) obj;
-            _logger.debug("standardReportTemplate ID: "
-                + standardReportTemplate.getId());
-            _logger.debug("standardReportTemplate label: "
-                + standardReportTemplate.getLabel());
-
-            if (standardReportTemplate == null)
-                throw new Exception("standardReportTemplate == null");
+            standardReportTemplate = getStandardReportTemplate(
+                standardReportLabel, warningMsg);
         } catch (Exception e) {
             return warningMsg(warningMsg, "Unable to identify report label "
                 + standardReportLabel + " -- report not generated.");
@@ -309,6 +348,7 @@ public class ReportGenerationThread implements Runnable {
                     codingSchemeVersion, null, rootConceptCode);
 
             associationName = standardReportTemplate.getAssociationName();
+            associationName = "A8"; //DYEE
             level = standardReportTemplate.getLevel();
 
             String tag = null;
@@ -891,20 +931,8 @@ public class ReportGenerationThread implements Runnable {
         String standardReportLabel, String uid, StringBuffer warningMsg) {
         StandardReportTemplate standardReportTemplate = null;
         try {
-            SDKClientUtil sdkclientutil = new SDKClientUtil();
-            String FQName =
-                "gov.nih.nci.evs.reportwriter.bean.StandardReportTemplate";
-            String methodName = "setLabel";
-            Object obj =
-                sdkclientutil.search(FQName, methodName, standardReportLabel);
-            standardReportTemplate = (StandardReportTemplate) obj;
-            _logger.debug("standardReportTemplate ID: "
-                + standardReportTemplate.getId());
-            _logger.debug("standardReportTemplate label: "
-                + standardReportTemplate.getLabel());
-
-            if (standardReportTemplate == null)
-                throw new Exception("standardReportTemplate == null");
+            standardReportTemplate = getStandardReportTemplate(
+                standardReportLabel, warningMsg);
         } catch (Exception e) {
             return warningMsg(warningMsg, "Unable to identify report label "
                 + standardReportLabel + " -- report not generated.");
