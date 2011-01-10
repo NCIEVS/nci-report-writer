@@ -83,9 +83,10 @@ public class SpecialCases {
             if (label.indexOf("[CDRH] PARENT") < 0)
                 return null;
 
+            //DYEE_A8: "Concept_In_Subset", "A8", "Has_CDRH_Parent", "A10"
             Vector<Entity> v =
                 DataUtils.getAssociationTargets(definitionServices, uri, 
-                    scheme, version, node.getEntityCode(), "Concept_In_Subset");
+                    scheme, version, node.getEntityCode(), "A10"); 
             if (v == null || v.size() <= 0)
                 return new CDRHInfo(""); // Previous: Not Available
 

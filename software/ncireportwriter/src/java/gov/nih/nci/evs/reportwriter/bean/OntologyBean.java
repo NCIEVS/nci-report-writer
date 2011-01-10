@@ -173,7 +173,6 @@ public class OntologyBean // extends BaseBean
             _ontologies = getOntologyList();
 
         try {
-            //DYEE: if (_associationList == null) {
             _associationList = new ArrayList<SelectItem>();
             Vector<String> associationNames =
                 DataUtils.getSupportedAssociations(
@@ -196,7 +195,6 @@ public class OntologyBean // extends BaseBean
                     }
                 }
             }
-            //DYEE: }
             return _associationList;
         } catch (Exception e) {
             _associationList = null;

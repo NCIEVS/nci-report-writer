@@ -19,7 +19,7 @@ public class DataUtilsTest2 {
     public void getSupportedAssociationNames()
     {
         String scheme = "NCI Thesaurus";
-        String version = "09.12d";
+        String version = "10.10d";
 
         Vector<String> values;
         try {

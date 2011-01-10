@@ -348,7 +348,7 @@ public class ReportGenerationThread implements Runnable {
                     codingSchemeVersion, null, rootConceptCode);
 
             associationName = standardReportTemplate.getAssociationName();
-            associationName = "A8"; //DYEE
+            associationName = "A8"; //DYEE_A8
             level = standardReportTemplate.getLevel();
 
             String tag = null;
