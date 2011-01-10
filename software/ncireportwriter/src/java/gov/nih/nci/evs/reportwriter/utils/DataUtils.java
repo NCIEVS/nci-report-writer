@@ -332,8 +332,12 @@ public class DataUtils {
         Vector<String> v = new Vector<String>();
         SupportedAssociation[] assos =
             scheme.getMappings().getSupportedAssociation();
+        _logger.debug("");
+        _logger.debug(StringUtils.SEPARATOR);
+        _logger.debug("List of supported associations:");
         for (int i = 0; i < assos.length; i++) {
             SupportedAssociation sa = (SupportedAssociation) assos[i];
+            _logger.debug("  " + i + ") id=" + sa.getLocalId() + ", name=" + sa.getContent());
             switch (associationType) {
             case Names:
                 v.add(sa.getContent());
