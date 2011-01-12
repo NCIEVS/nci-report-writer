@@ -704,8 +704,11 @@ public class ReportGenerationThread implements Runnable {
         if (field_Id.indexOf("Property Qualifier") != -1) {
             // getRepresentationalForm
             boolean match = false;
-            for (int i = 0; i < properties.length; i++) {
-                qualifier_value = null;
+            boolean has_qualval = false; //GF28940 RWW
+            
+            for (int i = 0; i < properties.length && !has_qualval; i++) {  //GF28940 RWW: there can only be one!
+                //GF28940 RWW: commented
+                //qualifier_value = null;
                 org.LexGrid.commonTypes.Property p = properties[i];
                 if (p.getPropertyName().compareTo(property_name) == 0) // focus
                 // on
@@ -750,7 +753,22 @@ public class ReportGenerationThread implements Runnable {
                                 boolean match_found = false;
                                 PropertyQualifier[] qualifiers =
                                     p.getPropertyQualifier();
-                                if (qualifiers != null) {
+                                
+                                if( qualifiers != null && qualifier_value != null ) {
+                                    for (int j= 0; j < qualifiers.length; j++ ) {
+                                        PropertyQualifier q = qualifiers[j];
+                                        String name = q.getPropertyQualifierName();
+                                        String value = q.getValue().getContent();
+                                        //GF28940 RWW: there's no place in the model for another qualifier name
+                                        //so I have to do this for "Property Qualifier" columns with a qualifier value
+                                        //and luckily we don't have any using this!
+                                        if( name.compareTo("subsource-name") == 0 && value.compareTo(qualifier_value) == 0 ) {
+                                            has_qualval = true;
+                                        }
+                                    }
+                                }                                
+                                
+                                if (qualifiers != null && has_qualval ) {
                                     for (int j = 0; j < qualifiers.length; j++) {
                                         PropertyQualifier q = qualifiers[j];
                                         String name =
