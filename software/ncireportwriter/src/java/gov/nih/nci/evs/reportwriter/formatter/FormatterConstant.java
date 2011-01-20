@@ -50,22 +50,23 @@ package gov.nih.nci.evs.reportwriter.formatter;
 public interface FormatterConstant {
 //    public static final String DOWNLOAD_DIR = AppProperties.getInstance()
 //        .getProperty(AppProperties.REPORT_DOWNLOAD_DIRECTORY);
+    public static final String VERSION = "10.10d";
     public static final String DOWNLOAD_DIR = 
         "c:/apps/evs/ncireportwriter-webapp/downloads/";
     public static final String CDISC_SDTM_FILE = DOWNLOAD_DIR
-        + "/CDISC_SDTM_Terminology__10.06e.txt";
+        + "/CDISC_SDTM_Terminology__" + VERSION + ".txt";
     public static final String CDISC_SUBSET_FILE = DOWNLOAD_DIR
-        + "/CDISC_Subset_REPORT__10.06e.txt";
+        + "/CDISC_Subset_REPORT__" + VERSION + ".txt";
     public static final String CDRH_SUBSET_FILE = DOWNLOAD_DIR
-        + "/CDRH_Subset_REPORT__10.06e.txt";
+        + "/CDRH_Subset_REPORT__" + VERSION + ".txt";
     public static final String FDA_SPL_FILE = DOWNLOAD_DIR
-        + "/FDA-SPL_Country_Code_REPORT__10.06e.txt";
+        + "/FDA-SPL_Country_Code_REPORT__" + VERSION + ".txt";
     public static final String FDA_UNII_FILE = DOWNLOAD_DIR
-        + "/FDA-UNII_Subset_REPORT__10.06e.txt";
+        + "/FDA-UNII_Subset_REPORT__" + VERSION + ".txt";
     public static final String ICS_SUBSET_FILE = DOWNLOAD_DIR
-        + "/Individual_Case_Safety_(ICS)_Subset_REPORT__10.06e.txt";
+        + "/Individual_Case_Safety_(ICS)_Subset_REPORT__" + VERSION + ".txt";
     public static final String SPL_FILE = DOWNLOAD_DIR
-        + "/Structured_Product_Labeling_(SPL)_REPORT__10.06e.txt";
+        + "/Structured_Product_Labeling_(SPL)_REPORT__" + VERSION + ".txt";
 
     public static final String FTP_URL = "http://evs.nci.nih.gov/ftp1";
     public static final String CDISC_SDTM_REPORT_URL = FTP_URL
