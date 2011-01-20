@@ -271,13 +271,13 @@ public class AsciiToHtmlFormatter extends FileFormatterBase
     }
 
     public static void main(String[] args) {
-        test(CDISC_SDTM_FILE, CDISC_SDTM_NCIT_COLUMNS);
-        test(CDISC_SUBSET_FILE, CDISC_SUBSET_NCIT_COLUMNS);
+//        test(CDISC_SDTM_FILE, CDISC_SDTM_NCIT_COLUMNS);
+//        test(CDISC_SUBSET_FILE, CDISC_SUBSET_NCIT_COLUMNS);
         test(CDRH_SUBSET_FILE, CDRH_COLUMNS);
-        test(FDA_SPL_FILE, FDA_SPL_NCIT_COLUMNS);
-        test(FDA_UNII_FILE, FDA_UNII_NCIT_COLUMNS);
-        test(ICS_SUBSET_FILE, ICS_SUBSET_NCIT_COLUMNS);
-        test(SPL_FILE, SPL_NCIT_COLUMNS);
+//        test(FDA_SPL_FILE, FDA_SPL_NCIT_COLUMNS);
+//        test(FDA_UNII_FILE, FDA_UNII_NCIT_COLUMNS);
+//        test(ICS_SUBSET_FILE, ICS_SUBSET_NCIT_COLUMNS);
+//        test(SPL_FILE, SPL_NCIT_COLUMNS);
         _logger.debug("Done");
     }
 }

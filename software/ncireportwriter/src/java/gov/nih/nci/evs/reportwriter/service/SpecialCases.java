@@ -7,6 +7,7 @@ import gov.nih.nci.evs.utils.*;
 
 import java.io.*;
 import java.util.*;
+import java.util.regex.*;
 
 import org.LexGrid.concepts.*;
 import org.apache.log4j.*;
@@ -75,28 +76,74 @@ public class SpecialCases {
         }
     }
 
-    public static class CDRH {
-        public static CDRHInfo getAssociatedConcept(
-            LexEVSValueSetDefinitionServices definitionServices,
-            String uri, String label,
-            String scheme, String version, Entity node) throws Exception {
-            if (label.indexOf("[CDRH] PARENT") < 0)
-                return null;
-
-            //DYEE_A8: "Concept_In_Subset", "A8", "Has_CDRH_Parent", "A10"
-            Vector<Entity> v =
-                DataUtils.getAssociationTargets(definitionServices, uri, 
-                    scheme, version, node.getEntityCode(), "A10"); 
-            if (v == null || v.size() <= 0)
-                return new CDRHInfo(""); // Previous: Not Available
-
-            Entity associated_concept = (Entity) v.elementAt(0);
-            return new CDRHInfo(associated_concept);
+    public static class RegExArgs {
+        public static String replace(String text, String regex,
+                String replacement) {
+            Pattern pattern = Pattern.compile(regex);
+            Matcher matcher = pattern.matcher(text);
+            String newValue = matcher.replaceAll(replacement);
+            return newValue;
         }
 
-        public static String replaceLabel(String label) {
-            label = label.replaceAll("\\[CDRH] ", "");
-            return label;
+        public static boolean exists(String text, String key) {
+            String phrase = getKeyPhrase(key);
+            Pattern pattern = Pattern.compile(phrase);
+            Matcher matcher = pattern.matcher(text);
+            return matcher.find();
+        }
+
+        private static String getKeyPhrase(String key) {
+            return "\\s*\\[\\s*" + key + "\\s*\\=\\s*";
+        }
+
+        /**
+         * Gets the value of the name-value pair that is 
+         * embedded within square brackets.
+         * @param text
+         * @param key
+         * @return
+         */
+        public static String getValue(String text, String key) {
+            String phrase = getKeyPhrase(key);
+            String tmpPhrase = "[" + key + "=";
+            String value = RegExArgs.replace(text, phrase, tmpPhrase);
+
+            int i = value.indexOf(tmpPhrase);
+            if (i < 0)
+                return null;
+            value = value.substring(i + tmpPhrase.length());
+            int j = value.indexOf("]");
+            value = value.substring(0, j).trim();
+            return value;
+        }
+    }
+    
+    public static class GetHasParent {
+        public static Entity getAssociatedConcept(
+            LexEVSValueSetDefinitionServices definitionServices,
+            String uri, String scheme, String version, Entity node,
+            String text) throws Exception {
+            if (! text.contains("Associated Concept"))
+                return null;
+            
+            String assocName = RegExArgs.getValue(text, "assocName");
+            if (assocName == null)
+                return null;
+
+            //DYEE_A8_Begin
+            if (text.contains("Has_CDRH_Parent"))
+                assocName = "A10";
+            else if (text.contains("Has_NICHD_Parent"))
+                assocName = "A11";
+            //DYEE_A8_End
+            Vector<Entity> v =
+                DataUtils.getAssociationTargets(definitionServices, uri, 
+                    scheme, version, node.getEntityCode(), assocName); 
+            if (v == null || v.size() <= 0)
+                return null;
+
+            Entity associated_concept = (Entity) v.elementAt(0);
+            return associated_concept;
         }
     }
 

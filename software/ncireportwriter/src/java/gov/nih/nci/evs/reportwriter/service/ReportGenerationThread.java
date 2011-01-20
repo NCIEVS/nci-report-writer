@@ -156,11 +156,22 @@ public class ReportGenerationThread implements Runnable {
             String recipients = _emailAddress;
             String subject = "";
             StringBuffer message = new StringBuffer();
+
+            boolean displaySummary = false;
+            if (displaySummary) {
+                message.append(_standardReportLabel + ", " + 
+                    StopWatch.format(StopWatch.timeInMinutes(runTime)) + " minutes, " +
+                    _count + " rows\n");
+                message.append("\n");
+                message.append(StringUtils.SEPARATOR + "\n");
+            }
+            
             if (successful) {
                 subject = "Generated: " + _standardReportLabel + "...";
                 message.append(_standardReportLabel + " is generated.\n");
             } else {
                 subject = "Failed generating: " + _standardReportLabel + "...";
+                message.append(_standardReportLabel + " failed to generated.\n");
                 message.append(warningMsg + "\n");
             }
 
@@ -416,7 +427,6 @@ public class ReportGenerationThread implements Runnable {
         for (int i = 0; i < cols.length; i++) {
             ReportColumn rc = (ReportColumn) cols[i];
             String label = rc.getLabel();
-            label = SpecialCases.CDRH.replaceLabel(label);
             columnHeadings = columnHeadings + label;
             if (i < cols.length - 1)
                 columnHeadings = columnHeadings + delimeter_str;
@@ -610,14 +620,11 @@ public class ReportGenerationThread implements Runnable {
             delimiter = null;
 
         String label = rc.getLabel().toUpperCase();
-        SpecialCases.CDRHInfo cdrhInfo =
-            SpecialCases.CDRH
-                .getAssociatedConcept(definitionServices, uri,
-                    label, scheme, version, node);
-        if (cdrhInfo != null && cdrhInfo.value != null)
-            return cdrhInfo.value;
-        if (cdrhInfo != null && cdrhInfo.associated_concept != null)
-            associated_concept = cdrhInfo.associated_concept;
+
+        Entity concept = SpecialCases.GetHasParent.getAssociatedConcept(
+            definitionServices, uri, scheme, version, node, field_Id);
+        if (concept != null)
+            associated_concept = concept;
 
         String cdiscValue =
             SpecialCases.CDISC.getSubmissionValue(label, node,
@@ -627,13 +634,13 @@ public class ReportGenerationThread implements Runnable {
 
         if (field_Id.equals("Code"))
             return node.getEntityCode();
-        if (field_Id.equals("Associated Concept Code")) {
+        if (field_Id.contains("Associated Concept Code")) {
             if (associated_concept == null)
                 return "";
             return associated_concept.getEntityCode();
         }
 
-        Entity concept = node;
+        concept = node;
         if (property_name != null
             && property_name.compareTo("Contributing_Source") == 0) {
             concept = defining_root_concept;
@@ -820,7 +827,7 @@ public class ReportGenerationThread implements Runnable {
         }
 
         else if (field_Id.compareToIgnoreCase("Property") == 0
-            || field_Id.compareToIgnoreCase("Associated Concept Property") == 0
+            || field_Id.contains("Associated Concept Property")
             || field_Id.indexOf("Parent Property") != -1)
 
         {
