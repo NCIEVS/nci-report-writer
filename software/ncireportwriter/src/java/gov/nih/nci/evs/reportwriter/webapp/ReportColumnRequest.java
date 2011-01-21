@@ -1,6 +1,7 @@
 package gov.nih.nci.evs.reportwriter.webapp;
 
 import gov.nih.nci.evs.reportwriter.bean.*;
+import gov.nih.nci.evs.reportwriter.service.*;
 import gov.nih.nci.evs.reportwriter.utils.*;
 import gov.nih.nci.evs.utils.*;
 
@@ -67,6 +68,7 @@ public class ReportColumnRequest {
     private String _fieldLabel = "";
     private int _columnNumber = 0;
     private String _fieldType = "";
+    private String _fieldTypeArgs = "";
     private String _propertyType = "";
     private String _propertyName = "";
     private Boolean _isPreferred = null;
@@ -111,6 +113,11 @@ public class ReportColumnRequest {
             HTTPUtils
                 .getSessionAttributeString(request, "selectedDataCategory");
         _logger.debug("* fieldType: " + _fieldType);
+
+        _fieldTypeArgs =
+            HTTPUtils
+                .getSessionAttributeString(request, "selectedDataCategoryArgs");
+        _logger.debug("* fieldTypeArgs: " + _fieldTypeArgs);
 
         _propertyType =
             HTTPUtils
@@ -390,9 +397,11 @@ public class ReportColumnRequest {
                 return HTTPUtils.warningMsg(request, warningMsg);
 
             SDKClientUtil sdkclientutil = new SDKClientUtil();
+            String fieldType = SpecialCases.GetHasParent.mergeValueAndArgs(
+                _fieldType, _fieldTypeArgs);
             ReportColumn col =
                 sdkclientutil.createReportColumn(_fieldLabel, _columnNumber,
-                    _fieldType, _propertyType, _propertyName, _isPreferred,
+                    fieldType, _propertyType, _propertyName, _isPreferred,
                     _representationalForm, _source, _propertyQualifier,
                     _qualifierValue, _delimiter, _conditionalColumnId);
             col.setReportTemplate(_standardReportTemplate);
@@ -421,7 +430,9 @@ public class ReportColumnRequest {
             ReportColumn col = getReportColumn();
             col.setColumnNumber(_columnNumber);
             col.setLabel(_fieldLabel);
-            col.setFieldId(_fieldType);
+            String fieldType = SpecialCases.GetHasParent.mergeValueAndArgs(
+                _fieldType, _fieldTypeArgs); 
+            col.setFieldId(fieldType);
             col.setPropertyType(_propertyType);
             col.setPropertyName(_propertyName);
             col.setIsPreferred(_isPreferred);

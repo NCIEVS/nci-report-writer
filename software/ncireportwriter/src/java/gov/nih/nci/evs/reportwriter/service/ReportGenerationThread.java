@@ -74,6 +74,7 @@ public class ReportGenerationThread implements Runnable {
 
     private int _count = 0;
     private String _hierarchicalAssoName = null;
+    private int _abortLimit = 0;
 
     public ReportGenerationThread(String outputDir, String standardReportLabel,
         String uid, String emailAddress, int[] ncitColumns) {
@@ -359,7 +360,7 @@ public class ReportGenerationThread implements Runnable {
                     codingSchemeVersion, null, rootConceptCode);
 
             associationName = standardReportTemplate.getAssociationName();
-            associationName = "A8"; //DYEE_A8
+            // associationName = "A8"; //DYEE_A8
             level = standardReportTemplate.getLevel();
 
             String tag = null;
@@ -516,6 +517,8 @@ public class ReportGenerationThread implements Runnable {
         String hierarchyAssociationName, String associationName,
         boolean direction, int level, int maxLevel, ReportColumn[] cols)
         throws Exception {
+        if (_abortLimit > 0 && _count > _abortLimit)
+            return;
         if (maxLevel != -1 && level > maxLevel)
             return;
 
@@ -556,6 +559,8 @@ public class ReportGenerationThread implements Runnable {
             writeColumnData(definitionServices, uri,
                 pw, scheme, version, defining_root_concept, root,
                 c, delim, cols);
+            if (_abortLimit > 0 && _count > _abortLimit)
+                break;
         }
 
         // Note: Commented on 2/24/10 (Wed). subconcept_vec size was 0.

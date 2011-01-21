@@ -76,7 +76,7 @@ public class SpecialCases {
         }
     }
 
-    public static class RegExArgs {
+    private static class RegExArgs {
         public static String replace(String text, String regex,
                 String replacement) {
             Pattern pattern = Pattern.compile(regex);
@@ -116,9 +116,35 @@ public class SpecialCases {
             value = value.substring(0, j).trim();
             return value;
         }
+        
+        public static String getValueWithoutArgs(String text) {
+            if (text == null)
+                return null;
+            int i = text.indexOf("[");
+            if (i < 0)
+                return text;
+            String value = text.substring(0, i).trim();
+            return value;
+        }
+
+        public static String getArgs(String text) {
+            if (text == null) 
+                return null;
+            int i = text.indexOf("[");
+            if (i < 0)
+                return "";
+            String value = text.substring(i).trim();
+            return value;
+        }
+        
+        public static String mergeValueAndArgs(String value, String args) {
+            if (args == null || args.trim().length() <= 0)
+                return value;
+            return value + " " + args;
+        }
     }
     
-    public static class GetHasParent {
+    public static class GetHasParent extends RegExArgs {
         public static Entity getAssociatedConcept(
             LexEVSValueSetDefinitionServices definitionServices,
             String uri, String scheme, String version, Entity node,
@@ -126,23 +152,24 @@ public class SpecialCases {
             if (! text.contains("Associated Concept"))
                 return null;
             
-            String assocName = RegExArgs.getValue(text, "assocName");
+            String assocName = getValue(text, "assocName");
             if (assocName == null)
                 return null;
 
             //DYEE_A8_Begin
-            if (text.contains("Has_CDRH_Parent"))
-                assocName = "A10";
-            else if (text.contains("Has_NICHD_Parent"))
-                assocName = "A11";
+//            if (text.contains("Has_CDRH_Parent"))
+//                assocName = "A10";
+//            else if (text.contains("Has_NICHD_Parent"))
+//                assocName = "A11";
             //DYEE_A8_End
             Vector<Entity> v =
                 DataUtils.getAssociationTargets(definitionServices, uri, 
-                    scheme, version, node.getEntityCode(), assocName); 
+                    scheme, version, node.getEntityCode(), assocName);
             if (v == null || v.size() <= 0)
                 return null;
-
-            Entity associated_concept = (Entity) v.elementAt(0);
+            Entity associated_concept = v.elementAt(0);
+            if (text.contains("2nd") && v.size() >= 2)
+                associated_concept = v.elementAt(1);
             return associated_concept;
         }
     }
