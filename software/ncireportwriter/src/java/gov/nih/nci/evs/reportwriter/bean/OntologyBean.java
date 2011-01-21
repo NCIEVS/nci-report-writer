@@ -8,6 +8,7 @@ import javax.servlet.http.*;
 
 import org.apache.log4j.*;
 
+import gov.nih.nci.evs.reportwriter.service.*;
 import gov.nih.nci.evs.reportwriter.utils.*;
 import gov.nih.nci.evs.reportwriter.properties.*;
 import gov.nih.nci.evs.utils.*;
@@ -451,6 +452,7 @@ public class OntologyBean // extends BaseBean
     }
 
     private String _selectedDataCategory = null;
+    private String _selectedDataCategoryArgs = null;
     private List<SelectItem> _dataCategoryList = null;
 
     public List<SelectItem> getDataCategoryList() {
@@ -489,10 +491,24 @@ public class OntologyBean // extends BaseBean
     }
 
     public void setSelectedDataCategory(String selectedDataCategory) {
-        _selectedDataCategory = selectedDataCategory;
         HttpServletRequest request = HTTPUtils.getRequest();
+        
+        if (selectedDataCategory == null) {
+            _selectedDataCategory = null;
+            _selectedDataCategoryArgs = null;
+        } else {
+            _selectedDataCategory = SpecialCases.GetHasParent.
+                getValueWithoutArgs(selectedDataCategory);
+            if (_selectedDataCategoryArgs == null) {
+                _selectedDataCategoryArgs = SpecialCases.GetHasParent.
+                    getArgs(selectedDataCategory);
+            }
+        }
+
         request.getSession().setAttribute("selectedDataCategory",
-            selectedDataCategory);
+            _selectedDataCategory);
+        request.getSession().setAttribute("selectedDataCategoryArgs", 
+            _selectedDataCategoryArgs);
     }
 
     public String getSelectedDataCategory() {
