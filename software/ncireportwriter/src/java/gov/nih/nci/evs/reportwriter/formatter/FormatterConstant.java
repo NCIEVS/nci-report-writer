@@ -50,7 +50,7 @@ package gov.nih.nci.evs.reportwriter.formatter;
 public interface FormatterConstant {
 //    public static final String DOWNLOAD_DIR = AppProperties.getInstance()
 //        .getProperty(AppProperties.REPORT_DOWNLOAD_DIRECTORY);
-    public static final String VERSION = "10.10d";
+    public static final String VERSION = "10.12c";
     public static final String DOWNLOAD_DIR = 
         "c:/apps/evs/ncireportwriter-webapp/downloads/";
     public static final String CDISC_SDTM_FILE = DOWNLOAD_DIR
@@ -65,6 +65,8 @@ public interface FormatterConstant {
         + "/FDA-UNII_Subset_REPORT__" + VERSION + ".txt";
     public static final String ICS_SUBSET_FILE = DOWNLOAD_DIR
         + "/Individual_Case_Safety_(ICS)_Subset_REPORT__" + VERSION + ".txt";
+    public static final String NICHD_SUBSET_FILE = DOWNLOAD_DIR
+        + "/NICHD_Subset_Report__" + VERSION + ".txt";
     public static final String SPL_FILE = DOWNLOAD_DIR
         + "/Structured_Product_Labeling_(SPL)_REPORT__" + VERSION + ".txt";
 
@@ -84,5 +86,6 @@ public interface FormatterConstant {
     public static final int[] FDA_SPL_NCIT_COLUMNS = new int[] { 1 };
     public static final int[] FDA_UNII_NCIT_COLUMNS = new int[] { 2 };
     public static final int[] ICS_SUBSET_NCIT_COLUMNS = new int[] { 1, 3 };
+    public static final int[] NICHD_SUBSET_COLUMNS = new int[] { 0, 5, 7, 9 };
     public static final int[] SPL_NCIT_COLUMNS = new int[] { 1, 3 };
 }
