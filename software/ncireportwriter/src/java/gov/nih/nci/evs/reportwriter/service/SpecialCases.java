@@ -63,19 +63,6 @@ import org.lexgrid.valuesets.*;
 public class SpecialCases {
     private static Logger _logger = Logger.getLogger(SpecialCases.class);
 
-    public static class CDRHInfo {
-        String value = null;
-        Entity associated_concept = null;
-
-        public CDRHInfo(String value) {
-            this.value = value;
-        }
-
-        public CDRHInfo(Entity associated_concept) {
-            this.associated_concept = associated_concept;
-        }
-    }
-
     private static class RegExArgs {
         public static String replace(String text, String regex,
                 String replacement) {
@@ -145,16 +132,18 @@ public class SpecialCases {
     }
     
     public static class GetHasParent extends RegExArgs {
+        public static String getAssocName(String field_Id) {
+            if (! field_Id.contains("Associated Concept"))
+                return null;
+            String assocName = getValue(field_Id, "assocName");
+            return assocName;
+        }
+        
         public static Entity getAssociatedConcept(
             LexEVSValueSetDefinitionServices definitionServices,
             String uri, String scheme, String version, Entity node,
-            String text) throws Exception {
-            if (! text.contains("Associated Concept"))
-                return null;
-            
-            String assocName = getValue(text, "assocName");
-            if (assocName == null)
-                return null;
+            String field_Id) throws Exception {
+            String assocName = getValue(field_Id, "assocName");
 
             //DYEE_A8_Begin
 //            if (text.contains("Has_CDRH_Parent"))
@@ -167,10 +156,9 @@ public class SpecialCases {
                     scheme, version, node.getEntityCode(), assocName);
             if (v == null || v.size() <= 0)
                 return null;
-            Entity associated_concept = v.elementAt(0);
-            if (text.contains("2nd") && v.size() >= 2)
-                associated_concept = v.elementAt(1);
-            return associated_concept;
+            if (field_Id.contains("2nd"))
+                return v.size() >= 2 ? v.elementAt(1) : null;
+            return v.elementAt(0);
         }
     }
 

@@ -626,11 +626,15 @@ public class ReportGenerationThread implements Runnable {
 
         String label = rc.getLabel().toUpperCase();
 
-        Entity concept = SpecialCases.GetHasParent.getAssociatedConcept(
-            definitionServices, uri, scheme, version, node, field_Id);
-        if (concept != null)
-            associated_concept = concept;
-
+        String assocName = SpecialCases.GetHasParent.getAssocName(field_Id);
+        if (assocName != null && assocName.length() > 0) {
+            Entity concept = SpecialCases.GetHasParent.getAssociatedConcept(
+                definitionServices, uri, scheme, version, node, field_Id);
+            if (concept != null)
+                associated_concept = concept;
+            else return "";
+        }
+        
         String cdiscValue =
             SpecialCases.CDISC.getSubmissionValue(label, node,
                 associated_concept, delimiter);
@@ -645,7 +649,7 @@ public class ReportGenerationThread implements Runnable {
             return associated_concept.getEntityCode();
         }
 
-        concept = node;
+        Entity concept = node;
         if (property_name != null
             && property_name.compareTo("Contributing_Source") == 0) {
             concept = defining_root_concept;
