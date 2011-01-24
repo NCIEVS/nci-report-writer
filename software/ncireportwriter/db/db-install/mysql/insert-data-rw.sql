@@ -22,7 +22,7 @@ INSERT INTO `USER` (`ID`,`LOGIN_NAME`) VALUES
 --
 
 INSERT INTO `hi_value` (`next_value`) VALUES
- (70);
+ (74);
 
 --
 -- Data for table `REPORT_FORMAT`
@@ -52,7 +52,8 @@ INSERT INTO `STANDARD_REPORT_TEMPLATE` (`ID`,`LABEL`,`ROOT_CONCEPT_CODE`,`ASSOCI
  (4040,'CDISC Subset REPORT ','C61410','Concept_In_Subset',0,'NCI Thesaurus','10.10d',-1,'$'),
  (4646,'CDRH Subset REPORT','C62596','Concept_In_Subset',0,'NCI Thesaurus','10.10d',-1,'$'),
  (6060,'FDA-SPL Country Code REPORT','Semantic_Type|null|null|null|Geographic Area|exactMatch','',0,'NCI Thesaurus','10.10d',-1,'$'),
- (6868,'CDISC SDTM Terminology','C61410','Concept_In_Subset',0,'NCI Thesaurus','10.10d',-1,'$');
+ (6868,'CDISC SDTM Terminology','C61410','Concept_In_Subset',0,'NCI Thesaurus','10.10d',-1,'$'),
+ (7272,'NICHD Subset Report','C90259','Concept_In_Subset',0,'NCI Thesaurus','10.12c',-1,'$');
 
 --
 -- Data for table `REPORT_COLUMN`
@@ -107,7 +108,18 @@ INSERT INTO `REPORT_COLUMN` (`ID`,`COLUMN_NUMBER`,`LABEL`,`FIELD_ID`,`PROPERTY_T
  (6974,6,'CDISC Preferred Term','Property','PRESENTATION','FULL_SYN',NULL,'PT','CDISC','','','|',-1,6868),
  (6975,7,'CDISC Symonym(s)','Property','PRESENTATION','FULL_SYN',NULL,'SY','CDISC','','','|',-1,6868),
  (6976,8,'CDISC Definition','Property','DEFINITION','ALT_DEFINITION',NULL,'','CDISC','','','|',-1,6868),
- (6977,9,'NCI Preferred Term','Property','PRESENTATION','FULL_SYN',NULL,'PT','NCI','','','|',-1,6868);
+ (6977,9,'NCI Preferred Term','Property','PRESENTATION','FULL_SYN',NULL,'PT','NCI','','','|',-1,6868),
+ (7373,1,'NCIt Code','Code','','',NULL,'','','','','|',-1,7272),
+ (7374,2,'NCIt PT','Property','PRESENTATION','FULL_SYN',NULL,'PT','NCI','','','|',-1,7272),
+ (7375,3,'NICHD PT','Property','PRESENTATION','FULL_SYN',NULL,'PT','NICHD','','','|',-1,7272),
+ (7376,4,'NICHD SY','Property','PRESENTATION','FULL_SYN',NULL,'SY','NICHD','','','|',-1,7272),
+ (7377,5,'NCIt Definition','Property','DEFINITION','DEFINITION',NULL,'','','','','|',-1,7272),
+ (7378,6,'NCIt Code of NICHD Parent','1st Associated Concept Code [ assocName = Has_NICHD_Parent ]','','',NULL,'','','','','|',-1,7272),
+ (7379,7,'NICHD Parent PT','1st Associated Concept Property [ assocName = Has_NICHD_Parent ]','PRESENTATION','FULL_SYN',NULL,'PT','NICHD','','','|',-1,7272),
+ (7380,8,'NCIt Code of second NICHD Parent','2nd Associated Concept Code [ assocName = Has_NICHD_Parent ]','','',NULL,'','','','','|',-1,7272),
+ (7381,9,'NICHD second Parent PT','2nd Associated Concept Property [ assocName = Has_NICHD_Parent ]','PRESENTATION','FULL_SYN',NULL,'PT','NICHD','','','|',-1,7272),
+ (7382,10,'NCIt Code of NICHD Subset','Associated Concept Code','','',NULL,'','','','','|',-1,7272),
+ (7383,11,'NICHD PT of NICHD Subset','Associated Concept Property','PRESENTATION','FULL_SYN',NULL,'PT','NICHD','','','|',-1,7272);
 
 --
 -- Data for table `REPORT`
