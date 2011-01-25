@@ -146,15 +146,14 @@ public class SpecialCases {
             String assocName = getValue(field_Id, "assocName");
 
             //DYEE_A8_Begin
-//            if (text.contains("Has_CDRH_Parent"))
+//            if (assocName.contains("Has_CDRH_Parent"))
 //                assocName = "A10";
-//            else if (text.contains("Has_NICHD_Parent"))
+//            else if (assocName.contains("Has_NICHD_Parent"))
 //                assocName = "A11";
             //DYEE_A8_End
             Vector<Entity> v =
                 DataUtils.getAssociationTargets(definitionServices, uri, 
                     scheme, version, node.getEntityCode(), assocName);
-            SortUtils.quickSort(v, SortComparator.SortBy.Code);
             if (v == null || v.size() <= 0)
                 return null;
             if (field_Id.contains("2nd"))
