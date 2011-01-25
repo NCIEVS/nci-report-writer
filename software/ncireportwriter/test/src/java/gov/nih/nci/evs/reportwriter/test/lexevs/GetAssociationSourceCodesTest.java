@@ -23,10 +23,10 @@ public class GetAssociationSourceCodesTest {
         String code = "C35221";
         code = "C50488";
 
-        Vector<Entity> v =
-            DataUtils.getSuperconceptCodes(definitionServices, uri, scheme,
-                version, code);
-        print(v);
+//        Vector<Entity> v =
+//            DataUtils.getSuperconceptCodes(definitionServices, uri, scheme,
+//                version, code);
+//        print(v);
     }
 
     private static void print(Vector<Entity> vector) {
