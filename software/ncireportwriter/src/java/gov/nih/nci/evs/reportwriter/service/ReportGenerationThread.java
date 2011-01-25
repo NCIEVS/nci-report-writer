@@ -360,7 +360,7 @@ public class ReportGenerationThread implements Runnable {
                     codingSchemeVersion, null, rootConceptCode);
 
             associationName = standardReportTemplate.getAssociationName();
-            // associationName = "A8"; //DYEE_A8
+            // associationName = "A8"; //NOTE_A8: A8 vs Concept_In_Subset
             level = standardReportTemplate.getLevel();
 
             String tag = null;
@@ -606,6 +606,7 @@ public class ReportGenerationThread implements Runnable {
         String property_type = rc.getPropertyType();
         char delimiter_ch = rc.getDelimiter();
         String delimiter = "" + delimiter_ch;
+        //GF28844: delimiter = " " + delimiter + " ";
 
         if (isNull(field_Id))
             field_Id = null;
