@@ -4,6 +4,9 @@
 
 <%
   String message = (String) request.getSession().getAttribute("message");
+  String goBackAttr = (String) request.getAttribute("goBack");
+  int goBack = (goBackAttr != null) ? Integer.parseInt(goBackAttr) : 1;
+  goBack *= -1;
 %>
 <f:view>
   <h:form id="MESSAGEForm">
@@ -40,7 +43,7 @@
                     <td align="right" class="actionSection">
                       <table cellpadding="4" cellspacing="0" border="0">
                         <tr>
-                          <td><input type="button" value="Back" onClick="history.go(-1);return true;"></td>
+                          <td><input type="button" value="Back" onClick="history.go(<%=goBack%>);return true;"></td>
                         </tr>
                       </table>
                     </td>

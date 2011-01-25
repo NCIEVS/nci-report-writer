@@ -121,6 +121,12 @@ public class ReportContentRequest {
         return "standard_report_column";
     }
 
+    private String sessionMsg_goBack2(HttpServletRequest request, 
+        String text) {
+        request.setAttribute("goBack", "2");
+        return HTTPUtils.sessionMsg(request, text);
+    }
+
     public String generateAction(String selectedStandardReportTemplate) {
         init(selectedStandardReportTemplate);
         HttpServletRequest request = HTTPUtils.getRequest();
@@ -163,7 +169,7 @@ public class ReportContentRequest {
                     buffer.append(" or version " + version + ".\n");
                     buffer.append("The report template may be out of date.  ");
                     buffer.append("Please modify it and resubmit.");
-                    return HTTPUtils.sessionMsg(request, buffer);
+                    return sessionMsg_goBack2(request, buffer.toString());
                 }
 
                 defining_set_desc = standardReportTemplate.getRootConceptCode();
@@ -180,7 +186,7 @@ public class ReportContentRequest {
                         buffer.append(rootConceptCode + ".\n");
                         buffer.append("Please modify the report template");
                         buffer.append(" and resubmit.");
-                        return HTTPUtils.sessionMsg(request, buffer);
+                        return sessionMsg_goBack2(request, buffer.toString());
                     }
                     String associationName =
                         standardReportTemplate.getAssociationName();
@@ -193,14 +199,14 @@ public class ReportContentRequest {
                         buffer.append(associationName + ".\n");
                         buffer.append("Please modify the report template");
                         buffer.append(" and resubmit.");
-                        return HTTPUtils.sessionMsg(request, buffer);
+                        return sessionMsg_goBack2(request, buffer.toString());
                     }
                 }
             }
         } catch (Exception ex) {
             ex.printStackTrace();
             String trace = ExceptionUtils.getStackTrace(ex);
-            return HTTPUtils.sessionMsg(request,
+            return sessionMsg_goBack2(request,
                 "Exception encountered when generating " + templateId + "."
                 + "\n\nPlease report the following exception:\n"
                 + trace);
@@ -208,7 +214,7 @@ public class ReportContentRequest {
 
         String uid = (String) request.getSession().getAttribute("uid");
         if (uid == null)
-            return HTTPUtils.sessionMsg(request,
+            return sessionMsg_goBack2(request,
                 "You must first login to perform this function.");
 
         String reportFormat_value = "Text (tab delimited)";
@@ -218,7 +224,7 @@ public class ReportContentRequest {
             StandardReportService.validReport(_selectedStandardReportTemplate,
                 reportFormat_value, reportStatus_value, uid);
         if (message.compareTo("success") != 0)
-            return HTTPUtils.sessionMsg(request, message);
+            return sessionMsg_goBack2(request, message);
 
         String download_dir =
             AppProperties.getInstance().getProperty(
@@ -229,7 +235,7 @@ public class ReportContentRequest {
             buffer.append(" up properly.\n");
             buffer.append("Ask your administrator to check the JBoss");
             buffer.append(" setting in properties-service.xml.");
-            return HTTPUtils.sessionMsg(request, buffer);
+            return sessionMsg_goBack2(request, buffer.toString());
         }
 
         String emailAddress =
@@ -248,6 +254,6 @@ public class ReportContentRequest {
             buffer.append(" an email notification will be sent to");
             buffer.append(" " + emailAddress + ".");
         }
-        return HTTPUtils.sessionMsg(request, buffer);
+        return sessionMsg_goBack2(request, buffer.toString());
     }
 }
