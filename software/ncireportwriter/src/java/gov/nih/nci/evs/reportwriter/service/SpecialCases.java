@@ -145,12 +145,12 @@ public class SpecialCases {
             String field_Id) throws Exception {
             String assocName = getValue(field_Id, "assocName");
 
-            //DYEE_A8_Begin
+//NOTE_A8: A8 vs Concept_In_Subset (Begin)
 //            if (assocName.contains("Has_CDRH_Parent"))
 //                assocName = "A10";
 //            else if (assocName.contains("Has_NICHD_Parent"))
 //                assocName = "A11";
-            //DYEE_A8_End
+//NOTE_A8: A8 vs Concept_In_Subset (End)
             Vector<Entity> v =
                 DataUtils.getAssociationTargets(definitionServices, uri, 
                     scheme, version, node.getEntityCode(), assocName);
