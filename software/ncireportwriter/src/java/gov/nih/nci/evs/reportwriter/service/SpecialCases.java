@@ -154,6 +154,7 @@ public class SpecialCases {
             Vector<Entity> v =
                 DataUtils.getAssociationTargets(definitionServices, uri, 
                     scheme, version, node.getEntityCode(), assocName);
+            SortUtils.quickSort(v, SortComparator.SortBy.Code);
             if (v == null || v.size() <= 0)
                 return null;
             if (field_Id.contains("2nd"))
