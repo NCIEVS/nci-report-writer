@@ -7,6 +7,7 @@ import org.apache.log4j.*;
 import org.apache.poi.hssf.usermodel.*;
 import org.apache.poi.hssf.util.*;
 
+import gov.nih.nci.evs.reportwriter.service.*;
 import gov.nih.nci.evs.utils.*;
 
 /**
@@ -59,6 +60,7 @@ import gov.nih.nci.evs.utils.*;
 public class AsciiToExcelFormatter extends FileFormatterBase {
     private static Logger _logger = Logger
         .getLogger(AsciiToExcelFormatter.class);
+    private static boolean _specialCases_CDISC = SpecialCases.CDISC.ON;
     private static final int MAX_WIDTH = 30;
     private static final int MAX_CELL_WIDTH = 50;
     private static final int MAX_CODE_WIDTH = 10;
@@ -75,7 +77,9 @@ public class AsciiToExcelFormatter extends FileFormatterBase {
         Vector<Integer> maxChars = getColumnMaxChars(textfile, delimiter);
 
         // Note: Special Case for CDISC STDM Terminology report.
-        int extensible_col = findColumnIndicator(headings, "Extensible");
+        int extensible_col = -1;
+        if (_specialCases_CDISC)
+            extensible_col = findColumnIndicator(headings, "Extensible");
 
         int heading_height_multiplier = 1;
         for (int i = 0; i < maxChars.size(); i++) {
@@ -176,9 +180,12 @@ public class AsciiToExcelFormatter extends FileFormatterBase {
             }
 
             // Note: Special Case for CDISC STDM Terminology report.
-            boolean highlight_row =
-                extensible_col != -1
-                    && v.elementAt(extensible_col).trim().length() > 0;
+            boolean highlight_row = false;
+            if (_specialCases_CDISC)
+                highlight_row =
+                    extensible_col != -1
+                        && v.elementAt(extensible_col).trim().length() > 0;
+           
 
             for (int i = 0; i < v.size(); i++) {
                 HSSFCell wc = wr.createCell(i);
@@ -266,15 +273,15 @@ public class AsciiToExcelFormatter extends FileFormatterBase {
 
     public static void main(String[] args) {
         String dir = "C:/apps/evs/ncireportwriter-webapp/downloads/";
-        test(dir + "CDISC_SDTM_Terminology__10.06e.txt", new int[] { 0, 1 });
-        test(dir + "CDISC_Subset_REPORT__10.06e.txt", new int[] { 1, 3 });
-        test(dir + "CDRH_Subset_REPORT__10.06e.txt", new int[] { 1, 3, 9 });
-        test(dir + "FDA-SPL_Country_Code_REPORT__10.06e.txt", new int[] { 1 });
-        test(dir + "FDA-UNII_Subset_REPORT__10.06e.txt", new int[] { 2 });
-        test(dir + "Individual_Case_Safety_(ICS)_Subset_REPORT__10.06e.txt",
-            new int[] { 1, 3 });
-        test(dir + "Structured_Product_Labeling_(SPL)_REPORT__10.06e.txt",
-            new int[] { 1, 3 });
+        test(dir + "CDISC_SDTM_Terminology__10.11e.txt", new int[] { 0, 1 });
+//        test(dir + "CDISC_Subset_REPORT__10.06e.txt", new int[] { 1, 3 });
+//        test(dir + "CDRH_Subset_REPORT__10.06e.txt", new int[] { 1, 3, 9 });
+//        test(dir + "FDA-SPL_Country_Code_REPORT__10.06e.txt", new int[] { 1 });
+//        test(dir + "FDA-UNII_Subset_REPORT__10.06e.txt", new int[] { 2 });
+//        test(dir + "Individual_Case_Safety_(ICS)_Subset_REPORT__10.06e.txt",
+//            new int[] { 1, 3 });
+//        test(dir + "Structured_Product_Labeling_(SPL)_REPORT__10.06e.txt",
+//            new int[] { 1, 3 });
         _logger.debug("Done");
     }
 }
