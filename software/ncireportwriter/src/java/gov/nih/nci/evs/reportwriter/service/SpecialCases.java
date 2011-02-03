@@ -187,6 +187,7 @@ public class SpecialCases {
     }
 
     public static class CDISC {
+        public static boolean ON = true;
         private static boolean _debugGetCdiscPreferredTerm = false;
         private static final String CODELIST_CODE_LABEL = "Codelist Code";
         private static final String EXTENSIBLE_LABEL = "Extensible";

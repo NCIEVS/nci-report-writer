@@ -1,5 +1,6 @@
 package gov.nih.nci.evs.reportwriter.formatter;
 
+import gov.nih.nci.evs.reportwriter.service.*;
 
 import java.io.*;
 import java.util.*;
@@ -57,6 +58,7 @@ public class AsciiToHtmlFormatter extends FileFormatterBase
     implements FormatterConstant {
     private static Logger _logger = Logger
         .getLogger(AsciiToHtmlFormatter.class);
+    private static boolean _specialCases_CDISC = SpecialCases.CDISC.ON;
 
     public Boolean convert(String textfile, String delimiter) throws Exception {
         return convert2(textfile, "htm", delimiter);
@@ -92,7 +94,9 @@ public class AsciiToHtmlFormatter extends FileFormatterBase
         out.writeln_undent("</tr>");
 
         // Note: Special Case for CDISC STDM Terminology report.
-        int extensible_col = findColumnIndicator(headings, "Extensible");
+        int extensible_col = -1;
+        if (_specialCases_CDISC)
+            extensible_col = findColumnIndicator(headings, "Extensible");
 
         // Prints contents:
         int row = 0;
@@ -112,7 +116,7 @@ public class AsciiToHtmlFormatter extends FileFormatterBase
             String rowColor = row % 2 == 1 ? "dataRowDark" : "dataRowLight";
             out.writeln_indent("<tr class=\"" + rowColor + "\">");
             String bgColor = "";
-            if (extensible_col >= 0) {
+            if (_specialCases_CDISC && extensible_col >= 0) {
                 // Note: Special Case for CDISC STDM Terminology report.
                 String eValue = v.get(extensible_col - 1); // -1 from # column
                 if (eValue == null || eValue.trim().length() <= 0)
@@ -271,14 +275,14 @@ public class AsciiToHtmlFormatter extends FileFormatterBase
     }
 
     public static void main(String[] args) {
-//        test(CDISC_SDTM_FILE, CDISC_SDTM_NCIT_COLUMNS);
-//        test(CDISC_SUBSET_FILE, CDISC_SUBSET_NCIT_COLUMNS);
-//        test(CDRH_SUBSET_FILE, CDRH_COLUMNS);
-//        test(FDA_SPL_FILE, FDA_SPL_NCIT_COLUMNS);
-//        test(FDA_UNII_FILE, FDA_UNII_NCIT_COLUMNS);
-//        test(ICS_SUBSET_FILE, ICS_SUBSET_NCIT_COLUMNS);
+        test(CDISC_SDTM_FILE, CDISC_SDTM_NCIT_COLUMNS);
+        test(CDISC_SUBSET_FILE, CDISC_SUBSET_NCIT_COLUMNS);
+        test(CDRH_SUBSET_FILE, CDRH_COLUMNS);
+        test(FDA_SPL_FILE, FDA_SPL_NCIT_COLUMNS);
+        test(FDA_UNII_FILE, FDA_UNII_NCIT_COLUMNS);
+        test(ICS_SUBSET_FILE, ICS_SUBSET_NCIT_COLUMNS);
         test(NICHD_SUBSET_FILE, NICHD_SUBSET_COLUMNS);
-//        test(SPL_FILE, SPL_NCIT_COLUMNS);
+        test(SPL_FILE, SPL_NCIT_COLUMNS);
         _logger.debug("Done");
     }
 }

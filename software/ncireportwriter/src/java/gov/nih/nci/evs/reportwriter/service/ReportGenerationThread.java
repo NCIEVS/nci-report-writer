@@ -491,20 +491,23 @@ public class ReportGenerationThread implements Runnable {
                     scheme, version, defining_root_concept,
                     associated_concept, c, rc);
 
-            if (SpecialCases.CDISC.writeExtensibleColumnData(_cdiscInfo, rc,
-                values, value, i)) {
+            if (SpecialCases.CDISC.ON &&
+                SpecialCases.CDISC.writeExtensibleColumnData(_cdiscInfo, rc,
+                    values, value, i)) {
                 if (_cdiscInfo.skipRow)
                     return;
                 value = _cdiscInfo.newValue;
             }
             values.add(value);
         }
-        SpecialCases.CDISC.writeSubheader(
-            definitionServices, uri,
-            _cdiscInfo, this, values, pw, scheme,
-            version, defining_root_concept, associated_concept, c, delim, cols);
-        pw.println(StringUtils.toString(values, delim, true));
+        if (SpecialCases.CDISC.ON) {
+            SpecialCases.CDISC.writeSubheader(
+                definitionServices, uri,
+                _cdiscInfo, this, values, pw, scheme,
+                version, defining_root_concept, associated_concept, c, delim, cols);
+        }
 
+        pw.println(StringUtils.toString(values, delim, true));
         _count++;
         if ((_count / 100) * 100 == _count) {
             _logger.debug("Number of concepts processed: " + _count);
@@ -635,12 +638,14 @@ public class ReportGenerationThread implements Runnable {
                 associated_concept = concept;
             else return "";
         }
-        
-        String cdiscValue =
-            SpecialCases.CDISC.getSubmissionValue(label, node,
-                associated_concept, delimiter);
-        if (cdiscValue != null)
-            return cdiscValue;
+
+        if (SpecialCases.CDISC.ON) {
+            String cdiscValue =
+                SpecialCases.CDISC.getSubmissionValue(label, node,
+                    associated_concept, delimiter);
+            if (cdiscValue != null)
+                return cdiscValue;
+        }
 
         if (field_Id.equals("Code"))
             return node.getEntityCode();

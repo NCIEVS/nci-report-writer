@@ -22,7 +22,7 @@ INSERT INTO `USER` (`ID`,`LOGIN_NAME`) VALUES
 --
 
 INSERT INTO `hi_value` (`next_value`) VALUES
- (74);
+ (82);
 
 --
 -- Data for table `REPORT_FORMAT`
@@ -46,14 +46,19 @@ INSERT INTO `REPORT_STATUS` (`ID`,`LABEL`,`DESCRIPTION`,`ACTIVE`) VALUES
 --
 
 INSERT INTO `STANDARD_REPORT_TEMPLATE` (`ID`,`LABEL`,`ROOT_CONCEPT_CODE`,`ASSOCIATION_NAME`,`DIRECTION`,`CODING_SCHEME_NAME`,`CODING_SCHEME_VERSION`,`LEVEL`,`DELIMITER`) VALUES
- (202,'FDA-UNII Subset REPORT','C63923','Concept_In_Subset',0,'NCI Thesaurus','10.12c',-1,'$'),
- (2323,'Individual Case Safety (ICS) Subset REPORT','C54447','Concept_In_Subset',0,'NCI Thesaurus','10.12c',-1,'$'),
- (3535,'Structured Product Labeling (SPL) REPORT','C54452','Concept_In_Subset',0,'NCI Thesaurus','10.12c',-1,'$'),
- (4040,'CDISC Subset REPORT ','C61410','Concept_In_Subset',0,'NCI Thesaurus','10.12c',-1,'$'),
- (4646,'CDRH Subset REPORT','C62596','Concept_In_Subset',0,'NCI Thesaurus','10.12c',-1,'$'),
- (6060,'FDA-SPL Country Code REPORT','Semantic_Type|null|null|null|Geographic Area|exactMatch','',0,'NCI Thesaurus','10.12c',-1,'$'),
- (6868,'CDISC SDTM Terminology','C61410','Concept_In_Subset',0,'NCI Thesaurus','10.12c',-1,'$'),
- (7272,'NICHD Subset Report','C90259','Concept_In_Subset',0,'NCI Thesaurus','10.12c',-1,'$');
+ (202,'FDA-UNII Subset REPORT','C63923','Concept_In_Subset',0,'NCI Thesaurus','10.11e',-1,'$'),
+ (2323,'Individual Case Safety (ICS) Subset REPORT','C54447','Concept_In_Subset',0,'NCI Thesaurus','10.11e',-1,'$'),
+ (3535,'Structured Product Labeling (SPL) REPORT','C54452','Concept_In_Subset',0,'NCI Thesaurus','10.11e',-1,'$'),
+ (4040,'CDISC Subset REPORT ','C61410','Concept_In_Subset',0,'NCI Thesaurus','10.11e',-1,'$'),
+ (4646,'CDRH Subset REPORT','C62596','Concept_In_Subset',0,'NCI Thesaurus','10.11e',-1,'$'),
+ (6060,'FDA-SPL Country Code REPORT','Semantic_Type|null|null|null|Geographic Area|exactMatch','',0,'NCI Thesaurus','10.11e',-1,'$'),
+ (6868,'CDISC SDTM Terminology (Orig)','C61410','Concept_In_Subset',0,'NCI Thesaurus','10.11e',-1,'$'),
+ (7272,'NICHD Subset Report','C90259','Concept_In_Subset',0,'NCI Thesaurus','10.11e',-1,'$'),
+ (7474,'CDISC ADaM Terminology','C81222','Concept_In_Subset',0,'NCI Thesaurus','10.11e',-1,'$'),
+ (7676,'CDISC SEND Terminology','C77526','Concept_In_Subset',0,'NCI Thesaurus','10.11e',-1,'$'),
+ (7878,'CDISC CDASH Terminology','C77527','Concept_In_Subset',0,'NCI Thesaurus','10.11e',-1,'$'),
+ (8080,'CDISC SDTM Terminology','C66830','Concept_In_Subset',0,'NCI Thesaurus','10.11e',-1,'$');
+
 
 --
 -- Data for table `REPORT_COLUMN`
@@ -119,7 +124,39 @@ INSERT INTO `REPORT_COLUMN` (`ID`,`COLUMN_NUMBER`,`LABEL`,`FIELD_ID`,`PROPERTY_T
  (7380,8,'NCIt Code of second NICHD Parent','2nd Associated Concept Code [ assocName = Has_NICHD_Parent ]','','',NULL,'','','','','|',-1,7272),
  (7381,9,'NICHD second Parent PT','2nd Associated Concept Property [ assocName = Has_NICHD_Parent ]','PRESENTATION','FULL_SYN',NULL,'PT','NICHD','','','|',-1,7272),
  (7382,10,'NCIt Code of NICHD Subset','Associated Concept Code','','',NULL,'','','','','|',-1,7272),
- (7383,11,'NICHD PT of NICHD Subset','Associated Concept Property','PRESENTATION','FULL_SYN',NULL,'PT','NICHD','','','|',-1,7272);
+ (7383,11,'NICHD PT of NICHD Subset','Associated Concept Property','PRESENTATION','FULL_SYN',NULL,'PT','NICHD','','','|',-1,7272),
+ (7501,1,'Code','Code','','',NULL,'','','','','|',-1,7474),
+ (7502,2,'Codelist Code','Associated Concept Code','','',NULL,'','','','','|',-1,7474),
+ (7503,3,'Codelist Extensible (Yes/No)','Associated Concept Property','GENERIC','Extensible_List',NULL,'','','','','|',-1,7474),
+ (7504,4,'Codelist Name','Associated Concept Property','PRESENTATION','FULL_SYN',NULL,'SY','CDISC','','','|',-1,7474),
+ (7505,5,'CDISC Submission Value','Property','PRESENTATION','FULL_SYN',NULL,'PT','CDISC','','','|',-1,7474),
+ (7506,6,'CDISC Symonym(s)','Property','PRESENTATION','FULL_SYN',NULL,'SY','CDISC','','','|',-1,7474),
+ (7507,7,'CDISC Definition','Property','DEFINITION','ALT_DEFINITION',NULL,'','CDISC','','','|',-1,7474),
+ (7508,8,'NCI Preferred Term','Property','PRESENTATION','FULL_SYN',NULL,'PT','NCI','','','|',-1,7474),
+ (7701,1,'Code','Code','','',NULL,'','','','','|',-1,7676),
+ (7702,2,'Codelist Code','Associated Concept Code','','',NULL,'','','','','|',-1,7676),
+ (7703,3,'Codelist Extensible (Yes/No)','Associated Concept Property','GENERIC','Extensible_List',NULL,'','','','','|',-1,7676),
+ (7704,4,'Codelist Name','Associated Concept Property','PRESENTATION','FULL_SYN',NULL,'SY','CDISC','','','|',-1,7676),
+ (7705,5,'CDISC Submission Value','Property','PRESENTATION','FULL_SYN',NULL,'PT','CDISC','','','|',-1,7676),
+ (7706,6,'CDISC Symonym(s)','Property','PRESENTATION','FULL_SYN',NULL,'SY','CDISC','','','|',-1,7676),
+ (7707,7,'CDISC Definition','Property','DEFINITION','ALT_DEFINITION',NULL,'','CDISC','','','|',-1,7676),
+ (7708,8,'NCI Preferred Term','Property','PRESENTATION','FULL_SYN',NULL,'PT','NCI','','','|',-1,7676),
+ (7901,1,'Code','Code','','',NULL,'','','','','|',-1,7878),
+ (7902,2,'Codelist Code','Associated Concept Code','','',NULL,'','','','','|',-1,7878),
+ (7903,3,'Codelist Extensible (Yes/No)','Associated Concept Property','GENERIC','Extensible_List',NULL,'','','','','|',-1,7878),
+ (7904,4,'Codelist Name','Associated Concept Property','PRESENTATION','FULL_SYN',NULL,'SY','CDISC','','','|',-1,7878),
+ (7905,5,'CDISC Submission Value','Property','PRESENTATION','FULL_SYN',NULL,'PT','CDISC','','','|',-1,7878),
+ (7906,6,'CDISC Symonym(s)','Property','PRESENTATION','FULL_SYN',NULL,'SY','CDISC','','','|',-1,7878),
+ (7907,7,'CDISC Definition','Property','DEFINITION','ALT_DEFINITION',NULL,'','CDISC','','','|',-1,7878),
+ (7908,8,'NCI Preferred Term','Property','PRESENTATION','FULL_SYN',NULL,'PT','NCI','','','|',-1,7878),
+ (8101,1,'Code','Code','','',NULL,'','','','','|',-1,8080),
+ (8102,2,'Codelist Code','Associated Concept Code','','',NULL,'','','','','|',-1,8080),
+ (8103,3,'Codelist Extensible (Yes/No)','Associated Concept Property','GENERIC','Extensible_List',NULL,'','','','','|',-1,8080),
+ (8104,4,'Codelist Name','Associated Concept Property','PRESENTATION','FULL_SYN',NULL,'SY','CDISC','','','|',-1,8080),
+ (8105,5,'CDISC Submission Value','Property','PRESENTATION','FULL_SYN',NULL,'PT','CDISC','','','|',-1,8080),
+ (8106,6,'CDISC Symonym(s)','Property','PRESENTATION','FULL_SYN',NULL,'SY','CDISC','','','|',-1,8080),
+ (8107,7,'CDISC Definition','Property','DEFINITION','ALT_DEFINITION',NULL,'','CDISC','','','|',-1,8080),
+ (8108,8,'NCI Preferred Term','Property','PRESENTATION','FULL_SYN',NULL,'PT','NCI','','','|',-1,8080);
 
 --
 -- Data for table `REPORT`
