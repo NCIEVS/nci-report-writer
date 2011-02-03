@@ -55,8 +55,8 @@ INSERT INTO `STANDARD_REPORT_TEMPLATE` (`ID`,`LABEL`,`ROOT_CONCEPT_CODE`,`ASSOCI
  (6868,'CDISC SDTM Terminology (Orig)','C61410','Concept_In_Subset',0,'NCI Thesaurus','10.11e',-1,'$'),
  (7272,'NICHD Subset Report','C90259','Concept_In_Subset',0,'NCI Thesaurus','10.11e',-1,'$'),
  (7474,'CDISC ADaM Terminology','C81222','Concept_In_Subset',0,'NCI Thesaurus','10.11e',-1,'$'),
- (7676,'CDISC SEND Terminology','C77256','Concept_In_Subset',0,'NCI Thesaurus','10.11e',-1,'$'),
- (7878,'CDISC CDASH Terminology','C77257','Concept_In_Subset',0,'NCI Thesaurus','10.11e',-1,'$'),
+ (7676,'CDISC SEND Terminology','C77526','Concept_In_Subset',0,'NCI Thesaurus','10.11e',-1,'$'),
+ (7878,'CDISC CDASH Terminology','C77527','Concept_In_Subset',0,'NCI Thesaurus','10.11e',-1,'$'),
  (8080,'CDISC SDTM Terminology','C66830','Concept_In_Subset',0,'NCI Thesaurus','10.11e',-1,'$');
 
 
