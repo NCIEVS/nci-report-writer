@@ -6,6 +6,15 @@ Edit local.properties file to match your environment:
   * cd [RW_HOME]/software/build
   * Edit local.properties to your environment
 
+Setup MySQL database:
+  * Log into MySQL
+  * Create the database specified in the local.properties [database.name]
+      if it does not exist.
+
+To install software:
+  * ant deploy:local:install  # Installs JBoss
+  * ant install:database      # Installs the database tables
+  * ant deploy:local:upgrade  # Installs NCI Report Writer application to JBoss
+  
 To build:
-  * ant deploy:local:install  # build the first time
-  * ant deploy:hot            # quick build all other times
+  * ant deploy:hot            # For quick incremental builds
