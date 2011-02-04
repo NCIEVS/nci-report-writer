@@ -156,7 +156,7 @@
 
     </target>
 
-    <target name="-dist" depends="-war" description="Copies external files to distribution folder">
+    <target name="-dist" description="Copies external files to distribution folder">
 
         <echo message="Config folder: ${bda.conf.dir}" />
 
@@ -271,11 +271,8 @@
                 <filter token="lg.config.file" value="${lg.config.file}"/>
                 <filter token="application.data.path" value="${application.data.path}"/>
                 <filter token="mail.smtp.server" value="${mail.smtp.server}"/>
-                <filter token="ncicb.contact.url" value="${ncicb.contact.url}"/>
                 <filter token="account.admin.user.email" value="${account.admin.user.email}"/>
                 <filter token="contact.us.email" value="${contact.us.email}"/>
-                <filter token="terminology.subset.download.url" value="${terminology.subset.download.url}"/>
-                <filter token="meddra_security_token" value="${meddra_security_token}"/>
                 <filter token="license_page_option" value="${license_page_option}"/>
                 <filter token="report.download.directory" value="${application.data.path}/${report.download.directory}"/>
             </filterset>
@@ -417,7 +414,7 @@
 
     </target>
 
-    <target name="install:database" description="Install a new database">
+    <target name="install:database" depends="-dist,build:config" description="Install a new database">
 
         <bda:InputYesNo
             property="begin.db.install"
