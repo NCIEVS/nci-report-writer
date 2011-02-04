@@ -6,13 +6,13 @@
 -- Create schema reportwriter
 --
 
-CREATE DATABASE IF NOT EXISTS @database.name@;
 USE @database.name@;
 
 --
 -- Definition of table `USER`
 --
 
+DROP TABLE IF EXISTS USER;
 CREATE TABLE `USER` (
   `ID` bigint(20) NOT NULL,
   `LOGIN_NAME` varchar(100) NOT NULL,
@@ -25,6 +25,7 @@ CREATE TABLE `USER` (
 -- hibernate's primary key generator (HILO)
 --
 
+DROP TABLE IF EXISTS hi_value;
 CREATE TABLE `hi_value` (
   `next_value` int(10) unsigned NOT NULL auto_increment,
   PRIMARY KEY  (`next_value`)
@@ -34,6 +35,7 @@ CREATE TABLE `hi_value` (
 -- Definition of table `CUSTOMIZED_QUERY`
 --
 
+DROP TABLE IF EXISTS CUSTOMIZED_QUERY;
 CREATE TABLE `CUSTOMIZED_QUERY` (
   `ID` int(11) NOT NULL,
   `QUERY_EXPRESSION` varchar(255) default NULL,
@@ -50,6 +52,7 @@ CREATE TABLE `CUSTOMIZED_QUERY` (
 -- Definition of table `REPORT_FORMAT`
 --
 
+DROP TABLE IF EXISTS REPORT_FORMAT;
 CREATE TABLE `REPORT_FORMAT` (
   `ID` int(11) NOT NULL,
   `DESCRIPTION` varchar(255) default NULL,
@@ -60,6 +63,7 @@ CREATE TABLE `REPORT_FORMAT` (
 -- Definition of table `REPORT_STATUS`
 --
 
+DROP TABLE IF EXISTS REPORT_STATUS;
 CREATE TABLE `REPORT_STATUS` (
   `ID` int(11) NOT NULL,
   `LABEL` varchar(255) default NULL,
@@ -72,6 +76,7 @@ CREATE TABLE `REPORT_STATUS` (
 -- Definition of table `REPORT`
 --
 
+DROP TABLE IF EXISTS REPORT;
 CREATE TABLE `REPORT` (
   `ID` int(11) NOT NULL,
   `LABEL` varchar(255) default NULL,
@@ -92,6 +97,7 @@ CREATE TABLE `REPORT` (
 -- Definition of table `CUSTOMIZED_REPORT`
 --
 
+DROP TABLE IF EXISTS CUSTOMIZED_REPORT;
 CREATE TABLE `CUSTOMIZED_REPORT` (
   `REPORT_ID` int(11) NOT NULL,
   `BASED_ON` int(11) default NULL,
@@ -106,6 +112,7 @@ CREATE TABLE `CUSTOMIZED_REPORT` (
 -- Definition of table `STANDARD_REPORT_TEMPLATE`
 --
 
+DROP TABLE IF EXISTS STANDARD_REPORT_TEMPLATE;
 CREATE TABLE `STANDARD_REPORT_TEMPLATE` (
   `ID` int(11) NOT NULL,
   `LABEL` varchar(255) default NULL,
@@ -123,6 +130,7 @@ CREATE TABLE `STANDARD_REPORT_TEMPLATE` (
 -- Definition of table `REPORT_COLUMN`
 --
 
+DROP TABLE IF EXISTS REPORT_COLUMN;
 CREATE TABLE `REPORT_COLUMN` (
   `ID` int(11) NOT NULL,
   `COLUMN_NUMBER` int(11) default NULL,
@@ -147,6 +155,7 @@ CREATE TABLE `REPORT_COLUMN` (
 -- Definition of table `STANDARD_REPORT`
 --
 
+DROP TABLE IF EXISTS STANDARD_REPORT;
 CREATE TABLE `STANDARD_REPORT` (
   `REPORT_ID` int(11) NOT NULL,
   `BASED_ON_TEMPLATE` int(11) default NULL,
