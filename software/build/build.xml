@@ -379,21 +379,21 @@
         <copy todir="${application.data.path}/conf" overwrite="true"
               flatten="true" includeEmptyDirs="no" filtering="false">
             <resources>
-                <file file="${bda.dist.dir}/exploded/${project.name}-webapp/install/${webapp.prop.file}"/>
-                <file file="${bda.dist.dir}/exploded/${project.name}-webapp/install/${project.short.name}-log4j.xml"/>
-                <file file="${bda.dist.dir}/exploded/${project.name}-webapp/install/log4j.dtd"/>
-                <file file="${bda.dist.dir}/exploded/${project.name}-webapp/install/application-config-client-local.xml"/>
-                <file file="${bda.dist.dir}/exploded/${project.name}-webapp/install/application-config-client-remote.xml"/>
-                <file file="${bda.dist.dir}/exploded/${project.name}-webapp/install/application-config.xml"/>
+                <file file="${exploded.dir}/install/${webapp.prop.file}"/>
+                <file file="${exploded.dir}/install/${project.short.name}-log4j.xml"/>
+                <file file="${exploded.dir}/install/log4j.dtd"/>
+                <file file="${exploded.dir}/install/application-config-client-local.xml"/>
+                <file file="${exploded.dir}/install/application-config-client-remote.xml"/>
+                <file file="${exploded.dir}/install/application-config.xml"/>
             </resources>
         </copy>
 
         <copy todir="${jboss.server.path}/server/default/conf" overwrite="true"
               flatten="true" includeEmptyDirs="no" filtering="false">
             <resources>
-                <file file="${bda.dist.dir}/exploded/${project.name}-webapp/install/application-config-client.xml"/>
-                <file file="${bda.dist.dir}/exploded/${project.name}-webapp/install/ncireportwriter.csm.new.hibernate.cfg.xml"/>
-                <file file="${bda.dist.dir}/exploded/${project.name}-webapp/install/rwdbserver.csm.new.hibernate.cfg.xml"/>
+                <file file="${exploded.dir}/install/application-config-client.xml"/>
+                <file file="${exploded.dir}/install/ncireportwriter.csm.new.hibernate.cfg.xml"/>
+                <file file="${exploded.dir}/install/rwdbserver.csm.new.hibernate.cfg.xml"/>
             </resources>
         </copy>
 
@@ -512,10 +512,10 @@
 
         <copy
             file="${bda.dist.dir}/exploded/${project.name}-webapp/${webapp.war.name}"
-            tofile="${jboss.server.path}/server/default/deploy/${webapp.war.name}.pre"
+            tofile="${jboss.server.path}/server/default/deploy/${webapp.war.name}.bak"
             overwrite="true"
         />
-        <move file="${jboss.server.path}/server/default/deploy/${webapp.war.name}.pre"
+        <move file="${jboss.server.path}/server/default/deploy/${webapp.war.name}.bak"
             tofile="${jboss.server.path}/server/default/deploy/${webapp.war.name}"/>
 
     </target>
@@ -594,15 +594,16 @@
                     <isset property="begin.install"/>
                     <then>
 
+                        <mkdir dir="${bda.temp.dir}"/>
+
                         <available file="${jboss.server.path}" property="jboss.server.exists" />
                         <if>
                             <not><isset property="jboss.server.exists"/></not>
                             <then>
                                 <bda:ConsoleOutput message="Downloading ${jboss.download.url}..."/>
-                                <mkdir dir="${bda.temp.dir}"/>
                                 <get src="${jboss.download.url}" dest="${bda.temp.dir}/${jboss.zip.name}"/>
                                 <unzip src="${bda.temp.dir}/${jboss.zip.name}" dest="${jboss.server.path}/.."/>
-                                <chmod file="${jboss.server.path}/bin/*.sh" perm="+x"/>
+                                <mkdir dir="${jboss.server.path}/server/default/log" />
                             </then>
                             <else>
                                 <bda:ConsoleOutput message="JBoss present. Skipping download."/>
@@ -613,9 +614,9 @@
                         <bda:ConsoleOutput message="Configuring JBoss..."/>
 
                         <bda:SetJBossServer
-                            serverxml="${jboss.server.path}/server/default/deploy/jbossweb.sar/server.xml"
-                            bindingsxml="${jboss.server.path}/server/default/conf/bindingservice.beans/META-INF/bindings-jboss-beans.xml"
+                            serverpath="${jboss.server.path}"
                             port="${jboss.server.port}"
+                            bindaddress="${jboss.server.bindaddress}"
                             redirectport="${jboss.server.redirect.port}"
                             ajpport="${jboss.server.ajp.port}"
                             ajpredirectport="${jboss.server.ajp.redirect.port}"
@@ -634,6 +635,24 @@
                             xms="${jboss.server.xms}"
                             xmx="${jboss.server.xmx}"
                         />
+
+                        <get src="${tools.download.url}/stop.sh" dest="${bda.temp.dir}/stop.sh"/>
+                        <get src="${tools.download.url}/start.sh" dest="${bda.temp.dir}/start.sh"/>
+
+                        <copy todir="${jboss.server.path}/bin" overwrite="true"
+                             flatten="true" includeEmptyDirs="no" filtering="true">
+                            <filterset>
+                                <filter token="jboss.server.path" value="${jboss.server.path}"/>
+                                <filter token="jboss.server.hostname" value="${jboss.server.hostname}"/>
+                                <filter token="jboss.server.jndi.port" value="${jboss.server.jndi.port}"/>
+                            </filterset>
+                            <resources>
+                                <file file="${bda.temp.dir}/stop.sh"/>
+                                <file file="${bda.temp.dir}/start.sh"/>
+                            </resources>
+                        </copy>
+
+                        <chmod file="${jboss.server.path}/bin/*.sh" perm="+x"/>
 
                         <bda:ConsoleOutput />
                         <bda:ConsoleOutput message="  Configuration complete." />
