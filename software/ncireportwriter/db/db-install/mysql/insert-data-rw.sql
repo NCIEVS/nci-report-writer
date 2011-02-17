@@ -22,7 +22,7 @@ INSERT INTO `USER` (`ID`,`LOGIN_NAME`) VALUES
 --
 
 INSERT INTO `hi_value` (`next_value`) VALUES
- (82);
+ (84);
 
 --
 -- Data for table `REPORT_FORMAT`
@@ -57,7 +57,8 @@ INSERT INTO `STANDARD_REPORT_TEMPLATE` (`ID`,`LABEL`,`ROOT_CONCEPT_CODE`,`ASSOCI
  (7474,'CDISC ADaM Terminology','C81222','Concept_In_Subset',0,'NCI Thesaurus','10.11e',-1,'$'),
  (7676,'CDISC SEND Terminology','C77526','Concept_In_Subset',0,'NCI Thesaurus','10.11e',-1,'$'),
  (7878,'CDISC CDASH Terminology','C77527','Concept_In_Subset',0,'NCI Thesaurus','10.11e',-1,'$'),
- (8080,'CDISC SDTM Terminology','C66830','Concept_In_Subset',0,'NCI Thesaurus','10.11e',-1,'$');
+ (8080,'CDISC SDTM Terminology','C66830','Concept_In_Subset',0,'NCI Thesaurus','10.11e',-1,'$'),
+ (8282,'NCPDP Subset','C89415','Concept_In_Subset',0,'NCI Thesaurus','10.11e',-1,'$');
 
 
 --
@@ -156,7 +157,13 @@ INSERT INTO `REPORT_COLUMN` (`ID`,`COLUMN_NUMBER`,`LABEL`,`FIELD_ID`,`PROPERTY_T
  (8105,5,'CDISC Submission Value','Property','PRESENTATION','FULL_SYN',NULL,'PT','CDISC','','','|',-1,8080),
  (8106,6,'CDISC Symonym(s)','Property','PRESENTATION','FULL_SYN',NULL,'SY','CDISC','','','|',-1,8080),
  (8107,7,'CDISC Definition','Property','DEFINITION','ALT_DEFINITION',NULL,'','CDISC','','','|',-1,8080),
- (8108,8,'NCI Preferred Term','Property','PRESENTATION','FULL_SYN',NULL,'PT','NCI','','','|',-1,8080);
+ (8108,8,'NCI Preferred Term','Property','PRESENTATION','FULL_SYN',NULL,'PT','NCI','','','|',-1,8080),
+ (8301,1,'NCIt Subset Code','Associated Concept Code','','',NULL,'','','','','|',-1,8282),
+ (8302,2,'NCPDP Subset Preferred Term','Associated Concept Property','PRESENTATION','FULL_SYN',NULL,'PT','NCPDP','','','|',-1,8282),
+ (8303,3,'NCIt Code','Code','','',NULL,'','','','','|',-1,8282),
+ (8304,4,'NCPDP Preferred Term','Property','PRESENTATION','FULL_SYN',NULL,'PT','NCPDP','','','|',-1,8282),
+ (8305,5,'NCIt Preferred Term','Property','PRESENTATION','FULL_SYN',NULL,'PT','NCI','','','|',-1,8282),
+ (8306,6,'NCIt Definition','Property','DEFINITION','DEFINITION',NULL,'','NCI','','','|',-1,8282);
 
 --
 -- Data for table `REPORT`
