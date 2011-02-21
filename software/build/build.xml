@@ -487,23 +487,32 @@
 
     <target name="deploy:local:uninstall" description="Uninstall the web application">
 
-        <antcall target="jboss:stop" />
-
-        <bda:RemoveJBossProperty
-            deploydir="${jboss.server.path}/server/default/deploy"
-            backup="true"
-            name="gov.nih.nci.cacore.ncireportwriterProperties"
+        <bda:InputYesNo
+            property="begin.uninstall"
+            prompt="Uninstall the application?"
         />
+        <if>
+            <isset property="begin.uninstall"/>
+            <then>
+                <antcall target="jboss:stop" />
 
-        <bda:RemoveJBossProperty
-            deploydir="${jboss.server.path}/server/default/deploy"
-            backup="true"
-            name="gov.nih.nci.cacore.ncireportwriterlog4jProperties"
-        />
+                <bda:RemoveJBossProperty
+                    deploydir="${jboss.server.path}/server/default/deploy"
+                    backup="true"
+                    name="gov.nih.nci.cacore.ncireportwriterProperties"
+                />
 
-        <delete dir="${application.data.path}/conf" quiet="true" />
-        <delete file="${jboss.server.path}/server/default/conf/application-config-client.xml" quiet="true" />
-        <delete file="${jboss.server.path}/server/default/deploy/${webapp.war.name}" quiet="true" />
+                <bda:RemoveJBossProperty
+                    deploydir="${jboss.server.path}/server/default/deploy"
+                    backup="true"
+                    name="gov.nih.nci.cacore.ncireportwriterlog4jProperties"
+                />
+
+                <delete file="${jboss.server.path}/server/default/deploy/${webapp.war.name}" quiet="true" />
+                <delete file="${jboss.server.path}/server/default/conf/application-config-client.xml" quiet="true" />
+                <delete file="${jboss.server.path}/server/default/deploy/ncireportwriter-ds.xml" quiet="true" />
+           </then>
+        </if>
 
     </target>
 
