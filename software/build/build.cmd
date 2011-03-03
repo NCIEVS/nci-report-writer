@@ -21,6 +21,8 @@ if "%1" == "" (
     echo   install      -- Builds, installs JBoss locally
     echo   uninstall    -- Uninstall the web application
     echo   deploy       -- Hot deploy application
+    echo   installdb    -- Installs new Report Writer database
+    echo   upgradedb    -- Upgrade Report Writer database
     echo   jsp          -- Hot deploy JSP files
     echo   config       -- Generates configuration files for a target environment
     echo   stop         -- Shutdown JBoss
@@ -50,6 +52,16 @@ if "%1" == "uninstall" (
 
 if "%1" == "deploy" (
     ant %TAG% %DEBUG% deploy:hot
+    goto DONE
+)
+
+if "%1" == "installdb" (
+    ant %TAG% %DEBUG% install:database
+    goto DONE
+)
+
+if "%1" == "upgradedb" (
+    ant %TAG% %DEBUG% upgrade:database
     goto DONE
 )
 

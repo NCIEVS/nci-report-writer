@@ -20,6 +20,8 @@ if [ -z "$1" ]; then
     echo "  install      -- Installs JBoss locally"
     echo "  uninstall    -- Uninstall the web application"
     echo "  deploy       -- Hot deploy application"
+    echo "  installdb    -- Installs new Report Writer database"
+    echo "  upgradedb    -- Upgrade Report Writer database"
     echo "  jsp          -- Hot deploy JSP files"
     echo "  config       -- Generates configuration files for a target environment"
     echo "  stop         -- Shutdown JBoss"
@@ -51,6 +53,14 @@ case $1 in
 
     jsp)
         ant $DEBUG deploy:hot:jsp
+        ;;
+
+    installdb)
+        ant $TAG $DEBUG install:database
+        ;;
+
+    upgradedb)
+        ant $TAG $DEBUG upgrade:database
         ;;
 
     clean)

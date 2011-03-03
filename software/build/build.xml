@@ -38,11 +38,19 @@
         </fileset>
     </path>
 
-    <!-- BDA-Lite Task definitions -->
-    <taskdef uri="antlib:gov.nih.nci.bdalite" resource="gov/nih/nci/bdalite/ant/bda-lite.xml" classpathref="classpath" />
+    <!-- BDA-Lite Task Definitions -->
+    <taskdef uri="antlib:gov.nih.nci.bdalite"
+        resource="gov/nih/nci/bdalite/ant/bda-lite.xml"
+        classpathref="classpath" />
 
-    <!-- BDA-Lite standard locations -->
+    <!-- BDA-Lite Standard Locations -->
     <bda:BDAInit />
+
+    <!-- Liquibase Tasks -->
+    <taskdef resource="liquibasetasks.properties">
+        <classpath refid="classpath"/>
+    </taskdef>
+    <property name="db.changelog.file" value="${bda.dist.dir}/exploded/${project.name}-webapp/install/db-upgrade.xml"/>
 
     <!-- Compile standard values -->
     <property name="webapp.build.dir" value="${bda.software.dir}/${project.name}/build/web" />
@@ -57,8 +65,8 @@
     <taskdef name="if" classname="net.sf.antcontrib.logic.IfTask" classpathref="bda.project.compile.classpath"/>
     <taskdef name="osfamily" classname="net.sf.antcontrib.platform.OsFamily" classpathref="bda.project.compile.classpath"/>
     <taskdef name="xmltask" classname="com.oopsconsultancy.xmltask.ant.XmlTask" classpathref="bda.project.compile.classpath"/>
-    <property name="db.install.dir" value="${bda.software.dir}/${project.name}/db/db-install/mysql" />
-    <property name="db.upgrade.dir" value="${bda.software.dir}/${project.name}/db/db-upgrade/mysql" />
+    <property name="db.install.dir" value="${bda.software.dir}/${project.name}/db/db-install" />
+    <property name="db.upgrade.dir" value="${bda.software.dir}/${project.name}/db/db-upgrade" />
 
     <!--============================-->
     <!-- usage: show build targets  -->
@@ -223,11 +231,13 @@
             <resources>
                 <file file="${bda.conf.dir}/log4j.dtd"/>
                 <file file="${bda.conf.dir}/ncireportwriter-ds.xml"/>
-                <file file="${db.install.dir}/create-tables-csm.sql"/>
-                <file file="${db.install.dir}/create-tables-rw.sql"/>
-                <file file="${db.install.dir}/insert-data-rw.sql"/>
-                <file file="${db.upgrade.dir}/upgrade-data-csm.sql"/>
-                <file file="${db.upgrade.dir}/upgrade-data-rw.sql"/>
+                <!-- database files -->
+                <file file="${db.install.dir}/mysql/create-tables-csm.sql"/>
+                <file file="${db.install.dir}/mysql/create-tables-rw.sql"/>
+                <file file="${db.install.dir}/mysql/insert-data-rw.sql"/>
+                <file file="${db.upgrade.dir}/mysql/upgrade-data-csm.sql"/>
+                <file file="${db.upgrade.dir}/mysql/upgrade-data-rw.sql"/>
+                <file file="${db.upgrade.dir}/db-upgrade.xml"/>
             </resources>
         </copy>
 
@@ -327,6 +337,8 @@
                 <filter token="rw.user.name" value="${rw.user.name}"/>
                 <filter token="rw.user.passwd" value="${encrypted.rw.user.passwd}"/>
                 <filter token="rw.user.email" value="${rw.user.email}"/>
+                <!-- Paths -->
+                <filter token="db-run.dir" value="${exploded.dir}/install"/>
             </filterset>
             <resources>
                 <file file="${exploded.dir}/deploy/create-tables-csm.sql"/>
@@ -334,6 +346,7 @@
                 <file file="${exploded.dir}/deploy/insert-data-rw.sql"/>
                 <file file="${exploded.dir}/deploy/upgrade-data-csm.sql"/>
                 <file file="${exploded.dir}/deploy/upgrade-data-rw.sql"/>
+                <file file="${exploded.dir}/deploy/db-upgrade.xml"/>
             </resources>
         </copy>
 
@@ -417,69 +430,69 @@
 
     <target name="install:database" depends="-dist,build:config" description="Install a new database">
 
-        <bda:InputYesNo
-            property="begin.db.install"
-            prompt="Begin a clean database install?"
-        />
+        <if>
+            <not><isset property="run.quite"/></not>
+            <then>
+                <bda:InputYesNo
+                    property="begin.db.install"
+                    prompt="Begin a clean database install?"
+                />
+            </then>
+            <else>
+                <property name="begin.db.install" value="true"/>
+            </else>
+        </if>
 
         <if>
             <isset property="begin.db.install"/>
             <then>
-                <sql
+                <echo message="Install a new database..." />
+
+                <updateDatabase
+                    changeLogFile="${db.changelog.file}"
                     driver="${database.driver}"
                     url="${database.url}"
-                    userid="${database.user}"
+                    username="${database.user}"
                     password="${database.password}"
-                    src="${bda.dist.dir}/exploded/${project.name}-webapp/install/create-tables-csm.sql"
-                    classpathref="classpath">
-                </sql>
-                <sql
-                    driver="${database.driver}"
-                    url="${database.url}"
-                    userid="${database.user}"
-                    password="${database.password}"
-                    src="${bda.dist.dir}/exploded/${project.name}-webapp/install/create-tables-rw.sql"
-                    classpathref="classpath">
-                </sql>
-                <sql
-                    driver="${database.driver}"
-                    url="${database.url}"
-                    userid="${database.user}"
-                    password="${database.password}"
-                    src="${bda.dist.dir}/exploded/${project.name}-webapp/install/insert-data-rw.sql"
-                    classpathref="classpath">
-                </sql>
+                    promptOnNonLocalDatabase="no"
+                    dropFirst="true"
+                    classpathref="classpath"
+                />
             </then>
         </if>
 
     </target>
 
-    <target name="upgrade:database" description="The the current database">
+    <target name="upgrade:database" depends="-dist,build:config" description="The the current database">
 
-        <bda:InputYesNo
-            property="begin.db.upgrade"
-            prompt="Begin database upgradeinstall?"
-        />
+        <if>
+            <not><isset property="run.quite"/></not>
+            <then>
+                <bda:InputYesNo
+                    property="begin.db.upgrade"
+                    prompt="Begin database upgradeinstall?"
+                />
+            </then>
+            <else>
+                <property name="begin.db.upgrade" value="true"/>
+            </else>
+        </if>
 
         <if>
             <isset property="begin.db.upgrade"/>
             <then>
-                <sql
+                <echo message="Upgrading database..." />
+
+                <updateDatabase
+                    changeLogFile="${db.changelog.file}"
                     driver="${database.driver}"
                     url="${database.url}"
-                    userid="${database.user}"
+                    username="${database.user}"
                     password="${database.password}"
-                    src="${bda.dist.dir}/exploded/${project.name}-webapp/install/upgrade-data-csm.sql"
-                    classpathref="classpath">
-                </sql>
-                <sql
-                    driver="${database.driver}"
-                    url="${database.url}"
-                    userid="${database.user}"
-                    password="${database.password}"
-                    src="${bda.dist.dir}/exploded/${project.name}-webapp/install/upgrade-data-rw.sql"
-                    classpathref="classpath">
-                </sql>
+                    promptOnNonLocalDatabase="no"
+                    dropFirst="false"
+                    classpathref="classpath"
+                />
             </then>
         </if>
 
