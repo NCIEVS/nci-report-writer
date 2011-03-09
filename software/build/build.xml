@@ -12,7 +12,6 @@
     <property environment="env" />
     <property name="properties.file" value="project.properties" />
     <property name="local.properties.file" value="local.properties" />
-    <property environment="env"/>
 
     <!-- Local property file -->
     <property file="${local.properties.file}" />
@@ -50,7 +49,7 @@
     <taskdef resource="liquibasetasks.properties">
         <classpath refid="classpath"/>
     </taskdef>
-    <property name="db.changelog.file" value="${bda.dist.dir}/exploded/${project.name}-webapp/install/db-upgrade.xml"/>
+    <property name="db.changelog.file" value="db-upgrade.xml"/>
 
     <!-- Compile standard values -->
     <property name="webapp.build.dir" value="${bda.software.dir}/${project.name}/build/web" />
@@ -321,7 +320,7 @@
         <bda:CSMStringEncrypter string="${rw.admin.user.passwd}" property="encrypted.rw.admin.user.passwd"/>
         <bda:CSMStringEncrypter string="${rw.user.passwd}" property="encrypted.rw.user.passwd"/>
 
-        <copy todir="${exploded.dir}/install" overwrite="true"
+        <copy todir="${exploded.dir}/db" overwrite="true"
              flatten="true" includeEmptyDirs="no" filtering="true">
             <filterset>
                 <filter token="database.name" value="${database.name}"/>
@@ -337,8 +336,6 @@
                 <filter token="rw.user.name" value="${rw.user.name}"/>
                 <filter token="rw.user.passwd" value="${encrypted.rw.user.passwd}"/>
                 <filter token="rw.user.email" value="${rw.user.email}"/>
-                <!-- Paths -->
-                <filter token="db-run.dir" value="${exploded.dir}/install"/>
             </filterset>
             <resources>
                 <file file="${exploded.dir}/deploy/create-tables-csm.sql"/>
@@ -348,6 +345,33 @@
                 <file file="${exploded.dir}/deploy/upgrade-data-rw.sql"/>
                 <file file="${exploded.dir}/deploy/db-upgrade.xml"/>
             </resources>
+        </copy>
+
+        <!-- Copy database support files (For systems team AHP3 deployments) -->
+
+        <copy todir="${exploded.dir}/db" overwrite="true"
+            flatten="true" includeEmptyDirs="no" filtering="false">
+            <resources>
+                <file file="${database.driver.file}"/>
+                <file file="${bda.software.dir}/${project.name}/extlib/liquibase-2.0.1.jar"/>
+            </resources>
+        </copy>
+
+        <copy
+            file="db-build.xml"
+            tofile="${exploded.dir}/db/build.xml"
+            overwrite="true"
+            filtering="true">
+            <filterset>
+                <filter token="db.changelog.file" value="${db.changelog.file}"/>
+                <filter token="database.driver" value="${database.driver}"/>
+                <filter token="database.name" value="${database.name}"/>
+                <filter token="database.user" value="${database.user}"/>
+                <filter token="database.password" value="${database.password}"/>
+                <filter token="database.server" value="${database.server}"/>
+                <filter token="database.port" value="${database.port}"/>
+                <filter token="database.url" value="${database.url}"/>
+            </filterset>
         </copy>
 
     </target>
@@ -449,21 +473,24 @@
                 <echo message="Install a new database..." />
 
                 <updateDatabase
-                    changeLogFile="${db.changelog.file}"
+                    changeLogFile="${bda.dist.dir}/exploded/${project.name}-webapp/db/${db.changelog.file}"
                     driver="${database.driver}"
                     url="${database.url}"
                     username="${database.user}"
                     password="${database.password}"
                     promptOnNonLocalDatabase="no"
                     dropFirst="true"
-                    classpathref="classpath"
-                />
+                    classpathref="classpath">
+                        <changeLogProperty name="db.run.path"
+                            value="${bda.dist.dir}/exploded/${project.name}-webapp/db"
+                        />
+                </updateDatabase>
             </then>
         </if>
 
     </target>
 
-    <target name="upgrade:database" depends="-dist,build:config" description="The the current database">
+    <target name="upgrade:database" depends="-dist,build:config" description="Upgrade the current database">
 
         <if>
             <not><isset property="run.quite"/></not>
@@ -481,18 +508,22 @@
         <if>
             <isset property="begin.db.upgrade"/>
             <then>
-                <echo message="Upgrading database..." />
+                <echo message="Upgrading the database..." />
 
                 <updateDatabase
-                    changeLogFile="${db.changelog.file}"
+                    changeLogFile="${bda.dist.dir}/exploded/${project.name}-webapp/db/${db.changelog.file}"
                     driver="${database.driver}"
                     url="${database.url}"
                     username="${database.user}"
                     password="${database.password}"
                     promptOnNonLocalDatabase="no"
                     dropFirst="false"
-                    classpathref="classpath"
-                />
+                    classpathref="classpath">
+                        <changeLogProperty name="db.run.path"
+                            value="${bda.dist.dir}/exploded/${project.name}-webapp/db"
+                        />
+               </updateDatabase>
+
             </then>
         </if>
 
