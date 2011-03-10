@@ -320,6 +320,7 @@
         <bda:CSMStringEncrypter string="${rw.admin.user.passwd}" property="encrypted.rw.admin.user.passwd"/>
         <bda:CSMStringEncrypter string="${rw.user.passwd}" property="encrypted.rw.user.passwd"/>
 
+        <mkdir dir="${exploded.dir}/db" />
         <copy todir="${exploded.dir}/db" overwrite="true"
              flatten="true" includeEmptyDirs="no" filtering="true">
             <filterset>
