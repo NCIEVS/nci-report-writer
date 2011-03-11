@@ -102,7 +102,7 @@ INSERT INTO `REPORT_COLUMN` (`ID`,`COLUMN_NUMBER`,`LABEL`,`FIELD_ID`,`PROPERTY_T
  (4852,9,'NCIt Definition','Property','DEFINITION','DEFINITION',NULL,'',' ','','','|',-1,4646),
  (4853,10,'Parent Concept''s NCIt Concept Code','1st Associated Concept Code [ assocName = Has_CDRH_Parent ]','','',NULL,'','','','','|',-1,4646),
  (4854,11,'Parent Concept''s FDA Source Code','1st Associated Concept Property Qualifier [ assocName = Has_CDRH_Parent ]','PRESENTATION','FULL_SYN',NULL,'PT','FDA','source-code','CDRH','|',-1,4646),
- (4855,12,'Parent Concept''s FDA Source PT','1st Associated Concept Property [ assocName = Has_CDRH_Parent ]','PRESENTATION','FULL_SYN',NULL,'PT','FDA','','','|',-1,4646),
+ (4855,12,'Parent Concept''s FDA Source PT','1st Associated Concept Property [ assocName = Has_CDRH_Parent ]','PRESENTATION','FULL_SYN',NULL,'PT','FDA','subsource-name','CDRH','|',-1,4646),
  (6161,1,'ISO Code','Property','PRESENTATION','FULL_SYN',NULL,'CA3','NCI','','','|',-1,6060),
  (6162,2,'NCI Concept Code','Code','','',NULL,'',' ','','','|',-1,6060),
  (6163,3,'NCI Preferred Term','Property','PRESENTATION','Preferred_Name',NULL,'',' ','','','|',-1,6060),
