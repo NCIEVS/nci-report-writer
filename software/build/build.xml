@@ -553,9 +553,17 @@
                     name="gov.nih.nci.cacore.ncireportwriterlog4jProperties"
                 />
 
+				<!-- Remove war files -->
                 <delete file="${jboss.server.path}/server/default/deploy/${webapp.war.name}" quiet="true" />
-                <delete file="${jboss.server.path}/server/default/conf/application-config-client.xml" quiet="true" />
+                <delete file="${jboss.server.path}/server/default/deploy/upt.war" quiet="true" />
+                <delete file="${jboss.server.path}/server/default/lib/clm.jar" quiet="true" />
+                <!-- Remove config files -->
+                <delete file="${jboss.server.path}/server/default/conf/application-config-client.xml" quiet="true" />                
+                <!-- Remove database config files -->
                 <delete file="${jboss.server.path}/server/default/deploy/ncireportwriter-ds.xml" quiet="true" />
+                <delete file="${jboss.server.path}/server/default/conf/ncireportwriter.csm.new.hibernate.cfg.xml" quiet="true" />
+                <delete file="${jboss.server.path}/server/default/conf/rwdbserver.csm.new.hibernate.cfg.xml" quiet="true" />
+      
            </then>
         </if>
 
