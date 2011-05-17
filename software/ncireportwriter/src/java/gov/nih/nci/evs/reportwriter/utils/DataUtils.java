@@ -2066,4 +2066,264 @@ public class DataUtils {
 		return null;
 	}
 
+
+
+    public static LexBIGServiceConvenienceMethods createLexBIGServiceConvenienceMethods(
+        LexBIGService lbSvc) {
+        LexBIGServiceConvenienceMethods lbscm = null;
+        try {
+            lbscm =
+                (LexBIGServiceConvenienceMethods) lbSvc
+                    .getGenericExtension("LexBIGServiceConvenienceMethods");
+            lbscm.setLexBIGService(lbSvc);
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+        return lbscm;
+    }
+
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    // [GF#31126] Bad data in NICHD report
+    // [GF#31146] Bad data in CDRH report
+    public static Vector<AssociatedConcept> getRelatedConcepts(String scheme, String version, String code, String assocName, boolean direction) {
+
+		System.out.println("==================================================================");
+		System.out.println("scheme: " + scheme);
+		System.out.println("version: " + version);
+		System.out.println("code: " + code);
+		System.out.println("assocName: " + assocName);
+		System.out.println("direction: " + direction);
+
+		System.out.println("==================================================================");
+
+		Vector<AssociatedConcept> v = new Vector();
+
+        LexBIGService lbSvc = null;
+        try {
+        	lbSvc = RemoteServerUtil.createLexBIGService();
+		} catch (Exception ex) {
+			ex.printStackTrace();
+			return null;
+		}
+
+
+        LexBIGServiceConvenienceMethods lbscm =
+            createLexBIGServiceConvenienceMethods(lbSvc);
+
+        CodingSchemeVersionOrTag csvt = new CodingSchemeVersionOrTag();
+        if (version != null)
+            csvt.setVersion(version);
+
+        ConceptReference cr = ConvenienceMethods.createConceptReference(code, scheme);
+
+        CodedNodeGraph cng = null;
+        try {
+			cng = lbSvc.getNodeGraph(scheme, csvt, null);
+
+			// Perform the query ...
+
+			boolean resolveForward = true;
+			boolean resolveBackward = false;
+			if (!direction) {
+			    resolveForward = false;
+			    resolveBackward = true;
+			}
+
+			ResolvedConceptReferenceList matches = cng.resolveAsList(
+					cr, resolveForward, resolveBackward, 1, 1, new LocalNameList(), null,
+					null, 1024);
+
+			String associationName = null;
+			// Analyze the result ...
+			if (matches.getResolvedConceptReferenceCount() > 0) {
+				Enumeration<? extends ResolvedConceptReference> refEnum = matches.enumerateResolvedConceptReference();
+
+				while (refEnum.hasMoreElements()) {
+					ResolvedConceptReference ref = refEnum.nextElement();
+					AssociationList sourceof = ref.getSourceOf();
+					if (!direction) {
+						sourceof = ref.getTargetOf();
+					}
+					Association[] associations = sourceof.getAssociation();
+
+					for (int i = 0; i < associations.length; i++) {
+						Association assoc = associations[i];
+
+						try {
+							associationName =
+								lbscm.getAssociationNameFromAssociationCode(
+										scheme, csvt, assoc
+											.getAssociationName());
+						} catch (Exception ex) {
+							associationName = assoc.getAssociationName();
+						}
+
+						if (associationName.compareTo(assocName) == 0) {
+							AssociatedConcept[] acl = assoc.getAssociatedConcepts().getAssociatedConcept();
+							for (int j = 0; j < acl.length; j++) {
+								AssociatedConcept ac = acl[j];
+								v.add(ac);
+							}
+						}
+					}
+				}
+			}
+
+		} catch (Exception ex) {
+			ex.printStackTrace();
+		}
+
+
+        return v;
+    }
+
+
+    // [#30542] SDTM: Use source-code SDTM-XYZ to pull PT
+    public static String getPTBySourceCode(String scheme, String version, String code, String source, String source_code) {
+        String pt = null;
+
+        LexBIGService lbSvc = null;
+        try {
+        	lbSvc = RemoteServerUtil.createLexBIGService();
+		} catch (Exception ex) {
+			ex.printStackTrace();
+			return null;
+		}
+        LexBIGServiceConvenienceMethods lbscm =
+            createLexBIGServiceConvenienceMethods(lbSvc);
+
+        CodingSchemeVersionOrTag csvt = new CodingSchemeVersionOrTag();
+        if (version != null)
+            csvt.setVersion(version);
+
+        ConceptReference cr = ConvenienceMethods.createConceptReference(code, scheme);
+        ConceptReferenceList codeList = new ConceptReferenceList();
+        codeList.addConceptReference(cr);
+
+        CodedNodeSet cns = null;
+        try {
+			LocalNameList entityTypes = new LocalNameList();
+			entityTypes.addEntry("concept");
+			cns = lbSvc.getNodeSet(scheme, csvt, entityTypes);
+
+			cns = cns.restrictToCodes(codeList);
+
+			SortOptionList sortOptions = null;
+			LocalNameList filterOptions = null;
+			LocalNameList propertyNames = new LocalNameList();
+			propertyNames.addEntry("FULL_SYN");
+			CodedNodeSet.PropertyType[] propertyTypes = new CodedNodeSet.PropertyType[1];
+			propertyTypes[0] = CodedNodeSet.PropertyType.PRESENTATION;
+
+			boolean resolveObjects = true;
+			int maxToReturn = 10;
+            ResolvedConceptReferenceList rcrl = cns.resolveToList(sortOptions, filterOptions, propertyNames, propertyTypes, resolveObjects, maxToReturn);
+
+            for (int i=0; i<rcrl.getResolvedConceptReferenceCount(); i++) {
+				ResolvedConceptReference rcr = rcrl.getResolvedConceptReference(i);
+				Entity entity = rcr.getReferencedEntry();
+				Presentation[] properties = entity.getPresentation();
+
+				for (int j = 0; j < properties.length; j++) {
+					Presentation prop = properties[j];
+					if (prop.getRepresentationalForm()
+						.compareTo("PT") != 0) {
+
+                        boolean match_found = false;
+						Source[] sources = prop.getSource();
+						for (int m = 0; m < sources.length; m++) {
+							Source src = sources[m];
+							if (src.getContent().compareTo(source) == 0) {
+								match_found = true;
+								break;
+							}
+						}
+
+                        if (match_found) {
+							pt = prop.getValue().getContent();
+
+							PropertyQualifier[] qualifiers =
+								prop.getPropertyQualifier();
+
+							if( qualifiers != null) {
+								for (int k= 0; k < qualifiers.length; k++ ) {
+									PropertyQualifier q = qualifiers[k];
+									String name = q.getPropertyQualifierName();
+									String value = q.getValue().getContent();
+
+									if( name.compareTo("source-code") == 0 && value.compareTo(source_code) == 0 ) {
+										pt = prop.getValue().getContent();
+										return pt;
+									}
+								}
+							}
+						}
+					}
+				}
+			}
+		} catch (Exception ex) {
+			ex.printStackTrace();
+		}
+
+		return pt;
+
+	}
+
+
+
+    public static void main(String[] args) {
+
+        try {
+			String scheme = "NCI Thesaurus";
+			String version = "11.03d";
+            String code = "C66767";
+
+            String assocName = "Concept_In_Subset";
+            boolean direction = true;
+
+            Vector v = getRelatedConcepts(scheme, version, code, assocName, direction);
+            for (int i=0; i<v.size(); i++) {
+				AssociatedConcept ac = (AssociatedConcept) v.elementAt(i);
+				System.out.println("\t\t" + ac.getConceptCode() + "\t" + ac.getEntityDescription().getContent());
+			}
+
+            direction = false;
+
+            v = getRelatedConcepts(scheme, version, code, assocName, direction);
+            for (int i=0; i<v.size(); i++) {
+				AssociatedConcept ac = (AssociatedConcept) v.elementAt(i);
+				System.out.println("\t\t" + ac.getConceptCode() + "\t" + ac.getEntityDescription().getContent());
+			}
+
+            code = "C92807";
+            assocName = "Has_NICHD_Parent";
+            direction = true;
+
+            v = getRelatedConcepts(scheme, version, code, assocName, direction);
+            for (int i=0; i<v.size(); i++) {
+				AssociatedConcept ac = (AssociatedConcept) v.elementAt(i);
+				System.out.println("\t\t" + ac.getConceptCode() + "\t" + ac.getEntityDescription().getContent());
+			}
+
+			code = "C74912";
+			String source = "CDISC";
+			String source_code = "SDTM-LBTEST";
+			String pt = getPTBySourceCode(scheme, version, code, source, source_code);
+			System.out.println(code + " source: " + source + " source-code: " + source_code + " pt: " + pt);
+
+
+			code = "C25158";
+			source = "CDISC";
+			source_code = "SDTM-LBTEST";
+			pt = getPTBySourceCode(scheme, version, code, source, source_code);
+			System.out.println(code + " source: " + source + " source-code: " + source_code + " pt: " + pt);
+
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
 }
