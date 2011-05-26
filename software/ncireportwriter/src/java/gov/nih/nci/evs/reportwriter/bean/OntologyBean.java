@@ -592,6 +592,10 @@ public class OntologyBean // extends BaseBean
 			 System.out.println(propName);
 			 _dataCategoryList.add(new SelectItem(propName));
 		 }
+
+		 String t = "CDISC Submission Value";
+		 _dataCategoryList.add(new SelectItem(t));
+
          return _dataCategoryList;
     }
 

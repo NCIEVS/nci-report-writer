@@ -76,9 +76,7 @@ public class ReportGenerationThread implements Runnable {
 
     private int _count = 0;
     private String _hierarchicalAssoName = null;
-
     private int _abortLimit = 0;
-    //private int _abortLimit = 200;
 
     public ReportGenerationThread(String outputDir, String standardReportLabel,
         String uid, String emailAddress, int[] ncitColumns) {
@@ -496,14 +494,19 @@ public class ReportGenerationThread implements Runnable {
                     scheme, version, defining_root_concept,
                     associated_concept, c, rc);
 
+
             if (SpecialCases.CDISC.ON &&
-                SpecialCases.CDISC.writeExtensibleColumnData(_cdiscInfo, rc,
-                    values, value, i)) {
+                SpecialCases.CDISC.writeExtensibleColumnData(_cdiscInfo, rc, values, value, i)) {
                 if (_cdiscInfo.skipRow)
                     return;
                 value = _cdiscInfo.newValue;
             }
+
+            if (value == null) value = "";
             values.add(value);
+
+            //_logger.debug("add value: " + value);
+
         }
         if (SpecialCases.CDISC.ON) {
             SpecialCases.CDISC.writeSubheader(
@@ -511,8 +514,8 @@ public class ReportGenerationThread implements Runnable {
                 _cdiscInfo, this, values, pw, scheme,
                 version, defining_root_concept, associated_concept, c, delim, cols);
         }
-
         pw.println(StringUtils.toString(values, delim, true));
+
         _count++;
         if ((_count / 100) * 100 == _count) {
             _logger.debug("Number of concepts processed: " + _count);
@@ -1374,7 +1377,7 @@ public class ReportGenerationThread implements Runnable {
 					}
 					// match qualifier
 					if (match) {
-						if (qualifier_name != null) // match property
+						if (qualifier_name != null) // match qualifier name vaue pair
 						// qualifier, if needed
 						{
 							boolean match_found = false;
@@ -1414,19 +1417,22 @@ public class ReportGenerationThread implements Runnable {
 						}
 					}
 				}
-			}
-			if (match) {
-				String prop_value = p.getValue().getContent();
-				if (!hset.contains(prop_value)) {
-				    num_matches++;
-					hset.add(prop_value);
-					if (num_matches == 1) {
-						return_str = prop_value;
-					} else {
-						return_str = return_str + delimiter + prop_value;
+
+				if (match) {
+					String prop_value = p.getValue().getContent();
+					if (!hset.contains(prop_value)) {
+						num_matches++;
+						hset.add(prop_value);
+						if (num_matches == 1) {
+							return_str = prop_value;
+						} else {
+							return_str = return_str + delimiter + prop_value;
+						}
 					}
-			    }
+				}
+
 			}
+
 		}
         return return_str;
 	}
@@ -1607,9 +1613,20 @@ FULL_SYN: INJURY
         Qualifier value: 2348
         Qualifier name: subsource-name
         Qualifier value: CDRH
+
+//C54027
+FULL_SYN: PATIENT PROBLEM/MEDICAL PROBLEM
+	RepresentationalForm: PT
+	Source: FDA
+	Qualifier name: source-code
+	Qualifier value: 2688
+	Qualifier name: subsource-name
+	Qualifier value: CDRH
+
 */
 
         if (concept == null) return "";
+
         int num_matches = 0;
         org.LexGrid.commonTypes.Property[] properties =
             new org.LexGrid.commonTypes.Property[] {};
@@ -1636,8 +1653,8 @@ FULL_SYN: INJURY
 
 				if (source != null || representational_form != null
 					|| qualifier_name != null || isPreferred != null) {
-					// compare isPreferred
 
+					// compare isPreferred
 					if (isPreferred != null && p instanceof Presentation) {
 						Presentation presentation = (Presentation) p;
 						Boolean is_pref = presentation.getIsPreferred();
@@ -1646,6 +1663,7 @@ FULL_SYN: INJURY
 						} else if (!is_pref.equals(isPreferred)) {
 							match = false;
 						}
+
 					}
 
 					// match representational_form
@@ -1658,10 +1676,10 @@ FULL_SYN: INJURY
 								match = false;
 							}
 						}
+
 					}
 
 					// match qualifier
-
 					if (match) {
 						if (qualifier_name != null) // match property
 						{
@@ -1680,6 +1698,8 @@ FULL_SYN: INJURY
 											break;
 										}
 									}
+
+
 								} else { // qualifier value (subsource_name) is given
 									for (int j= 0; j < qualifiers.length; j++ ) {
 										PropertyQualifier q = qualifiers[j];
@@ -1724,22 +1744,23 @@ FULL_SYN: INJURY
 							}
 							if (!match_found) {
 								match = false;
+
 							}
 						}
 					}
 				}
-			}
-			if (match && qualifier_value != null) {
-				num_matches++;
-				if (num_matches == 1) {
-					return_str = qualifier_value;
-				} else {
-					return_str = return_str + delimiter + qualifier_value;
+
+				if (match && qualifier_value != null) {
+					num_matches++;
+					if (num_matches == 1) {
+						return_str = qualifier_value;
+					} else {
+						return_str = return_str + delimiter + qualifier_value;
+					}
 				}
 			}
-            return return_str;
         }
-        return "";
+        return return_str;
 	}
 
 
