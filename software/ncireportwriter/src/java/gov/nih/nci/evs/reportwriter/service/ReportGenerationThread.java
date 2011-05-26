@@ -1623,6 +1623,15 @@ FULL_SYN: PATIENT PROBLEM/MEDICAL PROBLEM
 	Qualifier name: subsource-name
 	Qualifier value: CDRH
 
+
+FULL_SYN: DEVICE ISSUE
+	RepresentationalForm: PT
+	Source: FDA
+	Qualifier name: source-code
+	Qualifier value: 2379
+	Qualifier name: subsource-name
+	Qualifier value: CDRH
+
 */
 
         if (concept == null) return "";
@@ -1646,7 +1655,10 @@ FULL_SYN: PATIENT PROBLEM/MEDICAL PROBLEM
         String return_str = ""; // RWW change from space to empty string
 		boolean match = false;
 
+		String ret_qualifier_value = null;
+
 		for (int i = 0; i < properties.length; i++) {
+			ret_qualifier_value = null;
 			org.LexGrid.commonTypes.Property p = properties[i];
 			if (p.getPropertyName().compareTo(property_name) == 0) {
 				match = true;
@@ -1693,7 +1705,7 @@ FULL_SYN: PATIENT PROBLEM/MEDICAL PROBLEM
 										String value = q.getValue().getContent();
 
 										if( name.compareTo(qualifier_name) == 0) {
-											qualifier_value = value;
+											ret_qualifier_value = value;
 											match_found = true;
 											break;
 										}
@@ -1713,14 +1725,13 @@ FULL_SYN: PATIENT PROBLEM/MEDICAL PROBLEM
 												String q_value = q.getValue().getContent();
 
 												if( q_name.compareTo("source-code") == 0) {
-													qualifier_value = q_value;
+													ret_qualifier_value = q_value;
 													match_found = true;
 													break;
 												}
 											}
 										}
 									}
-
 								}
 						    }
 
@@ -1750,12 +1761,12 @@ FULL_SYN: PATIENT PROBLEM/MEDICAL PROBLEM
 					}
 				}
 
-				if (match && qualifier_value != null) {
+				if (match && ret_qualifier_value != null) {
 					num_matches++;
 					if (num_matches == 1) {
-						return_str = qualifier_value;
+						return_str = ret_qualifier_value;
 					} else {
-						return_str = return_str + delimiter + qualifier_value;
+						return_str = return_str + delimiter + ret_qualifier_value;
 					}
 				}
 			}
