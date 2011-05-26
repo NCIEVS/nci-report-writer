@@ -15,6 +15,8 @@ import org.lexgrid.valuesets.*;
 import gov.nih.nci.evs.reportwriter.properties.*;
 import gov.nih.nci.evs.utils.*;
 
+import org.LexGrid.LexBIG.DataModel.Core.AssociatedConcept;
+
 /**
  * <!-- LICENSE_TEXT_START -->
  * Copyright 2008,2009 NGIT. This software was developed in conjunction
@@ -74,7 +76,9 @@ public class ReportGenerationThread implements Runnable {
 
     private int _count = 0;
     private String _hierarchicalAssoName = null;
+
     private int _abortLimit = 0;
+    //private int _abortLimit = 200;
 
     public ReportGenerationThread(String outputDir, String standardReportLabel,
         String uid, String emailAddress, int[] ncitColumns) {
@@ -124,7 +128,7 @@ public class ReportGenerationThread implements Runnable {
                 generateStandardReport(_outputDir, _standardReportLabel, _uid,
                     warningMsg);
             long runTime = stopWatch.getDuration();
-            emailNotification(successful, _standardReportLabel, 
+            emailNotification(successful, _standardReportLabel,
                 warningMsg, startDate, new Date(), runTime);
             _logger.info("Report " + _standardReportLabel + " generated.");
             _logger.info("  * Start time: " + startDate);
@@ -132,7 +136,7 @@ public class ReportGenerationThread implements Runnable {
         } catch (Exception e) {
             warningMsg.append("\n" + ExceptionUtils.getStackTrace(e));
             long runTime = stopWatch.getDuration();
-            emailNotification(false, _standardReportLabel, 
+            emailNotification(false, _standardReportLabel,
                 warningMsg, startDate, new Date(), runTime);
             ExceptionUtils.print(_logger, e, "* In ReportGenerationThread.run");
             e.printStackTrace();
@@ -160,13 +164,13 @@ public class ReportGenerationThread implements Runnable {
 
             boolean displaySummary = false;
             if (displaySummary) {
-                message.append(_standardReportLabel + ", " + 
+                message.append(_standardReportLabel + ", " +
                     StopWatch.format(StopWatch.timeInMinutes(runTime)) + " minutes, " +
                     _count + " rows\n");
                 message.append("\n");
                 message.append(StringUtils.SEPARATOR + "\n");
             }
-            
+
             if (successful) {
                 subject = "Generated: " + _standardReportLabel + "...";
                 message.append(_standardReportLabel + " is generated.\n");
@@ -196,21 +200,21 @@ public class ReportGenerationThread implements Runnable {
                 StandardReportTemplate standardReportTemplate = null;
                 standardReportTemplate = getStandardReportTemplate(
                     standardReportLabel, warningMsg);
-                message.append("  * Label: " + 
+                message.append("  * Label: " +
                     standardReportTemplate.getLabel() + "\n");
-                message.append("  * Coding Scheme Name: " + 
+                message.append("  * Coding Scheme Name: " +
                     standardReportTemplate.getCodingSchemeName() + "\n");
-                message.append("  * Coding Scheme Version: " + 
+                message.append("  * Coding Scheme Version: " +
                     standardReportTemplate.getCodingSchemeVersion() + "\n");
-                message.append("  * Root Concept Code: " + 
+                message.append("  * Root Concept Code: " +
                     standardReportTemplate.getRootConceptCode() + "\n");
-                message.append("  * Association Name: " + 
+                message.append("  * Association Name: " +
                     standardReportTemplate.getAssociationName() + "\n");
                 Boolean dirValue = standardReportTemplate.getDirection();
                 String dirStr = dirValue ? "Target" : "Source";
-                message.append("  * Direction: " + dirStr + 
+                message.append("  * Direction: " + dirStr +
                     "(" + dirValue + ")" + "\n");
-                message.append("  * Level: " + 
+                message.append("  * Level: " +
                     standardReportTemplate.getLevel() + "\n");
             } catch (Exception e) {
                 message.append("  * Exception: " + e.getMessage() + "\n");
@@ -224,7 +228,7 @@ public class ReportGenerationThread implements Runnable {
             e.printStackTrace();
         }
     }
-    
+
     private StandardReportTemplate getStandardReportTemplate(
         String standardReportLabel, StringBuffer warningMsg) throws Exception {
         StandardReportTemplate standardReportTemplate = null;
@@ -398,6 +402,7 @@ public class ReportGenerationThread implements Runnable {
             LexEVSValueSetDefinitionServices definitionServices =
                 DataUtils.getValueSetDefinitionService();
             String uri = DataUtils.codingSchemeName2URI(scheme, version);
+
             traverse(definitionServices, uri, pw, scheme, version, tag, defining_root_concept, code,
                 _hierarchicalAssoName, associationName, direction, curr_level,
                 max_level, cols);
@@ -443,7 +448,7 @@ public class ReportGenerationThread implements Runnable {
 
         if (firstColRequired) {
             String firstValue =
-                getReportColumnValue(definitionServices, uri,
+               get_ReportColumnValue(definitionServices, uri,
                     scheme, version, defining_root_concept,
                     associated_concept, c, cols[0]);
             if (firstValue == null)
@@ -457,7 +462,8 @@ public class ReportGenerationThread implements Runnable {
         for (int i = 0; i < cols.length; i++) {
             ReportColumn rc = (ReportColumn) cols[i];
             String s =
-                getReportColumnValue(definitionServices, uri,
+                //KLO
+                get_ReportColumnValue(definitionServices, uri,
                     scheme, version, defining_root_concept,
                     associated_concept, c, rc);
             if (i == 0) {
@@ -468,7 +474,6 @@ public class ReportGenerationThread implements Runnable {
             }
         }
         pw.println(output_line);
-
         _count++;
         if ((_count / 100) * 100 == _count) {
             _logger.debug("Number of concepts processed: " + _count);
@@ -487,7 +492,7 @@ public class ReportGenerationThread implements Runnable {
         for (int i = 0; i < cols.length; i++) {
             ReportColumn rc = (ReportColumn) cols[i];
             String value =
-                getReportColumnValue(definitionServices, uri,
+                get_ReportColumnValue(definitionServices, uri,
                     scheme, version, defining_root_concept,
                     associated_concept, c, rc);
 
@@ -559,6 +564,7 @@ public class ReportGenerationThread implements Runnable {
         for (int i = 0; i < v.size(); i++) {
             // subset member element
             Entity c = (Entity) v.elementAt(i);
+
             writeColumnData(definitionServices, uri,
                 pw, scheme, version, defining_root_concept, root,
                 c, delim, cols);
@@ -575,7 +581,6 @@ public class ReportGenerationThread implements Runnable {
             DataUtils
                 .getSubconceptCodes2(scheme, version, root.getEntityCode());
 
-
         //Vector<Entity> subconcept_vec = DataUtils.getSubconcepts(scheme, version, code);
         if (subconcept_vec == null | subconcept_vec.size() == 0)
             return;
@@ -586,12 +591,14 @@ public class ReportGenerationThread implements Runnable {
             //String subconcep_code = concept.getEntityCode();
             //Entity e = (Entity) subconcept_vec.elementAt(k);
             String subconcep_code = subconcept_vec.elementAt(k);
+
             traverse(definitionServices, uri, pw, scheme, version, tag, defining_root_concept,
                 subconcep_code, hierarchyAssociationName, associationName,
                 direction, level, maxLevel, cols);
         }
     }
 
+/*
     public String getReportColumnValue(LexEVSValueSetDefinitionServices definitionServices,
         String uri, String scheme, String version,
         Entity defining_root_concept, Entity associated_concept,
@@ -632,6 +639,7 @@ public class ReportGenerationThread implements Runnable {
 
         String assocName = SpecialCases.GetHasParent.getAssocName(field_Id);
         if (assocName != null && assocName.length() > 0) {
+
             Entity concept = SpecialCases.GetHasParent.getAssociatedConcept(
                 definitionServices, uri, scheme, version, node, field_Id);
             if (concept != null)
@@ -655,7 +663,10 @@ public class ReportGenerationThread implements Runnable {
             return associated_concept.getEntityCode();
         }
 
+
+
         Entity concept = node;
+
         if (property_name != null
             && property_name.compareTo("Contributing_Source") == 0) {
             concept = defining_root_concept;
@@ -713,9 +724,6 @@ public class ReportGenerationThread implements Runnable {
             properties = concept.getProperty();
         } else if (property_type.compareToIgnoreCase("PRESENTATION") == 0) {
             properties = concept.getPresentation();
-            // } else if (property_type.compareToIgnoreCase("INSTRUCTION") == 0)
-            // {
-            // properties = concept.getInstruction();
         } else if (property_type.compareToIgnoreCase("COMMENT") == 0) {
             properties = concept.getComment();
         } else if (property_type.compareToIgnoreCase("DEFINITION") == 0) {
@@ -727,7 +735,7 @@ public class ReportGenerationThread implements Runnable {
             // getRepresentationalForm
             boolean match = false;
             boolean has_qualval = false; //GF28940 RWW
-            
+
             for (int i = 0; i < properties.length && !has_qualval; i++) {  //GF28940 RWW: there can only be one!
                 //GF28940 RWW: commented
                 //qualifier_value = null;
@@ -775,7 +783,7 @@ public class ReportGenerationThread implements Runnable {
                                 boolean match_found = false;
                                 PropertyQualifier[] qualifiers =
                                     p.getPropertyQualifier();
-                                
+
                                 if( qualifiers != null && qualifier_value != null ) {
                                     for (int j= 0; j < qualifiers.length; j++ ) {
                                         PropertyQualifier q = qualifiers[j];
@@ -788,8 +796,8 @@ public class ReportGenerationThread implements Runnable {
                                             has_qualval = true;
                                         }
                                     }
-                                }                                
-                                
+                                }
+
                                 if (qualifiers != null && has_qualval ) {
                                     for (int j = 0; j < qualifiers.length; j++) {
                                         PropertyQualifier q = qualifiers[j];
@@ -939,7 +947,7 @@ public class ReportGenerationThread implements Runnable {
         }
         return return_str;
     }
-
+*/
     private boolean isNull(String s) {
         if (s == null)
             return true;
@@ -1242,5 +1250,577 @@ public class ReportGenerationThread implements Runnable {
             StandardReportService.createStandardReport(label, pathname,
                 templateLabel, format, status, uid);
         return bool_obj;
+    }
+
+
+    public Entity getFocusConcept(String scheme, String version, Entity associated_concept, Entity node, String field_Id) {
+		if (field_Id.indexOf("Associated Concept") != -1) {
+			return associated_concept;
+		}
+		else if (field_Id.indexOf("Parent") != -1) {
+    		String associationName = DataUtils.getHasParentAssociationName(scheme, version, field_Id);
+    		if (associationName == null) {
+				// find superconcept
+
+    			Vector superconcepts = DataUtils.getSuperconcepts(scheme, version, node.getEntityCode());
+                if (superconcepts == null) return null;
+                if (superconcepts.size() == 0) return null;
+
+                if (field_Id.startsWith("2nd")) {
+					if (superconcepts.size() > 1) {
+						return (Entity) superconcepts.elementAt(1);
+					} else {
+						return null;
+					}
+				} else {
+					return (Entity) superconcepts.elementAt(0);
+				}
+
+
+			} else {
+				// find associated concept based on associationName
+                Vector<AssociatedConcept> asso_concepts = DataUtils.getRelatedConcepts(scheme, version, node.getEntityCode(),
+                    associationName, true);
+                if (asso_concepts == null) {
+					return null;
+				}
+                if (asso_concepts.size() == 0) {
+					return null;
+				}
+
+ 				if (field_Id.startsWith("2nd")) {
+					if (asso_concepts.size() > 1) {
+						Entity e = (Entity) asso_concepts.elementAt(1).getReferencedEntry();
+                        return e;
+					} else {
+						return null;
+					}
+
+				} else {
+					Entity e = (Entity) asso_concepts.elementAt(0).getReferencedEntry();
+					return e;
+				}
+			}
+		}
+		return node;
+	}
+
+    public String getFocusConceptCode(Entity concept) {
+		if (concept == null) return "";
+		return concept.getEntityCode();
+	}
+
+
+    public String getFocusConceptPropertyValue(Entity concept,
+            String property_name,
+            String property_type,
+	        String qualifier_name,
+	        String source,
+	        String qualifier_value,
+	        String representational_form,
+	        String delimiter,
+	        Boolean isPreferred) {
+        if (concept == null) return "";
+        HashSet hset = new HashSet();
+        int num_matches = 0;
+        org.LexGrid.commonTypes.Property[] properties =
+            new org.LexGrid.commonTypes.Property[] {};
+
+        if (property_type == null) {
+
+        } else if (property_type.compareToIgnoreCase("GENERIC") == 0) {
+            properties = concept.getProperty();
+        } else if (property_type.compareToIgnoreCase("PRESENTATION") == 0) {
+            properties = concept.getPresentation();
+        } else if (property_type.compareToIgnoreCase("COMMENT") == 0) {
+            properties = concept.getComment();
+        } else if (property_type.compareToIgnoreCase("DEFINITION") == 0) {
+            properties = concept.getDefinition();
+        }
+
+        String return_str = "";
+
+		for (int i = 0; i < properties.length; i++) {
+			boolean match = false;
+			org.LexGrid.commonTypes.Property p = properties[i];
+			String propertyName = p.getPropertyName();
+			if (propertyName.compareTo(property_name) == 0) {
+				match = true;
+
+				if (source != null || representational_form != null
+					|| qualifier_name != null || isPreferred != null) {
+					// compare isPreferred
+					if (isPreferred != null && p instanceof Presentation) {
+						Presentation presentation = (Presentation) p;
+						Boolean is_pref = presentation.getIsPreferred();
+						if (is_pref == null) {
+							match = false;
+						} else if (is_pref != null
+							&& !is_pref.equals(isPreferred)) {
+							match = false;
+						}
+					}
+
+					// match representational_form
+					if (match) {
+						if (representational_form != null
+							&& p instanceof Presentation) {
+							Presentation presentation = (Presentation) p;
+							String representationalForm = presentation.getRepresentationalForm();
+							if (representationalForm.compareTo(representational_form) != 0) {
+								match = false;
+							}
+						}
+					}
+					// match qualifier
+					if (match) {
+						if (qualifier_name != null) // match property
+						// qualifier, if needed
+						{
+							boolean match_found = false;
+							PropertyQualifier[] qualifiers =
+								p.getPropertyQualifier();
+							for (int j = 0; j < qualifiers.length; j++) {
+								PropertyQualifier q = qualifiers[j];
+								String name = q.getPropertyQualifierName();
+								String value = q.getValue().getContent();
+								if (qualifier_name.compareTo(name) == 0
+									&& qualifier_value.compareTo(value) == 0) {
+									match_found = true;
+									break;
+								}
+							}
+							if (!match_found) {
+								match = false;
+							}
+						}
+					}
+					// match source
+					if (match) {
+						if (source != null) // match source
+						{
+							boolean match_found = false;
+							Source[] sources = p.getSource();
+							for (int j = 0; j < sources.length; j++) {
+								Source src = sources[j];
+								if (src.getContent().compareTo(source) == 0) {
+									match_found = true;
+									break;
+								}
+							}
+							if (!match_found) {
+								match = false;
+							}
+						}
+					}
+				}
+			}
+			if (match) {
+				String prop_value = p.getValue().getContent();
+				if (!hset.contains(prop_value)) {
+				    num_matches++;
+					hset.add(prop_value);
+					if (num_matches == 1) {
+						return_str = prop_value;
+					} else {
+						return_str = return_str + delimiter + prop_value;
+					}
+			    }
+			}
+		}
+        return return_str;
+	}
+
+
+/*
+
+
+
+    public String getFocusConceptPropertyQualifierValue(
+            Entity concept,
+            String property_name,
+            String property_type,
+	        String qualifier_name,
+	        String source,
+	        String qualifier_value,
+	        String representational_form,
+	        String delimiter,
+	        Boolean isPreferred) {
+
+        if (concept == null) return "";
+        int num_matches = 0;
+        org.LexGrid.commonTypes.Property[] properties =
+            new org.LexGrid.commonTypes.Property[] {};
+
+        if (property_type == null) {
+
+        } else if (property_type.compareToIgnoreCase("GENERIC") == 0) {
+            properties = concept.getProperty();
+        } else if (property_type.compareToIgnoreCase("PRESENTATION") == 0) {
+            properties = concept.getPresentation();
+        } else if (property_type.compareToIgnoreCase("COMMENT") == 0) {
+            properties = concept.getComment();
+        } else if (property_type.compareToIgnoreCase("DEFINITION") == 0) {
+            properties = concept.getDefinition();
+        }
+
+        String return_str = ""; // RWW change from space to empty string
+		boolean match = false;
+		boolean has_qualval = false; //GF28940 RWW
+
+		for (int i = 0; i < properties.length && !has_qualval; i++) {  //GF28940 RWW: there can only be one!
+			//GF28940 RWW: commented
+			//qualifier_value = null;
+			org.LexGrid.commonTypes.Property p = properties[i];
+			if (p.getPropertyName().compareTo(property_name) == 0) {
+				match = true;
+
+				// <P90><![CDATA[<term-name>Black</term-name><term-group>PT</term-group><term-source>CDC</term-source><source-code>2056-0</source-code>]]></P90>
+
+				if (source != null || representational_form != null
+					|| qualifier_name != null || isPreferred != null) {
+					// compare isPreferred
+
+					if (isPreferred != null && p instanceof Presentation) {
+						Presentation presentation = (Presentation) p;
+						Boolean is_pref = presentation.getIsPreferred();
+						if (is_pref == null) {
+							match = false;
+						} else if (!is_pref.equals(isPreferred)) {
+							match = false;
+						}
+					}
+
+					// match representational_form
+					if (match) {
+						if (representational_form != null
+							&& p instanceof Presentation) {
+							Presentation presentation = (Presentation) p;
+							if (presentation.getRepresentationalForm()
+								.compareTo(representational_form) != 0) {
+								match = false;
+							}
+						}
+					}
+
+					// match qualifier
+					if (match) {
+						if (qualifier_name != null) // match property
+						// qualifier, if needed
+						{
+							boolean match_found = false;
+							PropertyQualifier[] qualifiers =
+								p.getPropertyQualifier();
+
+							if( qualifiers != null && qualifier_value != null ) {
+								for (int j= 0; j < qualifiers.length; j++ ) {
+									PropertyQualifier q = qualifiers[j];
+									String name = q.getPropertyQualifierName();
+									String value = q.getValue().getContent();
+									//GF28940 RWW: there's no place in the model for another qualifier name
+									//so I have to do this for "Property Qualifier" columns with a qualifier value
+									//and luckily we don't have any using this!
+									if( name.compareTo("subsource-name") == 0 && value.compareTo(qualifier_value) == 0 ) {
+										has_qualval = true;
+									}
+								}
+							}
+
+							if (qualifiers != null && has_qualval ) {
+								for (int j = 0; j < qualifiers.length; j++) {
+									PropertyQualifier q = qualifiers[j];
+									String name =
+										q.getPropertyQualifierName();
+									String value =
+										q.getValue().getContent();
+									if (qualifier_name.compareTo(name) == 0) {
+										match_found = true;
+										qualifier_value = value;
+										break;
+									}
+								}
+							}
+							if (!match_found) {
+								match = false;
+							}
+						}
+					}
+					// match source
+					if (match) {
+						if (source != null) // match source
+						{
+							boolean match_found = false;
+							Source[] sources = p.getSource();
+							for (int j = 0; j < sources.length; j++) {
+								Source src = sources[j];
+								if (src.getContent().compareTo(source) == 0) {
+									match_found = true;
+									break;
+								}
+							}
+							if (!match_found) {
+								match = false;
+							}
+						}
+					}
+				}
+			}
+			if (match && qualifier_value != null) {
+				num_matches++;
+				if (num_matches == 1) {
+					return_str = qualifier_value;
+				} else {
+					return_str = return_str + delimiter + qualifier_value;
+				}
+			}
+            return return_str;
+        }
+        return "";
+	}
+*/
+
+
+
+    public String getFocusConceptPropertyQualifierValue(
+            Entity concept,
+            String property_name,
+            String property_type,
+	        String qualifier_name,
+	        String source,
+	        String qualifier_value,
+	        String representational_form,
+	        String delimiter,
+	        Boolean isPreferred) {
+
+/*
+// Business rule::
+// If both qualifier name and qualifier value are present, then the source-code value would be returned for
+// the property that matched with the given pair of qualifier name and qualifier value.
+
+scheme = "NCI Thesaurus";
+version = "11.04d";
+code = "C3671";
+FULL_SYN: INJURY
+        RepresentationalForm: PT
+        Source: FDA
+        Qualifier name: source-code
+        Qualifier value: 2348
+        Qualifier name: subsource-name
+        Qualifier value: CDRH
+*/
+
+        if (concept == null) return "";
+        int num_matches = 0;
+        org.LexGrid.commonTypes.Property[] properties =
+            new org.LexGrid.commonTypes.Property[] {};
+
+        if (property_type == null) {
+
+        } else if (property_type.compareToIgnoreCase("GENERIC") == 0) {
+            properties = concept.getProperty();
+        } else if (property_type.compareToIgnoreCase("PRESENTATION") == 0) {
+            properties = concept.getPresentation();
+        } else if (property_type.compareToIgnoreCase("COMMENT") == 0) {
+            properties = concept.getComment();
+        } else if (property_type.compareToIgnoreCase("DEFINITION") == 0) {
+            properties = concept.getDefinition();
+        }
+
+        String return_str = ""; // RWW change from space to empty string
+		boolean match = false;
+
+		for (int i = 0; i < properties.length; i++) {
+			org.LexGrid.commonTypes.Property p = properties[i];
+			if (p.getPropertyName().compareTo(property_name) == 0) {
+				match = true;
+
+				if (source != null || representational_form != null
+					|| qualifier_name != null || isPreferred != null) {
+					// compare isPreferred
+
+					if (isPreferred != null && p instanceof Presentation) {
+						Presentation presentation = (Presentation) p;
+						Boolean is_pref = presentation.getIsPreferred();
+						if (is_pref == null) {
+							match = false;
+						} else if (!is_pref.equals(isPreferred)) {
+							match = false;
+						}
+					}
+
+					// match representational_form
+					if (match) {
+						if (representational_form != null
+							&& p instanceof Presentation) {
+							Presentation presentation = (Presentation) p;
+							if (presentation.getRepresentationalForm()
+								.compareTo(representational_form) != 0) {
+								match = false;
+							}
+						}
+					}
+
+					// match qualifier
+
+					if (match) {
+						if (qualifier_name != null) // match property
+						{
+							boolean match_found = false;
+							PropertyQualifier[] qualifiers = p.getPropertyQualifier();
+							if (qualifiers != null && qualifiers.length > 0) {
+								if (qualifier_value == null || qualifier_value.compareTo("") == 0) { // find qualifier value by matching qualifier name
+									for (int j= 0; j < qualifiers.length; j++ ) {
+										PropertyQualifier q = qualifiers[j];
+										String name = q.getPropertyQualifierName();
+										String value = q.getValue().getContent();
+
+										if( name.compareTo(qualifier_name) == 0) {
+											qualifier_value = value;
+											match_found = true;
+											break;
+										}
+									}
+								} else { // qualifier value (subsource_name) is given
+									for (int j= 0; j < qualifiers.length; j++ ) {
+										PropertyQualifier q = qualifiers[j];
+										String name = q.getPropertyQualifierName();
+										String value = q.getValue().getContent();
+
+										if( name.compareTo(qualifier_name) == 0 && value.compareTo(qualifier_value) == 0) {
+											for (int k= 0; k < qualifiers.length; k++ ) {
+												q = qualifiers[k];
+												String q_name = q.getPropertyQualifierName();
+												String q_value = q.getValue().getContent();
+
+												if( q_name.compareTo("source-code") == 0) {
+													qualifier_value = q_value;
+													match_found = true;
+													break;
+												}
+											}
+										}
+									}
+
+								}
+						    }
+
+							if (!match_found) {
+								match = false;
+							}
+						}
+					}
+					// match source
+					if (match) {
+						if (source != null) // match source
+						{
+							boolean match_found = false;
+							Source[] sources = p.getSource();
+							for (int j = 0; j < sources.length; j++) {
+								Source src = sources[j];
+								if (src.getContent().compareTo(source) == 0) {
+									match_found = true;
+									break;
+								}
+							}
+							if (!match_found) {
+								match = false;
+							}
+						}
+					}
+				}
+			}
+			if (match && qualifier_value != null) {
+				num_matches++;
+				if (num_matches == 1) {
+					return_str = qualifier_value;
+				} else {
+					return_str = return_str + delimiter + qualifier_value;
+				}
+			}
+            return return_str;
+        }
+        return "";
+	}
+
+
+    public String get_ReportColumnValue(LexEVSValueSetDefinitionServices definitionServices,
+        String uri, String scheme, String version,
+        Entity defining_root_concept, Entity associated_concept,
+        Entity node, ReportColumn rc) throws Exception {
+
+		Entity focused_concept = null;
+        String field_Id = rc.getFieldId();
+
+        String property_name = rc.getPropertyName();
+        String qualifier_name = rc.getQualifierName();
+        String source = rc.getSource();
+        String qualifier_value = rc.getQualifierValue();
+        String representational_form = rc.getRepresentationalForm();
+
+        // check:
+        Boolean isPreferred = rc.getIsPreferred();
+
+        String property_type = rc.getPropertyType();
+        char delimiter_ch = rc.getDelimiter();
+        String delimiter = "" + delimiter_ch;
+        //GF28844: delimiter = " " + delimiter + " ";
+
+        if (isNull(field_Id))
+            field_Id = null;
+        if (isNull(property_name))
+            property_name = null;
+        if (isNull(qualifier_name))
+            qualifier_name = null;
+        if (isNull(source))
+            source = null;
+        if (isNull(qualifier_value))
+            qualifier_value = null;
+        if (isNull(representational_form))
+            representational_form = null;
+        if (isNull(property_type))
+            property_type = null;
+        if (isNull(delimiter))
+            delimiter = null;
+
+        Entity concept = node;
+        if (property_name != null
+            && property_name.compareTo("Contributing_Source") == 0) {
+            concept = defining_root_concept;
+		} else {
+			concept = getFocusConcept(scheme, version, associated_concept, node, field_Id);
+		}
+
+
+        if (field_Id.endsWith("Code")) {
+			return getFocusConceptCode(concept);
+
+		} else if (field_Id.endsWith("Property Qualifier")) {
+
+            return getFocusConceptPropertyQualifierValue(
+             concept,
+             property_name,
+             property_type,
+	         qualifier_name,
+	         source,
+	         qualifier_value,
+	         representational_form,
+	         delimiter,
+	         isPreferred);
+
+		} else if (field_Id.endsWith("Property")) {
+
+            return getFocusConceptPropertyValue(
+             concept,
+             property_name,
+             property_type,
+	         qualifier_name,
+	         source,
+	         qualifier_value,
+	         representational_form,
+	         delimiter,
+	         isPreferred);
+
+		}
+		return null;
     }
 }

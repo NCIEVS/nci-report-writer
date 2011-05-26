@@ -84,7 +84,7 @@ public class SpecialCases {
         }
 
         /**
-         * Gets the value of the name-value pair that is 
+         * Gets the value of the name-value pair that is
          * embedded within square brackets.
          * @param text
          * @param key
@@ -103,7 +103,7 @@ public class SpecialCases {
             value = value.substring(0, j).trim();
             return value;
         }
-        
+
         public static String getValueWithoutArgs(String text) {
             if (text == null)
                 return null;
@@ -115,7 +115,7 @@ public class SpecialCases {
         }
 
         public static String getArgs(String text) {
-            if (text == null) 
+            if (text == null)
                 return null;
             int i = text.indexOf("[");
             if (i < 0)
@@ -123,14 +123,14 @@ public class SpecialCases {
             String value = text.substring(i).trim();
             return value;
         }
-        
+
         public static String mergeValueAndArgs(String value, String args) {
             if (args == null || args.trim().length() <= 0)
                 return value;
             return value + " " + args;
         }
     }
-    
+
     public static class GetHasParent extends RegExArgs {
         public static String getAssocName(String field_Id) {
             if (! field_Id.contains("Associated Concept"))
@@ -138,7 +138,7 @@ public class SpecialCases {
             String assocName = getValue(field_Id, "assocName");
             return assocName;
         }
-        
+
         public static Entity getAssociatedConcept(
             LexEVSValueSetDefinitionServices definitionServices,
             String uri, String scheme, String version, Entity node,
@@ -152,7 +152,7 @@ public class SpecialCases {
 //                assocName = "A11";
 //NOTE_A8: A8 vs Concept_In_Subset (End)
             Vector<Entity> v =
-                DataUtils.getAssociationTargets(definitionServices, uri, 
+                DataUtils.getAssociationTargets(definitionServices, uri,
                     scheme, version, node.getEntityCode(), assocName);
             if (v == null || v.size() <= 0)
                 return null;
@@ -333,7 +333,7 @@ public class SpecialCases {
             for (int i = 0; i < cols.length; i++) {
                 ReportColumn rc = (ReportColumn) cols[i];
                 String value =
-                    reportGenerationThread.getReportColumnValue(
+                    reportGenerationThread.get_ReportColumnValue(
                         definitionServices, uri, scheme,
                         version, defining_root_concept, null,
                         associated_concept, rc);
