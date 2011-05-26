@@ -13,44 +13,51 @@ import gov.nih.nci.evs.reportwriter.utils.*;
 import gov.nih.nci.evs.reportwriter.properties.*;
 import gov.nih.nci.evs.utils.*;
 
+import org.LexGrid.LexBIG.DataModel.Core.CodingSchemeVersionOrTag;
+import org.LexGrid.codingSchemes.CodingScheme;
+import org.LexGrid.LexBIG.LexBIGService.LexBIGService;
+import org.LexGrid.naming.SupportedProperty;
+import org.LexGrid.naming.SupportedAssociation;
+
+
 /**
  * <!-- LICENSE_TEXT_START -->
- * Copyright 2008,2009 NGIT. This software was developed in conjunction 
- * with the National Cancer Institute, and so to the extent government 
- * employees are co-authors, any rights in such works shall be subject 
+ * Copyright 2008,2009 NGIT. This software was developed in conjunction
+ * with the National Cancer Institute, and so to the extent government
+ * employees are co-authors, any rights in such works shall be subject
  * to Title 17 of the United States Code, section 105.
- * Redistribution and use in source and binary forms, with or without 
- * modification, are permitted provided that the following conditions 
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions
  * are met:
- *   1. Redistributions of source code must retain the above copyright 
- *      notice, this list of conditions and the disclaimer of Article 3, 
- *      below. Redistributions in binary form must reproduce the above 
- *      copyright notice, this list of conditions and the following 
- *      disclaimer in the documentation and/or other materials provided 
+ *   1. Redistributions of source code must retain the above copyright
+ *      notice, this list of conditions and the disclaimer of Article 3,
+ *      below. Redistributions in binary form must reproduce the above
+ *      copyright notice, this list of conditions and the following
+ *      disclaimer in the documentation and/or other materials provided
  *      with the distribution.
- *   2. The end-user documentation included with the redistribution, 
+ *   2. The end-user documentation included with the redistribution,
  *      if any, must include the following acknowledgment:
- *      "This product includes software developed by NGIT and the National 
+ *      "This product includes software developed by NGIT and the National
  *      Cancer Institute."   If no such end-user documentation is to be
  *      included, this acknowledgment shall appear in the software itself,
  *      wherever such third-party acknowledgments normally appear.
- *   3. The names "The National Cancer Institute", "NCI" and "NGIT" must 
+ *   3. The names "The National Cancer Institute", "NCI" and "NGIT" must
  *      not be used to endorse or promote products derived from this software.
  *   4. This license does not authorize the incorporation of this software
- *      into any third party proprietary programs. This license does not 
- *      authorize the recipient to use any trademarks owned by either NCI 
- *      or NGIT 
- *   5. THIS SOFTWARE IS PROVIDED "AS IS," AND ANY EXPRESSED OR IMPLIED 
- *      WARRANTIES, (INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES 
- *      OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE) ARE 
+ *      into any third party proprietary programs. This license does not
+ *      authorize the recipient to use any trademarks owned by either NCI
+ *      or NGIT
+ *   5. THIS SOFTWARE IS PROVIDED "AS IS," AND ANY EXPRESSED OR IMPLIED
+ *      WARRANTIES, (INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
+ *      OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE) ARE
  *      DISCLAIMED. IN NO EVENT SHALL THE NATIONAL CANCER INSTITUTE,
- *      NGIT, OR THEIR AFFILIATES BE LIABLE FOR ANY DIRECT, INDIRECT, 
- *      INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, 
- *      BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; 
- *      LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER 
- *      CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT 
- *      LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN 
- *      ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE 
+ *      NGIT, OR THEIR AFFILIATES BE LIABLE FOR ANY DIRECT, INDIRECT,
+ *      INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING,
+ *      BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
+ *      LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
+ *      CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT
+ *      LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN
+ *      ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  *      POSSIBILITY OF SUCH DAMAGE.
  * <!-- LICENSE_TEXT_END -->
  */
@@ -71,9 +78,13 @@ public class OntologyBean // extends BaseBean
     private String _selectedOntology = null;
     private List<SelectItem> _associationList = null;
     private String _selectedAssociation = null;
+    private String _selectedParentAssociation = null;
     private String _selectedDirection = null;
     private List<SelectItem> _directionList = null;
-    
+
+    private HashMap<String, String> _hasParentAssociationMap = null;
+
+
     public String getDefaultOntologyKey() {
         String version = DataUtils.getCodingSchemeVersionByName(DEFAULT_ONTOLOGY);
         if (version == null)
@@ -81,7 +92,7 @@ public class OntologyBean // extends BaseBean
         String key = DataUtils.getCSNVKey(DEFAULT_ONTOLOGY, version);
         return key;
     }
-    
+
     public void setDefaultSelectedOntology() {
         setSelectedOntology(getDefaultOntologyKey());
     }
@@ -99,7 +110,7 @@ public class OntologyBean // extends BaseBean
     public List<SelectItem> getOntologyList() {
         if (_ontologies != null)
             return _ontologies;
-        
+
         _ontologies = DataUtils.getOntologyList();
         if (_ontologies != null && _ontologies.size() > 0) {
             for (int i = 0; i < _ontologies.size(); i++) {
@@ -168,7 +179,7 @@ public class OntologyBean // extends BaseBean
     public String getSelectedDirection() {
         return _selectedDirection;
     }
-    
+
     public List<SelectItem> getAssociationList() {
         if (_selectedOntology == null)
             _ontologies = getOntologyList();
@@ -274,6 +285,25 @@ public class OntologyBean // extends BaseBean
         setSelectedAssociation(associationName);
     }
 
+
+    public String getSelectedParentAssociation() {
+        return _selectedParentAssociation;
+    }
+
+    public void setSelectedParentAssociation(String selectedParentAssociation) {
+        _selectedParentAssociation = selectedParentAssociation;
+        HttpServletRequest request = HTTPUtils.getRequest();
+        request.getSession().setAttribute("selectedParentAssociation",
+            selectedParentAssociation);
+    }
+
+    public void parentAssociationSelectionChanged(ValueChangeEvent event) {
+        if (event.getNewValue() == null)
+            return;
+        String parentAssociationName = (String) event.getNewValue();
+        setSelectedParentAssociation(parentAssociationName);
+    }
+
     // /////////////////////////////////////////////////////////////////////////
     // Report Column Data
     // /////////////////////////////////////////////////////////////////////////
@@ -299,7 +329,7 @@ public class OntologyBean // extends BaseBean
                 }
             }
         } catch (Exception e) {
-            ExceptionUtils.print(_logger, e, new String[] { 
+            ExceptionUtils.print(_logger, e, new String[] {
                 "  * Method: getPropertyNameList",
                 "  * selectedOntology: " +  selectedOntology,
             });
@@ -455,44 +485,119 @@ public class OntologyBean // extends BaseBean
     private String _selectedDataCategoryArgs = null;
     private List<SelectItem> _dataCategoryList = null;
 
+
+
+
+    public Vector<String> getSupportedAssociations(String codingSchemeName, String version)
+            throws Exception {
+        CodingSchemeVersionOrTag vt = new CodingSchemeVersionOrTag();
+        if (version != null)
+            vt.setVersion(version);
+
+        CodingScheme scheme = null;
+        LexBIGService lbSvc = RemoteServerUtil.createLexBIGService();
+        scheme = lbSvc.resolveCodingScheme(codingSchemeName, vt);
+
+        Vector<String> v = new Vector<String>();
+        SupportedAssociation[] assos =
+            scheme.getMappings().getSupportedAssociation();
+        _logger.debug("");
+        _logger.debug(StringUtils.SEPARATOR);
+        _logger.debug("List of supported associations:");
+        for (int i = 0; i < assos.length; i++) {
+            SupportedAssociation sa = (SupportedAssociation) assos[i];
+            v.add(sa.getLocalId());
+        }
+        SortUtils.quickSort(v);
+        return v;
+    }
+
+
+    public static String fieldID2AssociationName(String codingSchemeName, String fieldID) {
+        if (codingSchemeName == null) {
+			 codingSchemeName = DEFAULT_ONTOLOGY;
+		}
+
+		HashMap hmap = DataUtils.getHasParentAssociationMap(codingSchemeName, null);
+	    if (hmap == null) return null;
+	    return (String) hmap.get(fieldID);
+	}
+
+
     public List<SelectItem> getDataCategoryList() {
         if (_dataCategoryList != null)
             return _dataCategoryList;
-        
-        _dataCategoryList = new ArrayList<SelectItem>();
-        _dataCategoryList.add(new SelectItem("Code"));
-        _dataCategoryList.add(new SelectItem("Property"));
-        _dataCategoryList.add(new SelectItem("Property Qualifier"));
 
-        _dataCategoryList.add(new SelectItem("Associated Concept Code"));
-        _dataCategoryList.add(new SelectItem("Associated Concept Property"));
-        _dataCategoryList.add(new SelectItem(
-            "Associated Concept Property Qualifier"));
+         _dataCategoryList = new ArrayList<SelectItem>();
 
-        _dataCategoryList.add(new SelectItem("1st Associated Concept Code"));
-        _dataCategoryList.add(new SelectItem("1st Associated Concept Property"));
-        _dataCategoryList.add(new SelectItem(
-            "1st Associated Concept Property Qualifier"));
+         Vector v0 = new Vector();
 
-        _dataCategoryList.add(new SelectItem("2nd Associated Concept Code"));
-        _dataCategoryList.add(new SelectItem("2nd Associated Concept Property"));
-        _dataCategoryList.add(new SelectItem(
-            "2nd Associated Concept Property Qualifier"));
+         v0.add("Code");
+         v0.add("Property");
+         v0.add("Property Qualifier");
 
-        _dataCategoryList.add(new SelectItem("1st Parent Code"));
-        _dataCategoryList.add(new SelectItem("1st Parent Property"));
-        _dataCategoryList.add(new SelectItem("1st Parent Property Qualifier"));
+         v0.add("Associated Concept Code");
+         v0.add("Associated Concept Property");
+         v0.add("Associated Concept Property Qualifier");
 
-        _dataCategoryList.add(new SelectItem("2nd Parent Code"));
-        _dataCategoryList.add(new SelectItem("2nd Parent Property"));
-        _dataCategoryList.add(new SelectItem("2nd Parent Property Qualifier"));
+/*
+         v0.add("1st Associated Concept Code");
+         v0.add("1st Associated Concept Property");
+         v0.add("1st Associated Concept Property Qualifier");
 
-        return _dataCategoryList;
+         v0.add("2nd Associated Concept Code");
+         v0.add("2nd Associated Concept Property");
+         v0.add("2nd Associated Concept Property Qualifier");
+
+         v0.add("1st Parent Code");
+         v0.add("1st Parent Property");
+         v0.add("1st Parent Property Qualifier");
+
+         v0.add("2nd Parent Code");
+         v0.add("2nd Parent Property");
+         v0.add("2nd Parent Property Qualifier");
+*/
+
+         if (_selectedOntology == null) {
+			 _selectedOntology = DEFAULT_ONTOLOGY;
+		 }
+
+         Vector<String> v = null;
+         try {
+         	v = getSupportedAssociations(_selectedOntology, null);
+         	if (v != null) {
+         	    System.out.println("getSupportedAssociations returns: " + v.size());
+			}
+		 } catch (Exception ex) {
+			 ex.printStackTrace();
+		 }
+
+	     HashMap hmap = DataUtils.getHasParentAssociationMap(_selectedOntology, null);
+	     Vector w = new Vector();
+	     if (hmap != null) {
+			 Iterator it = hmap.keySet().iterator();
+			 while (it.hasNext()) {
+				 String key = (String) it.next();
+				 w.add(key);
+			 }
+		 }
+		 w = SortUtils.quickSort(w);
+		 for (int i=0; i<w.size(); i++) {
+			 String s = (String) w.elementAt(i);
+			 v0.add(s);
+		 }
+
+         for (int i=0; i<v0.size(); i++) {
+			 String propName = (String) v0.elementAt(i);
+			 System.out.println(propName);
+			 _dataCategoryList.add(new SelectItem(propName));
+		 }
+         return _dataCategoryList;
     }
 
     public void setSelectedDataCategory(String selectedDataCategory) {
         HttpServletRequest request = HTTPUtils.getRequest();
-        
+
         if (selectedDataCategory == null) {
             _selectedDataCategory = null;
             _selectedDataCategoryArgs = null;
@@ -507,7 +612,7 @@ public class OntologyBean // extends BaseBean
 
         request.getSession().setAttribute("selectedDataCategory",
             _selectedDataCategory);
-        request.getSession().setAttribute("selectedDataCategoryArgs", 
+        request.getSession().setAttribute("selectedDataCategoryArgs",
             _selectedDataCategoryArgs);
     }
 
@@ -587,4 +692,35 @@ public class OntologyBean // extends BaseBean
         String newValue = (String) event.getNewValue();
         setSelectedSource(newValue);
     }
+
+/*
+     public Vector<String> getPropertyNameListData(
+        String codingSchemeName, String version) {
+        CodingSchemeVersionOrTag vt = new CodingSchemeVersionOrTag();
+        if (version != null) {
+            vt.setVersion(version);
+        }
+        CodingScheme scheme = null;
+        try {
+            // RemoteServerUtil rsu = new RemoteServerUtil();
+            // EVSApplicationService lbSvc = rsu.createLexBIGService();
+            LexBIGService lbSvc = RemoteServerUtil.createLexBIGService();
+
+            scheme = lbSvc.resolveCodingScheme(codingSchemeName, vt);
+            if (scheme == null)
+                return null;
+            Vector<String> propertyNameListData = new Vector<String>();
+            SupportedProperty[] properties =
+                scheme.getMappings().getSupportedProperty();
+            for (int i = 0; i < properties.length; i++) {
+                SupportedProperty property = properties[i];
+                propertyNameListData.add(property.getLocalId());
+            }
+            return propertyNameListData;
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+        return null;
+    }
+*/
 }
