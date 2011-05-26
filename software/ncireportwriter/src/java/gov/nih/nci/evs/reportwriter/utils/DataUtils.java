@@ -1869,7 +1869,7 @@ public class DataUtils {
         boolean includeRoot) throws Exception {
 
         _logger.debug(StringUtils.SEPARATOR);
-        _logger.debug("Method: DataUtils.resolveValueSet");
+        _logger.debug("Resolving value set:");
         _logger.debug("  * codingScheme: " + codingScheme);
         _logger.debug("  * version: " + version);
         _logger.debug("  * code: " + code);
@@ -1930,9 +1930,14 @@ public class DataUtils {
         csvList.addAbsoluteCodingSchemeVersionReference(
 			//Constructors.createAbsoluteCodingSchemeVersionReference(codingScheme,
 			Constructors.createAbsoluteCodingSchemeVersionReference(uri, version));
+
+_logger.debug("Calling definitionServices.resolveValueSetDefinition ...");
         ResolvedValueSetDefinition rvdDef =
             definitionServices.resolveValueSetDefinition(vsd,
                 csvList, null, null);
+
+_logger.debug("getResolvedConceptReferenceIterator...");
+        int lcv = 0;
 
         if (rvdDef != null) {
             Set<String> codes = new HashSet<String>();
@@ -1944,11 +1949,16 @@ public class DataUtils {
                     _logger.warn("rcr.getReferencedEntry() returns NULL");
                 } else {
                     v.add(concept);
+                    lcv++;
+                    if (lcv/500 * 500 == lcv) {
+						_logger.debug("\t" + lcv + " concepts resolved.");
+					}
                 }
             }
         } else {
             _logger.error("Unable to resolveValueSetDefinition??");
         }
+        _logger.debug("\t" + v.size() + " concepts resolved.");
         return v;
     }
 
