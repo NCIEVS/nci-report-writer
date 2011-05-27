@@ -21,8 +21,8 @@
             target="_blank">Project GForge Site</a></li>
           <li><a href="https://cabig.nci.nih.gov/help"
             target="_blank">NCICB Application Support</a></li>
-          <li><a href="http://bioportal.nci.nih.gov"
-            target="_blank">NCI Bioportal</a></li>
+          <li><a href="http://nciterms51-dev.nci.nih.gov/"
+            target="_blank">NCI Term Browser</a></li>
         </ul>        
       </li>
     </ul>
