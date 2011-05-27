@@ -1912,25 +1912,24 @@ FULL_SYN: DEVICE ISSUE
 				null);
 			if (codeListPT != null) {
 				_code2PTHashMap.put(associated_concept.getEntityCode(), codeListPT);
-			} else {
-				return null;
 			}
 		}
 
-		String source_code = "SDTM-" + codeListPT;
+		if (codeListPT != null) {
+			String source_code = "SDTM-" + codeListPT;
+			String retval = getFocusConceptPropertyValue(
+				node,
+				property_name,
+				property_type,
+				qualifier_name,
+				source,
+				source_code,
+				representational_form,
+				delimiter,
+				isPreferred);
 
-    	String retval = getFocusConceptPropertyValue(
-			node,
-            property_name,
-            property_type,
-	        qualifier_name,
-	        source,
-	        source_code,
-	        representational_form,
-	        delimiter,
-	        isPreferred);
-
-	    if (retval != null && retval.compareTo("") != 0) return retval;
+			if (retval != null && retval.compareTo("") != 0) return retval;
+		}
 
     	return getFocusConceptPropertyValue(
 			node,
