@@ -78,6 +78,8 @@ public class ReportGenerationThread implements Runnable {
     private String _hierarchicalAssoName = null;
     private int _abortLimit = 0;
 
+    private HashMap _code2PTHashMap = null;
+
     public ReportGenerationThread(String outputDir, String standardReportLabel,
         String uid, String emailAddress, int[] ncitColumns) {
         _outputDir = outputDir;
@@ -87,6 +89,8 @@ public class ReportGenerationThread implements Runnable {
         _ncitColumns = ncitColumns;
 
         _count = 0;
+
+        _code2PTHashMap = new HashMap();
     }
 
     public Boolean warningMsg(StringBuffer buffer, String text) {
@@ -1780,18 +1784,18 @@ FULL_SYN: DEVICE ISSUE
         Entity defining_root_concept, Entity associated_concept,
         Entity node, ReportColumn rc) throws Exception {
 
-		Entity focused_concept = null;
         String field_Id = rc.getFieldId();
+        if (field_Id.compareTo("CDISC Submission Value") == 0) {
+			return getCDISCSubmissionValue(scheme, version, associated_concept, node, rc);
+		}
 
+		Entity focused_concept = null;
         String property_name = rc.getPropertyName();
         String qualifier_name = rc.getQualifierName();
         String source = rc.getSource();
         String qualifier_value = rc.getQualifierValue();
         String representational_form = rc.getRepresentationalForm();
-
-        // check:
         Boolean isPreferred = rc.getIsPreferred();
-
         String property_type = rc.getPropertyType();
         char delimiter_ch = rc.getDelimiter();
         String delimiter = "" + delimiter_ch;
@@ -1855,4 +1859,91 @@ FULL_SYN: DEVICE ISSUE
 		}
 		return null;
     }
+
+    public String getCodeListPT(String code) {
+		if (code == null) return null;
+		if (_code2PTHashMap.containsKey(code)) {
+			return (String) _code2PTHashMap.get(code);
+		}
+		return null;
+	}
+
+    public String getCDISCSubmissionValue(String scheme, String version,
+        Entity associated_concept, Entity node, ReportColumn rc) {
+			if (associated_concept == null || node == null) return null;
+
+        String property_name = rc.getPropertyName();
+        String qualifier_name = rc.getQualifierName();
+        String source = rc.getSource();
+        String qualifier_value = rc.getQualifierValue();
+        String representational_form = rc.getRepresentationalForm();
+        Boolean isPreferred = rc.getIsPreferred();
+        String property_type = rc.getPropertyType();
+        char delimiter_ch = rc.getDelimiter();
+        String delimiter = "" + delimiter_ch;
+
+        if (isNull(property_name))
+            property_name = null;
+        if (isNull(qualifier_name))
+            qualifier_name = null;
+        if (isNull(source))
+            source = null;
+        if (isNull(qualifier_value))
+            qualifier_value = null;
+        if (isNull(representational_form))
+            representational_form = null;
+        if (isNull(property_type))
+            property_type = null;
+        if (isNull(delimiter))
+            delimiter = null;
+
+        String codeListPT = getCodeListPT(associated_concept.getEntityCode());
+        if (codeListPT == null) {
+
+    		codeListPT = getFocusConceptPropertyValue(
+				associated_concept,
+				"FULL_SYN",
+				"PRESENTATION",
+				null,
+				"CDISC",
+				null,
+				"PT",
+				delimiter,
+				null);
+			if (codeListPT != null) {
+				_code2PTHashMap.put(associated_concept.getEntityCode(), codeListPT);
+			} else {
+				return null;
+			}
+		}
+
+		String source_code = "SDTM-" + codeListPT;
+
+    	String retval = getFocusConceptPropertyValue(
+			node,
+            property_name,
+            property_type,
+	        qualifier_name,
+	        source,
+	        source_code,
+	        representational_form,
+	        delimiter,
+	        isPreferred);
+
+	    if (retval != null && retval.compareTo("") != 0) return retval;
+
+    	return getFocusConceptPropertyValue(
+			node,
+            property_name,
+            property_type,
+	        null,
+	        source,
+	        null,
+	        representational_form,
+	        delimiter,
+	        isPreferred);
+
+		//return DataUtils.getPTBySourceCode(scheme, version, node.getEntityCode(), source, source_code);
+	}
+
 }
