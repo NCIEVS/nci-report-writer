@@ -337,6 +337,8 @@ public class SpecialCases {
                         definitionServices, uri, scheme,
                         version, defining_root_concept, null,
                         associated_concept, rc);
+
+                if (value == null) value = "";
                 subHeader.add(value);
             }
             subHeader.set(info.codelistExtensibleColumnIndex,
