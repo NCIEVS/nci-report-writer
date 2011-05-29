@@ -341,7 +341,7 @@ public class DataUtils {
         _logger.debug("List of supported associations:");
         for (int i = 0; i < assos.length; i++) {
             SupportedAssociation sa = (SupportedAssociation) assos[i];
-            _logger.debug("  " + i + ") id=" + sa.getLocalId() + ", name=" + sa.getContent());
+//            _logger.debug("  " + i + ") id=" + sa.getLocalId() + ", name=" + sa.getContent());
             switch (associationType) {
             case Names:
                 v.add(sa.getContent());
@@ -947,8 +947,6 @@ public class DataUtils {
             csvt.setVersion(version);
         long ms = System.currentTimeMillis();
 
- _logger.debug("getSubconceptCodes2 Step 1");
-
 
         try {
             LexBIGService lbSvc = RemoteServerUtil.createLexBIGService();
@@ -991,10 +989,6 @@ public class DataUtils {
             if (matches != null
                 && matches.getResolvedConceptReferenceCount() > 0) {
 
- _logger.debug("getSubconceptCodes2 Step 2 matches: " + matches.getResolvedConceptReferenceCount());
-
-
-
                 ResolvedConceptReference ref =
                     (ResolvedConceptReference) matches
                         .enumerateResolvedConceptReference().nextElement();
@@ -1024,10 +1018,6 @@ public class DataUtils {
                                                         list.add(ac
                                                             .getConceptCode());
 
-
-
-                                                        //_logger.debug("\t" + ac
-                                                        //    .getConceptCode());
                                                     }
                                                 }
                                             }

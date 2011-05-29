@@ -80,6 +80,12 @@ public class ReportGenerationThread implements Runnable {
 
     private HashMap _code2PTHashMap = null;
 
+    SpecialCases.CDISCExtensibleInfo _cdiscInfo = null;
+
+    private String prev_subset_code = null;
+
+    ReportColumn[] temp_cols = null;
+
     public ReportGenerationThread(String outputDir, String standardReportLabel,
         String uid, String emailAddress, int[] ncitColumns) {
         _outputDir = outputDir;
@@ -342,15 +348,21 @@ public class ReportGenerationThread implements Runnable {
             }
 
             ReportColumn[] cols = null;
+
             if (cc != null) {
                 cols = new ReportColumn[objs.length];
+                temp_cols = new ReportColumn[objs.length];
                 for (int i = 0; i < objs.length; i++) {
                     gov.nih.nci.evs.reportwriter.bean.ReportColumn col =
                         (gov.nih.nci.evs.reportwriter.bean.ReportColumn) objs[i];
                     Debug.print(col);
                     cols[i] = col;
+
+
                 }
             }
+
+            temp_cols = copyReportColumns(cols);
 
             _logger.debug(StringUtils.SEPARATOR);
             _logger.debug("* Start generating report..." + pathname);
@@ -482,14 +494,22 @@ public class ReportGenerationThread implements Runnable {
         }
     }
 
-    SpecialCases.CDISCExtensibleInfo _cdiscInfo = null;
 
     private void writeColumnData(LexEVSValueSetDefinitionServices definitionServices,
         String uri, PrintWriter pw, String scheme, String version,
         Entity defining_root_concept, Entity associated_concept, Entity c,
         String delim, ReportColumn[] cols) throws Exception {
         Vector<String> values = new Vector<String>();
-        _cdiscInfo.isExtensibleValue = false;
+
+//        _cdiscInfo.isExtensibleValue = false;
+
+
+
+if (associated_concept.getEntityCode().compareTo(c.getEntityCode()) == 0) {
+	_logger.debug("(*********) adding subset line..." + c.getEntityCode());
+}
+
+
 
         for (int i = 0; i < cols.length; i++) {
             ReportColumn rc = (ReportColumn) cols[i];
@@ -498,13 +518,14 @@ public class ReportGenerationThread implements Runnable {
                     scheme, version, defining_root_concept,
                     associated_concept, c, rc);
 
-
+/*
             if (SpecialCases.CDISC.ON &&
                 SpecialCases.CDISC.writeExtensibleColumnData(_cdiscInfo, rc, values, value, i)) {
                 if (_cdiscInfo.skipRow)
                     return;
                 value = _cdiscInfo.newValue;
             }
+*/
 
             if (value == null) value = "";
             values.add(value);
@@ -512,12 +533,15 @@ public class ReportGenerationThread implements Runnable {
             //_logger.debug("add value: " + value);
 
         }
+
+        /*
         if (SpecialCases.CDISC.ON) {
             SpecialCases.CDISC.writeSubheader(
                 definitionServices, uri,
                 _cdiscInfo, this, values, pw, scheme,
                 version, defining_root_concept, associated_concept, c, delim, cols);
         }
+        */
         pw.println(StringUtils.toString(values, delim, true));
 
         _count++;
@@ -568,10 +592,32 @@ public class ReportGenerationThread implements Runnable {
         if (v == null)
             return;
         _logger.debug("Subset size: " + v.size());
+
+
+_logger.debug("prev_subset_code: " + prev_subset_code);
+_logger.debug("root.getEntityCode(): " + root.getEntityCode());
+
+
+
+if (prev_subset_code != null && root.getEntityCode().compareTo(prev_subset_code) != 0) {
+
+_logger.debug("(**********) calling writeColumnData using temp_cols ..." + root.getEntityCode());
+
+ 	writeColumnData(definitionServices, uri,
+ 		pw, scheme, version, defining_root_concept, root,
+ 		root, delim, temp_cols);
+  	prev_subset_code = root.getEntityCode();
+
+_logger.debug("setting prev_subset_code to: " + root.getEntityCode());
+
+
+}
+
+
+
         for (int i = 0; i < v.size(); i++) {
             // subset member element
             Entity c = (Entity) v.elementAt(i);
-
             writeColumnData(definitionServices, uri,
                 pw, scheme, version, defining_root_concept, root,
                 c, delim, cols);
@@ -1318,7 +1364,7 @@ public class ReportGenerationThread implements Runnable {
 	}
 
 
-    public String getFocusConceptPropertyValue(Entity concept,
+    public static String getFocusConceptPropertyValue(Entity concept,
             String property_name,
             String property_type,
 	        String qualifier_name,
@@ -1327,7 +1373,9 @@ public class ReportGenerationThread implements Runnable {
 	        String representational_form,
 	        String delimiter,
 	        Boolean isPreferred) {
+
         if (concept == null) return "";
+
         HashSet hset = new HashSet();
         int num_matches = 0;
         org.LexGrid.commonTypes.Property[] properties =
@@ -1351,6 +1399,7 @@ public class ReportGenerationThread implements Runnable {
 			boolean match = false;
 			org.LexGrid.commonTypes.Property p = properties[i];
 			String propertyName = p.getPropertyName();
+
 			if (propertyName.compareTo(property_name) == 0) {
 				match = true;
 
@@ -1381,7 +1430,7 @@ public class ReportGenerationThread implements Runnable {
 					}
 					// match qualifier
 					if (match) {
-						if (qualifier_name != null) // match qualifier name vaue pair
+						if (qualifier_value != null) // match qualifier name vaue pair
 						// qualifier, if needed
 						{
 							boolean match_found = false;
@@ -1391,11 +1440,15 @@ public class ReportGenerationThread implements Runnable {
 								PropertyQualifier q = qualifiers[j];
 								String name = q.getPropertyQualifierName();
 								String value = q.getValue().getContent();
-								if (qualifier_name.compareTo(name) == 0
-									&& qualifier_value.compareTo(value) == 0) {
-									match_found = true;
-									break;
+
+                                if (qualifier_name != null &&
+									qualifier_name.compareTo(name) == 0 &&
+									qualifier_value.compareTo(value) == 0) {
+										match_found = true;
+
+									    break;
 								}
+
 							}
 							if (!match_found) {
 								match = false;
@@ -1656,7 +1709,7 @@ FULL_SYN: DEVICE ISSUE
             properties = concept.getDefinition();
         }
 
-        String return_str = ""; // RWW change from space to empty string
+        String return_str = "";
 		boolean match = false;
 
 		String ret_qualifier_value = null;
@@ -1785,6 +1838,20 @@ FULL_SYN: DEVICE ISSUE
         Entity node, ReportColumn rc) throws Exception {
 
         String field_Id = rc.getFieldId();
+
+        if (field_Id.compareTo("Blank") == 0) {
+			return "";
+		}
+
+
+        if (field_Id.compareTo("Associated Concept Code") == 0
+            && associated_concept != null
+            && node != null
+            && associated_concept.getEntityCode().compareTo( node.getEntityCode() ) == 0) {
+			return "";
+		}
+
+
         if (field_Id.compareTo("CDISC Submission Value") == 0) {
 			return getCDISCSubmissionValue(scheme, version, associated_concept, node, rc);
 		}
@@ -1801,10 +1868,18 @@ FULL_SYN: DEVICE ISSUE
         String delimiter = "" + delimiter_ch;
         //GF28844: delimiter = " " + delimiter + " ";
 
+
+
         if (isNull(field_Id))
             field_Id = null;
         if (isNull(property_name))
             property_name = null;
+
+
+ if (property_name != null && property_name.compareTo("Extensible_List") == 0) {
+	if (associated_concept != null && node != null && associated_concept.getEntityCode().compareTo( node.getEntityCode() ) != 0 ) return "";
+ }
+
         if (isNull(qualifier_name))
             qualifier_name = null;
         if (isNull(source))
@@ -1870,7 +1945,7 @@ FULL_SYN: DEVICE ISSUE
 
     public String getCDISCSubmissionValue(String scheme, String version,
         Entity associated_concept, Entity node, ReportColumn rc) {
-			if (associated_concept == null || node == null) return null;
+		if (associated_concept == null || node == null) return null;
 
         String property_name = rc.getPropertyName();
         String qualifier_name = rc.getQualifierName();
@@ -1917,6 +1992,7 @@ FULL_SYN: DEVICE ISSUE
 
 		if (codeListPT != null) {
 			String source_code = "SDTM-" + codeListPT;
+			qualifier_name = "source-code";
 			String retval = getFocusConceptPropertyValue(
 				node,
 				property_name,
@@ -1945,4 +2021,89 @@ FULL_SYN: DEVICE ISSUE
 		//return DataUtils.getPTBySourceCode(scheme, version, node.getEntityCode(), source, source_code);
 	}
 
+
+    public void setReportColumns(ReportColumn[] cols) {
+        for (int i = 0; i < cols.length; i++) {
+			ReportColumn col = cols[i];
+			String field_id = col.getFieldId();
+            if (field_id.compareTo("CDISC Submission Value") == 0) {
+				col.setFieldId("Property");
+				col.setRepresentationalForm("PT");
+				col.setSource("CDISC");
+				col.setQualifierName(null);
+				col.setQualifierValue(null);
+		    }
+
+		    if (i == 1) {
+				col.setFieldId("Blank");
+			}
+
+            /*
+		    if (field_id.compareTo("Associated Concept Code") == 0) {
+				col.setFieldId("Code");
+			}
+			*/
+
+			if (col.getPropertyName().compareTo("Extensible_List") == 0) {
+				col.setFieldId("Property");
+			}
+		}
+	}
+
+
+    public ReportColumn[] copyReportColumns(ReportColumn[] cols) {
+        if (cols == null) return null;
+        prev_subset_code = null;
+        ReportColumn[] temporary_cols = new ReportColumn[cols.length];
+		for (int i = 0; i < cols.length; i++) {
+
+			ReportColumn col = cols[i];
+
+			ReportColumn rc = new ReportColumn();
+            rc.setColumnNumber(col.getColumnNumber());
+            rc.setId(col.getId());
+            rc.setLabel(col.getLabel());
+            rc.setFieldId(col.getFieldId());
+
+
+        if (col.getFieldId().compareTo("CDISC Submission Value") == 0) {
+			prev_subset_code = "";
+		}
+
+            rc.setPropertyType(col.getPropertyType());
+            rc.setPropertyName(col.getPropertyName());
+            rc.setIsPreferred(col.getIsPreferred());
+            rc.setRepresentationalForm(col.getRepresentationalForm());
+            rc.setSource(col.getSource());
+            rc.setQualifierName(col.getQualifierName());
+            rc.setQualifierValue(col.getQualifierValue());
+            rc.setDelimiter(col.getDelimiter());
+            rc.setConditionalColumnId(col.getConditionalColumnId());
+            temporary_cols[i] = rc;
+		}
+		return temporary_cols;
+	}
+
+
+/*
+        _logger.debug("");
+        _logger.debug(StringUtils.SEPARATOR);
+        _logger.debug("ReportColumn: ");
+        _logger.debug("  * Column Number: " + col.getColumnNumber());
+        _logger.debug("  * Field Number (Id): " + col.getId());
+        _logger.debug("  * Field Label (Label): " + col.getLabel());
+        _logger.debug("  * Field Type (FieldId): " + col.getFieldId());
+        _logger.debug("  * Property Type: " + col.getPropertyType());
+        _logger.debug("  * Property Name: " + col.getPropertyName());
+        _logger.debug("  * Is Preferred: " + col.getIsPreferred());
+        _logger.debug("  * Representational Form: "
+            + col.getRepresentationalForm());
+        _logger.debug("  * Source: " + col.getSource());
+        _logger.debug("  * Qualifier Name: " + col.getQualifierName());
+        _logger.debug("  * Qualifier Value: " + col.getQualifierValue());
+        _logger.debug("  * Delimiter: " + col.getDelimiter());
+        _logger.debug("  * Dependency (ConditionalColumnId): "
+            + col.getConditionalColumnId());
+
+*/
 }
