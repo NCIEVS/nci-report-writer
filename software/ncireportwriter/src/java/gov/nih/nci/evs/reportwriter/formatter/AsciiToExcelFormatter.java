@@ -137,13 +137,25 @@ public class AsciiToExcelFormatter extends FileFormatterBase {
         font.setColor(HSSFColor.BLACK.index);
         font.setBoldweight(HSSFFont.BOLDWEIGHT_BOLD);
         toprow.setFont(font);
-        toprow.setFillForegroundColor(HSSFColor.GREY_25_PERCENT.index);
+
+
+        if (extensible_col == -1) {
+        	toprow.setFillForegroundColor(HSSFColor.GREY_25_PERCENT.index);
+		} else {
+			//toprow.setFillForegroundColor(HSSFColor.YELLOW.index);
+			toprow.setFillForegroundColor(HSSFColor.LIGHT_YELLOW.index);
+		}
+
+
         toprow.setFillPattern(HSSFCellStyle.SOLID_FOREGROUND);
         toprow.setAlignment(HSSFCellStyle.VERTICAL_CENTER);
         toprow.setWrapText(true);
 
         highlightedrow.setFont(font);
-        highlightedrow.setFillForegroundColor(HSSFColor.SKY_BLUE.index);
+        //highlightedrow.setFillForegroundColor(HSSFColor.SKY_BLUE.index);
+        //highlightedrow.setFillForegroundColor(HSSFColor.LIGHT_BLUE.index);
+        highlightedrow.setFillForegroundColor(HSSFColor.LIGHT_CORNFLOWER_BLUE.index);
+
         highlightedrow.setFillPattern(HSSFCellStyle.SOLID_FOREGROUND);
         highlightedrow.setAlignment(HSSFCellStyle.VERTICAL_CENTER);
         // highlightedrow.setWrapText(true);
@@ -185,7 +197,7 @@ public class AsciiToExcelFormatter extends FileFormatterBase {
                 highlight_row =
                     extensible_col != -1
                         && v.elementAt(extensible_col).trim().length() > 0;
-           
+
 
             for (int i = 0; i < v.size(); i++) {
                 HSSFCell wc = wr.createCell(i);
