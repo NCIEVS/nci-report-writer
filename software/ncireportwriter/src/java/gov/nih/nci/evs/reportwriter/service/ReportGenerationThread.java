@@ -2034,16 +2034,19 @@ FULL_SYN: DEVICE ISSUE
 				col.setQualifierName(null);
 				col.setQualifierValue(null);
 		    }
-
+/*
 		    if (i == 1) {
 				col.setFieldId("Blank");
 			}
 
-            /*
+
 		    if (field_id.compareTo("Associated Concept Code") == 0) {
 				col.setFieldId("Code");
 			}
-			*/
+*/
+		    if (field_id.compareTo("Associated Concept Code") == 0) {
+				col.setFieldId("Blank");
+			}
 
 			if (col.getPropertyName().compareTo("Extensible_List") == 0) {
 				col.setFieldId("Property");
