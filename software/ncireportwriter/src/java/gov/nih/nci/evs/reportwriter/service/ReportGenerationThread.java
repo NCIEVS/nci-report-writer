@@ -83,6 +83,7 @@ public class ReportGenerationThread implements Runnable {
     SpecialCases.CDISCExtensibleInfo _cdiscInfo = null;
 
     private String prev_subset_code = null;
+    private boolean subheader_line_required = false;
 
     ReportColumn[] temp_cols = null;
 
@@ -599,7 +600,7 @@ _logger.debug("root.getEntityCode(): " + root.getEntityCode());
 
 
 
-if (prev_subset_code != null && root.getEntityCode().compareTo(prev_subset_code) != 0) {
+if (subheader_line_required && prev_subset_code != null && root.getEntityCode().compareTo(prev_subset_code) != 0) {
 
 _logger.debug("(**********) calling writeColumnData using temp_cols ..." + root.getEntityCode());
 
@@ -2054,6 +2055,7 @@ FULL_SYN: DEVICE ISSUE
     public ReportColumn[] copyReportColumns(ReportColumn[] cols) {
         if (cols == null) return null;
         prev_subset_code = null;
+        subheader_line_required = false;
         ReportColumn[] temporary_cols = new ReportColumn[cols.length];
 		for (int i = 0; i < cols.length; i++) {
 
@@ -2068,6 +2070,7 @@ FULL_SYN: DEVICE ISSUE
 
         if (col.getFieldId().compareTo("CDISC Submission Value") == 0) {
 			prev_subset_code = "";
+			subheader_line_required = true;
 		}
 
             rc.setPropertyType(col.getPropertyType());
@@ -2084,26 +2087,4 @@ FULL_SYN: DEVICE ISSUE
 		return temporary_cols;
 	}
 
-
-/*
-        _logger.debug("");
-        _logger.debug(StringUtils.SEPARATOR);
-        _logger.debug("ReportColumn: ");
-        _logger.debug("  * Column Number: " + col.getColumnNumber());
-        _logger.debug("  * Field Number (Id): " + col.getId());
-        _logger.debug("  * Field Label (Label): " + col.getLabel());
-        _logger.debug("  * Field Type (FieldId): " + col.getFieldId());
-        _logger.debug("  * Property Type: " + col.getPropertyType());
-        _logger.debug("  * Property Name: " + col.getPropertyName());
-        _logger.debug("  * Is Preferred: " + col.getIsPreferred());
-        _logger.debug("  * Representational Form: "
-            + col.getRepresentationalForm());
-        _logger.debug("  * Source: " + col.getSource());
-        _logger.debug("  * Qualifier Name: " + col.getQualifierName());
-        _logger.debug("  * Qualifier Value: " + col.getQualifierValue());
-        _logger.debug("  * Delimiter: " + col.getDelimiter());
-        _logger.debug("  * Dependency (ConditionalColumnId): "
-            + col.getConditionalColumnId());
-
-*/
 }
