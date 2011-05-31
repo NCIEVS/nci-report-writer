@@ -357,12 +357,12 @@ public class ReportGenerationThread implements Runnable {
                         (gov.nih.nci.evs.reportwriter.bean.ReportColumn) objs[i];
                     Debug.print(col);
                     cols[i] = col;
-
-
                 }
             }
 
             temp_cols = copyReportColumns(cols);
+            setReportColumns(temp_cols);
+
 
             _logger.debug(StringUtils.SEPARATOR);
             _logger.debug("* Start generating report..." + pathname);
