@@ -84,6 +84,9 @@ public class ReportGenerationThread implements Runnable {
 
     private String prev_subset_code = null;
     private boolean subheader_line_required = false;
+    private int KEY_INDEX_1 = 4; // for CDISC Sort
+    private int KEY_INDEX_2 = 0;
+
 
     ReportColumn[] temp_cols = null;
 
@@ -495,7 +498,7 @@ public class ReportGenerationThread implements Runnable {
         }
     }
 
-
+/*
     private void writeColumnData(LexEVSValueSetDefinitionServices definitionServices,
         String uri, PrintWriter pw, String scheme, String version,
         Entity defining_root_concept, Entity associated_concept, Entity c,
@@ -504,14 +507,6 @@ public class ReportGenerationThread implements Runnable {
 
 //        _cdiscInfo.isExtensibleValue = false;
 
-
-
-if (associated_concept.getEntityCode().compareTo(c.getEntityCode()) == 0) {
-	_logger.debug("(*********) adding subset line..." + c.getEntityCode());
-}
-
-
-
         for (int i = 0; i < cols.length; i++) {
             ReportColumn rc = (ReportColumn) cols[i];
             String value =
@@ -519,14 +514,14 @@ if (associated_concept.getEntityCode().compareTo(c.getEntityCode()) == 0) {
                     scheme, version, defining_root_concept,
                     associated_concept, c, rc);
 
-/*
-            if (SpecialCases.CDISC.ON &&
-                SpecialCases.CDISC.writeExtensibleColumnData(_cdiscInfo, rc, values, value, i)) {
-                if (_cdiscInfo.skipRow)
-                    return;
-                value = _cdiscInfo.newValue;
-            }
-*/
+
+            //if (SpecialCases.CDISC.ON &&
+            //    SpecialCases.CDISC.writeExtensibleColumnData(_cdiscInfo, rc, values, value, i)) {
+            //    if (_cdiscInfo.skipRow)
+            //        return;
+            //    value = _cdiscInfo.newValue;
+            //}
+
 
             if (value == null) value = "";
             values.add(value);
@@ -535,14 +530,14 @@ if (associated_concept.getEntityCode().compareTo(c.getEntityCode()) == 0) {
 
         }
 
-        /*
-        if (SpecialCases.CDISC.ON) {
-            SpecialCases.CDISC.writeSubheader(
-                definitionServices, uri,
-                _cdiscInfo, this, values, pw, scheme,
-                version, defining_root_concept, associated_concept, c, delim, cols);
-        }
-        */
+
+        //if (SpecialCases.CDISC.ON) {
+        //    SpecialCases.CDISC.writeSubheader(
+        //        definitionServices, uri,
+        //        _cdiscInfo, this, values, pw, scheme,
+        //        version, defining_root_concept, associated_concept, c, delim, cols);
+        //}
+
         pw.println(StringUtils.toString(values, delim, true));
 
         _count++;
@@ -550,6 +545,62 @@ if (associated_concept.getEntityCode().compareTo(c.getEntityCode()) == 0) {
             _logger.debug("Number of concepts processed: " + _count);
         }
     }
+*/
+
+
+    private void writeColumnData(LexEVSValueSetDefinitionServices definitionServices,
+        String uri, PrintWriter pw, String scheme, String version,
+        Entity defining_root_concept, Entity associated_concept, Entity c,
+        String delim, ReportColumn[] cols) throws Exception {
+
+		Vector<String> values = getColumnData(definitionServices,
+         uri,  pw, scheme, version,
+         defining_root_concept, associated_concept, c, delim, cols);
+
+        if (values != null) {
+			printColumnData(pw, values, delim);
+
+			_count++;
+			if ((_count / 100) * 100 == _count) {
+				_logger.debug("Number of concepts processed: " + _count);
+			}
+		}
+    }
+
+
+    private void printColumnData(PrintWriter pw, Vector<String> values, String delim) {
+		pw.println(StringUtils.toString(values, delim, true));
+	}
+
+
+    private Vector<String> getColumnData(LexEVSValueSetDefinitionServices definitionServices,
+        String uri, PrintWriter pw, String scheme, String version,
+        Entity defining_root_concept, Entity associated_concept, Entity c,
+        String delim, ReportColumn[] cols) throws Exception {
+        Vector<String> values = new Vector<String>();
+
+        for (int i = 0; i < cols.length; i++) {
+            ReportColumn rc = (ReportColumn) cols[i];
+            String value =
+                get_ReportColumnValue(definitionServices, uri,
+                    scheme, version, defining_root_concept,
+                    associated_concept, c, rc);
+
+            if (value == null) value = "";
+            values.add(value);
+
+        }
+        /*
+        _count++;
+        if ((_count / 100) * 100 == _count) {
+            _logger.debug("Number of concepts processed: " + _count);
+        }
+        */
+
+        return values;
+    }
+
+
 
     private void traverse(LexEVSValueSetDefinitionServices definitionServices,
         String uri, PrintWriter pw, String scheme, String version,
@@ -595,36 +646,70 @@ if (associated_concept.getEntityCode().compareTo(c.getEntityCode()) == 0) {
         _logger.debug("Subset size: " + v.size());
 
 
-_logger.debug("prev_subset_code: " + prev_subset_code);
-_logger.debug("root.getEntityCode(): " + root.getEntityCode());
+//_logger.debug("prev_subset_code: " + prev_subset_code);
+//_logger.debug("root.getEntityCode(): " + root.getEntityCode());
 
 
 
 if (subheader_line_required && prev_subset_code != null && root.getEntityCode().compareTo(prev_subset_code) != 0) {
 
-_logger.debug("(**********) calling writeColumnData using temp_cols ..." + root.getEntityCode());
+//_logger.debug("(**********) calling writeColumnData using temp_cols ..." + root.getEntityCode());
 
  	writeColumnData(definitionServices, uri,
  		pw, scheme, version, defining_root_concept, root,
  		root, delim, temp_cols);
   	prev_subset_code = root.getEntityCode();
 
-_logger.debug("setting prev_subset_code to: " + root.getEntityCode());
+//_logger.debug("setting prev_subset_code to: " + root.getEntityCode());
 
 
 }
 
 
+        if (subheader_line_required) {
+			HashMap hmap = new HashMap();
+			Vector key_vec = new Vector();
+			for (int i = 0; i < v.size(); i++) {
+				// subset member element
+				Entity c = (Entity) v.elementAt(i);
 
-        for (int i = 0; i < v.size(); i++) {
-            // subset member element
-            Entity c = (Entity) v.elementAt(i);
-            writeColumnData(definitionServices, uri,
-                pw, scheme, version, defining_root_concept, root,
-                c, delim, cols);
-            if (_abortLimit > 0 && _count > _abortLimit)
-                break;
+				Vector values = getColumnData(definitionServices, uri,
+					pw, scheme, version, defining_root_concept, root,
+					c, delim, cols);
+
+				String key = (String) values.elementAt( KEY_INDEX_1 ) + "|" + (String) values.elementAt( KEY_INDEX_2 );
+				key_vec.add(key);
+				hmap.put(key, values);
+
+				if (_abortLimit > 0 && _count > _abortLimit)
+					break;
+			}
+
+			key_vec = SortUtils.quickSort(key_vec);
+			for (int i = 0; i < key_vec.size(); i++) {
+				String key = (String) key_vec.elementAt(i);
+				Vector values = (Vector) hmap.get(key);
+				printColumnData(pw, values, delim);
+			}
+
+			hmap.clear();
+
+	    } else {
+
+			for (int i = 0; i < v.size(); i++) {
+				// subset member element
+				Entity c = (Entity) v.elementAt(i);
+
+
+				writeColumnData(definitionServices, uri,
+					pw, scheme, version, defining_root_concept, root,
+					c, delim, cols);
+
+				if (_abortLimit > 0 && _count > _abortLimit)
+					break;
+			}
         }
+
 
         // Note: Commented on 2/24/10 (Wed). subconcept_vec size was 0.
         // Vector<Entity> subconcept_vec =
@@ -2070,11 +2155,15 @@ FULL_SYN: DEVICE ISSUE
             rc.setLabel(col.getLabel());
             rc.setFieldId(col.getFieldId());
 
+			if (col.getFieldId().compareTo("CDISC Submission Value") == 0) {
+				prev_subset_code = "";
+				subheader_line_required = true;
+                KEY_INDEX_1	= i;
+			}
 
-        if (col.getFieldId().compareTo("CDISC Submission Value") == 0) {
-			prev_subset_code = "";
-			subheader_line_required = true;
-		}
+			if (col.getFieldId().compareTo("Code") == 0) {
+				KEY_INDEX_2	= i;
+			}
 
             rc.setPropertyType(col.getPropertyType());
             rc.setPropertyName(col.getPropertyName());
