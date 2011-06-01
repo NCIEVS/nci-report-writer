@@ -87,7 +87,6 @@ public class ReportGenerationThread implements Runnable {
     private int KEY_INDEX_1 = 4; // for CDISC Sort
     private int KEY_INDEX_2 = 0;
 
-
     ReportColumn[] temp_cols = null;
 
     public ReportGenerationThread(String outputDir, String standardReportLabel,
@@ -614,6 +613,8 @@ public class ReportGenerationThread implements Runnable {
             return;
 
         Entity root = DataUtils.getConceptByCode(scheme, version, tag, code);
+
+
         if (root == null) {
             _logger.warn("Concept with code " + code + " not found.");
             return;
@@ -650,49 +651,73 @@ public class ReportGenerationThread implements Runnable {
 //_logger.debug("root.getEntityCode(): " + root.getEntityCode());
 
 
-
-if (subheader_line_required && prev_subset_code != null && root.getEntityCode().compareTo(prev_subset_code) != 0) {
-
-//_logger.debug("(**********) calling writeColumnData using temp_cols ..." + root.getEntityCode());
-
- 	writeColumnData(definitionServices, uri,
- 		pw, scheme, version, defining_root_concept, root,
- 		root, delim, temp_cols);
-  	prev_subset_code = root.getEntityCode();
-
-//_logger.debug("setting prev_subset_code to: " + root.getEntityCode());
+        String extensible_list = null;
+		if (subheader_line_required && prev_subset_code != null && root.getEntityCode().compareTo(prev_subset_code) != 0) {
 
 
-}
+    		extensible_list = getFocusConceptPropertyValue(
+				root,
+				"Extensible_List",
+				"GENERIC",
+				null,
+				null,
+				null,
+				null,
+				null,
+				null);
+
+           if (extensible_list != null && extensible_list.compareTo("") != 0) {
+				writeColumnData(definitionServices, uri,
+					pw, scheme, version, defining_root_concept, root,
+					root, delim, temp_cols);
+				prev_subset_code = root.getEntityCode();
+		    }
+
+		}
 
 
         if (subheader_line_required) {
-			HashMap hmap = new HashMap();
-			Vector key_vec = new Vector();
-			for (int i = 0; i < v.size(); i++) {
-				// subset member element
-				Entity c = (Entity) v.elementAt(i);
 
-				Vector values = getColumnData(definitionServices, uri,
-					pw, scheme, version, defining_root_concept, root,
-					c, delim, cols);
+    		extensible_list = getFocusConceptPropertyValue(
+				root,
+				"Extensible_List",
+				"GENERIC",
+				null,
+				null,
+				null,
+				null,
+				null,
+				null);
 
-				String key = (String) values.elementAt( KEY_INDEX_1 ) + "|" + (String) values.elementAt( KEY_INDEX_2 );
-				key_vec.add(key);
-				hmap.put(key, values);
+			if (extensible_list != null && extensible_list.compareTo("") != 0) {
+				HashMap hmap = new HashMap();
+				Vector key_vec = new Vector();
+				for (int i = 0; i < v.size(); i++) {
+					// subset member element
+					Entity c = (Entity) v.elementAt(i);
 
-				if (_abortLimit > 0 && _count > _abortLimit)
-					break;
-			}
+					Vector values = getColumnData(definitionServices, uri,
+						pw, scheme, version, defining_root_concept, root,
+						c, delim, cols);
 
-			key_vec = SortUtils.quickSort(key_vec);
-			for (int i = 0; i < key_vec.size(); i++) {
-				String key = (String) key_vec.elementAt(i);
-				Vector values = (Vector) hmap.get(key);
-				printColumnData(pw, values, delim);
-			}
+					String key = (String) values.elementAt( KEY_INDEX_1 ) + "|" + (String) values.elementAt( KEY_INDEX_2 );
+					key_vec.add(key);
 
-			hmap.clear();
+					hmap.put(key, values);
+
+					if (_abortLimit > 0 && _count > _abortLimit)
+						break;
+				}
+
+				key_vec = SortUtils.quickSort(key_vec);
+				for (int i = 0; i < key_vec.size(); i++) {
+					String key = (String) key_vec.elementAt(i);
+					Vector values = (Vector) hmap.get(key);
+					printColumnData(pw, values, delim);
+				}
+
+				hmap.clear();
+		    }
 
 	    } else {
 
