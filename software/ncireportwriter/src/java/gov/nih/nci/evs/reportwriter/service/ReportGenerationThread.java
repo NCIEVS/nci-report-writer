@@ -2088,10 +2088,10 @@ FULL_SYN: DEVICE ISSUE
 
     		codeListPT = getFocusConceptPropertyValue(
 				associated_concept,
-				"FULL_SYN",
-				"PRESENTATION",
+				property_name,
+				property_type,//"PRESENTATION",
 				null,
-				"CDISC",
+				source,
 				null,
 				"PT",
 				delimiter,
@@ -2109,7 +2109,7 @@ FULL_SYN: DEVICE ISSUE
 				property_name,
 				property_type,
 				qualifier_name,
-				source,
+				source,//"CDISC",
 				source_code,
 				representational_form,
 				delimiter,
@@ -2117,6 +2117,7 @@ FULL_SYN: DEVICE ISSUE
 
 			if (retval != null && retval.compareTo("") != 0) return retval;
 		}
+
 
     	return getFocusConceptPropertyValue(
 			node,
