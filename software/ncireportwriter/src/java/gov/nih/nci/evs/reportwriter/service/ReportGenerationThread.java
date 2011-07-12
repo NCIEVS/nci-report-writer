@@ -1964,8 +1964,17 @@ FULL_SYN: DEVICE ISSUE
 
 
         if (field_Id.compareTo("CDISC Submission Value") == 0) {
-			return getCDISCSubmissionValue(scheme, version, associated_concept, node, rc);
+			return getCDISCSubmissionValue(scheme, version, associated_concept, node, rc, "SDTM-");
+		} else if (field_Id.compareTo("CDISC Submission Value (ADaM)") == 0) {
+			return getCDISCSubmissionValue(scheme, version, associated_concept, node, rc, "ADaM-");
+		} else if (field_Id.compareTo("CDISC Submission Value (CDASH)") == 0) {
+			return getCDISCSubmissionValue(scheme, version, associated_concept, node, rc, "CDASH-");
+		} else if (field_Id.compareTo("CDISC Submission Value (SEND)") == 0) {
+			return getCDISCSubmissionValue(scheme, version, associated_concept, node, rc, "SEND-");
+		} else if (field_Id.compareTo("CDISC Submission Value (SDTM)") == 0) {
+			return getCDISCSubmissionValue(scheme, version, associated_concept, node, rc, "SDTM-");
 		}
+
 
 		Entity focused_concept = null;
         String property_name = rc.getPropertyName();
@@ -2134,11 +2143,96 @@ FULL_SYN: DEVICE ISSUE
 	}
 
 
+    public String getCDISCSubmissionValue(String scheme, String version,
+        Entity associated_concept, Entity node, ReportColumn rc, String prefix) {
+		if (associated_concept == null || node == null) return null;
+
+		if (prefix == null) prefix = "SDTM-";
+		// possible prefix: ADaM-, CDASH-, SDTM-, and SEND-
+
+        String property_name = rc.getPropertyName();
+        String qualifier_name = rc.getQualifierName();
+        String source = rc.getSource();
+        String qualifier_value = rc.getQualifierValue();
+        String representational_form = rc.getRepresentationalForm();
+        Boolean isPreferred = rc.getIsPreferred();
+        String property_type = rc.getPropertyType();
+        char delimiter_ch = rc.getDelimiter();
+        String delimiter = "" + delimiter_ch;
+
+        if (isNull(property_name))
+            property_name = null;
+        if (isNull(qualifier_name))
+            qualifier_name = null;
+        if (isNull(source))
+            source = null;
+        if (isNull(qualifier_value))
+            qualifier_value = null;
+        if (isNull(representational_form))
+            representational_form = null;
+        if (isNull(property_type))
+            property_type = null;
+        if (isNull(delimiter))
+            delimiter = null;
+
+        String codeListPT = getCodeListPT(associated_concept.getEntityCode());
+        if (codeListPT == null) {
+
+    		codeListPT = getFocusConceptPropertyValue(
+				associated_concept,
+				property_name,
+				property_type,//"PRESENTATION",
+				null,
+				source,
+				null,
+				"PT",
+				delimiter,
+				null);
+			if (codeListPT != null) {
+				_code2PTHashMap.put(associated_concept.getEntityCode(), codeListPT);
+			}
+		}
+
+		if (codeListPT != null) {
+			String source_code = prefix + codeListPT;
+			qualifier_name = "source-code";
+			String retval = getFocusConceptPropertyValue(
+				node,
+				property_name,
+				property_type,
+				qualifier_name,
+				source,//"CDISC",
+				source_code,
+				representational_form,
+				delimiter,
+				isPreferred);
+
+			if (retval != null && retval.compareTo("") != 0) return retval;
+		}
+
+
+    	return getFocusConceptPropertyValue(
+			node,
+            property_name,
+            property_type,
+	        null,
+	        source,
+	        null,
+	        representational_form,
+	        delimiter,
+	        isPreferred);
+
+		//return DataUtils.getPTBySourceCode(scheme, version, node.getEntityCode(), source, source_code);
+	}
+
+
+
     public void setReportColumns(ReportColumn[] cols) {
         for (int i = 0; i < cols.length; i++) {
 			ReportColumn col = cols[i];
 			String field_id = col.getFieldId();
-            if (field_id.compareTo("CDISC Submission Value") == 0) {
+            //if (field_id.compareTo("CDISC Submission Value") == 0) {
+			if (field_id.indexOf("CDISC Submission Value") != -1) {
 				col.setFieldId("Property");
 				col.setRepresentationalForm("PT");
 				col.setSource("CDISC");
@@ -2181,7 +2275,8 @@ FULL_SYN: DEVICE ISSUE
             rc.setLabel(col.getLabel());
             rc.setFieldId(col.getFieldId());
 
-			if (col.getFieldId().compareTo("CDISC Submission Value") == 0) {
+			//if (col.getFieldId().compareTo("CDISC Submission Value") == 0) {
+			if (col.getFieldId().indexOf("CDISC Submission Value") != -1) {
 				prev_subset_code = "";
 				subheader_line_required = true;
                 KEY_INDEX_1	= i;
