@@ -2348,7 +2348,7 @@ _logger.debug("getResolvedConceptReferenceIterator...");
 				for (int j = 0; j < properties.length; j++) {
 					Presentation prop = properties[j];
 					if (prop.getRepresentationalForm()
-						.compareTo("PT") != 0) {
+						.compareTo("PT") == 0) {
 
                         boolean match_found = false;
 						Source[] sources = prop.getSource();
