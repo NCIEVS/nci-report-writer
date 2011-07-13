@@ -654,14 +654,14 @@ public class ReportGenerationThread implements Runnable {
         String extensible_list = null;
 		if (subheader_line_required && prev_subset_code != null && root.getEntityCode().compareTo(prev_subset_code) != 0) {
 
-
+            String src_code = null;
     		extensible_list = getFocusConceptPropertyValue(
 				root,
 				"Extensible_List",
 				"GENERIC",
 				null,
 				null,
-				null,
+				src_code,
 				null,
 				null,
 				null);
@@ -677,14 +677,14 @@ public class ReportGenerationThread implements Runnable {
 
 
         if (subheader_line_required) {
-
+            String src_code = null;
     		extensible_list = getFocusConceptPropertyValue(
 				root,
 				"Extensible_List",
 				"GENERIC",
 				null,
 				null,
-				null,
+				src_code,
 				null,
 				null,
 				null);
@@ -1606,6 +1606,150 @@ public class ReportGenerationThread implements Runnable {
 	}
 
 
+    public static String getFocusConceptPropertyValue(
+		    Entity concept,
+            String property_name,
+            String property_type,
+	        String qualifier_name,
+	        String source,
+	        Vector qualifier_value_vec,
+	        String representational_form,
+	        String delimiter,
+	        Boolean isPreferred) {
+
+        if (concept == null) return "";
+
+        HashSet hset = new HashSet();
+        int num_matches = 0;
+        org.LexGrid.commonTypes.Property[] properties =
+            new org.LexGrid.commonTypes.Property[] {};
+
+        if (property_type == null) {
+
+        } else if (property_type.compareToIgnoreCase("GENERIC") == 0) {
+            properties = concept.getProperty();
+        } else if (property_type.compareToIgnoreCase("PRESENTATION") == 0) {
+            properties = concept.getPresentation();
+        } else if (property_type.compareToIgnoreCase("COMMENT") == 0) {
+            properties = concept.getComment();
+        } else if (property_type.compareToIgnoreCase("DEFINITION") == 0) {
+            properties = concept.getDefinition();
+        }
+
+        String return_str = "";
+
+		for (int i = 0; i < properties.length; i++) {
+			boolean match = false;
+			org.LexGrid.commonTypes.Property p = properties[i];
+			String propertyName = p.getPropertyName();
+
+			if (propertyName.compareTo(property_name) == 0) {
+				match = true;
+
+				if (source != null || representational_form != null
+					|| qualifier_name != null || isPreferred != null) {
+					// compare isPreferred
+					if (isPreferred != null && p instanceof Presentation) {
+						Presentation presentation = (Presentation) p;
+						Boolean is_pref = presentation.getIsPreferred();
+						if (is_pref == null) {
+							match = false;
+						} else if (is_pref != null
+							&& !is_pref.equals(isPreferred)) {
+							match = false;
+						}
+					}
+
+					// match representational_form
+					if (match) {
+						if (representational_form != null
+							&& p instanceof Presentation) {
+							Presentation presentation = (Presentation) p;
+							String representationalForm = presentation.getRepresentationalForm();
+							if (representationalForm.compareTo(representational_form) != 0) {
+								match = false;
+							} else {
+
+							}
+
+						}
+					}
+					// match qualifier
+					if (match) {
+
+
+						if (qualifier_value_vec != null && qualifier_value_vec.size() > 0) // match qualifier name vaue pair
+						// qualifier, if needed
+						{
+							boolean match_found = false;
+							PropertyQualifier[] qualifiers =
+								p.getPropertyQualifier();
+
+							for (int j = 0; j < qualifiers.length; j++) {
+								PropertyQualifier q = qualifiers[j];
+								String name = q.getPropertyQualifierName();
+								String value = q.getValue().getContent();
+
+
+                                if (qualifier_name != null &&
+									qualifier_name.compareTo(name) == 0 &&
+									qualifier_value_vec.contains(value)) {
+
+										match_found = true;
+
+									    break;
+								}
+
+							}
+							if (!match_found) {
+								match = false;
+							}
+						}
+					}
+					// match source
+					if (match) {
+						if (source != null) // match source
+						{
+							boolean match_found = false;
+							Source[] sources = p.getSource();
+							for (int j = 0; j < sources.length; j++) {
+								Source src = sources[j];
+
+								if (src.getContent().compareTo(source) == 0) {
+									match_found = true;
+
+									break;
+								}
+							}
+							if (!match_found) {
+								match = false;
+							}
+						}
+					}
+				}
+
+				if (match) {
+
+					String prop_value = p.getValue().getContent();
+					if (!hset.contains(prop_value)) {
+						num_matches++;
+						hset.add(prop_value);
+						if (num_matches == 1) {
+							return_str = prop_value;
+						} else {
+							return_str = return_str + delimiter + prop_value;
+						}
+					}
+				}
+
+			}
+
+		}
+        return return_str;
+	}
+
+
+
 /*
 
 
@@ -1962,17 +2106,8 @@ FULL_SYN: DEVICE ISSUE
 			return "";
 		}
 
-
         if (field_Id.compareTo("CDISC Submission Value") == 0) {
-			return getCDISCSubmissionValue(scheme, version, associated_concept, node, rc, "SDTM-");
-		} else if (field_Id.compareTo("CDISC Submission Value (ADaM)") == 0) {
-			return getCDISCSubmissionValue(scheme, version, associated_concept, node, rc, "ADaM-");
-		} else if (field_Id.compareTo("CDISC Submission Value (CDASH)") == 0) {
-			return getCDISCSubmissionValue(scheme, version, associated_concept, node, rc, "CDASH-");
-		} else if (field_Id.compareTo("CDISC Submission Value (SEND)") == 0) {
-			return getCDISCSubmissionValue(scheme, version, associated_concept, node, rc, "SEND-");
-		} else if (field_Id.compareTo("CDISC Submission Value (SDTM)") == 0) {
-			return getCDISCSubmissionValue(scheme, version, associated_concept, node, rc, "SDTM-");
+			return getCDISCSubmissionValue(scheme, version, associated_concept, node, rc);
 		}
 
 
@@ -2094,14 +2229,14 @@ FULL_SYN: DEVICE ISSUE
 
         String codeListPT = getCodeListPT(associated_concept.getEntityCode());
         if (codeListPT == null) {
-
+            String src_code = null;
     		codeListPT = getFocusConceptPropertyValue(
 				associated_concept,
 				property_name,
 				property_type,//"PRESENTATION",
 				null,
 				source,
-				null,
+				src_code,
 				"PT",
 				delimiter,
 				null);
@@ -2111,7 +2246,14 @@ FULL_SYN: DEVICE ISSUE
 		}
 
 		if (codeListPT != null) {
-			String source_code = "SDTM-" + codeListPT;
+			Vector qualifier_value_vec = new Vector();
+			qualifier_value_vec.add("ADaM-" + codeListPT);
+			qualifier_value_vec.add("CDASH-"+ codeListPT);
+			qualifier_value_vec.add("SDTM-" + codeListPT);
+			qualifier_value_vec.add("SEND-" + codeListPT);
+			qualifier_value_vec.add("CDISC-"+ codeListPT);
+
+			//String source_code = "SDTM-" + codeListPT;
 			qualifier_name = "source-code";
 			String retval = getFocusConceptPropertyValue(
 				node,
@@ -2119,7 +2261,7 @@ FULL_SYN: DEVICE ISSUE
 				property_type,
 				qualifier_name,
 				source,//"CDISC",
-				source_code,
+				qualifier_value_vec,
 				representational_form,
 				delimiter,
 				isPreferred);
@@ -2127,14 +2269,14 @@ FULL_SYN: DEVICE ISSUE
 			if (retval != null && retval.compareTo("") != 0) return retval;
 		}
 
-
+        String src_code = null;
     	return getFocusConceptPropertyValue(
 			node,
             property_name,
             property_type,
 	        null,
 	        source,
-	        null,
+	        src_code,
 	        representational_form,
 	        delimiter,
 	        isPreferred);
@@ -2177,14 +2319,14 @@ FULL_SYN: DEVICE ISSUE
 
         String codeListPT = getCodeListPT(associated_concept.getEntityCode());
         if (codeListPT == null) {
-
+            String src_code = null;
     		codeListPT = getFocusConceptPropertyValue(
 				associated_concept,
 				property_name,
 				property_type,//"PRESENTATION",
 				null,
 				source,
-				null,
+				src_code,
 				"PT",
 				delimiter,
 				null);
@@ -2194,6 +2336,9 @@ FULL_SYN: DEVICE ISSUE
 		}
 
 		if (codeListPT != null) {
+
+			// May need to check for all possible prefixes:
+
 			String source_code = prefix + codeListPT;
 			qualifier_name = "source-code";
 			String retval = getFocusConceptPropertyValue(
@@ -2210,14 +2355,14 @@ FULL_SYN: DEVICE ISSUE
 			if (retval != null && retval.compareTo("") != 0) return retval;
 		}
 
-
+        String src_code = null;
     	return getFocusConceptPropertyValue(
 			node,
             property_name,
             property_type,
 	        null,
 	        source,
-	        null,
+	        src_code,
 	        representational_form,
 	        delimiter,
 	        isPreferred);
@@ -2231,8 +2376,7 @@ FULL_SYN: DEVICE ISSUE
         for (int i = 0; i < cols.length; i++) {
 			ReportColumn col = cols[i];
 			String field_id = col.getFieldId();
-            //if (field_id.compareTo("CDISC Submission Value") == 0) {
-			if (field_id.indexOf("CDISC Submission Value") != -1) {
+            if (field_id.compareTo("CDISC Submission Value") == 0) {
 				col.setFieldId("Property");
 				col.setRepresentationalForm("PT");
 				col.setSource("CDISC");
@@ -2275,8 +2419,7 @@ FULL_SYN: DEVICE ISSUE
             rc.setLabel(col.getLabel());
             rc.setFieldId(col.getFieldId());
 
-			//if (col.getFieldId().compareTo("CDISC Submission Value") == 0) {
-			if (col.getFieldId().indexOf("CDISC Submission Value") != -1) {
+			if (col.getFieldId().compareTo("CDISC Submission Value") == 0) {
 				prev_subset_code = "";
 				subheader_line_required = true;
                 KEY_INDEX_1	= i;
