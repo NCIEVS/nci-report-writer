@@ -593,18 +593,8 @@ public class OntologyBean // extends BaseBean
 			 _dataCategoryList.add(new SelectItem(propName));
 		 }
 
-		 String t = "CDISC Submission Value (ADaM)";
+		 String t = "CDISC Submission Value";
 		 _dataCategoryList.add(new SelectItem(t));
-
-		 t = "CDISC Submission Value (CDASH)";
-		 _dataCategoryList.add(new SelectItem(t));
-
-		 t = "CDISC Submission Value (SEND)";
-		 _dataCategoryList.add(new SelectItem(t));
-
-		 t = "CDISC Submission Value (SDTM)";
-		 _dataCategoryList.add(new SelectItem(t));
-
          return _dataCategoryList;
     }
 
