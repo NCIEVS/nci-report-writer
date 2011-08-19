@@ -11,12 +11,12 @@
         <dbms type="mysql" />
     </preConditions>
 
-    <changeSet id="1" author="EVS Team">
+    <!-- <changeSet id="1" author="EVS Team">
         <comment>Initial database setup.</comment>
         <sqlFile path="${db.run.path}/create-tables-csm.sql" />
         <sqlFile path="${db.run.path}/create-tables-rw.sql" />
         <sqlFile path="${db.run.path}/insert-data-rw.sql" />
-    </changeSet>
+    </changeSet> -->
 
     <!-- changeSet id="2" author="EVS Team">
         <comment>Upgrading the Report Writer database</comment>
@@ -24,4 +24,13 @@
         <sqlFile path="${db.run.path}/upgrade-data-rw.sql" />
     </changeSet -->
 
+
+    <changeSet id="3" author="EVS Team">
+        <comment>Initial database setup.</comment>
+        <sqlFile path="${db.run.path}/create-tables-csm.sql" />
+        <sqlFile path="${db.run.path}/create-tables-rw.sql" />
+        <sqlFile path="${db.run.path}/insert-data-rw.sql" />
+    </changeSet>
+    
+    
 </databaseChangeLog>
