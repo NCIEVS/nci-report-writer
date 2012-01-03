@@ -1,0 +1,29 @@
+Edit the following file:
+  * [RW_HOME]/software/ncireportwriter/db/db-install/mysql/insert-data-rw.sql
+
+Using HeidiSQL:
+  * In the left panel, right mouse click on the Report Writer database (ex. ncirw).
+  * Select "Export database as SQL":
+  * Note: See updating.mysql.installation.script.png image file.
+  * Check the following tables:
+	* hi_value
+	* report
+	* report_column
+	* report_format
+	* report_status
+	* standard_report
+	* standard_report_template
+  * Uncheck Database(s) checkboxes (Drop, Create).
+  * Uncheck Table(s) checkboxes (Drop, Create).
+  * Select Table(s) INSERT.
+  * Select Output: One big file.
+  * Select filename.
+  * Select Export button.
+
+Replace the INSERT statement from the insert-data-rw.sql file with the corresponding
+  INSERT statement from the exported file.
+
+For the report table:
+  * Replace the INSERT statement (previous statement).
+  * Replace all LAST_MODIFIED values with NULL.
+  * Replace all PATH_NAME values with ''.
