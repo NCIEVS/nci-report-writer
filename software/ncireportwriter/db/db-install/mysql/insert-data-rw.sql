@@ -1,50 +1,49 @@
+-- ----------------------------------------------------------------------------
 -- Create Report Writer database
---
--- ------------------------------------------------------
+-- Note: Please do not replace any values with @ prefix and @postfix in them
+--   (For example: @database.name@).  These values are set during our 
+--   build and deployment.
+-- ----------------------------------------------------------------------------
 
---
--- Insert reportwriter data
---
-
+-- ----------------------------------------------------------------------------
+-- Insert reportwriter data to a specific database.
+-- Note: Please do not replace any @VALUE@.
+-- ----------------------------------------------------------------------------
 USE @database.name@;
 
---
+-- ----------------------------------------------------------------------------
 -- Data for table `USER`
---
-
+-- Note: Please do not replace any @VALUE@.
+-- ----------------------------------------------------------------------------
 INSERT INTO `USER` (`ID`,`LOGIN_NAME`) VALUES
- (101,'@rw.admin.user.name@'),
- (102,'@rw.user.name@');
+	(101,'@rw.admin.user.name@'),
+	(102,'@rw.user.name@');
 
---
+-- ----------------------------------------------------------------------------
 -- Data for table `hi_value`
 -- Note: Need to set hi_value whenever you manually add rows to a table.
---
-
+-- ----------------------------------------------------------------------------
 INSERT INTO `hi_value` (`next_value`) VALUES
 	(110);
 
---
+-- ----------------------------------------------------------------------------
 -- Data for table `REPORT_FORMAT`
---
-
+-- ----------------------------------------------------------------------------
 INSERT INTO `REPORT_FORMAT` (`ID`,`DESCRIPTION`) VALUES
- (404,'Text (tab delimited)'),
- (405,'Microsoft Office Excel'),
- (406,'HyperText Markup Language');
+	(404,'Text (tab delimited)'),
+	(405,'Microsoft Office Excel'),
+	(406,'HyperText Markup Language');
 
---
+-- ----------------------------------------------------------------------------
 -- Data for table `REPORT_STATUS`
---
-
+-- ----------------------------------------------------------------------------
 INSERT INTO `REPORT_STATUS` (`ID`,`LABEL`,`DESCRIPTION`,`ACTIVE`) VALUES
- (505,'DRAFT','REPORT is a draft, not ready for download.',1),
- (506,'APPROVED','REPORT has been approved for download by USERs',1);
+	(505,'DRAFT','REPORT is a draft, not ready for download.',1),
+	(506,'APPROVED','REPORT has been approved for download by USERs',1);
 
---
+-- ----------------------------------------------------------------------------
 -- Data for table `STANDARD_REPORT_TEMPLATE`
---
-
+-- ----------------------------------------------------------------------------
 INSERT INTO `standard_report_template` (`ID`, `LABEL`, `ROOT_CONCEPT_CODE`, `ASSOCIATION_NAME`, `DIRECTION`, `CODING_SCHEME_NAME`, `CODING_SCHEME_VERSION`, `LEVEL`, `DELIMITER`) VALUES
 	(202, 'FDA-UNII Subset REPORT', 'C63923', 'Concept_In_Subset', 0, 'NCI Thesaurus', '11.11d', -1, '$'),
 	(2323, 'Individual Case Safety (ICS) Subset REPORT', 'C54447', 'Concept_In_Subset', 0, 'NCI Thesaurus', '11.10e', -1, '$'),
@@ -61,11 +60,9 @@ INSERT INTO `standard_report_template` (`ID`, `LABEL`, `ROOT_CONCEPT_CODE`, `ASS
 	(8282, 'NCPDP Subset', 'C89415', 'Concept_In_Subset', 0, 'NCI Thesaurus', '11.09d', -1, '$'),
 	(10100, 'eStability Subset Report', 'C96069', 'Concept_In_Subset', 0, 'NCI Thesaurus', '11.10e', -1, '$');
 
-
---
+-- ----------------------------------------------------------------------------
 -- Data for table `REPORT_COLUMN`
---
-
+-- ----------------------------------------------------------------------------
 INSERT INTO `report_column` (`ID`, `COLUMN_NUMBER`, `LABEL`, `FIELD_ID`, `PROPERTY_TYPE`, `PROPERTY_NAME`, `IS_PREFERRED`, `REPRESENTATIONAL_FORM`, `SOURCE`, `QUALIFIER_NAME`, `QUALIFIER_VALUE`, `DELIMITER`, `CONDITIONAL_COLUMN`, `BELONGS_TO`) VALUES
 	(303, 1, 'FDA UNII Code (use for SPL)', 'Property', 'Generic', 'FDA_UNII_Code', NULL, '', ' ', '', '', '|', -1, 202),
 	(304, 2, 'FDA Preferred Term', 'Property', 'Presentation', 'FULL_SYN', NULL, 'PT', 'FDA', '', '', '|', -1, 202),
@@ -179,11 +176,9 @@ INSERT INTO `report_column` (`ID`, `COLUMN_NUMBER`, `LABEL`, `FIELD_ID`, `PROPER
 	(10206, 6, 'Stability Preferred Term', 'Property', 'PRESENTATION', 'FULL_SYN', NULL, 'PT', 'FDA', 'subsource-name', 'Stability', '|', -1, 10100),
 	(10207, 7, 'Stability Definition', 'Property', 'DEFINITION', 'ALT_DEFINITION', NULL, '', 'FDA', 'attr', 'Stability', '|', -1, 10100);
 
-
---
+-- ----------------------------------------------------------------------------
 -- Data for table `REPORT`
---
-
+-- ----------------------------------------------------------------------------
 INSERT INTO `report` (`ID`, `LABEL`, `LAST_MODIFIED`, `PATH_NAME`, `HAS_FORMAT`, `HAS_STATUS`, `MODIFIED_BY`, `CREATED_BY`) VALUES
 	(10911, 'Structured Product Labeling (SPL) REPORT.txt', NULL, '', 404, 505, NULL, 101),
 	(10912, 'Structured Product Labeling (SPL) REPORT.xls', NULL, '', 405, 505, NULL, 101),
@@ -224,11 +219,9 @@ INSERT INTO `report` (`ID`, `LABEL`, `LAST_MODIFIED`, `PATH_NAME`, `HAS_FORMAT`,
 	(10915, 'eStability Subset Report.xls', NULL, '', 405, 505, NULL, 101),
 	(10916, 'eStability Subset Report.htm', NULL, '', 406, 505, NULL, 101);
 
-
---
+-- ----------------------------------------------------------------------------
 -- Data for table `STANDARD_REPORT`
---
-
+-- ----------------------------------------------------------------------------
 INSERT INTO `STANDARD_REPORT` (`REPORT_ID`,`BASED_ON_TEMPLATE`) VALUES
 	(11015, 202),
 	(11016, 202),
@@ -269,5 +262,5 @@ INSERT INTO `STANDARD_REPORT` (`REPORT_ID`,`BASED_ON_TEMPLATE`) VALUES
 	(10915, 10100),
 	(10916, 10100);
 
-
+-- ----------------------------------------------------------------------------
 COMMIT;
