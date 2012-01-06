@@ -491,7 +491,9 @@
 
     </target>
 
-    <target name="upgrade:database" depends="-dist,build:config" description="Upgrade the current database">
+    <target name="upgrade:database" depends="install:database" />
+	
+    <target name="upgrade:database:orig" depends="-dist,build:config" description="Upgrade the current database">
 
         <if>
             <not><isset property="run.quite"/></not>
