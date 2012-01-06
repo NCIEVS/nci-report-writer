@@ -518,7 +518,7 @@
                     username="${database.user}"
                     password="${database.password}"
                     promptOnNonLocalDatabase="no"
-                    dropFirst="false"
+                    dropFirst="true"
                     classpathref="classpath">
                         <changeLogProperty name="db.run.path"
                             value="${bda.dist.dir}/exploded/${project.name}-webapp/db"
