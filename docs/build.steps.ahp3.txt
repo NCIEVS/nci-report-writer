@@ -1,0 +1,31 @@
+* Log into Ant Hill Pro 3:
+  * https://anthillpro3.nci.nih.gov/
+  
+* Open the following folder:
+  * ncicb/lpg projects --> [TIER] projects --> Reportwriter
+
+  * Follow these steps if you want to refresh the database:
+    * Login to the mySQL database.
+      * Backup the reportwriter database by exporting to a SQL file.
+      * Drop reportwriter database.
+      * Create a blank reportwriter database.
+    * In AHP3, select ncireportwriter-database-[TIER] link.
+      * Select "build workflow" link.
+      * If any, enter build tag; else leave it blank for trunk.
+      * Select Build button.
+      * Select "Enable Refresh" link to automatically refresh the page.
+      * Once completed, Select the ID link.
+      * Select "Run Secondary Process" button.
+      * Select Workflow option.
+      * Select Run button.
+      
+  * Follow these steps if you want to update the software:
+    * In AHP3, select ncireportwriter-[TIER] link.
+      * Select "build workflow" link.
+      * If any, enter build tag; else leave it blank for trunk.
+      * Select Build button.
+      * Select "Enable Refresh" link to automatically refresh the page.
+      * Once completed, Select the ID link.
+      * Select "Run Secondary Process" button.
+      * Select Workflow option.
+      * Select Run button.
