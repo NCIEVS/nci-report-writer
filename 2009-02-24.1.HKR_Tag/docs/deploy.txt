@@ -1,0 +1,205 @@
+***********************************************
+*** Report Writer build / deployment notes ****
+***********************************************
+
+=====================================================
+Steps for a manual build / deployment
+=====================================================
+
+The following are the "manual" steps to build and deploy the report writer application.
+
+Automated steps are listed below this section.
+
+Examples in this document use root / admin123 for MySQL and localhost for the server. You will need
+to change these example entries where necessary for your environment.
+
+--------------------------------------
+Pre-installation requirements
+--------------------------------------
+1. JDK 1.5
+2. Apache ANT 1.7 or newer
+3. MySQL
+
+Note: Install MySQL as you normally would. You will need to create a MySQL user that has
+   permissions to create databases. This users credentials will need to be entered in
+   to a <env>.build.properties file.
+
+Note: Eventually we will need to modify the build / deployment so that the databases are
+create by the DBA with specific users.
+
+--------------------------------------
+Build the Report Writer application
+--------------------------------------
+1. Checkout source files from SVN at the following URL:
+   https://gforge.nci.nih.gov/svnroot/reportwriter/trunk
+
+2. Edit C:\SVN-Projects\reportwriter\local.build.properties to reflect your
+   environment with respect to JBoss and MySQL.
+
+3. Compile the application
+   a) cd C:\SVN-Projects\reportwriter
+   b) C:\SVN-Projects\reportwriter>ant clean war
+
+--------------------------------------
+Setup MySQL
+--------------------------------------
+
+Run the following scripts. This will initialize the databases csmupt and ncireportwriter
+   with sample uses and data.
+
+1. cd C:\SVN-Projects\reportwriter\models\dbscripts
+
+2. Login to the MySQL client
+   C:>mysql --host=localhost --port=3306 --user=root --password=admin123
+
+3. mysql>\. AuthSchemaMySQL.sql
+
+4. mysql>\. ReportWriterMySQL.sql
+
+5. exit;
+
+*** Note: On Unix platforms; setting lower_case_table_names=1 in my.cnf before recreating the databases is required to avoid
+a table case sensitivity issue with UPT. ***
+
+--------------------------------------
+D. Setup JBoss
+--------------------------------------
+
+1. Unzip Install JBoss 4.0.5 GA package in to an appropreate directory
+   In this example we use C:\Apps\jboss-4.0.5.GA
+
+2. JBoss 4.0.5 comes bundled Apache MyFaces implementation which will need
+   to be removed.
+   Delete file:
+   C:\Apps\jboss-4.0.5.GA\server\default\deploy\jbossweb-tomcat55.sar\jsf-libs\myfaces-impl.jar
+
+3. Copy file "C:\SVN-Projects\reportwriter\build\mysql-ds.xml"
+   to C:\Apps\jboss-4.0.5.GA\server\default\deploy
+
+4. Add the following lines of XML to the end of login-config.xml file but prior to the </policy> tag.
+   This file is located in the C:\Apps\jboss-4.0.5.GA\server\default\conf directory.
+
+   (You need to modify localhost, port, user and password entries to reflect your environment)
+
+    <application-policy name="ncireportwriter">
+     <authentication>
+        <login-module code="gov.nih.nci.security.authentication.loginmodules.RDBMSLoginModule" flag="required">
+        <module-option name="driver">com.mysql.jdbc.Driver</module-option>
+        <module-option name="url">jdbc:mysql://localhost:3306/csmupt</module-option>
+        <module-option name="user">root</module-option>
+        <module-option name="passwd">admin123</module-option>
+        <module-option name="query">SELECT * FROM csm_user WHERE login_name=? AND password=?</module-option>
+        <module-option name="encryption-enabled">YES</module-option>
+        </login-module>
+     </authentication>
+    </application-policy>
+
+    <application-policy name="csmupt">
+     <authentication>
+        <login-module code="gov.nih.nci.security.authentication.loginmodules.RDBMSLoginModule" flag="required">
+        <module-option name="driver">com.mysql.jdbc.Driver</module-option>
+        <module-option name="url">jdbc:mysql://localhost:3306/csmupt</module-option>
+        <module-option name="user">root</module-option>
+        <module-option name="passwd">admin123</module-option>
+        <module-option name="query">SELECT * FROM csm_user WHERE login_name=? AND password=?</module-option>
+        <module-option name="encryption-enabled">YES</module-option>
+        </login-module>
+     </authentication>
+    </application-policy>
+
+5. Copy C:\SVN-Projects\reportwriter\webroot\WEB-INF\classes\ncireportwriter.properties
+   to C:\Apps\jboss-4.0.5.GA\server\default\data
+   (You need to modify this instruction to reflect your environment)
+
+6. Edit C:\Apps\jboss-4.0.5.GA\server\default\deploy\properties-service.xml file
+   Add a "SystemProperties" tag entry for ncireportwriter.properties file.
+    (You need to modify this code to reflect your environment)
+
+    <attribute name="Properties">
+        gov.nih.nci.cacore.ncireportwriterProperties=C:/jboss-4.0.5.GA/server/default/data/ncireportwriter.properties
+    </attribute>
+
+7. Copy C:\SVN-Projects\reportwriter\webroot\WEB-INF\lib\mysql-connector-java-3.1.13-bin.jar
+   to C:\jboss-4.0.5.GA\server\default\lib
+
+--------------------------------------
+D. Deploy Report Writer and UPT
+--------------------------------------
+1. Copy C:\SVN-Projects\reportwriter\build\ncireportwriter.war
+   to C:\Apps\jboss-4.0.5.GA\server\default\deploy
+
+2. Copy C:\SVN-Projects\reportwriter\upt\upt.war
+   to C:\Apps\jboss-4.0.5.GA\server\default\deploy
+
+3. Copy C:\SVN-Projects\reportwriter\upt\clm.jar
+   to C:\Apps\jboss-4.0.5.GA\server\default\lib
+
+4. Start JBoss
+
+
+=====================================================
+Steps for an automated build / deployment
+=====================================================
+
+The following are the "automated" steps to build and deploy the report writer application.
+*** You may use these steps if you are building and deploying on the same server.***
+
+1. Install JBoss in to C:\Apps\jboss-4.0.5.GA
+
+2. Install MySQL as you normally would
+
+3. Check out code from SVN
+   https://gforge.nci.nih.gov/svnroot/reportwriter/trunk
+   in to C:\SVN-Projects\reportwriter
+
+4. cd C:\SVN-Projects\reportwriter
+
+5. Setup JBoss
+   C:\SVN-Projects\reportwriter>ant setup
+
+6. Setup MySQL
+   C:\SVN-Projects\reportwriter>ant dbsetup
+
+7. Build the app.
+   C:\SVN-Projects\reportwriter>ant clean war
+
+8. Deploy the app.
+   C:\SVN-Projects\reportwriter>ant deploy
+
+9. Start JBoss
+
+--------------------------------------
+URLs
+--------------------------------------
+Report Writer
+-------------
+URL:        http://localhost:8080/ncireportwriter/
+
+
+UPT
+---
+URL:        http://localhost:8080/upt/
+APPLICATION NAME:   csmupt
+
+--------------------------------------
+Trouble shooting
+--------------------------------------
+
+Clear JBoss cache
+-----------------
+Solution:
+Delete C:\Apps\jboss-4.0.5.GA\server\default\work\jboss.web\localhost
+
+JBoss rmiPort=1098 "Address already in use" error
+-------------------------------------------------
+Solution:
+cd <JBOSS_HOME>\server\default\conf directory, and changed the rmi port in
+the jboss-services.xml from 1098 to 1122 (or a port that hasn't been taken).
+Restarted JBOSS.
+
+log4j:ERROR "org.jboss.logging.util.OnlyOnceErrorHandler"
+---------------------------------------------------------
+Exceptions occurs if an application deployed on JBoss packages log4j and commons-logging related jars
+in its package. JBoss has its own versions of these jars in its lib folder which results in these conflicts.
+Solution:
+Removing the log4j and commons-logging jars from your application's package will solve this issue.
