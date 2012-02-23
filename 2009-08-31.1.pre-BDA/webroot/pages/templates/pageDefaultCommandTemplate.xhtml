@@ -1,0 +1,37 @@
+<tr:document title="The National Center for Biomedical Ontology - BioPortal"
+					   xmlns:ui="http://java.sun.com/jsf/facelets"
+						 xmlns:h="http://java.sun.com/jsf/html"
+						 xmlns:f="http://java.sun.com/jsf/core"
+						 xmlns:c="http://java.sun.com/jstl/core"
+						 xmlns:fn="http://java.sun.com/jsp/jstl/functions"
+						 xmlns:tr="http://myfaces.apache.org/trinidad"
+						 xmlns:trh="http://myfaces.apache.org/trinidad/html"
+						 xmlns:ncbo="http://www.bioontology.org/jsf">
+	<f:facet name="metaContainer">
+		<tr:group>
+		<link rel="stylesheet" type="text/css" href="${PageLayout.contextPath}/css/ncbo.css"></link>
+		<trh:script source="/js/yui/yahoo-min.js"></trh:script>
+		<trh:script source="/js/yui/event-min.js"></trh:script>
+		<trh:script source="/js/yui/dom-min.js"></trh:script>
+		<trh:script source="/js/yui/container-min.js"></trh:script>
+		<trh:script source="/js/yui/menu.js"></trh:script>
+		</tr:group>
+	</f:facet>
+	
+	<!--
+	<f:loadBundle var="nls" basename="org.ncbo.stanford.client.resource.NCBOResourceBundle"/>
+	-->
+	
+	  <tr:form usesUpload="${(usesUpload != null) ? usesUpload : 'false'}" id="pg_form" defaultCommand="${defaultCommand}">
+			<ui:insert name="header">
+				<ui:include src="header.xhtml"/>
+			</ui:insert>
+			<ui:insert name="menuBar">
+				<ui:include src="menuBar.xhtml"/>
+			</ui:insert>
+			<tr:messages/>
+			<ui:insert name="body"></ui:insert>
+	  </tr:form>
+  
+  
+</tr:document>
