@@ -1,3 +1,10 @@
+<%--L
+  Copyright Northrop Grumman Information Technology.
+
+  Distributed under the OSI-approved BSD 3-Clause License.
+  See http://ncip.github.com/nci-report--writer/LICENSE.txt for details.
+L--%>
+
 <%@ taglib uri="EVSUIComponents" prefix="ui" %>
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1" pageEncoding="ISO-8859-1"%>
 <%@ page import="gov.nih.nci.evs.reportwriter.properties.*" %>
