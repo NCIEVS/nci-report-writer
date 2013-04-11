@@ -1,3 +1,10 @@
+/*L
+  Copyright Northrop Grumman Information Technology.
+
+  Distributed under the OSI-approved BSD 3-Clause License.
+  See http://ncip.github.com/nci-report--writer/LICENSE.txt for details.
+L*/
+
 -- ----------------------------------------------------------------------------
 -- Create Report Writer database
 -- Note: Please do not replace any values with @ prefix and @postfix in them
