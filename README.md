@@ -1,4 +1,4 @@
-Welcome to the nci-report--writer Project!
+Welcome to the nci-report-writer Project!
 ==============================
 
 The NCI EVS General Purpose Report Writer is a web-based tool that allows users to generate reports from a 
