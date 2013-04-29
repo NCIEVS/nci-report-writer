@@ -16,6 +16,6 @@ You will find more details about NCI EVS Report Writer in the following links:
  * [Home Page] (https://wiki.nci.nih.gov/x/D4E1AQ)
  * [Code Repository] (http://github.com/NCIP/nci-report-writer)
  * [Issue Tracker] (https://gforge.nci.nih.gov/tracker/?group_id=543)
- * [Documentation] ( 	https://wiki.nci.nih.gov/x/D4E1AQ)
+ * [Documentation] ( 	https://gforge.nci.nih.gov/projects/reportwriter )
   
 Please join us in further developing and improving NCI EVS Report Writer.
