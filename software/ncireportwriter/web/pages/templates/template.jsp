@@ -43,7 +43,7 @@ L--%>
     <div class="center-page">
       <jsp:include page="/pages/templates/sub_header.jsp" />
       <div class="mainbox-top"><img src="<%=imagesPath%>/mainbox-top.gif"
-        width="745" height="5" alt="Mainbox Top" /></div>
+        width="947" height="5" alt="Mainbox Top" /></div>
       <div id="main-area">
         <jsp:include page="/pages/templates/application_banner.jsp" />
         <jsp:include page="/pages/templates/quick_links.jsp" />
@@ -55,7 +55,7 @@ L--%>
       </div>
       <!-- Note: Keep the div below on one line to avoid IE bug. -->
       <div class="mainbox-bottom"><img src="<%=imagesPath%>/mainbox-bottom.gif"
-        width="745" height="5" alt="Mainbox Bottom" /></div>
+        width="947" height="5" alt="Mainbox Bottom" /></div>
     </div>
     <br/>
   </body>
