@@ -1,0 +1,748 @@
+<?xml version="1.0" encoding="utf-8" ?>
+
+<!--L
+  Copyright Northrop Grumman Information Technology.
+
+  Distributed under the OSI-approved BSD 3-Clause License.
+  See http://ncip.github.com/nci-report-writer/LICENSE.txt for details.
+L-->
+
+<project name="build" default="usage" basedir="." xmlns:bda="antlib:gov.nih.nci.bdalite">
+
+    <description>
+        This is the master build file for the project.
+        It should be placed in project/software/. This script wrappers sub projects to build, test and inspect code.
+        These scripts require Java, Ant and SVN to work.
+    </description>
+
+    <!-- Property file names -->
+    <property environment="env" />
+    <property name="properties.file" value="project.properties" />
+    <property name="local.properties.file" value="local.properties" />
+
+    <!-- Local property file -->
+    <property file="${local.properties.file}" />
+    <available file="${local.properties.file}" property="local.properties.file.exists" />
+
+    <!-- Project property file -->
+    <property file="${properties.file}" />
+    <available file="${properties.file}" property="properties.file.exists" />
+    <fail unless="properties.file.exists" message="The properties.file ${properties.file} does not exist." />
+
+    <!-- Application values -->
+    <property name="project.name" value="ncireportwriter"/>
+    <property name="project.short.name" value="ncirw" />
+    <property name="webapp.war.name" value="${project.name}.war" />
+    <property name="webapp.prop.file" value="ncireportwriter.properties" />
+
+    <path id="classpath">
+        <fileset dir="../${project.name}/extlib">
+            <include name="**/*.jar" />
+        </fileset>
+        <fileset dir="../${project.name}/evs-utils">
+            <include name="**/*.jar" />
+        </fileset>
+    </path>
+
+    <!-- BDA-Lite Task Definitions -->
+    <taskdef uri="antlib:gov.nih.nci.bdalite"
+        resource="gov/nih/nci/bdalite/ant/security/bda-lite.xml"
+        classpathref="classpath" />
+
+    <!-- BDA-Lite Standard Locations -->
+    <bda:BDAInit />
+
+    <!-- Liquibase Tasks -->
+    <taskdef resource="liquibasetasks.properties">
+        <classpath refid="classpath"/>
+    </taskdef>
+    <property name="db.changelog.file" value="db-upgrade.xml"/>
+
+    <!-- Compile standard values -->
+    <property name="webapp.build.dir" value="${bda.software.dir}/${project.name}/build/web" />
+    <property name="webapp.classes.dir" value="${webapp.build.dir}/WEB-INF/classes" />
+    <property name="webapp.dir" value="${bda.software.dir}/${project.name}/web" />
+    <property name="upt.dir" value="${bda.software.dir}/${project.name}/upt" />
+    <property name="database.driver.file" value="${bda.lib.dir}/mysql-connector-java-5.1.10.jar"/>
+    <property name="exploded.dir" value="${bda.dist.dir}/exploded/${project.name}-webapp" />
+
+    <!-- Ant Task definitions -->
+    <taskdef name="for" classname="net.sf.antcontrib.logic.ForTask" classpathref="bda.project.compile.classpath"/>
+    <taskdef name="if" classname="net.sf.antcontrib.logic.IfTask" classpathref="bda.project.compile.classpath"/>
+    <taskdef name="osfamily" classname="net.sf.antcontrib.platform.OsFamily" classpathref="bda.project.compile.classpath"/>
+    <taskdef name="xmltask" classname="com.oopsconsultancy.xmltask.ant.XmlTask" classpathref="bda.project.compile.classpath"/>
+    <property name="db.install.dir" value="${bda.software.dir}/${project.name}/db/db-install" />
+    <property name="db.upgrade.dir" value="${bda.software.dir}/${project.name}/db/db-upgrade" />
+
+    <!--============================-->
+    <!-- usage: show build targets  -->
+    <!--============================-->
+
+    <target name="usage" depends="-init" description="Explains how to use this build script">
+
+        <bda:Usage />
+
+    </target>
+
+    <!-- This will delete all of the files created by the build process -->
+
+    <target name="clean" depends="-init" description="Remove classes directory for clean build">
+
+        <delete dir="${bda.target.dir}" quiet="true" />
+        <delete dir="${webapp.build.dir}" quiet="true" />
+
+    </target>
+
+    <target name="-init" description="Sets up build are and initalizes variables">
+
+        <tstamp>
+            <format property="BUILD_DATE" pattern="MMMM-d-yyyy hh:mm aa" locale="en,US"/>
+        </tstamp>
+
+        <echo message="Using local properties file of ${local.properties.file}." />
+        <echo message="Using project properties file of ${properties.file}." />
+
+    </target>
+
+    <!--=========================================-->
+    <!-- build:all: Builds all the sub projects  -->
+    <!--=========================================-->
+
+    <target name="build:all" description="Normal build of application"
+        depends="
+            clean,
+            compile:application-code,
+            -war,
+            -dist
+        " >
+    </target>
+
+    <target name="build:dist" description="Build of application with completed configuration files"
+        depends="
+            clean,
+            compile:application-code,
+            -war,
+            -dist,
+            build:config
+        " >
+    </target>
+
+    <target name="compile:application-code" depends="-init" description="Compiles all subproject code">
+
+        <mkdir dir="${webapp.build.dir}" />
+        <mkdir dir="${webapp.classes.dir}" />
+
+        <!-- Compile java classes -->
+        <javac srcdir="${bda.src.dir}" destdir="${webapp.classes.dir}" debug="true" includeantruntime="false">
+            <classpath refid="bda.project.compile.classpath" />
+            <classpath path ="${webapp.classes.dir}"/>
+        </javac>
+
+        <!-- Copy internal property files -->
+        <copy todir="${webapp.classes.dir}" includeEmptyDirs="no" overwrite="true">
+            <fileset dir="${bda.src.dir}/java">
+                <patternset>
+                    <include name="**/*.properties"/>
+                </patternset>
+            </fileset>
+        </copy>
+
+        <copy todir="${webapp.classes.dir}" overwrite="true"
+             flatten="true" includeEmptyDirs="no" filtering="false">
+            <resources>
+                <file file="${bda.conf.dir}/csm.ehcache.xml"/>
+                <file file="${bda.conf.dir}/unmarshaller-xml-mapping.xml"/>
+                <file file="${bda.conf.dir}/xml-mapping.xml"/>
+            </resources>
+        </copy>
+
+    </target>
+
+    <target name="-war" depends="compile:application-code">
+
+        <mkdir dir="${bda.dist.dir}/exploded/${project.name}-webapp" />
+        <mkdir dir="${bda.dist.dir}/exploded/${project.name}-webapp/deploy" />
+
+        <war destfile="${bda.dist.dir}/exploded/${project.name}-webapp/${webapp.war.name}" basedir="${webapp.dir}">
+            <lib dir="${bda.lib.dir}" includes="*.jar" />
+            <classes dir="${webapp.classes.dir}"/>
+        </war>
+
+    </target>
+
+    <target name="-dist" description="Copies external files to distribution folder">
+
+        <echo message="Config folder: ${bda.conf.dir}" />
+
+        <!-- Set default value of 'trunk' if Anthill tag is not set -->
+
+        <bda:PropertyTest
+            property="anthill.build.tag_built"
+            default="Unknown"
+        />
+
+        <echo message="Tag: ${anthill.build.tag_built}" />
+        <!-- Setup application property file with defaults, balance of which is set on deployment -->
+
+        <copy todir="${bda.dist.dir}/exploded/${project.name}-webapp/deploy" overwrite="true"
+             flatten="true" includeEmptyDirs="no" filtering="true">
+            <filterset>
+                <filter token="app.build.tag" value="${anthill.build.tag_built}"/>
+                <filter token="build.info" value="Built: ${BUILD_DATE}"/>
+                <filter token="application.version" value="${application.version}"/>
+                <filter token="debug.on" value="${debug.on}"/>
+                <filter token="maximum.return" value="${maximum.return}"/>
+                <filter token="maximum.level" value="${maximum.level}"/>
+                <filter token="csm.lockout.time" value="${csm.lockout.time}"/>
+                <filter token="csm.allowed.login.time" value="${csm.allowed.login.time}"/>
+                <filter token="csm.allowed.attempts" value="${csm.allowed.attempts}"/>
+                <filter token="display.ncit.code.url" value="${display.ncit.code.url}"/>
+            </filterset>
+            <resources>
+                <file file="${bda.conf.dir}/${webapp.prop.file}"/>
+            </resources>
+        </copy>
+
+        <!-- Setup hibernate remote config file -->
+
+        <copy todir="${bda.dist.dir}/exploded/${project.name}-webapp/deploy" overwrite="true"
+             flatten="true" includeEmptyDirs="no" filtering="false">
+            <resources>
+                <file file="${bda.conf.dir}/application-config.xml"/>
+                <file file="${bda.conf.dir}/application-config-client.xml"/>
+                <file file="${bda.conf.dir}/application-config-client-local.xml"/>
+                <file file="${bda.conf.dir}/application-config-client-remote.xml"/>
+                <file file="${bda.conf.dir}/ncireportwriter.csm.new.hibernate.cfg.xml"/>
+                <file file="${bda.conf.dir}/rwdbserver.csm.new.hibernate.cfg.xml"/>
+            </resources>
+        </copy>
+
+        <!-- Setup log4j file -->
+
+        <copy todir="${bda.dist.dir}/exploded/${project.name}-webapp/deploy" overwrite="true"
+             flatten="true" includeEmptyDirs="no" filtering="true">
+            <filterset>
+                <filter token="log.package" value="${log.package}"/>
+                <filter token="log4j.dtd.path" value="@application.data.path@/${ncireportwriter.conf.path}"/>
+            </filterset>
+            <resources>
+                <file file="${bda.conf.dir}/${project.short.name}-log4j.xml"/>
+            </resources>
+        </copy>
+
+        <!-- Copy additional files -->
+
+        <copy todir="${bda.dist.dir}/exploded/${project.name}-webapp/deploy" overwrite="true"
+             flatten="true" includeEmptyDirs="no" filtering="false">
+            <resources>
+                <file file="${bda.conf.dir}/log4j.dtd"/>
+                <file file="${bda.conf.dir}/ncireportwriter-ds.xml"/>
+                <!-- database files -->
+                <file file="${db.install.dir}/mysql/create-tables-csm.sql"/>
+                <file file="${db.install.dir}/mysql/create-tables-rw.sql"/>
+                <file file="${db.install.dir}/mysql/insert-data-rw.sql"/>
+                <file file="${db.upgrade.dir}/mysql/upgrade-data-csm.sql"/>
+                <file file="${db.upgrade.dir}/mysql/upgrade-data-rw.sql"/>
+                <file file="${db.upgrade.dir}/db-upgrade.xml"/>
+            </resources>
+        </copy>
+
+    </target>
+
+    <target name="build:config" description="Generates configuration files for a target environment">
+
+        <available file="${exploded.dir}/deploy" property="deploy.exists" />
+        <fail unless="deploy.exists" message="Deploy folder not found. Please run build:dist first." />
+
+        <!-- Generate Log4j XML file -->
+
+        <copy todir="${exploded.dir}/install" includeEmptyDirs="no"
+           filtering="true" overwrite="true">
+            <filterset>
+                <filter token="application.data.path" value="${application.data.path}"/>
+                <filter token="log.level" value="${log.level}"/>
+            </filterset>
+            <fileset dir="${exploded.dir}/deploy">
+                <patternset>
+                    <include name="**/*-log4j.*"/>
+                </patternset>
+            </fileset>
+        </copy>
+
+        <copy todir="${exploded.dir}/install" includeEmptyDirs="no"
+           filtering="false" overwrite="true">
+            <fileset dir="${exploded.dir}/deploy">
+                <patternset>
+                    <include name="**/*log4j.dtd"/>
+                </patternset>
+            </fileset>
+        </copy>
+
+        <!-- Generate application property file -->
+
+        <copy todir="${exploded.dir}/install" overwrite="true"
+             flatten="true" includeEmptyDirs="no" filtering="true">
+            <filterset>
+                <filter token="ncit.url" value="${ncit.url}"/>
+                <filter token="lex.evs.api.url" value="${lex.evs.api.url}"/>
+                <filter token="lg.config.file" value="${lg.config.file}"/>
+                <filter token="application.data.path" value="${application.data.path}"/>
+                <filter token="mail.smtp.server" value="${mail.smtp.server}"/>
+                <filter token="account.admin.user.email" value="${account.admin.user.email}"/>
+                <filter token="contact.us.email" value="${contact.us.email}"/>
+                <filter token="license_page_option" value="${license_page_option}"/>
+                <filter token="report.download.directory" value="${application.data.path}/${report.download.directory}"/>
+            </filterset>
+            <resources>
+                <file file="${exploded.dir}/deploy/${webapp.prop.file}"/>
+            </resources>
+        </copy>
+
+        <!-- Generate lexevs remote config file -->
+
+        <copy todir="${bda.dist.dir}/exploded/${project.name}-webapp/install" overwrite="true"
+             flatten="true" includeEmptyDirs="no" filtering="false">
+            <filterset>
+                <filter token="application.data.path" value="${application.data.path}"/>
+                <filter token="lex.evs.api.url" value="${lex.evs.api.url}"/>
+                <filter token="database.url" value="${database.url}"/>
+                <filter token="database.driver" value="${database.driver}"/>
+                <filter token="database.user" value="${database.user}"/>
+                <filter token="database.password" value="${database.password}"/>
+            </filterset>
+            <resources>
+                <file file="${exploded.dir}/deploy/application-config.xml"/>
+                <file file="${exploded.dir}/deploy/application-config-client.xml"/>
+                <file file="${exploded.dir}/deploy/application-config-client-local.xml"/>
+                <file file="${exploded.dir}/deploy/application-config-client-remote.xml"/>
+                <file file="${exploded.dir}/deploy/ncireportwriter.csm.new.hibernate.cfg.xml"/>
+                <file file="${exploded.dir}/deploy/rwdbserver.csm.new.hibernate.cfg.xml"/>
+                <file file="${exploded.dir}/deploy/ncireportwriter-ds.xml"/>
+            </resources>
+        </copy>
+
+        <!-- Generate database scripts -->
+
+        <bda:CSMStringEncrypter string="${database.password}" property="encryptedPassword"/>
+        <bda:CSMStringEncrypter string="${rw.admin.user.passwd}" property="encrypted.rw.admin.user.passwd"/>
+        <bda:CSMStringEncrypter string="${rw.user.passwd}" property="encrypted.rw.user.passwd"/>
+
+        <mkdir dir="${exploded.dir}/db" />
+        <copy todir="${exploded.dir}/db" overwrite="true"
+             flatten="true" includeEmptyDirs="no" filtering="true">
+            <filterset>
+                <filter token="database.name" value="${database.name}"/>
+                <filter token="database.user" value="${database.user}"/>
+                <filter token="database.password" value="${encryptedPassword}"/>
+                <filter token="database.server" value="${database.server}"/>
+                <filter token="database.port" value="${database.port}"/>
+                <filter token="database.url" value="${database.url}"/>
+                <!-- Users -->
+                <filter token="rw.admin.user.name" value="${rw.admin.user.name}"/>
+                <filter token="rw.admin.user.passwd" value="${encrypted.rw.admin.user.passwd}"/>
+                <filter token="rw.admin.user.email" value="${rw.admin.user.email}"/>
+                <filter token="rw.user.name" value="${rw.user.name}"/>
+                <filter token="rw.user.passwd" value="${encrypted.rw.user.passwd}"/>
+                <filter token="rw.user.email" value="${rw.user.email}"/>
+            </filterset>
+            <resources>
+                <file file="${exploded.dir}/deploy/create-tables-csm.sql"/>
+                <file file="${exploded.dir}/deploy/create-tables-rw.sql"/>
+                <file file="${exploded.dir}/deploy/insert-data-rw.sql"/>
+                <file file="${exploded.dir}/deploy/upgrade-data-csm.sql"/>
+                <file file="${exploded.dir}/deploy/upgrade-data-rw.sql"/>
+                <file file="${exploded.dir}/deploy/db-upgrade.xml"/>
+            </resources>
+        </copy>
+
+        <!-- Copy database support files (For systems team AHP3 deployments) -->
+
+        <copy todir="${exploded.dir}/db" overwrite="true"
+            flatten="true" includeEmptyDirs="no" filtering="false">
+            <resources>
+                <file file="${database.driver.file}"/>
+                <file file="${bda.software.dir}/${project.name}/extlib/liquibase-2.0.1.jar"/>
+            </resources>
+        </copy>
+
+        <copy
+            file="db-build.xml"
+            tofile="${exploded.dir}/db/build.xml"
+            overwrite="true"
+            filtering="true">
+            <filterset>
+                <filter token="db.changelog.file" value="${db.changelog.file}"/>
+                <filter token="database.driver" value="${database.driver}"/>
+                <filter token="database.name" value="${database.name}"/>
+                <filter token="database.user" value="${database.user}"/>
+                <filter token="database.password" value="${database.password}"/>
+                <filter token="database.server" value="${database.server}"/>
+                <filter token="database.port" value="${database.port}"/>
+                <filter token="database.url" value="${database.url}"/>
+            </filterset>
+        </copy>
+
+    </target>
+
+    <target name="deploy:local:upgrade" depends="build:all,build:config" description="Build and upgrade application">
+
+        <antcall target="jboss:stop" />
+
+        <bda:AddJBossProperty
+            deploydir="${jboss.server.path}/server/default/deploy"
+            backup="true"
+            name="gov.nih.nci.cacore.ncireportwriterProperties"
+            value="${application.data.path}/${ncireportwriter.conf.path}/${webapp.prop.file}"
+        />
+
+        <bda:AddJBossProperty
+            deploydir="${jboss.server.path}/server/default/deploy"
+            backup="true"
+            name="gov.nih.nci.cacore.ncireportwriterlog4jProperties"
+            value="${application.data.path}/${ncireportwriter.conf.path}/${project.short.name}-log4j.xml"
+        />
+
+        <bda:SetJBossLoginProperty
+            confdir="${jboss.server.path}/server/default/conf"
+            name="ncireportwriter"
+            driver="com.mysql.jdbc.Driver"
+            url="jdbc:mysql://${database.server}:${database.port}/${database.name}"
+            user="${database.user}"
+            passwd="${database.password}"
+            query="SELECT * FROM CSM_USER WHERE LOGIN_NAME=? and PASSWORD=?"
+            encrypt="true" />
+
+        <bda:SetJBossLoginProperty
+            confdir="${jboss.server.path}/server/default/conf"
+            name="csmupt"
+            driver="com.mysql.jdbc.Driver"
+            url="jdbc:mysql://${database.server}:${database.port}/${database.name}"
+            user="${database.user}"
+            passwd="${database.password}"
+            query="SELECT * FROM CSM_USER WHERE LOGIN_NAME=? and PASSWORD=?"
+            encrypt="true" />
+
+        <copy todir="${application.data.path}/conf" overwrite="true"
+              flatten="true" includeEmptyDirs="no" filtering="false">
+            <resources>
+                <file file="${exploded.dir}/install/${webapp.prop.file}"/>
+                <file file="${exploded.dir}/install/${project.short.name}-log4j.xml"/>
+                <file file="${exploded.dir}/install/log4j.dtd"/>
+                <file file="${exploded.dir}/install/application-config-client-local.xml"/>
+                <file file="${exploded.dir}/install/application-config-client-remote.xml"/>
+                <file file="${exploded.dir}/install/application-config.xml"/>
+            </resources>
+        </copy>
+
+        <copy todir="${jboss.server.path}/server/default/conf" overwrite="true"
+              flatten="true" includeEmptyDirs="no" filtering="false">
+            <resources>
+                <file file="${exploded.dir}/install/application-config-client.xml"/>
+                <file file="${exploded.dir}/install/ncireportwriter.csm.new.hibernate.cfg.xml"/>
+                <file file="${exploded.dir}/install/rwdbserver.csm.new.hibernate.cfg.xml"/>
+            </resources>
+        </copy>
+
+        <copy
+            file="${bda.dist.dir}/exploded/${project.name}-webapp/${webapp.war.name}"
+            tofile="${jboss.server.path}/server/default/deploy/${webapp.war.name}"
+            overwrite="true"
+        />
+
+        <copy file="${upt.dir}/upt.war" todir="${jboss.server.path}/server/default/deploy" overwrite="true"/>
+        <copy file="${upt.dir}/clm.jar" todir="${jboss.server.path}/server/default/lib" overwrite="true"/>
+        <copy file="${database.driver.file}" todir="${jboss.server.path}/server/default/lib" overwrite="true" />
+        <copy file="${bda.dist.dir}/exploded/${project.name}-webapp/install/ncireportwriter-ds.xml" todir="${jboss.server.path}/server/default/deploy" overwrite="true" />
+
+        <mkdir dir="${application.data.path}/${report.download.directory}" />
+
+        <antcall target="jboss:start" />
+
+    </target>
+
+    <target name="install:database" depends="-dist,build:config" description="Install a new database">
+
+        <if>
+            <not><isset property="run.quite"/></not>
+            <then>
+                <bda:InputYesNo
+                    property="begin.db.install"
+                    prompt="Begin a clean database install?"
+                />
+            </then>
+            <else>
+                <property name="begin.db.install" value="true"/>
+            </else>
+        </if>
+
+        <if>
+            <isset property="begin.db.install"/>
+            <then>
+                <echo message="Install a new database..." />
+
+                <updateDatabase
+                    changeLogFile="${bda.dist.dir}/exploded/${project.name}-webapp/db/${db.changelog.file}"
+                    driver="${database.driver}"
+                    url="${database.url}"
+                    username="${database.user}"
+                    password="${database.password}"
+                    promptOnNonLocalDatabase="no"
+                    dropFirst="true"
+                    classpathref="classpath">
+                        <changeLogProperty name="db.run.path"
+                            value="${bda.dist.dir}/exploded/${project.name}-webapp/db"
+                        />
+                </updateDatabase>
+            </then>
+        </if>
+
+    </target>
+
+    <target name="upgrade:database" depends="-dist,build:config" description="Upgrade the current database">
+
+        <if>
+            <not><isset property="run.quite"/></not>
+            <then>
+                <bda:InputYesNo
+                    property="begin.db.upgrade"
+                    prompt="Begin database upgradeinstall?"
+                />
+            </then>
+            <else>
+                <property name="begin.db.upgrade" value="true"/>
+            </else>
+        </if>
+
+        <if>
+            <isset property="begin.db.upgrade"/>
+            <then>
+                <echo message="Upgrading the database..." />
+
+                <updateDatabase
+                    changeLogFile="${bda.dist.dir}/exploded/${project.name}-webapp/db/${db.changelog.file}"
+                    driver="${database.driver}"
+                    url="${database.url}"
+                    username="${database.user}"
+                    password="${database.password}"
+                    promptOnNonLocalDatabase="no"
+                    dropFirst="false"
+                    classpathref="classpath">
+                        <changeLogProperty name="db.run.path"
+                            value="${bda.dist.dir}/exploded/${project.name}-webapp/db"
+                        />
+               </updateDatabase>
+
+            </then>
+        </if>
+
+    </target>
+
+    <target name="deploy:local:uninstall" description="Uninstall the web application">
+
+        <bda:InputYesNo
+            property="begin.uninstall"
+            prompt="Uninstall the application?"
+        />
+        <if>
+            <isset property="begin.uninstall"/>
+            <then>
+                <antcall target="jboss:stop" />
+
+                <bda:RemoveJBossProperty
+                    deploydir="${jboss.server.path}/server/default/deploy"
+                    backup="true"
+                    name="gov.nih.nci.cacore.ncireportwriterProperties"
+                />
+
+                <bda:RemoveJBossProperty
+                    deploydir="${jboss.server.path}/server/default/deploy"
+                    backup="true"
+                    name="gov.nih.nci.cacore.ncireportwriterlog4jProperties"
+                />
+
+				<!-- Remove war files -->
+                <delete file="${jboss.server.path}/server/default/deploy/${webapp.war.name}" quiet="true" />
+                <delete file="${jboss.server.path}/server/default/deploy/upt.war" quiet="true" />
+                <delete file="${jboss.server.path}/server/default/lib/clm.jar" quiet="true" />
+                <!-- Remove config files -->
+                <delete file="${jboss.server.path}/server/default/conf/application-config-client.xml" quiet="true" />                
+                <!-- Remove database config files -->
+                <delete file="${jboss.server.path}/server/default/deploy/ncireportwriter-ds.xml" quiet="true" />
+                <delete file="${jboss.server.path}/server/default/conf/ncireportwriter.csm.new.hibernate.cfg.xml" quiet="true" />
+                <delete file="${jboss.server.path}/server/default/conf/rwdbserver.csm.new.hibernate.cfg.xml" quiet="true" />
+      
+           </then>
+        </if>
+
+    </target>
+
+    <target name="deploy:hot" depends="build:all" description="Hot deploy application">
+
+        <delete file="${jboss.server.path}/server/default/deploy/${webapp.war.name}" quiet="true" />
+
+        <copy
+            file="${bda.dist.dir}/exploded/${project.name}-webapp/${webapp.war.name}"
+            tofile="${jboss.server.path}/server/default/deploy/${webapp.war.name}.bak"
+            overwrite="true"
+        />
+        <move file="${jboss.server.path}/server/default/deploy/${webapp.war.name}.bak"
+            tofile="${jboss.server.path}/server/default/deploy/${webapp.war.name}"/>
+
+    </target>
+
+    <target name="deploy:hot:jsp" depends="-init" description="Hot deploy JSP files">
+
+        <bda:JBossTempDir
+            tmpdir="${jboss.server.path}/server/default/tmp"
+            property="jboss.war.temp.dir.location"
+            warname="${webapp.war.name}"
+
+        />
+
+        <fail unless="jboss.war.temp.dir.location" message="Unable to locate JBoss temp war directory!" />
+        <echo message="JBoss temp: ${jboss.war.temp.dir.location}"/>
+        <echo message="    Source: ${webapp.dir}"/>
+
+        <bda:JBossStopApp
+            jbossbin="${jboss.server.path}/bin"
+            warname="${project.name}"
+            host="${jboss.server.hostname}:${jboss.server.jndi.port}"
+        />
+
+        <copy todir="${jboss.war.temp.dir.location}" overwrite="true">
+            <fileset dir="${webapp.dir}">
+                <include name="**/*.jsp" />
+                <include name="**/*.jspf" />
+                <include name="**/*.css" />
+                <include name="**/*.js" />
+                <include name="**/*.jpg" />
+                <include name="**/*.gif" />
+                <include name="**/*.png" />
+                <include name="**/*.faces" />
+                <include name="**/*.tag" />
+                <include name="**/*.tagf" />
+            </fileset>
+        </copy>
+
+        <bda:JBossStartApp
+            jbossbin="${jboss.server.path}/bin"
+            warname="${project.name}"
+            host="${jboss.server.hostname}:${jboss.server.jndi.port}"
+        />
+
+    </target>
+
+    <target name="jboss:stop" description="Shutdown JBoss">
+
+        <bda:JBossStopRemote
+            jbossbin="${jboss.server.path}/bin"
+            host="${jboss.server.hostname}:${jboss.server.jndi.port}"
+            url="http://${jboss.server.hostname}:${jboss.server.port}"
+        />
+
+    </target>
+
+    <target name="jboss:start" description="Start JBoss">
+
+        <bda:JBossStart
+            url="http://${jboss.server.hostname}:${jboss.server.port}/${project.name}"
+            startscript="${jboss.server.startscript}"
+        />
+
+    </target>
+
+    <target name="deploy:local:install" depends="-init" description="Installs JBoss based on local.properties">
+
+        <if>
+            <isset property="local.properties.file.exists"/>
+            <then>
+                <bda:InputYesNo
+                    property="begin.install"
+                    prompt="Begin a new install?"
+                />
+                <if>
+                    <isset property="begin.install"/>
+                    <then>
+
+                        <mkdir dir="${bda.temp.dir}"/>
+
+                        <available file="${jboss.server.path}" property="jboss.server.exists" />
+                        <if>
+                            <not><isset property="jboss.server.exists"/></not>
+                            <then>
+                                <bda:ConsoleOutput message="Downloading ${jboss.download.url}..."/>
+                                <get src="${jboss.download.url}" dest="${bda.temp.dir}/${jboss.zip.name}"/>
+                                <unzip src="${bda.temp.dir}/${jboss.zip.name}" dest="${jboss.server.path}/.."/>
+                                <mkdir dir="${jboss.server.path}/server/default/log" />
+                            </then>
+                            <else>
+                                <bda:ConsoleOutput message="JBoss present. Skipping download."/>
+                                <antcall target="jboss:stop" />
+                            </else>
+                        </if>
+
+                        <bda:ConsoleOutput message="Configuring JBoss..."/>
+
+                        <bda:SetJBossServer
+                            serverpath="${jboss.server.path}"
+                            port="${jboss.server.port}"
+                            bindaddress="${jboss.server.bindaddress}"
+                            redirectport="${jboss.server.redirect.port}"
+                            ajpport="${jboss.server.ajp.port}"
+                            ajpredirectport="${jboss.server.ajp.redirect.port}"
+                            jndiport="${jboss.server.jndi.port}"
+                            rmiport="${jboss.server.rmi.port}"
+                        />
+
+                        <bda:SetJBossRunConf
+                            runconf="${jboss.server.path}/bin/run.conf"
+                            xms="${jboss.server.xms}"
+                            xmx="${jboss.server.xmx}"
+                            maxpermgen="${jboss.server.maxpermgen}"
+                        />
+
+                        <bda:SetJBossRunConf
+                            runconf="${jboss.server.path}/bin/run.conf.bat"
+                            xms="${jboss.server.xms}"
+                            xmx="${jboss.server.xmx}"
+                            maxpermgen="${jboss.server.maxpermgen}"
+                        />
+
+                        <get src="${tools.download.url}/stop.sh" dest="${bda.temp.dir}/stop.sh"/>
+                        <get src="${tools.download.url}/start.sh" dest="${bda.temp.dir}/start.sh"/>
+
+                        <copy todir="${jboss.server.path}/bin" overwrite="true"
+                             flatten="true" includeEmptyDirs="no" filtering="true">
+                            <filterset>
+                                <filter token="jboss.server.path" value="${jboss.server.path}"/>
+                                <filter token="jboss.server.hostname" value="${jboss.server.hostname}"/>
+                                <filter token="jboss.server.jndi.port" value="${jboss.server.jndi.port}"/>
+                            </filterset>
+                            <resources>
+                                <file file="${bda.temp.dir}/stop.sh"/>
+                                <file file="${bda.temp.dir}/start.sh"/>
+                            </resources>
+                        </copy>
+
+                        <chmod file="${jboss.server.path}/bin/*.sh" perm="+x"/>
+
+                        <bda:ConsoleOutput />
+                        <bda:ConsoleOutput message="  Configuration complete." />
+                        <bda:ConsoleOutput message="  Please run 'deploy:local:upgrade' to deploy the application." />
+
+                    </then>
+                    <else>
+                        <bda:ConsoleOutput message="" />
+                        <bda:ConsoleOutput message="Install aborted." />
+                    </else>
+                </if>
+            </then>
+            <else>
+                <echo message="Please create a local.properties file and run 'deploy:local:install' again." />
+                <echo message="An example local.properties can be found in the docs directory." />
+            </else>
+        </if>
+
+    </target>
+
+</project>

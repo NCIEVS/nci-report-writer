@@ -13,8 +13,8 @@ import gov.nih.nci.evs.utils.*;
 import gov.nih.nci.security.*;
 import gov.nih.nci.security.authentication.*;
 import gov.nih.nci.security.authorization.domainobjects.User;
-
 import java.util.*;
+
 
 import javax.faces.event.*;
 import javax.faces.model.*;
@@ -23,8 +23,15 @@ import javax.servlet.http.*;
 
 import org.apache.log4j.*;
 
+import java.net.*;
+import java.sql.*;
+import javax.sql.DataSource;
+
+import gov.nih.nci.security.util.*;
+import gov.nih.nci.evs.reportwriter.security.CSMAuthorizationManager;
+
 /**
- * 
+ *
  */
 
 /**
@@ -42,9 +49,9 @@ public class LoginBean extends Object {
     private static final String CSM_ALLOWED_LOGIN_TIME =
         AppProperties.getInstance()
             .getProperty(AppProperties.CSM_ALLOWED_LOGIN_TIME);
-    private static final String CSM_ALLOWED_ATTEMPTS =
-        AppProperties.getInstance()
-            .getProperty(AppProperties.CSM_ALLOWED_ATTEMPTS);
+    private static final String CSM_ALLOWED_ATTEMPTS = "1000";
+        //AppProperties.getInstance()
+        //    .getProperty(AppProperties.CSM_ALLOWED_ATTEMPTS);
 
     private String _userid;
     private String _password;
@@ -57,8 +64,8 @@ public class LoginBean extends Object {
 		super();
 		LockoutManager.initialize(CSM_LOCKOUT_TIME, CSM_ALLOWED_LOGIN_TIME,
 				CSM_ALLOWED_ATTEMPTS);
-	}    
-    
+	}
+
     public void setSelectedTask(String selectedTask) {
         _selectedTask = selectedTask;
         _logger.debug("selectedTask: " + _selectedTask);
@@ -88,9 +95,15 @@ public class LoginBean extends Object {
         _roleGroupId = roleGroupId;
     }
 
+
+/*
     private User getCSMUser(String userid) throws Exception {
+
+System.out.println("(*) getCSMUser " + 	userid	);
+System.out.println("*********************************************************************************");
         AuthorizationManager manager =
             SecurityServiceProvider.getAuthorizationManager(APP_NAME);
+
         if (manager == null)
             throw new Exception("Can not get authorization manager for: "
                 + APP_NAME);
@@ -100,18 +113,58 @@ public class LoginBean extends Object {
             throw new Exception("Error retrieving CSM userid " + userid + ".");
         return user;
     }
+*/
+
+    public static gov.nih.nci.security.authorization.domainobjects.User getCSMUser(String userid) throws Exception {
+
+
+		System.out.println("(***) calling CSMAuthorizationManager.getAuthorizationManagerDirectly " + APP_NAME);
+
+        AuthorizationManager manager = CSMAuthorizationManager.getAuthorizationManagerDirectly(APP_NAME);
+
+		System.out.println("(***) exiting CSMAuthorizationManager.getAuthorizationManagerDirectly " + APP_NAME);
+
+
+        if (manager == null)
+            throw new Exception("Can not get authorization manager for: " + APP_NAME);
+
+        gov.nih.nci.security.authorization.domainobjects.User user = manager.getUser(userid);
+        if (user == null)
+            throw new Exception("Error retrieving CSM userid " + userid + ".");
+
+
+ 		System.out.println("(***) getCSMUser returns user email: " + user.getEmailId());
+
+
+        return user;
+    }
+
 
     private Boolean hasAdminPrivilege(String userid) throws Exception {
-        User user = getCSMUser(userid);
-        AuthorizationManager manager =
-            SecurityServiceProvider.getAuthorizationManager(APP_NAME);
+		System.out.println("getCSMUser " + userid);
+        gov.nih.nci.security.authorization.domainobjects.User user = getCSMUser(userid);
+
+        if (user == null) {
+			System.out.println("getCSMUser returns NULL??? " + userid);
+		}
+
+        //KLO
+        //AuthorizationManager manager = SecurityServiceProvider.getAuthorizationManager(APP_NAME);
+        AuthorizationManager manager = CSMAuthorizationManager.getAuthorizationManagerDirectly(APP_NAME);
+
         boolean permission =
             manager.checkPermission(user.getLoginName(), "admin-pe", "EXECUTE");
+
+		System.out.println("getCSMUser permission = " + permission);
+
         return new Boolean(permission);
+
+
+        //return new Boolean(true);
     }
 
     private String getEmail(String userid) throws Exception {
-        User user = getCSMUser(userid);
+        gov.nih.nci.security.authorization.domainobjects.User user = getCSMUser(userid);
         String email = user.getEmailId();
         return email != null ? email : null;
     }
@@ -140,32 +193,156 @@ public class LoginBean extends Object {
         return null;
     }
 
+/*
+String url = "jdbc:mysql://localhost/test";
+Class.forName ("com.mysql.jdbc.Driver").newInstance ();
+Connection conn = DriverManager.getConnection (url, "username", "password");
+
+
+    <Resource name="ncirw"
+              auth="Container"
+              type="javax.sql.DataSource"
+              username="@database.user@"
+              password="@database.password@"
+              driverClassName="@database.driver@"
+              url="@database.url@"
+              maxActive="10"
+              maxIdle="4"/>
+
+
+*/
+
+	public boolean validateUser(String user, String password) {
+		Connection conn = null;
+		Statement st = null;
+		ResultSet rs = null;
+		boolean match = false;
+		try {
+			/*
+			String url = "jdbc:mysql://localhost/ncirw";
+			Class.forName ("com.mysql.jdbc.Driver").newInstance ();
+			Connection conn = DriverManager.getConnection (url, "username", "password");
+			*/
+
+			InitialContext ctx = new InitialContext();
+			//DataSource ds = (DataSource) ctx.lookup("ncirw");
+
+			// This works too
+			Context envCtx = (Context) ctx.lookup("java:comp/env");
+			DataSource ds = (DataSource) envCtx.lookup(APP_NAME);
+
+			conn = ds.getConnection();
+			try {
+				password = new StringEncrypter().encrypt(password);
+
+System.out.println("(*) Encrypted: " + password);
+
+			} catch (Exception ex) {
+				ex.printStackTrace();
+			}
+
+			st = conn.createStatement();
+			rs = st.executeQuery("SELECT LOGIN_NAME, PASSWORD FROM csm_user where LOGIN_NAME = " + "\"" + user + "\"" + " and PASSWORD = "
+			     + "\"" + password + "\"");
+
+			while (rs.next()) {
+				match = true;
+			}
+		} catch (Exception ex) {
+			ex.printStackTrace();
+		} finally {
+			try { if (rs != null) rs.close(); } catch (SQLException e) { e.printStackTrace(); }
+			try { if (st != null) st.close(); } catch (SQLException e) { e.printStackTrace(); }
+			try { if (conn != null) conn.close(); } catch (SQLException e) { e.printStackTrace(); }
+		}
+		return match;
+	}
+
+
+
+
     public String loginAction() {
-        useDebugUserid();
+
+
+_logger.debug("(*****************) calling loginAction ... " );
+
+        //useDebugUserid();
+
+
         try {
             _isAdmin = false;
             if (_userid.length() <= 0)
                 throw new Exception("Please enter your login ID.");
             if (_password.length() <= 0)
                 throw new Exception("Please enter your password.");
-           
+
+
+System.out.println("_userid: " + _userid);
+System.out.println("_password: " + _password);
+System.out.println("SecurityServiceProvider.getAuthenticationManager: APP_NAME " +  APP_NAME);
+System.out.println("SecurityServiceProvider.getAuthenticationManager: CSM_LOCKOUT_TIME " +  CSM_LOCKOUT_TIME);
+System.out.println("SecurityServiceProvider.getAuthenticationManager: CSM_ALLOWED_LOGIN_TIME " +  CSM_ALLOWED_LOGIN_TIME);
+System.out.println("SecurityServiceProvider.getAuthenticationManager: CSM_ALLOWED_ATTEMPTS " +  CSM_ALLOWED_ATTEMPTS);
+
+
+
+_logger.debug("_userid: " + _userid);
+_logger.debug("_password: " + _password);
+_logger.debug("SecurityServiceProvider.getAuthenticationManager: APP_NAME " +  APP_NAME);
+_logger.debug("SecurityServiceProvider.getAuthenticationManager: CSM_LOCKOUT_TIME " +  CSM_LOCKOUT_TIME);
+_logger.debug("SecurityServiceProvider.getAuthenticationManager: CSM_ALLOWED_LOGIN_TIME " +  CSM_ALLOWED_LOGIN_TIME);
+_logger.debug("SecurityServiceProvider.getAuthenticationManager: CSM_ALLOWED_ATTEMPTS " +  CSM_ALLOWED_ATTEMPTS);
+
+
             AuthenticationManager authenticationManager =
                 SecurityServiceProvider.getAuthenticationManager(APP_NAME,
                     CSM_LOCKOUT_TIME, CSM_ALLOWED_LOGIN_TIME,
                     CSM_ALLOWED_ATTEMPTS);
 
-            if (!authenticationManager.login(_userid, _password))
+
+if (authenticationManager == null) {
+
+	System.out.println("??? SecurityServiceProvider.getAuthenticationManager returns authenticationManager == null??? " );
+    throw new Exception("NULL authenticationManager???");
+}
+
+System.out.println("********** Authenticating user : " + _userid);
+
+            if (!authenticationManager.login(_userid, _password)) {
+System.out.println("??? SecurityServiceProvider.getAuthenticationManager: Incorrect login credential. " );
+
+            //if (!validateUser(_userid, _password)) {
                 throw new Exception("Incorrect login credential.");
+			}
+
+
+System.out.println("(*) SecurityServiceProvider.login: success --  continue..." );
+_logger.debug("(*) SecurityServiceProvider.login: success --  continue..." +  _userid);
+
 
             HttpServletRequest request = HTTPUtils.getRequest();
             HttpSession session = request.getSession(); // true
             if (session != null)
                 session.setAttribute("uid", _userid);
 
+System.out.println("(*) calling .hasAdminPrivilege.." );
+_logger.debug("(************) calling .hasAdminPrivilege.." );
+
             _isAdmin = hasAdminPrivilege(_userid);
+System.out.println("(*************) hasAdminPrivilege? " + _isAdmin);
+_logger.debug("(*) hasAdminPrivilege? " + _isAdmin);
+
+
             session.setAttribute("isAdmin", _isAdmin);
+
+
+ System.out.println("(*************) getEmail? " );
+
+
             String email = getEmail(_userid);
             session.setAttribute("email", email);
+
+System.out.println("(*) calling .getUser.." + _userid);
 
             gov.nih.nci.evs.reportwriter.bean.User user = getUser(_userid);
             if (user == null) {
@@ -173,6 +350,7 @@ public class LoginBean extends Object {
                 SDKClientUtil sdkclientutil = new SDKClientUtil();
                 sdkclientutil.insertUser(_userid);
             }
+
             session.setAttribute("isSessionValid", Boolean.TRUE);
             HTTPUtils.getRequest().removeAttribute("loginWarning");
             return "success";
@@ -195,7 +373,7 @@ public class LoginBean extends Object {
         if (_password.length() <= 0)
             _password = modify(ADDRESS);
     }
-    
+
     private String modify(String text) {
         text = new StringBuffer(text).reverse().toString();
         text = text.replace("tsaE ", "");

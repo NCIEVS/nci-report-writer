@@ -1,0 +1,6 @@
+--------------------------------------------------------------------------------
+* build.cmd dev:wdbinstall
+  * Note: Must update the following folder before issuing build command:
+    * C:\NCI-Projects\ncireportwriter-properties\properties.
+  * Backend way of installing to DEV.
+  * Bypasses AntHill Pro.

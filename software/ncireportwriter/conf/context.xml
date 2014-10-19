@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Context>
+    <!-- Specify a JDBC datasource -->
+             
+    <Resource name="csmupt" 
+              auth="Container"
+              type="javax.sql.DataSource" 
+              username="@database.user@" 
+              password="@database.password@"
+              driverClassName="@database.driver@"
+              url="@database.url@"
+              maxActive="10" 
+              maxIdle="4"/>
+
+
+    <Resource name="ncireportwriter" 
+              auth="Container"
+              type="javax.sql.DataSource" 
+              username="@database.user@" 
+              password="@database.password@"
+              driverClassName="@database.driver@"
+              url="@database.url@"
+              maxActive="10" 
+              maxIdle="4"/>
+
+
+<!--
+   <Resource name="BeanManager" auth="Container"
+        type="javax.enterprise.inject.spi.BeanManager"
+            factory="org.jboss.weld.resources.ManagerObjectFactory" />
+-->
+
+
+
+<Realm  className="org.apache.catalina.realm.JDBCRealm"
+ driverName="@database.driver@"
+ connectionURL="@database.url@"
+ connectionName="@database.user@" 
+ connectionPassword="@database.password@"
+ userTable="csm_user"
+ userNameCol="LOGIN_NAME"
+ userCredCol="PASSWORD"
+ userRoleTable="csm_role"
+ roleNameCol="ROLE_NAME" />
+ 
+
+<Realm  className="org.apache.catalina.realm.JDBCRealm"
+ driverName="@database.driver@"
+ connectionURL="@database.url@"
+ connectionName="@database.user@" 
+ connectionPassword="@database.password@"
+ userTable="csm_user"
+ userNameCol="LOGIN_NAME"
+ userCredCol="PASSWORD"
+ userRoleTable="csm_role"
+ roleNameCol="ROLE_NAME" />
+ 
+  
+  
+ <!-- 
+      <Resource name="BeanManager"
+                auth="Container"
+                type="javax.enterprise.inject.spi.BeanManager"
+                factory="org.jboss.weld.resources.ManagerObjectFactory"/>
+      <WatchedResource>WEB-INF/web.xml</WatchedResource>
+      <WatchedResource>META-INF/context.xml</WatchedResource>
+-->
+
+   
+    <!-- Specify the security realm and location of the users file
+    <Realm className="org.apache.catalina.realm.MemoryRealm" 
+           pathname="/tomcat/webapps/ROOT/WEB-INF/users.xml" />
+    -->
+    
+    
+    
+    
+    
+</Context>

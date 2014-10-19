@@ -61,6 +61,17 @@ L-->
       <to-view-id>/pages/main/add_standard_report_template.jsp</to-view-id>
     </navigation-case>
         
+        
+    <navigation-case>
+      <from-outcome>administer_excel_metadata</from-outcome>
+      <to-view-id>/pages/main/administer_excel_metadata.jsp</to-view-id>
+    </navigation-case>
+
+    <navigation-case>
+      <from-outcome>generate_hierarchy_report</from-outcome>
+      <to-view-id>/pages/main/generate_hierarchy_report.jsp</to-view-id>
+    </navigation-case>        
+        
     <navigation-case>
       <from-outcome>retrieve_standard_reports</from-outcome>
       <to-view-id>/pages/main/retrieve_standard_reports.jsp</to-view-id>

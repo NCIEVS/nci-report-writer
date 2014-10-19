@@ -25,7 +25,7 @@ import gov.nih.nci.evs.utils.*;
 import org.LexGrid.LexBIG.DataModel.Core.AssociatedConcept;
 
 /**
- * 
+ *
  */
 
 /**
@@ -57,6 +57,7 @@ public class ReportGenerationThread implements Runnable {
     private int KEY_INDEX_2 = 0;
 
     ReportColumn[] temp_cols = null;
+    private static String SOURCE_CODE = "source-code";
 
     public ReportGenerationThread(String outputDir, String standardReportLabel,
         String uid, String emailAddress, int[] ncitColumns) {
@@ -108,8 +109,14 @@ public class ReportGenerationThread implements Runnable {
                 generateStandardReport(_outputDir, _standardReportLabel, _uid,
                     warningMsg);
             long runTime = stopWatch.getDuration();
-            emailNotification(successful, _standardReportLabel,
-                warningMsg, startDate, new Date(), runTime);
+
+		    if (DataUtils.isNullOrBlank(DataUtils.NCIT_VERSION)) {
+
+            	emailNotification(successful, _standardReportLabel,
+                	warningMsg, startDate, new Date(), runTime);
+
+			}
+
             _logger.info("Report " + _standardReportLabel + " generated.");
             _logger.info("  * Start time: " + startDate);
             _logger.info("  * Run time: " + stopWatch.getResult(runTime));
@@ -268,11 +275,16 @@ public class ReportGenerationThread implements Runnable {
                 _logger.debug("Output directory: " + outputDir + " exists.");
             }
 
-            String version = standardReportTemplate.getCodingSchemeVersion();
+            String codingSchemeVersion = standardReportTemplate.getCodingSchemeVersion();
+
+			if (!DataUtils.isNullOrBlank(DataUtils.NCIT_VERSION)) {
+				codingSchemeVersion = DataUtils.NCIT_VERSION;
+			}
+
             // append version to the report file name:
             String pathname =
                 outputDir + File.separator + standardReportLabel + "__"
-                    + version + ".txt";
+                    + codingSchemeVersion + ".txt";
             pathname = pathname.replaceAll(" ", "_");
             _logger.debug("Full path name: " + pathname);
 
@@ -286,16 +298,21 @@ public class ReportGenerationThread implements Runnable {
             String label = standardReportTemplate.getLabel();
             String codingSchemeName =
                 standardReportTemplate.getCodingSchemeName();
-            String codingSchemeVersion =
-                standardReportTemplate.getCodingSchemeVersion();
+
+            //String codingSchemeVersion =
+            //    standardReportTemplate.getCodingSchemeVersion();
+
             String rootConceptCode =
                 standardReportTemplate.getRootConceptCode();
+
             String associationName =
                 standardReportTemplate.getAssociationName();
+
             boolean direction = standardReportTemplate.getDirection();
             int level = standardReportTemplate.getLevel();
             Character delimiter = standardReportTemplate.getDelimiter();
             String delimeter_str = "\t";
+
 
             _logger.debug(StringUtils.SEPARATOR);
             _logger.debug("  * ID: " + id);
@@ -307,6 +324,19 @@ public class ReportGenerationThread implements Runnable {
             _logger.debug("  * Direction: " + direction);
             _logger.debug("  * Level: " + level);
             _logger.debug("  * Delimiter: " + delimiter);
+
+/*
+            System.out.println(StringUtils.SEPARATOR);
+            System.out.println("  * ID: " + id);
+            System.out.println("  * Label: " + label);
+            System.out.println("  * CodingSchemeName: " + codingSchemeName);
+            System.out.println("  * CodingSchemeVersion: " + codingSchemeVersion);
+            System.out.println("  * Root: " + rootConceptCode);
+            System.out.println("  * AssociationName: " + associationName);
+            System.out.println("  * Direction: " + direction);
+            System.out.println("  * Level: " + level);
+            System.out.println("  * Delimiter: " + delimiter);
+*/
 
             Object[] objs = null;
             Collection<ReportColumn> cc =
@@ -327,7 +357,7 @@ public class ReportGenerationThread implements Runnable {
                 for (int i = 0; i < objs.length; i++) {
                     gov.nih.nci.evs.reportwriter.bean.ReportColumn col =
                         (gov.nih.nci.evs.reportwriter.bean.ReportColumn) objs[i];
-                    Debug.print(col);
+                    //Debug.print(col);
                     cols[i] = col;
                 }
             }
@@ -342,12 +372,14 @@ public class ReportGenerationThread implements Runnable {
             printReportHeading(pw, cols);
 
             String scheme = standardReportTemplate.getCodingSchemeName();
-            version = standardReportTemplate.getCodingSchemeVersion();
+            codingSchemeVersion = standardReportTemplate.getCodingSchemeVersion();
 
-            String code = standardReportTemplate.getRootConceptCode();
-            Entity defining_root_concept =
-                DataUtils.getConceptByCode(codingSchemeName,
-                    codingSchemeVersion, null, rootConceptCode);
+//[GF#32771] Allow report templates with multiple roots.
+//String code = standardReportTemplate.getRootConceptCode();
+
+//            Entity defining_root_concept =
+//                DataUtils.getConceptByCode(codingSchemeName,
+//                    codingSchemeVersion, null, rootConceptCode);
 
             associationName = standardReportTemplate.getAssociationName();
             // associationName = "A8"; //NOTE_A8: A8 vs Concept_In_Subset
@@ -364,7 +396,7 @@ public class ReportGenerationThread implements Runnable {
             // printReportHeading(pw, cols);
             if (_hierarchicalAssoName == null) {
                 Vector<String> hierarchicalAssoName_vec =
-                    DataUtils.getHierarchyAssociationId(scheme, version);
+                    DataUtils.getHierarchyAssociationId(scheme, codingSchemeVersion);
                 if (hierarchicalAssoName_vec == null
                     || hierarchicalAssoName_vec.size() == 0) {
                     return Boolean.FALSE;
@@ -387,19 +419,58 @@ public class ReportGenerationThread implements Runnable {
             _cdiscInfo = new SpecialCases.CDISCExtensibleInfo(cols);
             LexEVSValueSetDefinitionServices definitionServices =
                 DataUtils.getValueSetDefinitionService();
-            String uri = DataUtils.codingSchemeName2URI(scheme, version);
+            String uri = DataUtils.codingSchemeName2URI(scheme, codingSchemeVersion);
+
+            curr_level = 0;
+			String code = standardReportTemplate.getRootConceptCode();
+			Entity defining_root_concept = null;
+/*
+            defining_root_concept =
+                DataUtils.getConceptByCode(codingSchemeName,
+                    codingSchemeVersion, null, rootConceptCode);
+
 
             traverse(definitionServices, uri, pw, scheme, version, tag, defining_root_concept, code,
                 _hierarchicalAssoName, associationName, direction, curr_level,
                 max_level, cols);
+*/
+
+//[GF#32771] Allow report templates with multiple roots.
+Vector w = DataUtils.parseData(code, ";");
+for (int k=0; k<w.size(); k++) {
+	code = (String) w.elementAt(k);
+
+		if (!DataUtils.isNullOrBlank(DataUtils.NCIT_VERSION)) {
+			codingSchemeVersion = DataUtils.NCIT_VERSION;
+		}
+
+	defining_root_concept =
+		DataUtils.getConceptByCode(codingSchemeName,
+			codingSchemeVersion, null, code);
+
+
+
+	curr_level = 0;
+	/*
+	traverse(definitionServices, uri, pw, scheme, version, tag, defining_root_concept, code,
+		_hierarchicalAssoName, associationName, direction, curr_level,
+		max_level, cols);
+    */
+	traverse(definitionServices, uri, pw, scheme, codingSchemeVersion, tag, defining_root_concept, code,
+		_hierarchicalAssoName, associationName, direction, curr_level,
+		max_level, cols);
+
+}
+
             closePrintWriter(pw);
 
             _logger.debug("Total number of concepts processed: " + _count);
             _logger.debug("Output file " + pathname + " generated.");
 
             return createStandardReports(outputDir, standardReportLabel, uid,
-                standardReportTemplate, pathname, version, delimeter_str);
+                standardReportTemplate, pathname, codingSchemeVersion, delimeter_str);
         } catch (Exception e) {
+			e.printStackTrace();
             return warningMsg(warningMsg, ExceptionUtils.getStackTrace(e));
         }
     }
@@ -1209,7 +1280,7 @@ public class ReportGenerationThread implements Runnable {
                 for (int i = 0; i < objs.length; i++) {
                     gov.nih.nci.evs.reportwriter.bean.ReportColumn col =
                         (gov.nih.nci.evs.reportwriter.bean.ReportColumn) objs[i];
-                    Debug.print(col);
+                    //Debug.print(col);
                     cols[i] = col;
                 }
             }
@@ -1444,7 +1515,9 @@ public class ReportGenerationThread implements Runnable {
 	}
 
 
-    public static String getFocusConceptPropertyValue(Entity concept,
+/*
+    public static String getFocusConceptPropertyValue(
+		    Entity concept,
             String property_name,
             String property_type,
 	        String qualifier_name,
@@ -1717,12 +1790,172 @@ public class ReportGenerationThread implements Runnable {
         return return_str;
 	}
 
+*/
+    public static String getFocusConceptPropertyValue(
+	    Entity concept,
+		String property_name,
+		String property_type,
+		String qualifier_name,
+		String source,
+		String qualifier_value,
+		String representational_form,
+		String delimiter,
+		Boolean isPreferred) {
+
+		Vector qualifier_value_vec = null;
+		if (qualifier_value	!= null) {
+		     qualifier_value_vec = new Vector();
+		     qualifier_value_vec.add(qualifier_value);
+	    }
+
+		return getFocusConceptPropertyValue(
+			 concept,
+			 property_name,
+			 property_type,
+			 qualifier_name,
+			 source,
+			 qualifier_value_vec,
+			 representational_form,
+			 delimiter,
+			 isPreferred);
+	}
+
+    public static String getFocusConceptPropertyValue(
+	    Entity concept,
+		String property_name,
+		String property_type,
+		String qualifier_name,
+		String source,
+		Vector qualifier_value_vec,
+		String representational_form,
+		String delimiter,
+		Boolean isPreferred) {
+
+        if (concept == null) return "";
+
+        HashSet hset = new HashSet();
+        int num_matches = 0;
+        org.LexGrid.commonTypes.Property[] properties =
+            new org.LexGrid.commonTypes.Property[] {};
+
+        if (property_type == null) {
+
+        } else if (property_type.compareToIgnoreCase("GENERIC") == 0) {
+            properties = concept.getProperty();
+        } else if (property_type.compareToIgnoreCase("PRESENTATION") == 0) {
+            properties = concept.getPresentation();
+        } else if (property_type.compareToIgnoreCase("COMMENT") == 0) {
+            properties = concept.getComment();
+        } else if (property_type.compareToIgnoreCase("DEFINITION") == 0) {
+            properties = concept.getDefinition();
+        }
+
+        String return_str = "";
+
+		for (int i = 0; i < properties.length; i++) {
+			boolean match = false;
+			org.LexGrid.commonTypes.Property p = properties[i];
+			String propertyName = p.getPropertyName();
+
+			if (propertyName.compareTo(property_name) == 0) {
+				match = true;
+
+				if (source != null || representational_form != null
+					|| qualifier_name != null || isPreferred != null) {
+					// compare isPreferred
+					if (isPreferred != null && p instanceof Presentation) {
+						Presentation presentation = (Presentation) p;
+						Boolean is_pref = presentation.getIsPreferred();
+						if (is_pref == null) {
+							match = false;
+						} else if (is_pref != null
+							&& !is_pref.equals(isPreferred)) {
+							match = false;
+						}
+					}
+
+					if (match) {
+						if (representational_form != null
+							&& p instanceof Presentation) {
+							Presentation presentation = (Presentation) p;
+							String representationalForm = presentation.getRepresentationalForm();
+							if (representationalForm.compareTo(representational_form) != 0) {
+								match = false;
+							} else {
+
+							}
+
+						}
+					}
+
+
+
+					// match qualifier
+					if (match) {
+						if (qualifier_value_vec != null && qualifier_value_vec.size() > 0) // match qualifier name vaue pair
+						// qualifier, if needed
+						{
+
+							boolean match_found = false;
+							PropertyQualifier[] qualifiers = p.getPropertyQualifier();
+							for (int j = 0; j < qualifiers.length; j++) {
+								PropertyQualifier q = qualifiers[j];
+								String name = q.getPropertyQualifierName();
+								String value = q.getValue().getContent();
+                                if (qualifier_name != null &&
+									qualifier_name.compareTo(name) == 0 &&
+									qualifier_value_vec.contains(value)) {
+										match_found = true;
+									    break;
+								}
+							}
+							if (!match_found) {
+								match = false;
+							}
+						}
+					}
+					// match source
+					if (match) {
+						if (source != null) // match source
+						{
+							boolean match_found = false;
+							Source[] sources = p.getSource();
+							for (int j = 0; j < sources.length; j++) {
+								Source src = sources[j];
+
+								if (src.getContent().compareTo(source) == 0) {
+									match_found = true;
+									break;
+								}
+							}
+							if (!match_found) {
+								match = false;
+							}
+						}
+					}
+				}
+
+				if (match) {
+					String prop_value = p.getValue().getContent();
+					if (!hset.contains(prop_value)) {
+						num_matches++;
+						hset.add(prop_value);
+						if (num_matches == 1) {
+							return_str = prop_value;
+						} else {
+							return_str = return_str + delimiter + prop_value;
+						}
+					}
+				}
+
+			}
+		}
+        return return_str;
+	}
+
 
 
 /*
-
-
-
     public String getFocusConceptPropertyQualifierValue(
             Entity concept,
             String property_name,
@@ -2005,7 +2238,7 @@ FULL_SYN: DEVICE ISSUE
 												String q_name = q.getPropertyQualifierName();
 												String q_value = q.getValue().getContent();
 
-												if( q_name.compareTo("source-code") == 0) {
+												if( q_name.compareTo(SOURCE_CODE) == 0) {
 													ret_qualifier_value = q_value;
 													match_found = true;
 													break;
@@ -2199,6 +2432,8 @@ FULL_SYN: DEVICE ISSUE
         String codeListPT = getCodeListPT(associated_concept.getEntityCode());
         if (codeListPT == null) {
             String src_code = null;
+
+            /*
     		codeListPT = getFocusConceptPropertyValue(
 				associated_concept,
 				property_name,
@@ -2209,6 +2444,19 @@ FULL_SYN: DEVICE ISSUE
 				"PT",
 				delimiter,
 				null);
+			*/
+
+    		codeListPT = getFocusConceptPropertyValue(
+				associated_concept,
+				property_name,
+				property_type,
+				null,
+				source,
+				src_code,
+				"AB",
+				delimiter,
+				null);
+
 			if (codeListPT != null) {
 				_code2PTHashMap.put(associated_concept.getEntityCode(), codeListPT);
 			}
@@ -2216,20 +2464,21 @@ FULL_SYN: DEVICE ISSUE
 
 		if (codeListPT != null) {
 			Vector qualifier_value_vec = new Vector();
+			/*
 			qualifier_value_vec.add("ADaM-" + codeListPT);
 			qualifier_value_vec.add("CDASH-"+ codeListPT);
 			qualifier_value_vec.add("SDTM-" + codeListPT);
 			qualifier_value_vec.add("SEND-" + codeListPT);
 			qualifier_value_vec.add("CDISC-"+ codeListPT);
-
-			//String source_code = "SDTM-" + codeListPT;
-			qualifier_name = "source-code";
+			*/
+			qualifier_value_vec.add(codeListPT);
+			qualifier_name = SOURCE_CODE;
 			String retval = getFocusConceptPropertyValue(
 				node,
 				property_name,
 				property_type,
 				qualifier_name,
-				source,//"CDISC",
+				source,
 				qualifier_value_vec,
 				representational_form,
 				delimiter,

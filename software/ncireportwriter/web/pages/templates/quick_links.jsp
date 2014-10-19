@@ -24,8 +24,8 @@ L--%>
             target="_blank">National Cancer Institute</a></li>
           <li><a href="http://ncicb.nci.nih.gov/"
             target="_blank">NCI Center for Bioinformatics</a></li>
-          <li><a href="http://gforge.nci.nih.gov/projects/reportwriter/"
-            target="_blank">Project GForge Site</a></li>
+          <li><a href="https://tracker.nci.nih.gov/issues/?jql=project%20%3D%20EVSREPORT"
+            target="_blank">Project GitHub Site</a></li>
           <li><a href="https://cabig.nci.nih.gov/help"
             target="_blank">NCICB Application Support</a></li>
           <li><a href="http://nciterms51-dev.nci.nih.gov/"

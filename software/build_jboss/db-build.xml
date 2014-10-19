@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8" ?>
+
+<!--L
+  Copyright Northrop Grumman Information Technology.
+
+  Distributed under the OSI-approved BSD 3-Clause License.
+  See http://ncip.github.com/nci-report-writer/LICENSE.txt for details.
+L-->
+
+<project name="db-build" default="upgrade:database" basedir=".">
+
+    <description>
+        Report Writer Database Upgrade Build File
+    </description>
+
+    <!-- Property file names -->
+    <property environment="env" />
+
+    <path id="classpath">
+        <fileset dir=".">
+            <include name="**/*.jar" />
+        </fileset>
+    </path>
+
+    <!-- Liquibase Tasks -->
+    <taskdef resource="liquibasetasks.properties">
+        <classpath refid="classpath"/>
+    </taskdef>
+    <property name="db.changelog.file" value="db-upgrade.xml"/>
+
+    <target name="upgrade:database" description="Upgrade the current Report Writer database">
+
+        <echo message="Upgrading the database..." />
+
+        <updateDatabase
+            changeLogFile="@db.changelog.file@"
+            driver="@database.driver@"
+            url="@database.url@"
+            username="@database.user@"
+            password="@database.password@"
+            promptOnNonLocalDatabase="no"
+            dropFirst="false"
+            classpathref="classpath">
+                <changeLogProperty name="db.run.path"
+                    value="./"
+                />
+       </updateDatabase>
+
+    </target>
+
+</project>

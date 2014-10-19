@@ -18,7 +18,7 @@ import javax.faces.model.*;
 import javax.servlet.http.*;
 
 /**
- * 
+ *
  */
 
 /**
@@ -71,6 +71,13 @@ public class TaskRequest {
             return "administer_standard_reports";
         } else if (_selectedTask.compareTo("Maintain Report Status") == 0) {
             return "report_status";
+
+        } else if (_selectedTask.compareTo("Administer Excel Metadata") == 0) {
+            return "administer_excel_metadata";
+
+        } else if (_selectedTask.compareTo("Generate Hierarchy Report") == 0) {
+            return "generate_hierarchy_report";
+
         } else if (_selectedTask.compareTo("Assign Report Status") == 0) {
             // Check if there is any DRAFT report waiting for approval:
             List<SelectItem> list =

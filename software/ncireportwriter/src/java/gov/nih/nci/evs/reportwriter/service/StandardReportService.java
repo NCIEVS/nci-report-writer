@@ -19,13 +19,17 @@ import gov.nih.nci.evs.utils.*;
 import org.apache.log4j.*;
 
 /**
- * 
+ *
  */
 
 /**
  * @author EVS Team (Kim Ong, David Yee)
  * @version 1.0
  */
+
+// NCIt codes hyper-linkable: int[] ncitColumns
+
+
 
 public class StandardReportService {
     private static Logger _logger =
@@ -50,21 +54,21 @@ public class StandardReportService {
         pw.close();
         pw = null;
     }
-    
+
     private static int[] getSelectedColumns() {
         try {
             HttpServletRequest request = HTTPUtils.getRequest();
             String[] selectedColumns = request.getParameterValues("selectedColumns");
             if (selectedColumns == null)
                 return new int[] {};
-            
+
             int n = selectedColumns.length;
             int[] columns = new int[n];
             for (int i=0; i<n; ++i)
                 columns[i] = Integer.parseInt(selectedColumns[i]);
             return columns;
         } catch (Exception e) {
-            ExceptionUtils.print(_logger, e, 
+            ExceptionUtils.print(_logger, e,
                 "Error parsing selected column string to integer.");
             return new int[] {};
         }
@@ -81,7 +85,7 @@ public class StandardReportService {
         // to be modified
         return Boolean.TRUE;
     }
-    
+
     public static String validReport(String standardReportTemplate_value,
         String reportFormat_value, String reportStatus_value, String user_value) {
 

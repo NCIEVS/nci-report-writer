@@ -13,7 +13,7 @@ import java.util.*;
 import org.apache.log4j.*;
 
 /**
- * 
+ *
  */
 
 /**
@@ -194,6 +194,7 @@ public abstract class FileFormatterBase {
     }
 
     public void setNcitCodeColumns(int[] columns) {
+		if (columns == null) return;
         clearNcitCodeColumns();
         for (int i = 0; i < columns.length; ++i)
             addNcitCodeColumn(columns[i]);

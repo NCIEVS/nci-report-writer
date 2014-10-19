@@ -1,0 +1,30 @@
+08:51:22,933 DEBUG [Twiddle] args[0]=-s
+08:51:22,934 DEBUG [Twiddle] args[1]=localhost:11299
+08:51:22,934 DEBUG [Twiddle] args[2]=invoke
+08:51:22,934 DEBUG [Twiddle] args[3]=jboss.system:type=Server
+08:51:22,934 DEBUG [Twiddle] args[4]=shutdown
+08:51:22,937 DEBUG [Twiddle] Command name: invoke
+08:51:22,956 DEBUG [Twiddle] Command arguments: jboss.system:type=Server,shutdown
+08:51:22,956 DEBUG [Twiddle] command proto type properties: jar:file:/C:/apps/evs/jboss-5.1.0.GA/bin/twiddle.jar!/org/jboss/console/twiddle/commands.properties
+08:51:22,958 DEBUG [Twiddle] Adding command 'jsr77'; proto: org.jboss.console.twiddle.command.JSR77Command@d80be3
+08:51:22,959 DEBUG [Twiddle] Adding command 'xmbean'; proto: org.jboss.console.twiddle.command.XMBeanCommand@1006d75
+08:51:22,960 DEBUG [Twiddle] Adding command 'info'; proto: org.jboss.console.twiddle.command.InfoCommand@18dfef8
+08:51:22,960 DEBUG [Twiddle] Adding command 'get'; proto: org.jboss.console.twiddle.command.GetCommand@2a5330
+08:51:22,961 DEBUG [Twiddle] Adding command 'invoke'; proto: org.jboss.console.twiddle.command.InvokeCommand@134bed0
+08:51:22,962 DEBUG [Twiddle] Adding command 'create'; proto: org.jboss.console.twiddle.command.CreateCommand@13c1b02
+08:51:22,962 DEBUG [Twiddle] Adding command 'setattrs'; proto: org.jboss.console.twiddle.command.SetAttrsCommand@1ccce3c
+08:51:22,963 DEBUG [Twiddle] Adding command 'unregister'; proto: org.jboss.console.twiddle.command.UnregisterCommand@10655dd
+08:51:22,964 DEBUG [Twiddle] Adding command 'queryMethod'; proto: org.jboss.console.twiddle.command.QueryMethodCommand@b61fd1
+08:51:22,964 DEBUG [Twiddle] Adding command 'listDomains'; proto: org.jboss.console.twiddle.command.ListDomainsCommand@1ce2dd4
+08:51:22,965 DEBUG [Twiddle] Adding command 'query'; proto: org.jboss.console.twiddle.command.QueryCommand@1ef9157
+08:51:22,965 DEBUG [Twiddle] Adding command 'set'; proto: org.jboss.console.twiddle.command.SetCommand@11f2ee1
+08:51:22,966 DEBUG [Twiddle] Adding command 'serverinfo'; proto: org.jboss.console.twiddle.command.ServerInfoCommand@1c99159
+08:51:22,968 DEBUG [InvokeCommand] processing arguments: jboss.system:type=Server,shutdown
+08:51:22,968 DEBUG [InvokeCommand] query: jboss.system:type=Server
+08:51:22,968 DEBUG [InvokeCommand] operation name: shutdown
+08:51:22,968 DEBUG [InvokeCommand] operation arguments: []
+08:51:22,986 DEBUG [TimedSocketFactory] createSocket, hostAddr: localhost/127.0.0.1, port: 11299, localAddr: null, localPort: 0, timeout: 0
+08:51:23,530 DEBUG [InvokeCommand] Query matches: [jboss.system:type=Server]
+08:51:23,530 DEBUG [InvokeCommand] Invoke jboss.system:type=Server
+08:51:23,564 DEBUG [InvokeCommand] Using params: 
+08:51:23,568 DEBUG [InvokeCommand] Raw result: null

@@ -9,7 +9,7 @@ L-->
 
 <!DOCTYPE beans PUBLIC "-//SPRING//DTD BEAN//EN" "http://www.springframework.org/dtd/spring-beans.dtd">
 <beans>
-    <import resource="file:@application.data.path@/conf/application-config.xml"/>
+    <import resource="application-config.xml"/>
 
     <!-- Used only by the client and not the server components -->
     <bean id="ServiceInfo" class="java.util.HashMap">

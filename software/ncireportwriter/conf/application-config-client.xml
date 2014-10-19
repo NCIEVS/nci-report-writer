@@ -10,6 +10,6 @@ L-->
 <!DOCTYPE beans PUBLIC "-//SPRING//DTD BEAN//EN" "http://www.springframework.org/dtd/spring-beans.dtd">
 <beans>
     <!-- Import the files for each remote service -->
-    <import resource="file:@application.data.path@/conf/application-config-client-local.xml"/>
-    <import resource="file:@application.data.path@/conf/application-config-client-remote.xml"/>
+    <import resource="application-config-client-local.xml"/>
+    <import resource="application-config-client-remote.xml"/>
 </beans>

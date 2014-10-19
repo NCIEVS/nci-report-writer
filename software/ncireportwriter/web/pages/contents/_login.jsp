@@ -13,6 +13,12 @@ L--%>
 <%
   String pagesPath = FormUtils.getPagesPath(request);
   String loginWarning = (String)request.getAttribute("loginWarning");
+  
+  
+System.out.println("(*) _login.jsp pagesPath: " + pagesPath);  
+System.out.println("(*) _login.jsp loginWarning: " + loginWarning);  
+  
+  
 %>
 <f:view>
   <h:form id="loginForm">
@@ -31,6 +37,13 @@ L--%>
               width="100%" class="sidebarSection">
               <% 
                   String queryString = request.getQueryString();
+                  
+                  
+System.out.println("(*) queryString: " + queryString);  
+                  
+                  
+                  
+                  
                   if (queryString != null && queryString.contains("logout")) { 
                 	  loginWarning = "You have successfully logged out.";
                 %>

@@ -7,11 +7,13 @@ L--%>
 
 <%@ taglib uri="http://java.sun.com/jsf/html" prefix="h" %>
 <%@ taglib uri="http://java.sun.com/jsf/core" prefix="f" %> 
+<%@ page import="java.io.*" %>
 <%@ page import="java.util.*" %>
 <%@ page import="java.text.*" %>
 <%@ page import="gov.nih.nci.evs.reportwriter.bean.*" %>
 <%@ page import="gov.nih.nci.evs.reportwriter.utils.*" %>
 <%@ page import="gov.nih.nci.evs.utils.*" %>
+<%@ page import="gov.nih.nci.evs.reportwriter.properties.*" %>
 
 <%
   SDKClientUtil sdkclientutil = new SDKClientUtil();
@@ -51,6 +53,7 @@ L--%>
                   <tr>
                     <th class="dataTableHeader" scope="col" align="center">Report Label</th>
                     <th class="dataTableHeader" scope="col" align="center">File Name</th>
+                    <th class="dataTableHeader" scope="col" align="center">File Size</th>
                     <th class="dataTableHeader" scope="col" align="center">Format</th>
                     <th class="dataTableHeader" scope="col" align="center">Coding Scheme</th>
                     <th class="dataTableHeader" scope="col" align="center">Version</th>
@@ -60,6 +63,9 @@ L--%>
                   </tr>
 
                   <%
+                    String download_dir = AppProperties.getInstance().getProperty(AppProperties.REPORT_DOWNLOAD_DIRECTORY);
+                    //System.out.println("(*) DOWNLOAD DIR: " + download_dir);
+                  
                     int i=0;
                     Iterator<StandardReport> iterator = vector.iterator();
                     while (iterator.hasNext()) {
@@ -71,6 +77,9 @@ L--%>
                           || reportStatus == null)
                         continue;
                       String label = standardReportTemplate.getLabel();
+                      
+                      //System.out.println("(*) REPORT LABEL: " + label);
+                      
                       String format = reportFormat.getDescription();
                       String codingScheme = standardReportTemplate.getCodingSchemeName();
                       String version = standardReportTemplate.getCodingSchemeVersion();
@@ -78,6 +87,16 @@ L--%>
                       String status = reportStatus.getLabel();
                       String pathname = standardReport.getPathName();
                       String filename = DataUtils.getFileName(pathname);
+                      
+                      String filesize = "";
+                      if (pathname == null || pathname.compareTo("") == 0) {
+                          pathname = download_dir + File.separator + label + DataUtils.getFileExtension(format);
+                      }
+                      
+                      //System.out.println("(*) PATHNAME: " + pathname);
+                      
+                      filesize = DataUtils.getFileSize(pathname);
+                      
                       gov.nih.nci.evs.reportwriter.bean.User user = standardReport.getCreatedBy();
                       String loginName = user.getLoginName();
                       String date_str = lastModified == null ? null : formatter.format(lastModified);
@@ -99,6 +118,7 @@ L--%>
                         <td class="dataCellText"><%=StringUtils.getSpaceIfBlank(label)%></td>
                       <% } %>
                         <td class="dataCellText"><%=StringUtils.getSpaceIfBlank(filename)%></td>
+                        <td class="dataCellText"><%=StringUtils.getSpaceIfBlank(filesize)%></td>
                         <td class="dataCellText"><%=StringUtils.getSpaceIfBlank(format)%></td>
                         <td class="dataCellText"><%=StringUtils.getSpaceIfBlank(codingScheme)%></td>
                         <td class="dataCellText"><%=StringUtils.getSpaceIfBlank(version)%></td>
