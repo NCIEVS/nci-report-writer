@@ -1,0 +1,127 @@
+<project name="ncirw" default="build" basedir=".">
+  <property file="build.properties" />
+
+    <!-- Property file names -->
+    <property environment="env" />
+    <property name="properties.file" value="../build/project.properties" />
+    <property name="local.properties.file" value="../build/local.properties" />
+
+    <!-- Local property file -->
+    <property file="${local.properties.file}" />
+    <available file="${local.properties.file}" property="local.properties.file.exists" />
+
+    <!-- Project property file -->
+    <property file="${properties.file}" />
+    <available file="${properties.file}" property="properties.file.exists" />
+    <fail unless="properties.file.exists" message="The properties.file ${properties.file} does not exist." />
+    
+    <path id="classpath">
+        <fileset dir="../ncireportwriter/extlib">
+            <include name="**/*.jar" />
+        </fileset>    
+        <fileset dir="../ncireportwriter/lib">
+            <include name="**/*.jar" />
+        </fileset>
+    </path>   
+  
+  
+  <target name="clean" description="Delete the build directory">
+    <delete dir="${build.dir}" />
+  </target>
+  
+  <target name="init" depends="clean">
+    <echo>JAVA_HOME: ${java.home}</echo>
+    
+    <mkdir dir="${build.dir}" />
+    
+	<copy todir="${build.dir}" overwrite="true"
+	     flatten="true" includeEmptyDirs="no" filtering="true">
+	    <filterset>
+		<filter token="application.data.path" value="${application.data.path}"/>
+		
+		<filter token="database.url" value="${database.url}"/>
+		<filter token="database.driver" value="${database.driver}"/>
+		<filter token="database.user" value="${database.user}"/>
+		<filter token="database.password" value="${database.password}"/>
+		
+		<filter token="build.info" value="${build.info}"/>
+		<filter token="application.version" value="${application.version}"/>
+		<filter token="app.build.tag" value="${app.build.tag}"/>
+		<filter token="lex.evs.api.url" value="${lex.evs.api.url}"/>
+		<filter token="mail.smtp.server" value="${mail.smtp.server}"/>
+		<filter token="debug.on" value="${debug.on}"/>
+		<filter token="report.download.directory" value="${report.download.directory}"/>
+		<filter token="maximum.level" value="${maximum.level}"/>
+		<filter token="maximum.return" value="${maximum.return}"/>
+		
+		<filter token="contact.us.email" value="${contact.us.email}"/>
+		<filter token="account.admin.user.email" value="${account.admin.user.email}"/>
+		<filter token="ncit.url" value="${ncit.url}"/>
+		<filter token="ncit.version" value="${ncit.version}"/>
+		<filter token="display.ncit.code.url" value="${display.ncit.code.url}"/>
+		
+	    </filterset>
+	    
+	    <resources>
+		<file file="../ncireportwriter/conf/application-config.xml"/>
+		<file file="../ncireportwriter/conf/application-config-client.xml"/>
+		<file file="../ncireportwriter/conf/application-config-client-local.xml"/>
+		<file file="../ncireportwriter/conf/application-config-client-remote.xml"/>
+		<file file="../ncireportwriter/conf/hibernate.cfg.xml"/>
+		<file file="../ncireportwriter/conf/ApplicationSecurityConfig.xml"/>
+		<file file="../ncireportwriter/conf/ncireportwriter.properties"/>
+		<file file="../ncireportwriter/conf/context.xml"/>
+	    </resources>
+	</copy>
+       
+  </target>
+  
+  <target name="compile" depends="init" description="Compile source code">
+    <javac srcdir="${src.dir}" destdir="${build.dir}" >
+    
+      <classpath refid="classpath" />
+
+      <include name="**/gov/nih/nci/evs/reportwriter/formatter/*.java" />
+      <include name="**/gov/nih/nci/evs/reportwriter/properties/*.java" />
+      <include name="**/gov/nih/nci/evs/reportwriter/service/*.java" />
+      <include name="**/gov/nih/nci/evs/reportwriter/utils/*.java" />
+      
+    </javac>
+  </target>
+
+
+  <tstamp>
+    <format property="TODAY" pattern="yyyy-MM-dd HH:mm:ss" />
+  </tstamp>
+
+
+  <target name="jar" depends="compile">
+    <jar jarfile="${project.name}.jar" basedir="${build.dir}"
+    >
+      <manifest>
+        <attribute name="Main-Class"
+        value="projectname" />
+	<attribute name="Built-Date" value="${TODAY}"/>
+      </manifest>
+     
+    </jar>
+  </target>
+  
+  <target name="build" depends="jar,clean"
+  description="Build jar file" />
+
+ 
+  <target name="javadoc" depends="init"
+  description="Generate API Javadocs">
+    <mkdir dir="${javadoc.dir}" />
+    <javadoc packagenames="${packagename}.*" sourcepath="src"
+    destdir="${javadoc.dir}" author="${javadoc.author}"
+    version="${javadoc.version}" use="${javadoc.use}"
+    private="${javadoc.private}"
+    windowtitle="${javadoc.window.title}"
+    doctitle="${javadoc.doc.title}" header="${javadoc.header}"
+    footer="${javadoc.footer}" bottom="${javadoc.bottom}"
+    stylesheetfile="${javadoc.style}" classpath="${class.path}">
+    </javadoc>
+  </target>
+</project>
