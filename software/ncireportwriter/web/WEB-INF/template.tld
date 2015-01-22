@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<taglib version="2.0" xmlns="http://java.sun.com/xml/ns/j2ee" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://java.sun.com/xml/ns/j2ee web-jsptaglibrary_2_0.xsd">
+
+  <description>EVS Web Framework Function Library</description>
+  <display-name>EVS Web Framework Functions</display-name>
+  <tlib-version>1.2</tlib-version>
+  <uri>EVSUIComponents</uri>
+  <short-name>ui</short-name>
+
+  <!--  Tag lib -->
+
+  <tag>
+    <name>insert</name>
+    <tag-class>gov.nih.nci.evs.tags.templates.InsertTag</tag-class>
+    <body-content>JSP</body-content>
+    <attribute>
+       <name>template</name>
+       <rtexprvalue>true</rtexprvalue>
+       <required>true</required>
+    </attribute>
+  </tag>
+
+  <tag>
+    <name>put</name>
+    <tag-class>gov.nih.nci.evs.tags.templates.PutTag</tag-class>
+    <body-content>Empty</body-content>
+    <attribute>
+       <name>name</name>
+       <rtexprvalue>true</rtexprvalue>
+       <required>true</required>
+    </attribute>
+    <attribute>
+       <name>value</name>
+       <rtexprvalue>true</rtexprvalue>
+       <required>false</required>
+    </attribute>
+    <attribute>
+       <name>url</name>
+       <rtexprvalue>true</rtexprvalue>
+       <required>false</required>
+    </attribute>
+  </tag>
+
+  <tag>
+    <name>get</name>
+    <tag-class>gov.nih.nci.evs.tags.templates.GetTag</tag-class>
+    <body-content>Empty</body-content>
+    <attribute>
+       <name>name</name>
+       <rtexprvalue>true</rtexprvalue>
+       <required>true</required>
+    </attribute>
+    <attribute>
+       <name>default</name>
+       <rtexprvalue>true</rtexprvalue>
+       <required>false</required>
+    </attribute>
+    <attribute>
+       <name>defaultUrl</name>
+       <rtexprvalue>true</rtexprvalue>
+       <required>false</required>
+    </attribute>
+    <attribute>
+       <name>flush</name>
+       <rtexprvalue>true</rtexprvalue>
+       <required>false</required>
+    </attribute>         
+  </tag>
+
+</taglib>
