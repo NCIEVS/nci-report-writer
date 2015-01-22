@@ -573,7 +573,9 @@ L-->
                 
                 <file file="${exploded.dir}/deploy/ncireportwriter.csm.new.hibernate.cfg.xml"/>
                 <file file="${exploded.dir}/deploy/rwdbserver.csm.new.hibernate.cfg.xml"/>
+                <!--
                 <file file="${exploded.dir}/deploy/hibernate.cfg.xml"/>
+                -->
                 <file file="${exploded.dir}/deploy/ApplicationSecurityConfig.xml"/>
                 
             </resources>
