@@ -196,6 +196,7 @@ L-->
         </copy>
 
 
+<!--
         <copy todir="${webapp.meta.inf.dir}" overwrite="true"
              flatten="true" includeEmptyDirs="no" filtering="true">
 
@@ -213,6 +214,9 @@ L-->
                 <file file="${bda.conf.dir}/context.xml"/>
             </resources>
         </copy>
+-->        
+        
+        
     </target>
 
     <target name="-war" depends="compile:application-code">
