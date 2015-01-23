@@ -61,7 +61,10 @@ L-->
     <!-- Compile standard values -->
     <property name="webapp.build.dir" value="${bda.software.dir}/${project.name}/build/web" />
     <property name="webapp.classes.dir" value="${webapp.build.dir}/WEB-INF/classes" />
+    
     <property name="webapp.dir" value="${bda.software.dir}/${project.name}/web" />
+    <property name="webapp.meta.inf.dir" value="${webapp.dir}/META-INF" />
+    
     <property name="upt.dir" value="${bda.software.dir}/${project.name}/upt" />
     <property name="database.driver.file" value="${bda.lib.dir}/mysql-connector-java-5.1.10.jar"/>
     <property name="exploded.dir" value="${bda.dist.dir}/exploded/${project.name}-webapp" />
@@ -192,14 +195,30 @@ L-->
             </resources>
         </copy>
 
+
+        <copy todir="${webapp.meta.inf.dir}" overwrite="true"
+             flatten="true" includeEmptyDirs="no" filtering="true">
+
+            <filterset>
+                <filter token="database.driver" value="${database.driver}"/>
+                <filter token="database.name" value="${database.name}"/>
+                <filter token="database.user" value="${database.user}"/>
+                <filter token="database.password" value="${database.password}"/>
+                <filter token="database.server" value="${database.server}"/>
+                <filter token="database.port" value="${database.port}"/>
+                <filter token="database.url" value="${database.url}"/>
+            </filterset>
+            
+            <resources>
+                <file file="${bda.conf.dir}/context.xml"/>
+            </resources>
+        </copy>
     </target>
 
     <target name="-war" depends="compile:application-code">
 
         <mkdir dir="${bda.dist.dir}/exploded/${project.name}-webapp" />
         <mkdir dir="${bda.dist.dir}/exploded/${project.name}-webapp/deploy" />
-
-
         
         <war destfile="${bda.dist.dir}/exploded/${project.name}-webapp/${webapp.war.name}" basedir="${webapp.dir}">
             <lib dir="${bda.lib.dir}" includes="*.jar" />
@@ -246,7 +265,6 @@ L-->
                 <filter token="database.server" value="${database.server}"/>
                 <filter token="database.port" value="${database.port}"/>
                 <filter token="database.url" value="${database.url}"/>
-                
             </filterset>
             <resources>
                 <file file="${bda.conf.dir}/${webapp.prop.file}"/>
@@ -256,6 +274,7 @@ L-->
                 <file file="${bda.conf.dir}/rwdbserver.csm.new.hibernate.cfg.xml"/>
                 <file file="${bda.conf.dir}/hibernate.cfg.xml"/>
                 <file file="${bda.conf.dir}/ApplicationSecurityConfig.xml"/>
+               
             </resources>
         </copy>
 
@@ -298,11 +317,6 @@ L-->
                 <file file="${db.upgrade.dir}/db-upgrade.xml"/>
             </resources>
         </copy>
-
-
-
-
-
     </target>
 
     <target name="build:config" description="Generates configuration files for a target environment">
@@ -718,7 +732,6 @@ L-->
                 <file file="${bda.conf.dir}/application-config.xml"/>
                 <file file="${bda.conf.dir}/ncireportwriter.properties"/>
                 <file file="${bda.conf.dir}/ApplicationSecurityConfig.xml"/>
-                <file file="${bda.conf.dir}/context.xml"/>
             </resources>
         </copy>
                 
