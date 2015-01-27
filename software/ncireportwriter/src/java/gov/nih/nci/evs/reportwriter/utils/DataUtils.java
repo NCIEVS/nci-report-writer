@@ -80,11 +80,11 @@ public class DataUtils {
 
     private static HashMap<String, HashMap> _cs2HasParentAssociationMap = null;
 
-    public static String NCIT_VERSION = AppProperties.getInstance().getProperty(
-        AppProperties.NCIT_VERSION);
+    public static String NCIT_VERSION = null;//AppProperties.getInstance().getProperty(AppProperties.NCIT_VERSION);
 
     static {
         setCodingSchemeMap();
+        NCIT_VERSION = getVocabularyVersionByTag("NCI_Thesaurus", "PRODUCTION");
     }
 
     public static List<SelectItem> getPropertyTypeList() {
@@ -2626,7 +2626,7 @@ _logger.debug("getResolvedConceptReferenceIterator...");
     public static CodingScheme resolveCodingScheme(String scheme, String version) {
 		String representsVersion = version;
 
-		if (!isNullOrBlank(NCIT_VERSION)) {
+		if (!isNullOrBlank(NCIT_VERSION) || version.compareTo("@ncit.version@") == 0) {
 			representsVersion = NCIT_VERSION;
 		}
 
