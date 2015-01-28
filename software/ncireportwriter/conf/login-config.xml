@@ -116,7 +116,7 @@ $Revision: 87078 $
     <authentication>
       <login-module code="gov.nih.nci.security.authentication.loginmodules.RDBMSLoginModule" flag="required">
         <module-option name="driver">com.mysql.jdbc.Driver</module-option>
-        <module-option name="url">jdbc:mysql://localhost:3306/ncirw</module-option>
+        <module-option name="url">jdbc:mysql://localhost:3306/reportwriter</module-option>
         <module-option name="user">root</module-option>
         <module-option name="passwd">password</module-option>
         <module-option name="query">SELECT * FROM CSM_USER WHERE LOGIN_NAME=? and PASSWORD=?</module-option>
@@ -128,7 +128,7 @@ $Revision: 87078 $
     <authentication>
       <login-module code="gov.nih.nci.security.authentication.loginmodules.RDBMSLoginModule" flag="required">
         <module-option name="driver">com.mysql.jdbc.Driver</module-option>
-        <module-option name="url">jdbc:mysql://localhost:3306/ncirw</module-option>
+        <module-option name="url">jdbc:mysql://localhost:3306/reportwriter</module-option>
         <module-option name="user">root</module-option>
         <module-option name="passwd">password</module-option>
         <module-option name="query">SELECT * FROM CSM_USER WHERE LOGIN_NAME=? and PASSWORD=?</module-option>
