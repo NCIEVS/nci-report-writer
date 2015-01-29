@@ -16,10 +16,12 @@ L--%>
 <%@ page import="gov.nih.nci.evs.reportwriter.properties.*" %>
 
 <%
+
   SDKClientUtil sdkclientutil = new SDKClientUtil();
   StandardReportTemplate standardReportTemplate = null;
   String FQName = "gov.nih.nci.evs.reportwriter.bean.StandardReport";
   Object[] objs = sdkclientutil.search(FQName);
+  
   Vector<StandardReport> vector = ListConverter.toStandardReport(objs, true);
   SimpleDateFormat formatter = new SimpleDateFormat("MM/dd/yyyy");
 %>
@@ -64,7 +66,7 @@ L--%>
 
                   <%
                     String download_dir = AppProperties.getInstance().getProperty(AppProperties.REPORT_DOWNLOAD_DIRECTORY);
-                    //System.out.println("(*) DOWNLOAD DIR: " + download_dir);
+                    System.out.println("(*) DOWNLOAD DIR: " + download_dir);
                   
                     int i=0;
                     Iterator<StandardReport> iterator = vector.iterator();

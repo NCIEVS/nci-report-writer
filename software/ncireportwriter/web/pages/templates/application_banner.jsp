@@ -7,13 +7,13 @@ L--%>
 
 <%@ page import="gov.nih.nci.evs.utils.*" %>
 <%
-  String basePath = FormUtils.getBasePath(request);
-  String imagesPath = FormUtils.getImagesPath(request);
+  String bannerBasePath = FormUtils.getBasePath(request);
+  String bannerImagesPath = FormUtils.getImagesPath(request);
 %>
 
 <div class="subhdrBG">
-  <a href="<%=basePath%>">
-    <img src="<%=imagesPath%>/appLogo.gif"
+  <a href="<%=bannerBasePath%>">
+    <img src="<%=bannerImagesPath%>/appLogo.gif"
       alt="Application Logo" height="97" border="0">
   </a>
 </div>

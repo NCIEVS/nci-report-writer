@@ -7,7 +7,7 @@ L--%>
 
 <%@ page import="gov.nih.nci.evs.utils.*" %>
 <%
-  String imagesPath = FormUtils.getImagesPath(request);
+  String footerImagesPath = FormUtils.getImagesPath(request);
   String pagesPath = FormUtils.getPagesPath(request);
 %>
 <div class="footer">
@@ -21,7 +21,7 @@ L--%>
 
   <p>
     A Service of the National Cancer Institute<br />
-    <img src="<%=imagesPath%>/external-footer-logos.gif"
+    <img src="<%=footerImagesPath%>/external-footer-logos.gif"
       alt="External Footer Logos" width="238" height="34" border="0"
       usemap="#external-footer" />
   </p>

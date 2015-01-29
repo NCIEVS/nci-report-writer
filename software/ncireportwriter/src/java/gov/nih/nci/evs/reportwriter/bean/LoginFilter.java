@@ -17,7 +17,7 @@ import javax.servlet.http.*;
 import org.apache.log4j.*;
 
 /**
- * 
+ *
  */
 
 /**
@@ -46,13 +46,14 @@ public class LoginFilter implements Filter {
             int index = uri.lastIndexOf("/");
             String path = uri.substring(index);
 
-            /* To make a page public, add it to this list. */            
+            /* To make a page public, add it to this list. */
             if (path.equals("/login.jsf")
                 || path.equals("/")
                 || path.equals("/download_nologin.jsf")
                 || path.equals("/request.jsf")
                 || path.equals("/contact_us.jsf")
                 || path.equals("/download.jsf")) {
+
                 chain.doFilter(request, response);
                 return;
             }

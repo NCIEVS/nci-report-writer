@@ -12,7 +12,7 @@ import gov.nih.nci.evs.reportwriter.bean.*;
 import gov.nih.nci.evs.reportwriter.service.*;
 
 /**
- * 
+ *
  */
 
 /**
@@ -28,25 +28,48 @@ public class ListConverter {
             String label2 = obj2.getTemplate().getLabel();
             if (! label1.equals(label2))
                 return label1.compareTo(label2);
-            
-            String format1 = obj1.getFormat().getDescription();
-            String format2 = obj2.getFormat().getDescription();
-            ReportGenerationThread.ReportFormatType formatType1 =
-                ReportGenerationThread.ReportFormatType.value_of(format1);
-            ReportGenerationThread.ReportFormatType formatType2 =
-                ReportGenerationThread.ReportFormatType.value_of(format2);
-            return formatType1.compareTo(formatType2);
+
+            if (obj1.getFormat() != null && obj2.getFormat() != null) {
+				String format1 = obj1.getFormat().getDescription();
+				String format2 = obj2.getFormat().getDescription();
+				ReportGenerationThread.ReportFormatType formatType1 =
+					ReportGenerationThread.ReportFormatType.value_of(format1);
+				ReportGenerationThread.ReportFormatType formatType2 =
+					ReportGenerationThread.ReportFormatType.value_of(format2);
+				return formatType1.compareTo(formatType2);
+			}
+			return 0;
         }
     }
 
+
     public static Vector<StandardReport> toStandardReport(Object[] objs,
         boolean sort) {
-        @SuppressWarnings("rawtypes")
+
+        if (objs == null) {
+			System.out.println("ListConverter toStandardReport input objs == null.");
+			return null;
+		}
+
+        //@SuppressWarnings("rawtypes")
         List list = Arrays.asList(objs);
-        @SuppressWarnings("unchecked")
-        Vector<StandardReport> vector = new Vector<StandardReport>(list);
-        if (sort)
-            Collections.sort(vector, new StandardReportSortComparator());
+        //@SuppressWarnings("unchecked")
+
+        Vector<StandardReport> vector = new Vector<StandardReport>();
+        for (int i=0; i<list.size(); i++) {
+			StandardReport rpt = (StandardReport) list.get(i);
+			if (rpt != null) {
+				vector.add(rpt);
+			}
+		}
+
+        try {
+			if (sort) {
+				Collections.sort(vector, new StandardReportSortComparator());
+			}
+		} catch (Exception ex) {
+			ex.printStackTrace();
+		}
         return vector;
     }
 }
