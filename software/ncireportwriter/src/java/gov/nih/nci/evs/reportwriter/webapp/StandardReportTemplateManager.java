@@ -17,7 +17,7 @@ import javax.faces.model.*;
 import javax.servlet.http.*;
 
 /**
- * 
+ *
  */
 
 /**
@@ -28,7 +28,7 @@ public class StandardReportTemplateManager {
     private String _selectedStandardReportTemplate = null;
     private String _selectedStandardReportTemplate_draft = null;
     private String _selectedStandardReportTemplate_approved = null;
-    
+
     // -------------------------------------------------------------------------
     public String getSelected() {
         return _selectedStandardReportTemplate;
@@ -49,9 +49,10 @@ public class StandardReportTemplateManager {
         }
         return null;
     }
-    
+
     public List<SelectItem> getStandardReportTemplateList() {
         List<SelectItem> list = DataUtils.getStandardReportTemplateList();
+
         if (_selectedStandardReportTemplate == null) {
             if (list != null && list.size() > 0) {
                 if (getSelectedStandardReportTemplate() == null) {
@@ -73,8 +74,8 @@ public class StandardReportTemplateManager {
         HttpServletRequest request = HTTPUtils.getRequest();
         request.getSession().setAttribute("selectedStandardReportTemplate",
             selectedStandardReportTemplate);
-    }   
-    
+    }
+
     // -------------------------------------------------------------------------
     private List<SelectItem> getStandardReportTemplateList(String version) {
         List<SelectItem> list = new ArrayList<SelectItem>();
@@ -82,27 +83,51 @@ public class StandardReportTemplateManager {
         SDKClientUtil sdkclientutil = new SDKClientUtil();
         StandardReportTemplate standardReportTemplate = null;
         String FQName = "gov.nih.nci.evs.reportwriter.bean.StandardReport";
-        Object[] objs = sdkclientutil.search(FQName);
 
-        if (objs == null || objs.length <= 0)
+        Object[] objs = null;
+        try {
+        	objs = sdkclientutil.search(FQName);
+		} catch (Exception ex) {
+			System.out.println("Exception at sdkclientutil.search(FQName): " + FQName);
+		}
+
+
+        if (objs == null || objs.length <= 0) {
             return list;
+	    }
+
         for (int i = 0; i < objs.length; i++) {
             StandardReport standardReport = (StandardReport) objs[i];
-            ReportStatus rs = standardReport.getStatus();
-            String status = rs.getLabel();
-            standardReportTemplate = standardReport.getTemplate();
-            if (standardReportTemplate == null ||
-                !status.equalsIgnoreCase(version) ||
-                hset.contains(standardReportTemplate.getLabel()))
-                continue;
-            
-            hset.add(standardReportTemplate.getLabel());
-            list.add(new SelectItem(standardReportTemplate
-                .getLabel()));
+            if (standardReport != null) {
+				ReportStatus rs = null;
+				try {
+					rs = standardReport.getStatus();
+				} catch (Exception ex) {
+					System.out.println("standardReport.getStatus() exception?");
+				}
+
+				if (rs != null) {
+					String status = rs.getLabel();
+                    standardReportTemplate = null;
+                    try {
+						standardReportTemplate = standardReport.getTemplate();
+					} catch (Exception ex) {
+
+					}
+
+					if (standardReportTemplate == null ||
+						!status.equalsIgnoreCase(version) ||
+						hset.contains(standardReportTemplate.getLabel()))
+						continue;
+
+					hset.add(standardReportTemplate.getLabel());
+					list.add(new SelectItem(standardReportTemplate.getLabel()));
+			    }
+		    }
         }
         return list;
     }
-    
+
     // -------------------------------------------------------------------------
     public String getSelectedStandardReportTemplate_draft() {
         return _selectedStandardReportTemplate_draft;
@@ -119,15 +144,18 @@ public class StandardReportTemplateManager {
     }
 
     public List<SelectItem> getStandardReportTemplateList_draft() {
-        List<SelectItem> list = getStandardReportTemplateList("DRAFT");
+        List<SelectItem> list = null;
+
+        list = getStandardReportTemplateList("DRAFT");
         if (list != null && list.size() > 0) {
             SelectItem item = list.get(0);
             setSelectedStandardReportTemplate_draft(item.getLabel());
+            SortUtils.quickSort(list);
         }
-        SortUtils.quickSort(list);
+
         return list;
     }
-    
+
     // -------------------------------------------------------------------------
     public String getSelectedStandardReportTemplate_approved() {
         return _selectedStandardReportTemplate_approved;

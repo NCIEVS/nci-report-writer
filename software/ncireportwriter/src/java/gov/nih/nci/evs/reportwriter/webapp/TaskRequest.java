@@ -18,10 +18,6 @@ import javax.faces.model.*;
 import javax.servlet.http.*;
 
 /**
- *
- */
-
-/**
  * @author EVS Team (Kim Ong, David Yee)
  * @version 1.0
  */
@@ -79,9 +75,13 @@ public class TaskRequest {
             return "generate_hierarchy_report";
 
         } else if (_selectedTask.compareTo("Assign Report Status") == 0) {
+
             // Check if there is any DRAFT report waiting for approval:
-            List<SelectItem> list =
-                usBean.getStandardReportTemplateList_draft();
+            List<SelectItem> list = null;
+            if (usBean != null) {
+                list = usBean.getStandardReportTemplateList_draft();
+			}
+
             if (list != null && list.size() > 0) {
                 return "assign_report_status";
             } else {

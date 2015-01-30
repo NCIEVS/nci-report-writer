@@ -128,9 +128,11 @@ public class DataUtils {
             SDKClientUtil util = new SDKClientUtil();
             String FQName =
                 "gov.nih.nci.evs.reportwriter.bean.StandardReportTemplate";
+
             Object[] objs = util.search(FQName);
-            if (objs.length == 0)
+            if (objs == null || objs.length == 0) {
                 return _standardReportTemplateList;
+			}
             Vector<String> v = new Vector<String>();
             for (int i = 0; i < objs.length; i++) {
                 StandardReportTemplate standardReportTemplate =
@@ -416,7 +418,6 @@ public class DataUtils {
 
         CSNVInfo info = _csnv2InfoMap.get(key);
         if (info == null) {
-			System.out.println("(*) getRepresentationalFormListData ..info == null???." + key);
 			Vector<String> v = getRepresentationalFormListData(key, null);
 			return v;
 		}

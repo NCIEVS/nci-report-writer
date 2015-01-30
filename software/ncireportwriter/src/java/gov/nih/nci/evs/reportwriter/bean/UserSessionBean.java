@@ -20,7 +20,7 @@ import javax.servlet.http.*;
 import org.apache.log4j.*;
 
 /**
- * 
+ *
  */
 
 /**
@@ -31,9 +31,9 @@ import org.apache.log4j.*;
 public class UserSessionBean extends Object {
     private static Logger _logger = Logger.getLogger(UserSessionBean.class);
     private TaskRequest _taskRequest = new TaskRequest();
-    private StandardReportTemplateManager _srtMgr = 
+    private StandardReportTemplateManager _srtMgr =
         new StandardReportTemplateManager();
-    
+
     private String _selectedPropertyType = null;
     private String _rootConceptCode = null;
     private String _selectedOntology = null;
@@ -209,12 +209,12 @@ public class UserSessionBean extends Object {
             return;
         setSelectedVersion(_selectedVersion);
     }
-    
+
     // -------------------------------------------------------------------------
     public StandardReportTemplate getStandardReportTemplate(String label) {
         return _srtMgr.getStandardReportTemplate(label);
     }
-    
+
     public List<SelectItem> getStandardReportTemplateList() {
         return _srtMgr.getStandardReportTemplateList();
     }
@@ -237,11 +237,11 @@ public class UserSessionBean extends Object {
         _srtMgr.setSelectedStandardReportTemplate_draft(
             selectedStandardReportTemplate_draft);
     }
-    
+
     public List<SelectItem> getStandardReportTemplateList_draft() {
         return _srtMgr.getStandardReportTemplateList_draft();
     }
-    
+
     public String getSelectedStandardReportTemplate_approved() {
         return _srtMgr.getSelectedStandardReportTemplate_approved();
     }
@@ -255,12 +255,12 @@ public class UserSessionBean extends Object {
     public List<SelectItem> getStandardReportTemplateList_approved() {
         return _srtMgr.getStandardReportTemplateList_approved();
     }
-    
+
     // -------------------------------------------------------------------------
     public String performTask() {
         return _taskRequest.performAction();
     }
-    
+
     public String getSelectedTask() {
         return _taskRequest.getSelectedTask();
     }
@@ -272,11 +272,11 @@ public class UserSessionBean extends Object {
     public void changeTaskSelection(ValueChangeEvent vce) {
         _taskRequest.changeTaskSelection(vce);
     }
-    
+
     public List<SelectItem> getTaskList() {
         return _taskRequest.getTaskList();
     }
-    
+
     // -------------------------------------------------------------------------
     public String addReportTemplateAction() {
         return new ReportTemplateRequest().addAction();
@@ -293,7 +293,7 @@ public class UserSessionBean extends Object {
     public String saveModifiedTemplateAction() {
         return new ReportTemplateRequest().saveModifiedAction();
     }
-    
+
     public String selectGenerateReportOptionAction() {
         return "selectGenerateReportOption";
     }
@@ -332,7 +332,7 @@ public class UserSessionBean extends Object {
         return new ReportColumnRequest()
             .saveModifiedAction(_srtMgr.getSelected());
     }
-    
+
     // -------------------------------------------------------------------------
     public String editReportContentAction() {
         return new ReportContentRequest()
@@ -343,7 +343,7 @@ public class UserSessionBean extends Object {
         return new ReportContentRequest()
             .generateAction(_srtMgr.getSelected());
     }
-    
+
     public String displayStandardReportTemplateAction() {
         return "standard_report_template";
     }
@@ -352,7 +352,7 @@ public class UserSessionBean extends Object {
     public String addStatusAction() {
     	return new ReportStatusRequest().addAction();
     }
-    
+
     public String activateStatusAction () {
         return new ReportStatusRequest().activateAction();
     }
@@ -364,18 +364,18 @@ public class UserSessionBean extends Object {
     public String assignStatusAction() {
     	return new ReportStatusRequest().assignAction();
     }
-    
+
     public String saveStatusAction() { // Might not be called.
         return new ReportStatusRequest().
             saveAction(_srtMgr.getSelected());
     }
-    
+
     // -------------------------------------------------------------------------
     public String downloadReportAction() {
         return new ReportDownloadRequest()
             .downloadReportAction(_srtMgr.getSelected());
     }
-    
+
     // -------------------------------------------------------------------------
     public String submitAccessDenied() {
         return new AccessDeniedRequest().submit();
