@@ -822,7 +822,11 @@ public class SDKClientUtil {
             if (results == null)
                 return null;
             Object[] a = results.toArray();
-            return a[0];
+            if (a.length > 0) {
+            	return a[0];
+			}
+
+            //return a[0];
         } catch (Exception e) {
             e.printStackTrace();
         }

@@ -2688,7 +2688,7 @@ _logger.debug("getResolvedConceptReferenceIterator...");
 		} else if (extension.compareTo("xls") == 0 || extension.compareTo("xlsx") == 0) {
 			return "Microsoft Office Excel";
 		} else if (extension.compareTo("htm") == 0 || extension.compareTo("html") == 0) {
-			return "Hypertext Markup Language";
+			return "HyperText Markup Language";
 		}
         return "";
 	}

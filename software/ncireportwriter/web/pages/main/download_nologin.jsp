@@ -185,6 +185,28 @@ System.out.println(pathname);
 
 				//user = standardReport.getCreatedBy();
 				//loginName = user.getLoginName();
+				
+				user = null;
+				try {
+				    user = standardReport.getCreatedBy();
+				    if (user != null) {
+				        loginName = user.getLoginName();
+				    }
+				} catch (Exception ex) {
+				    loginName = "";
+				}
+				
+				reportStatus = null;
+				try {
+				    reportStatus = standardReport.getStatus();
+				    if (reportStatus != null) {
+				        status = reportStatus.getLabel();
+				    }
+				} catch (Exception ex) {
+				    status = "";
+				}
+				
+				
 				dataRowColor = lcv%2==0 ? "dataRowLight" : "dataRowDark";
 				lcv++;
 				id = standardReportTemplate.getId();
