@@ -11,6 +11,8 @@ import java.io.*;
 import java.util.*;
 
 import java.text.DecimalFormat;
+import java.text.SimpleDateFormat;
+
 
 import gov.nih.nci.evs.reportwriter.bean.*;
 
@@ -2664,6 +2666,48 @@ _logger.debug("getResolvedConceptReferenceIterator...");
 			_logger.warn("  * " + scheme);
 		}
 		return null;
+	}
+
+
+    public static String getLastModified(File file) {
+		SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/yyyy HH:mm:ss");
+		String lastModified = sdf.format(file.lastModified());
+		return lastModified;
+	}
+
+
+    public static String getFileFormat(String filename) {
+		String extension = "";
+		int i = filename.lastIndexOf('.');
+		int p = Math.max(filename.lastIndexOf('/'), filename.lastIndexOf('\\'));
+		if (i > p) {
+			extension = filename.substring(i+1);
+		}
+		if (extension.compareTo("txt") == 0) {
+			return "Text (tab delimited)";
+		} else if (extension.compareTo("xls") == 0 || extension.compareTo("xlsx") == 0) {
+			return "Microsoft Office Excel";
+		} else if (extension.compareTo("htm") == 0 || extension.compareTo("html") == 0) {
+			return "Hypertext Markup Language";
+		}
+        return "";
+	}
+
+    public static Integer getFormatId(String filename) {
+		String extension = "";
+		int i = filename.lastIndexOf('.');
+		int p = Math.max(filename.lastIndexOf('/'), filename.lastIndexOf('\\'));
+		if (i > p) {
+			extension = filename.substring(i+1);
+		}
+		if (extension.compareTo("txt") == 0) {
+			return new Integer(404);
+		} else if (extension.compareTo("xls") == 0 || extension.compareTo("xlsx") == 0) {
+			return new Integer(405);
+		} else if (extension.compareTo("htm") == 0 || extension.compareTo("html") == 0) {
+			return new Integer(406);
+		}
+        return new Integer(404);
 	}
 
 }

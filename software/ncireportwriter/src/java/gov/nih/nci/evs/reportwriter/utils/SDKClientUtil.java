@@ -18,7 +18,7 @@ import java.util.*;
 import org.apache.log4j.*;
 
 /**
- * 
+ *
  */
 
 /**
@@ -621,7 +621,7 @@ public class SDKClientUtil {
 
         StandardReportTemplate standardReportTemplate =
             new StandardReportTemplate();
-        _logger.debug("Create Method: StandardReportTemplate ID: " 
+        _logger.debug("Create Method: StandardReportTemplate ID: "
                 + standardReportTemplate.getId());
         standardReportTemplate.setLabel(label);
         standardReportTemplate.setCodingSchemeName(codingSchemeName);
@@ -867,12 +867,22 @@ public class SDKClientUtil {
         try {
             Class<?> klass = Class.forName(FQName);
             Object o = klass.newInstance();
-            ApplicationService appService =
-                ApplicationServiceProvider.getApplicationService();
+            ApplicationService appService = null;
+            try {
+                appService = ApplicationServiceProvider.getApplicationService();
+			} catch (Exception ex) {
+				ex.printStackTrace();
+			}
+			if (appService == null) {
+				System.out.println("(***) appService = null???");
+				return null;
+			}
+
             Collection<Object> results = appService.search(klass, o);
             if (results == null)
                 return null;
             Object[] a = results.toArray();
+            System.out.println("Number of matches: " + a.length);
             return a;
         } catch (Exception e) {
             e.printStackTrace();
