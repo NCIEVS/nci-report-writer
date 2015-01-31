@@ -150,7 +150,7 @@ System.out.println("(*) DOWNLOAD DIR: " + download_dir);
 			try {
 			    standardReportTemplate = provider.getStandardReportTemplate(label);
 			    //templateId = standardReportTemplate.getId().toString();
-			    label = standardReportTemplate.getLabel();
+			    //label = standardReportTemplate.getLabel();
 			    codingScheme = standardReportTemplate.getCodingSchemeName();
 			    version = standardReportTemplate.getCodingSchemeVersion();
 			    Collection<StandardReport> c = standardReportTemplate.getReportCollection();
@@ -180,7 +180,7 @@ System.out.println(pathname);
 
 				//user = standardReport.getCreatedBy();
 				//loginName = user.getLoginName();
-                                i++;
+                                //i++;
 				dataRowColor = i%2==0 ? "dataRowLight" : "dataRowDark";
 				id = standardReportTemplate.getId();
 				templateId = id.toString();
