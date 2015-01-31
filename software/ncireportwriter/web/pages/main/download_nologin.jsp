@@ -145,6 +145,7 @@ System.out.println("(*) DOWNLOAD DIR: " + download_dir);
 		    StandardReportServiceProvider provider = new StandardReportServiceProvider();
 		    List label_list = provider.getStandardReportTemplateLabels();
 		    standardReportTemplate = null;
+		    int lcv = 0;
 		    for (i=0; i<label_list.size(); i++) {
 			label = (String) label_list.get(i);
 			try {
@@ -154,7 +155,7 @@ System.out.println("(*) DOWNLOAD DIR: " + download_dir);
 			    codingScheme = standardReportTemplate.getCodingSchemeName();
 			    version = standardReportTemplate.getCodingSchemeVersion();
 			    Collection<StandardReport> c = standardReportTemplate.getReportCollection();
-			    System.out.println("StandardReport: " + c.size());
+			    //System.out.println("StandardReport: " + c.size());
 			    List list = new ArrayList(c);
 			    for (int k=0; k<list.size(); k++) {
 				StandardReport standardReport = (StandardReport) list.get(k);
@@ -163,6 +164,8 @@ System.out.println("(*) DOWNLOAD DIR: " + download_dir);
 				lastModified = standardReport.getLastModified();
 				format = DataUtils.getFileFormat(filename);
 				pathname = download_dir + File.separator + filename;
+				filesize = "";
+				date_str = null;
 				
 System.out.println(pathname);				
 				
@@ -177,11 +180,13 @@ System.out.println(pathname);
 				if (lastModified != null && date_str == null) {
 				    date_str = formatter.format(lastModified);
 				} 
+				
+				if (date_str == null) date_str = "";
 
 				//user = standardReport.getCreatedBy();
 				//loginName = user.getLoginName();
-                                //i++;
-				dataRowColor = i%2==0 ? "dataRowLight" : "dataRowDark";
+				dataRowColor = lcv%2==0 ? "dataRowLight" : "dataRowDark";
+				lcv++;
 				id = standardReportTemplate.getId();
 				templateId = id.toString();
 				format_id = DataUtils.getFormatId(filename);
