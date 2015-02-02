@@ -11,6 +11,7 @@ import gov.nih.nci.evs.reportwriter.bean.*;
 import gov.nih.nci.evs.reportwriter.utils.*;
 import gov.nih.nci.evs.utils.*;
 
+import java.io.*;
 import java.util.*;
 
 import javax.faces.model.*;
@@ -76,8 +77,38 @@ public class StandardReportTemplateManager {
             selectedStandardReportTemplate);
     }
 
+
     // -------------------------------------------------------------------------
     private List<SelectItem> getStandardReportTemplateList(String version) {
+		HttpServletRequest request = HTTPUtils.getRequest();
+
+
+        List<SelectItem> list = new ArrayList<SelectItem>();
+        HashSet<String> hset = new HashSet<String>();
+
+		String hibernate_cfg_xml = request.getSession().getServletContext().getRealPath("/WEB-INF/classes/hibernate.cfg.xml");
+		File f = new File(hibernate_cfg_xml);
+		if (f.exists()) {
+			JDBCUtil util = new JDBCUtil(hibernate_cfg_xml);
+			Vector report_metadata_vec = util.getReportData();
+
+			for (int i=0; i<report_metadata_vec.size(); i++) {
+				ReportMetadata rmd = (ReportMetadata) report_metadata_vec.elementAt(i);
+				if (rmd.getStatus().compareTo(version) == 0) {
+                    String templateLabel = rmd.getTemplateLabel();
+                    if (!hset.contains(templateLabel)) {
+						hset.add(templateLabel);
+						list.add(new SelectItem(templateLabel));
+					}
+				}
+			}
+		}
+		return list;
+    }
+
+/*
+    private List<SelectItem> getStandardReportTemplateList(String version) {
+
         List<SelectItem> list = new ArrayList<SelectItem>();
         HashSet<String> hset = new HashSet<String>();
         SDKClientUtil sdkclientutil = new SDKClientUtil();
@@ -127,6 +158,7 @@ public class StandardReportTemplateManager {
         }
         return list;
     }
+*/
 
     // -------------------------------------------------------------------------
     public String getSelectedStandardReportTemplate_draft() {

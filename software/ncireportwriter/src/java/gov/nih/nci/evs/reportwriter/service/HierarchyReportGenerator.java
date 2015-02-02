@@ -103,14 +103,12 @@ public class HierarchyReportGenerator {
     public static Entity getConceptByCode(String codingSchemeName, String vers, String code) {
         try {
 			if (code == null) {
-				//System.out.println("Input error in DataUtils.getConceptByCode -- code is null.");
 				return null;
 			}
 			if (code.indexOf("@") != -1) return null; // anonymous class
 
             LexBIGService lbSvc = new RemoteServerUtil().createLexBIGService();
             if (lbSvc == null) {
-                //System.out.println("lbSvc == null???");
                 return null;
             }
             CodingSchemeVersionOrTag versionOrTag = new CodingSchemeVersionOrTag();
@@ -130,7 +128,6 @@ public class HierarchyReportGenerator {
 				}
 
                 if (cns == null) {
-					//System.out.println("getConceptByCode getCodingSchemeConcepts returns null??? " + codingSchemeName);
 					return null;
 				}
 
@@ -152,7 +149,6 @@ public class HierarchyReportGenerator {
 				}
 
                 if (matches == null) {
-                    //System.out.println("Concept not found.");
                     return null;
                 }
                 int count = matches.getResolvedConceptReferenceCount();
@@ -603,7 +599,6 @@ public class HierarchyReportGenerator {
 	                             String assocName, String source, String term_type, int level) {
 		String indentation = getIndentation(level);
 		pw.println(indentation + name + " (" + code + ")");
-		System.out.println(indentation + name + " (" + code + ")");
         Vector u = getAssociatedConceptTermAndCode(scheme, version, code, assocName, source, term_type);
         for (int i=0; i<u.size(); i++) {
 			String t = (String) u.elementAt(i);
@@ -625,9 +620,6 @@ public class HierarchyReportGenerator {
 			String name = term;
 			int level = 0;
 			printNode(pw, scheme, version, name, code, assocName, source, term_type, level);
-
-			System.out.println("Output file " + filename + " generated.");
-
 		} catch (Exception ex) {
 			ex.printStackTrace();
 		} finally {
@@ -636,7 +628,6 @@ public class HierarchyReportGenerator {
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
-            System.out.println("Run time (ms): " + (System.currentTimeMillis() - ms));
 		}
 	}
 
@@ -819,12 +810,6 @@ public class HierarchyReportGenerator {
 			assocName = "Has_CDRH_Parent";
 		}
 
-System.out.println("(*) excelfile: " + excelfile);
-System.out.println("(*) outputfile: " + outputfile);
-System.out.println("(*) assocName: " + assocName);
-
-
-
 		Vector headers = getExcelColumnHeaders(excelfile);
 
 		int col_num = -1;
@@ -844,11 +829,6 @@ System.out.println("(*) assocName: " + assocName);
 			    col = header;
 			}
 		}
-
-		System.out.println("col: " + col);
-		System.out.println("col_num: " + col_num);
-		System.out.println("parent_col: " + parent_col);
-		System.out.println("parent_col_num: " + parent_col_num);
 
 		String scheme = "NCI_Thesaurus";
 		String version = null;
@@ -902,14 +882,12 @@ System.out.println("(*) assocName: " + assocName);
 			for (int i=0; i<topnodes.size(); i++) {
 			    String topnode = (String) topnodes.elementAt(i);
 			    String topenode_code = (String) topnodeName2CodeHashMap.get(topnode);
-			    System.out.println("TOP NODE: " + topnode + " (" + topenode_code + ")");
 
 			    pw.println(topnode);
 			    Vector roots = (Vector) topNodes2RootsHashMap.get(topenode_code);
 			    roots = SortUtils.quickSort(roots);
 				for (int j=0; j<roots.size(); j++) {
 					String name = (String) roots.elementAt(j);
-					System.out.println("ROOT: " + name);
 					printNode(pw, parent2ChildrenHashMap, name, 1);
 				}
 		    }
@@ -932,35 +910,6 @@ System.out.println("(*) assocName: " + assocName);
 
 	public static void main(String [ ] args)
 	{
-		/*
-		String code = "C101805";
-		String codingSchemeName = "NCI_Thesaurus";
-		String vers = null;
-		Entity entity = HierarchyReportGenerator.getConceptByCode(codingSchemeName, vers, code);
-		if (entity != null) {
-			System.out.println(entity.getEntityDescription().getContent());
-		}
-		String source_code = HierarchyReportGenerator.getFocusConceptPropertyValue(
-		    entity, "FULL_SYN", "PRESENTATION", null, "NCI", null, "AB", "|", null);
-		if (source_code != null) {
-			System.out.println("source_code: " + source_code);
-		} else {
-			System.out.println("source_code not available.");
-		}
-
-		code = "C102034";
-		Vector qualifier_value_vec = new Vector();
-		qualifier_value_vec.add(source_code);
-		entity = HierarchyReportGenerator.getConceptByCode(codingSchemeName, vers, code);
-		String submission_value = HierarchyReportGenerator.getFocusConceptPropertyValue(
-		    entity, "FULL_SYN", "PRESENTATION", "source-code", "CDISC", qualifier_value_vec, "PT", "|", null);
-		if (source_code != null) {
-			System.out.println("submission_value: " + submission_value);
-		} else {
-			System.out.println("submission_value not available.");
-		}
-		*/
-
 		String code = "C62596";
 		String codingSchemeName = "NCI_Thesaurus";
 		String version = null;
@@ -968,59 +917,10 @@ System.out.println("(*) assocName: " + assocName);
 		String source = "FDA";
 		String term_type = "PT";
 
-		/*
-
-		Vector<String> v = getAssociatedConceptCodes(codingSchemeName, version, code, assocName);
-		Vector u = new Vector();
-		for (int i=0; i<v.size(); i++) {
-			String t = (String) v.elementAt(i);
-			String term = getTermBySourceName(codingSchemeName, version, t, source, term_type);
-			u.add(term + "|" + t);
-		}
-		u = SortUtils.quickSort(u);
-		for (int i=0; i<u.size(); i++) {
-			String t = (String) u.elementAt(i);
-			System.out.println(t);
-		}
-		*/
-
 		String filename = "hierarchy.txt";
         //generateHierarchyReport(filename, codingSchemeName, version, code, assocName, source, term_type);
 
         code = "C54027";
-
-        /*
-        String term = getTermBySourceName(codingSchemeName, version, code, source, term_type);
-        System.out.println(term);
-        */
-
-/*
-		Vector roots = new Vector();
-		roots.add("DIAGNOSTIC, THERAPEUTIC, OR RESEARCH EQUIPMENT");
-		roots.add("EVALUATION CONCLUSION");
-		roots.add("EVALUATION METHOD");
-		roots.add("EVALUATION RESULT");
-		roots.add("MISSING VALUE REASON");
-		roots.add("PATIENT PROBLEM/MEDICAL PROBLEM");
-
-
-        HashMap hmap = searchForHierarchyRoots(codingSchemeName, version, assocName, roots);
-        Iterator it = hmap.keySet().iterator();
-        while (it.hasNext()) {
-			code = (String) it.next();
-			System.out.println("PARENT: " + code);
-			String name = getTermBySourceName(codingSchemeName, version, code, "FDA", "PT");
-			System.out.println("parent: " + name + " (" + code + ")");
-
-			Vector u = (Vector) hmap.get(code);
-			u = SortUtils.quickSort(u);
-			for (int i=0; i<u.size(); i++) {
-				String t = (String) u.elementAt(i);
-				System.out.println(t);
-			}
-		}
-
-*/
 
         String excelfile = "FDA-CDRH_NCIt_Subsets.xls";
         int n = excelfile.lastIndexOf(".");
@@ -1042,8 +942,5 @@ Find the FULL_SYNs of the focus concept with source equaling to the specified so
 and source code equaling to the source-code qualifier (i.e., the name of the FULL_SYN of
 the associated concept found in the previous step above). Output the name of the FULL_SYN
 such found. This is so-called CDISC Submission Value.
-
-
-
 */
 

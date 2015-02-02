@@ -58,6 +58,7 @@ public class TaskRequest {
     }
 
     public String performAction() {
+
         UserSessionBean usBean = BeanUtils.getUserSessionBean();
         if (_selectedTask.compareTo("Administer Standard Reports") == 0) {
             List<SelectItem> list = usBean.getStandardReportTemplateList();

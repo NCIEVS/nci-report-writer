@@ -96,35 +96,9 @@ public class LoginBean extends Object {
     }
 
 
-/*
-    private User getCSMUser(String userid) throws Exception {
-
-System.out.println("(*) getCSMUser " + 	userid	);
-System.out.println("*********************************************************************************");
-        AuthorizationManager manager =
-            SecurityServiceProvider.getAuthorizationManager(APP_NAME);
-
-        if (manager == null)
-            throw new Exception("Can not get authorization manager for: "
-                + APP_NAME);
-
-        User user = manager.getUser(userid);
-        if (user == null)
-            throw new Exception("Error retrieving CSM userid " + userid + ".");
-        return user;
-    }
-*/
 
     public static gov.nih.nci.security.authorization.domainobjects.User getCSMUser(String userid) throws Exception {
-
-
-		System.out.println("(***) calling CSMAuthorizationManager.getAuthorizationManagerDirectly " + APP_NAME);
-
         AuthorizationManager manager = CSMAuthorizationManager.getAuthorizationManagerDirectly(APP_NAME);
-
-		System.out.println("(***) exiting CSMAuthorizationManager.getAuthorizationManagerDirectly " + APP_NAME);
-
-
         if (manager == null)
             throw new Exception("Can not get authorization manager for: " + APP_NAME);
 
@@ -132,16 +106,11 @@ System.out.println("************************************************************
         if (user == null)
             throw new Exception("Error retrieving CSM userid " + userid + ".");
 
-
- 		System.out.println("(***) getCSMUser returns user email: " + user.getEmailId());
-
-
         return user;
     }
 
 
     private Boolean hasAdminPrivilege(String userid) throws Exception {
-		System.out.println("getCSMUser " + userid);
         gov.nih.nci.security.authorization.domainobjects.User user = getCSMUser(userid);
 
         if (user == null) {
@@ -154,8 +123,6 @@ System.out.println("************************************************************
 
         boolean permission =
             manager.checkPermission(user.getLoginName(), "admin-pe", "EXECUTE");
-
-		System.out.println("getCSMUser permission = " + permission);
 
         return new Boolean(permission);
 
@@ -234,9 +201,6 @@ Connection conn = DriverManager.getConnection (url, "username", "password");
 			conn = ds.getConnection();
 			try {
 				password = new StringEncrypter().encrypt(password);
-
-System.out.println("(*) Encrypted: " + password);
-
 			} catch (Exception ex) {
 				ex.printStackTrace();
 			}
@@ -276,16 +240,6 @@ _logger.debug("(*****************) calling loginAction ... " );
             if (_password.length() <= 0)
                 throw new Exception("Please enter your password.");
 
-
-System.out.println("_userid: " + _userid);
-System.out.println("_password: " + _password);
-System.out.println("SecurityServiceProvider.getAuthenticationManager: APP_NAME " +  APP_NAME);
-System.out.println("SecurityServiceProvider.getAuthenticationManager: CSM_LOCKOUT_TIME " +  CSM_LOCKOUT_TIME);
-System.out.println("SecurityServiceProvider.getAuthenticationManager: CSM_ALLOWED_LOGIN_TIME " +  CSM_ALLOWED_LOGIN_TIME);
-System.out.println("SecurityServiceProvider.getAuthenticationManager: CSM_ALLOWED_ATTEMPTS " +  CSM_ALLOWED_ATTEMPTS);
-
-
-
 _logger.debug("_userid: " + _userid);
 _logger.debug("_password: " + _password);
 _logger.debug("SecurityServiceProvider.getAuthenticationManager: APP_NAME " +  APP_NAME);
@@ -301,22 +255,14 @@ _logger.debug("SecurityServiceProvider.getAuthenticationManager: CSM_ALLOWED_ATT
 
 
 if (authenticationManager == null) {
-
-	System.out.println("??? SecurityServiceProvider.getAuthenticationManager returns authenticationManager == null??? " );
-    throw new Exception("NULL authenticationManager???");
+   throw new Exception("NULL authenticationManager???");
 }
 
-System.out.println("********** Authenticating user : " + _userid);
-
             if (!authenticationManager.login(_userid, _password)) {
-System.out.println("??? SecurityServiceProvider.getAuthenticationManager: Incorrect login credential. " );
-
             //if (!validateUser(_userid, _password)) {
                 throw new Exception("Incorrect login credential.");
 			}
 
-
-System.out.println("(*) SecurityServiceProvider.login: success --  continue..." );
 _logger.debug("(*) SecurityServiceProvider.login: success --  continue..." +  _userid);
 
 
@@ -324,26 +270,15 @@ _logger.debug("(*) SecurityServiceProvider.login: success --  continue..." +  _u
             HttpSession session = request.getSession(); // true
             if (session != null)
                 session.setAttribute("uid", _userid);
-
-System.out.println("(*) calling .hasAdminPrivilege.." );
 _logger.debug("(************) calling .hasAdminPrivilege.." );
 
             _isAdmin = hasAdminPrivilege(_userid);
-System.out.println("(*************) hasAdminPrivilege? " + _isAdmin);
 _logger.debug("(*) hasAdminPrivilege? " + _isAdmin);
 
 
             session.setAttribute("isAdmin", _isAdmin);
-
-
- System.out.println("(*************) getEmail? " );
-
-
             String email = getEmail(_userid);
             session.setAttribute("email", email);
-
-System.out.println("(*) calling .getUser.." + _userid);
-
             gov.nih.nci.evs.reportwriter.bean.User user = getUser(_userid);
             if (user == null) {
                 // Synchronize with CSM User table

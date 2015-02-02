@@ -209,7 +209,6 @@ public class SimpleSearchUtils {
 
     private void printNumberOfMatches(ResolvedConceptReferencesIterator iterator) {
 		if (iterator == null) {
-			System.out.println("Iterator is null");
 			return;
 		}
 		try {
@@ -223,7 +222,6 @@ public class SimpleSearchUtils {
 
     public ResolvedConceptReferencesIteratorWrapper search(
         Vector<String> schemes, Vector<String> versions, String matchText, int searchOption, String algorithm) throws LBException {
-			System.out.println("search by " + matchText + ", algorithm: " + algorithm);
 
 	    if (schemes == null|| versions == null) return null;
 	    if (schemes.size() != versions.size()) return null;
@@ -252,7 +250,6 @@ public class SimpleSearchUtils {
         for (int i=0; i<schemes.size(); i++) {
 			String scheme = (String) schemes.elementAt(i);
 			String version = (String) versions.elementAt(i);
-			System.out.println("\t" + scheme + " (" + version + ")");
 			CodingSchemeReference ref = new CodingSchemeReference();
 			ref.setCodingScheme(scheme);
 
@@ -318,51 +315,6 @@ public class SimpleSearchUtils {
 		return null;
 	}
 
-/*
-	public static void main(String [ ] args) {
-		boolean searchExtensionAvaliable = isSearchExtensionAvaliable();
-		if (!searchExtensionAvaliable) {
-			System.out.println("SearchExtension is not available.");
-			System.exit(1);
-		}
-
-		SimpleSearchUtils test = new SimpleSearchUtils();
-        try {
-			Vector<String> schemes = new Vector();
-			Vector<String> versions = new Vector();
-			schemes.add("NCI_Thesaurus");
-			//versions.add("12.05d");
-			versions.add("13.03d");
-
-			schemes.add("NCI Metathesaurus");
-			versions.add("201105");
-
-			String matchText = "cell aging";
-
-			ResolvedConceptReferencesIteratorWrapper wrapper = test.search(schemes, versions, matchText, SimpleSearchUtils.BY_NAME, "contains");
-			if (wrapper != null) {
-				ResolvedConceptReferencesIterator iterator = wrapper.getIterator();
-				if (iterator != null) {
-					try {
-						int numRemaining = iterator.numberRemaining();
-						System.out.println("Number of matches: " + numRemaining);
-						dumpIterator(iterator);
-
-					} catch (Exception ex) {
-						ex.printStackTrace();
-					}
-				}
-			} else {
-				System.out.println("wrapper is NULL??? " + matchText);
-			}
-
-
-		} catch (Exception ex) {
-			ex.printStackTrace();
-		}
-	}
-*/
-
 
 	public static void main(String [ ] args) {
 		boolean searchExtensionAvaliable = isSearchExtensionAvaliable();
@@ -376,12 +328,7 @@ public class SimpleSearchUtils {
 			Vector<String> schemes = new Vector();
 			Vector<String> versions = new Vector();
 			schemes.add("NCI_Thesaurus");
-			//versions.add("12.05d");
-			//versions.add("13.03d");
 			versions.add(null);
-
-			//schemes.add("NCI Metathesaurus");
-			//versions.add("201105");
 
 			String matchText = "Tariquidar";
 
@@ -409,9 +356,3 @@ public class SimpleSearchUtils {
 	}
 }
 
-
-
-/*
-Tariquidar fails to find
-Doxorubicin/Etoposide/Mitotane/Tariquidar/Vincristine
-*/

@@ -32,8 +32,37 @@ L--%>
 %>
 
 <%
+
+
+String download_dir = AppProperties.getInstance().getProperty(AppProperties.REPORT_DOWNLOAD_DIRECTORY);
+System.out.println("(*) DOWNLOAD DIR: " + download_dir);
+SimpleDateFormat formatter = new SimpleDateFormat("MM/dd/yyyy");
+
+boolean approvedOnly = true;
+
+  
+  String label = null;
+  int templateId = -1;
+  String templateId_str = null;
+  String filename = null;
+  String filesize = null;
+  int formatId = -1;
+  String format = null;
+  String codingScheme = null;
+  String version = null;
+  String loginName = null;
+  String date_str = null;
+  String status = null;
+  String pathName = null;
+  String dataRowColor = null;
+  String formatId_str = null;
+  String labelUrl = null;
+
+  Vector report_metadata_vec = (Vector) request.getSession().getAttribute("report_metadata_vec");
   String imagesPath = FormUtils.getImagesPath(request);
   String title = "NCI Report Writer: Download";
+
+   
 %>
 <!--
    Build info: <%=buildInfo%>
@@ -61,23 +90,7 @@ L--%>
 
         <div class="pagecontent">
           <%@ include file="/pages/contents/menu_bar.jsp"%>
-          
 
-
-<%
-  SDKClientUtil sdkclientutil = new SDKClientUtil();
-  StandardReportTemplate standardReportTemplate = null;
-  //String FQName = "gov.nih.nci.evs.reportwriter.bean.StandardReport";
-  //String FQName = "gov.nih.nci.evs.reportwriter.bean.StandardReportTemplate";
-  
-  //Object[] objs = sdkclientutil.search(FQName);
-  //Vector<StandardReport> vector = ListConverter.toStandardReport(objs, true);
-  
-String download_dir = AppProperties.getInstance().getProperty(AppProperties.REPORT_DOWNLOAD_DIRECTORY);
-System.out.println("(*) DOWNLOAD DIR: " + download_dir);
-  
-  SimpleDateFormat formatter = new SimpleDateFormat("MM/dd/yyyy");
-%>
 
 <f:view>
   <h:form id="AVAILABLE_STANDARD_REPORTSForm">
@@ -118,107 +131,45 @@ System.out.println("(*) DOWNLOAD DIR: " + download_dir);
                   </tr>
 
                   <%
-                    int i = 0;
-                    ReportFormat reportFormat = null;
-                    ReportStatus reportStatus = null;
-                    String label = null;
-                    String format = null;
-                    String codingScheme = null;
-                    String version = null;
-                    Date lastModified = null;
-                    String status = null;
-                    String pathname = null;
-                    String filename = null;
+		int lcv = 0;
+		for (int i=0; i<report_metadata_vec.size(); i++) {
+			ReportMetadata rmd = (ReportMetadata) report_metadata_vec.elementAt(i);
+			label = rmd.getTemplateLabel();
+			templateId = rmd.getTemplateId();
+			templateId_str = new Integer(templateId).toString();
+			filename = rmd.getLabel();
+			filesize = "";
+			date_str = rmd.getLastModified();
 
-                    gov.nih.nci.evs.reportwriter.bean.User user = null;
-                    String loginName = null;
-                    String date_str = null;
-                    String dataRowColor = null;
-                      
-                    Integer id = null;
-                    String templateId = null;
-                    Integer format_id = null;
-                    String formatId = null;
-                    String labelUrl = null;
-                    String filesize = "";
- 
-		    StandardReportServiceProvider provider = new StandardReportServiceProvider();
-		    List label_list = provider.getStandardReportTemplateLabels();
-		    standardReportTemplate = null;
-		    int lcv = 0;
-		    for (i=0; i<label_list.size(); i++) {
-			label = (String) label_list.get(i);
-			try {
-			    standardReportTemplate = provider.getStandardReportTemplate(label);
-			    //templateId = standardReportTemplate.getId().toString();
-			    //label = standardReportTemplate.getLabel();
-			    codingScheme = standardReportTemplate.getCodingSchemeName();
-			    version = standardReportTemplate.getCodingSchemeVersion();
-			    Collection<StandardReport> c = standardReportTemplate.getReportCollection();
-			    //System.out.println("StandardReport: " + c.size());
-			    List list = new ArrayList(c);
-			    for (int k=0; k<list.size(); k++) {
-				StandardReport standardReport = (StandardReport) list.get(k);
-				filename = standardReport.getLabel();
-				//pathname = standardReport.getPathName();
-				lastModified = standardReport.getLastModified();
-				format = DataUtils.getFileFormat(filename);
-				pathname = download_dir + File.separator + filename;
-				filesize = "";
-				date_str = null;
-				
-System.out.println(pathname);				
-				
-				
-				File f = new File(pathname);
-				if (f.exists()) {
-				    filesize = DataUtils.getFileSize(pathname);
-				    //if (lastModified == null) {
-				    date_str = DataUtils.getLastModified(f);
-				    //} 
-				}
-				if (lastModified != null && date_str == null) {
-				    date_str = formatter.format(lastModified);
-				} 
-				
-				if (date_str == null) date_str = "";
+			pathName = rmd.getPathName();
+			if (pathName == null) {
+			    pathName = download_dir + File.separator + filename;
+			}
+			File f = new File(pathName);
+			if (f.exists()) {
+			    filesize = DataUtils.getFileSize(pathName);
+			    if (date_str == null) {
+				date_str = DataUtils.getLastModified(f);
+			    }
+			} 
+			format = rmd.getFormat();
+			codingScheme = rmd.getCodingScheme();
+			version = rmd.getVersion();
+			loginName = rmd.getCreatedBy();
 
-				//user = standardReport.getCreatedBy();
-				//loginName = user.getLoginName();
+			status = rmd.getStatus();	
+			formatId = rmd.getFormatId();
+			formatId_str = new Integer(formatId).toString();
 				
-				user = null;
-				try {
-				    user = standardReport.getCreatedBy();
-				    if (user != null) {
-				        loginName = user.getLoginName();
-				    }
-				} catch (Exception ex) {
-				    loginName = "";
-				}
-				
-				reportStatus = null;
-				try {
-				    reportStatus = standardReport.getStatus();
-				    if (reportStatus != null) {
-				        status = reportStatus.getLabel();
-				    }
-				} catch (Exception ex) {
-				    status = "";
-				}
-				
-				
-				dataRowColor = lcv%2==0 ? "dataRowLight" : "dataRowDark";
-				lcv++;
-				id = standardReportTemplate.getId();
-				templateId = id.toString();
-				format_id = DataUtils.getFormatId(filename);
-				formatId = format_id.toString();
-				labelUrl = null;
-			            //if (status.compareToIgnoreCase("APPROVED") == 0) {
-				labelUrl = request.getContextPath() + "/fileServlet?template=" + templateId + "&format=" + formatId;
-				
-			            //}
-			      %>
+			dataRowColor = lcv%2==0 ? "dataRowLight" : "dataRowDark";
+			lcv++;
+
+			labelUrl = null;
+			if (!approvedOnly || (approvedOnly && status.compareToIgnoreCase("APPROVED") == 0)) {
+			    labelUrl = request.getContextPath() + "/fileServlet?template=" + templateId_str + "&format=" + formatId_str;
+			}
+			
+		  %>
 
 			      <tr class="<%=dataRowColor%>">
 			      <% if (labelUrl != null) { %>
@@ -235,14 +186,9 @@ System.out.println(pathname);
 				<td class="dataCellText"><%=StringUtils.getSpaceIfBlank(date_str)%></td>
 				<td class="dataCellText"><%=StringUtils.getSpaceIfBlank(status)%></td>
 			      </tr>
-			      <%
-			      
-			    } //for loop
-			 } catch (Exception ex) {
-			 
-			 }
-                     } // for loop
-                  %>
+	 	 <%
+                 } // for loop
+                 %>
                 </table>
               </td>
             </tr>
@@ -251,7 +197,8 @@ System.out.println(pathname);
       </tr>
     </table> <!-- Table 1 (End) -->
   </h:form>
-</f:view>          
+</f:view> 
+
           
           <%@ include file="/pages/templates/footer.jsp"%>
         </div>

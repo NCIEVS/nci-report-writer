@@ -66,7 +66,6 @@ L--%>
 
                   <%
                     String download_dir = AppProperties.getInstance().getProperty(AppProperties.REPORT_DOWNLOAD_DIRECTORY);
-                    System.out.println("(*) DOWNLOAD DIR: " + download_dir);
                   
                     int i=0;
                     Iterator<StandardReport> iterator = vector.iterator();
@@ -79,9 +78,7 @@ L--%>
                           || reportStatus == null)
                         continue;
                       String label = standardReportTemplate.getLabel();
-                      
-                      //System.out.println("(*) REPORT LABEL: " + label);
-                      
+                     
                       String format = reportFormat.getDescription();
                       String codingScheme = standardReportTemplate.getCodingSchemeName();
                       String version = standardReportTemplate.getCodingSchemeVersion();
@@ -95,7 +92,6 @@ L--%>
                           pathname = download_dir + File.separator + label + DataUtils.getFileExtension(format);
                       }
                       
-                      //System.out.println("(*) PATHNAME: " + pathname);
                       
                       filesize = DataUtils.getFileSize(pathname);
                       

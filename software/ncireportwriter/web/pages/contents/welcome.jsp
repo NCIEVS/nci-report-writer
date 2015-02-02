@@ -21,7 +21,10 @@ L--%>
       <br/><br/>
       <b>
         Standard reports can be found
+        <!--
         <a href="<%= request.getContextPath() %>/pages/main/download_nologin.jsf" >here</a>.
+        -->
+        <a href="<%= request.getContextPath() %>/fileServlet?action=download">here</a>.
         &nbsp;No user authentication is required.
       </b>
     </td>

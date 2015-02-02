@@ -61,6 +61,8 @@ import org.LexGrid.LexBIG.Utility.Iterators.ResolvedConceptReferencesIterator;
  */
 
 public class DataUtils {
+	private static String[] units = new String[] { "B", "KB", "MB", "GB", "TB" };
+
     public static enum AssociationType {
         Codes, Names
     };
@@ -406,18 +408,6 @@ public class DataUtils {
     }
 
     public static Vector<String> getRepresentationalFormListData(String key) {
-/*
-
-        CSNVInfo info = _csnv2InfoMap.get(key);
-        if (info == null) {
-			System.out.println("(*) getRepresentationalFormListData ..info == null???." + key);
-            return null;
-		}
-        return getRepresentationalFormListData(info.codingSchemeName,
-            info.version);
-
-*/
-
         CSNVInfo info = _csnv2InfoMap.get(key);
         if (info == null) {
 			Vector<String> v = getRepresentationalFormListData(key, null);
@@ -2529,25 +2519,55 @@ _logger.debug("getResolvedConceptReferenceIterator...");
 //  [GF#32309] Add column to download for file size.
 	public static String getFileSize(long size) {
 		if(size < 0) return "";
-		final String[] units = new String[] { "B", "KB", "MB", "GB", "TB" };
+		/*
 		int digitGroups = (int) (Math.log10(size)/Math.log10(1024));
-		return new DecimalFormat("#,##0.#").format(size/Math.pow(1024, digitGroups)) + " " + units[digitGroups];
+		if (digitGroups > 4) return "";
+		try {
+			return new DecimalFormat("#,##0.#").format(size/Math.pow(1024, digitGroups)) + " " + units[digitGroups];
+		} catch (Exception ex) {
+			ex.printStackTrace();
+		}
+		*/
+
+
+
+		return "";
 	}
+
+
+	public static String getStringSizeLengthFile(long size) {
+		DecimalFormat df = new DecimalFormat("0.00");
+		float sizeKb = 1024.0f;
+		float sizeMo = sizeKb * sizeKb;
+		float sizeGo = sizeMo * sizeKb;
+		float sizeTerra = sizeGo * sizeKb;
+		if(size < sizeMo)
+			return df.format(size / sizeKb)+ " KB";
+		else if(size < sizeGo)
+			return df.format(size / sizeMo) + " MB";
+		else if(size < sizeTerra)
+			return df.format(size / sizeGo) + " GB";
+		return "";
+	}
+
+
 
 
 	public static String getFileSize(String filename) {
 		File file = new File(filename);
 		if (!file.exists()) return "";
-		return getFileSize(file.length());
+		//return getFileSize(file.length());
+		return getStringSizeLengthFile(file.length());
 	}
 
+/*
 	public static String getFileExtension(String format) {
 		if (format.compareToIgnoreCase("Text (tab delimited)") == 0) return ".txt";
 		if (format.compareToIgnoreCase("Microsoft Office Excel") == 0) return ".xls";
 		if (format.compareToIgnoreCase("HyperText Markup Language") == 0) return ".htm";
 		return ".xml";
 	}
-
+*/
 
     public static Vector<String> parseData(String line) {
 		if (line == null) return null;
@@ -2637,8 +2657,6 @@ _logger.debug("getResolvedConceptReferenceIterator...");
 			LexBIGService lbSvc = RemoteServerUtil.createLexBIGService();
 			CodingSchemeVersionOrTag vt = new CodingSchemeVersionOrTag();
 			vt.setVersion(representsVersion);
-
-			//System.out.println(scheme + " (" + representsVersion + ")");
 			CodingScheme cs = lbSvc.resolveCodingScheme(scheme, vt);
 			return cs;
 		} catch (Exception e) {
@@ -2675,6 +2693,22 @@ _logger.debug("getResolvedConceptReferenceIterator...");
 		return lastModified;
 	}
 
+    public static String getFileExtension(int formatId) {
+        if (formatId == 404) return "txt";
+        else if (formatId == 405) return "xls";
+        if (formatId == 406) return "htm";
+		return "";
+	}
+
+    public static String getFileExtension(String filename) {
+		String extension = "";
+		int i = filename.lastIndexOf('.');
+		int p = Math.max(filename.lastIndexOf('/'), filename.lastIndexOf('\\'));
+		if (i > p) {
+			extension = filename.substring(i+1);
+		}
+		return extension;
+	}
 
     public static String getFileFormat(String filename) {
 		String extension = "";
@@ -2683,6 +2717,8 @@ _logger.debug("getResolvedConceptReferenceIterator...");
 		if (i > p) {
 			extension = filename.substring(i+1);
 		}
+
+
 		if (extension.compareTo("txt") == 0) {
 			return "Text (tab delimited)";
 		} else if (extension.compareTo("xls") == 0 || extension.compareTo("xlsx") == 0) {

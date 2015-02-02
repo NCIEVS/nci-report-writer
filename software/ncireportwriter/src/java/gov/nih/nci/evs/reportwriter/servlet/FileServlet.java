@@ -8,6 +8,7 @@
 package gov.nih.nci.evs.reportwriter.servlet;
 
 import java.io.*;
+import java.util.*;
 
 import javax.servlet.*;
 import javax.servlet.http.*;
@@ -17,9 +18,10 @@ import org.apache.poi.hssf.usermodel.*;
 
 import gov.nih.nci.evs.reportwriter.utils.*;
 import gov.nih.nci.evs.reportwriter.bean.*;
+import gov.nih.nci.evs.reportwriter.properties.*;
 
 /**
- * 
+ *
  */
 
 /**
@@ -33,10 +35,10 @@ public final class FileServlet extends HttpServlet {
 
     /**
      * Route the user to the execute method
-     * 
+     *
      * @param request The HTTP request we are processing
      * @param response The HTTP response we are creating
-     * 
+     *
      * @exception IOException if an input/output error occurs
      * @exception ServletException if a servlet exception occurs
      */
@@ -47,10 +49,10 @@ public final class FileServlet extends HttpServlet {
 
     /**
      * Route the user to the execute method
-     * 
+     *
      * @param request The HTTP request we are processing
      * @param response The HTTP response we are creating
-     * 
+     *
      * @exception IOException if an input/output error occurs
      * @exception ServletException if a servlet exception occurs
      */
@@ -62,10 +64,10 @@ public final class FileServlet extends HttpServlet {
     /**
      * Process the specified HTTP request, and create the corresponding HTTP
      * response (or forward to another web component that will create it).
-     * 
+     *
      * @param request The HTTP request we are processing
      * @param response The HTTP response we are creating
-     * 
+     *
      * @exception IOException if an input/output error occurs
      * @exception ServletException if a servlet exception occurs
      */
@@ -84,13 +86,9 @@ public final class FileServlet extends HttpServlet {
         }
     }
 
-    public void sendResponse(HttpServletResponse response,
-            StandardReport standardReport) throws IOException, ServletException {
-        // processing download
 
-        String fullPathName = standardReport.getPathName();
-        ReportFormat rf = standardReport.getFormat();
-        String format = rf.getDescription();
+    public void sendResponse(HttpServletRequest request, HttpServletResponse response, String fullPathName, String format)
+            throws IOException, ServletException {
         response.setContentType("text/html");
         // String line_br = "\n";
         String line_br = "\r\n";
@@ -105,6 +103,10 @@ public final class FileServlet extends HttpServlet {
 
         File file = new File(fullPathName);
         String filename = file.getName();
+System.out.println("sendResponse fullPathName: " + fullPathName);
+System.out.println("sendResponse format: " + format);
+System.out.println("sendResponse filename: " + filename);
+
         // HKR, GForge# 19467 - wrong placement of '\' in header.
         response.addHeader("Content-Disposition", "attachment;filename=\""
                 + filename + "\"");
@@ -130,13 +132,12 @@ public final class FileServlet extends HttpServlet {
                 out.flush();
                 out.close();
             } catch (Exception e) {
-
+                e.printStackTrace();
             }
         } else if (format.indexOf("Excel") != -1) {
             try {
                 InputStream myxls = new FileInputStream(fullPathName);
                 HSSFWorkbook wb = new HSSFWorkbook(myxls);
-
                 try {
                     wb.write(response.getOutputStream());
                 } catch (Exception e) {
@@ -145,9 +146,56 @@ public final class FileServlet extends HttpServlet {
                 return;
             } catch (Exception e) {
                 // LogUtils.log(logger, Level.ERROR, e);
+                e.printStackTrace();
             }
         }
     }
+
+
+    public void sendResponse(HttpServletRequest request, HttpServletResponse response,
+            StandardReport standardReport) throws IOException, ServletException {
+        // processing download
+        String fullPathName = standardReport.getPathName();
+        ReportFormat rf = standardReport.getFormat();
+        String format = rf.getDescription();
+        sendResponse(request, response, fullPathName, format);
+    }
+
+
+    public void sendResponse(HttpServletRequest request, HttpServletResponse response,
+                             int formatId,
+	                         int templateId) throws IOException, ServletException {
+		String hibernate_cfg_xml = request.getSession().getServletContext().getRealPath("/WEB-INF/classes/hibernate.cfg.xml");
+		File f = new File(hibernate_cfg_xml);
+		if (f.exists()) {
+			JDBCUtil util = new JDBCUtil(hibernate_cfg_xml);
+			Vector report_metadata_vec = util.getReportData();
+
+			for (int i=0; i<report_metadata_vec.size(); i++) {
+				ReportMetadata rmd = (ReportMetadata) report_metadata_vec.elementAt(i);
+				int template_Id = rmd.getTemplateId();
+				int format_Id = rmd.getFormatId();
+				if (format_Id == formatId && template_Id == templateId) {
+					String fullPathName = rmd.getPathName();
+					if (fullPathName == null || fullPathName.compareTo("") == 0) {
+						String templateLabel = rmd.getTemplateLabel();
+						String version = rmd.getVersion();
+						String download_dir = AppProperties.getInstance().getProperty(AppProperties.REPORT_DOWNLOAD_DIRECTORY);
+						fullPathName = download_dir + File.separator + templateLabel + "__" + version + "."
+						   + DataUtils.getFileExtension(rmd.getFormatId()) ;
+						fullPathName = fullPathName.replaceAll(" ", "_");
+					}
+					String format = rmd.getFormat();
+					sendResponse(request, response, fullPathName, format);
+					return;
+				}
+			}
+		} else {
+			String message = "Report not found (format id: " + formatId + " templateId: " + templateId + ")";
+			sendErrorResponse(request, response, message);
+		}
+	}
+
 
     public void execute(HttpServletRequest request, HttpServletResponse response)
             throws IOException, ServletException {
@@ -156,8 +204,46 @@ public final class FileServlet extends HttpServlet {
         // ><%=template%> (<%=formatDescription%>)</a></td>
 
         // Get ReportFormat from database
+        Vector report_metadata_vec = null;
+        String action = request.getParameter("action");
+        if (action != null && action.compareTo("download") == 0) {
+			String hibernate_cfg_xml = request.getSession().getServletContext().getRealPath("/WEB-INF/classes/hibernate.cfg.xml");
+			//C:\Tomcat 7.0.54\webapps\ncireportwriter\WEB-INF\classes\hibernate.cfg.xml
+			//hibernate_cfg_xml = hibernate_cfg_xml.replaceAll("\"", "/");
+			File f = new File(hibernate_cfg_xml);
+			if (f.exists()) {
+				JDBCUtil util = new JDBCUtil(hibernate_cfg_xml);
+				report_metadata_vec = util.getReportData();
+				if (report_metadata_vec != null) {
+					request.getSession().setAttribute("report_metadata_vec", report_metadata_vec);
+				}
+			}
+
+			try {
+				String nextJSP = "/pages/main/download_nologin.jsf";
+				RequestDispatcher dispatcher = getServletContext().getRequestDispatcher(nextJSP);
+				dispatcher.forward(request,response);
+
+			} catch (Exception ex) {
+				String message = "ERROR JDBCUtil - Unable to retrieve report data.";
+				sendErrorResponse(request, response, message);
+				ex.printStackTrace();
+			}
+
+			return;
+		}
+
         String formatId = request.getParameter("format");
         String templateId = request.getParameter("template");
+
+System.out.println("FileServlet formatId: " +  formatId);
+System.out.println("FileServlet templateId: " +  templateId);
+
+        sendResponse(request, response, Integer.parseInt(formatId), Integer.parseInt(templateId));
+
+
+/*
+
         StandardReportTemplate standardReportTemplate = null;
         String message = "Format ID " + formatId + " not found.";
         try {
@@ -168,6 +254,11 @@ public final class FileServlet extends HttpServlet {
             Object reportFormat_obj =
                 sdkclientutil.search(FQName, methodName, format_id);
             if (reportFormat_obj == null) {
+
+
+System.out.println("FileServlet unable to find ReportFormat with Id: " +  formatId);
+
+
                 sendErrorResponse(request, response, message);
                 return;
             }
@@ -189,6 +280,11 @@ public final class FileServlet extends HttpServlet {
                 Object standardReportTemplate_obj =
                     sdkclientutil.search(FQName, methodName, template_id);
                 if (standardReportTemplate_obj == null) {
+
+
+System.out.println("FileServlet unable to find StandardReportTemplate with Id: " +  templateId);
+
+
                     sendErrorResponse(request, response, message);
                 }
 
@@ -199,16 +295,33 @@ public final class FileServlet extends HttpServlet {
                 // template and format)
                 FQName = "gov.nih.nci.evs.reportwriter.bean.StandardReport";
                 message = "The selected report is not available for download.";
+
                 Object[] objs = sdkclientutil.search(FQName);
 
                 if (objs == null || objs.length == 0) {
+
+
+System.out.println("FileServlet unable to search for StandardReport");
+
+
                     sendErrorResponse(request, response, message);
                 } else {
                     for (int i = 0; i < objs.length; i++) {
                         StandardReport standardReport =
                             (StandardReport) objs[i];
+
+
+ System.out.println("FileServlet StandardReport " + i);
+
+
+
                         StandardReportTemplate srt =
                             standardReport.getTemplate();
+
+  System.out.println("FileServlet StandardReportTemplate " + srt.getLabel());
+
+
+
                         int i1 = srt.getId().intValue();
                         int i2 = standardReportTemplate.getId().intValue();
 
@@ -253,5 +366,8 @@ public final class FileServlet extends HttpServlet {
             sendErrorResponse(request, response, message);
             ex.printStackTrace();
         }
+*/
+
+
     }
 }
