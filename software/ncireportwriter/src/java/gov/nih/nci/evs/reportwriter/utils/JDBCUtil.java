@@ -12,6 +12,7 @@ import gov.nih.nci.evs.reportwriter.properties.*;
 
 import java.io.*;
 import java.util.*;
+import java.text.*;
 
 import java.io.IOException;
 import java.sql.Connection;
@@ -928,7 +929,7 @@ import gov.nih.nci.security.util.StringEncrypter.EncryptionException;
 				String sql = "UPDATE report set HAS_STATUS=" + status_id + " where ID=" +  report_id;
 				stmt.executeUpdate(sql);
 				////////////////////////////////////
-				rs.close();
+				//rs.close();
 				stmt.close();
 			    conn.close();
 
@@ -961,8 +962,57 @@ import gov.nih.nci.security.util.StringEncrypter.EncryptionException;
 				Integer int_obj = (Integer) v.elementAt(i);
 				int report_id = int_obj.intValue();
 				updateReportStatus(report_id, status);
+				updateReportLastModified(report_id);
 			}
 		}
+
+
+       public String getTimeStampString() {
+			DateFormat df = new SimpleDateFormat("yyyy:MM:dd HH:mm:ss");
+			java.util.Date today = Calendar.getInstance().getTime();
+			String timestampstr = df.format(today);
+			return timestampstr;
+	   }
+
+	   public void updateReportLastModified(int report_id) {
+		    Connection conn = null;
+		    PreparedStatement stmt = null;
+		    ResultSet rs = null;
+		    String timestampstr = getTimeStampString();
+            try {
+				Class.forName (driver).newInstance ();
+				conn = DriverManager.getConnection (url, username, password);
+				////////////////////////////////////
+				String sql = "UPDATE report SET LAST_MODIFIED='" + getTimeStampString() + "' where ID=" +  report_id;
+				stmt = conn.prepareStatement(sql);
+				stmt.executeUpdate(sql);
+				////////////////////////////////////
+				//rs.close();
+				stmt.close();
+			    conn.close();
+
+		    } catch (SQLException se) {
+			    se.printStackTrace();
+		    } catch(Exception e){
+			    e.printStackTrace();
+		    } finally {
+			    try{
+				   if(stmt!=null) {
+					   stmt.close();
+				   }
+			    } catch (SQLException se2) {
+			       se2.printStackTrace();
+			    }
+			    try {
+				   if (conn!=null) {
+					   conn.close();
+				   }
+			    } catch (SQLException se) {
+				   se.printStackTrace();
+			    }
+		    }
+	   }
+
 
 
 		public static Vector<String> parseData(String line) {
