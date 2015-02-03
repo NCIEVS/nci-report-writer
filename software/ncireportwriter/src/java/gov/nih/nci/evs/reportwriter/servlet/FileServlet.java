@@ -211,13 +211,20 @@ System.out.println("sendResponse filename: " + filename);
 		    String hibernate_cfg_xml = request.getSession().getServletContext().getRealPath(JDBCUtil.HIBERNATE_CFG_PATH);//"/WEB-INF/classes/hibernate.cfg.xml");
 			//C:\Tomcat 7.0.54\webapps\ncireportwriter\WEB-INF\classes\hibernate.cfg.xml
 			//hibernate_cfg_xml = hibernate_cfg_xml.replaceAll("\"", "/");
+
+            _logger.debug("FileServlet executing download...");
+
 			File f = new File(hibernate_cfg_xml);
 			if (f.exists()) {
+				_logger.debug("Configuration file exists " + hibernate_cfg_xml);
+
 				JDBCUtil util = new JDBCUtil(hibernate_cfg_xml);
 				report_metadata_vec = util.getReportData();
 				if (report_metadata_vec != null) {
 					request.getSession().setAttribute("report_metadata_vec", report_metadata_vec);
 				}
+			} else {
+				_logger.debug("WARNING: Unable to access the configuration file - " + hibernate_cfg_xml);
 			}
 
 			try {

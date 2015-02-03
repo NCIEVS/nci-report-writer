@@ -28,8 +28,13 @@ import gov.nih.nci.security.util.StringEncrypter;
 import gov.nih.nci.security.util.StringUtilities;
 import gov.nih.nci.security.util.StringEncrypter.EncryptionException;
 
+import org.apache.log4j.*;
+
+
    public class JDBCUtil
    {
+	   private static Logger _logger = Logger.getLogger(JDBCUtil.class);
+
 	   public static String HIBERNATE_CFG_PATH = "/WEB-INF/classes/hibernate.cfg.xml";
 	   private Connection conn = null;
 	   private String username = null;
@@ -41,6 +46,8 @@ import gov.nih.nci.security.util.StringEncrypter.EncryptionException;
 
 	   public JDBCUtil(String configuration_file) {
 		   this.configuration_file = configuration_file;
+		   _logger.debug("configuration_file: " + configuration_file);
+
 		   initialize();
 	   }
 
@@ -53,10 +60,13 @@ import gov.nih.nci.security.util.StringEncrypter.EncryptionException;
 				String value = (String) map.get(key);
 				if (key.compareTo("connection.url") == 0) {
 					url = value;
+					_logger.debug("url: " + url);
 				} else if (key.compareTo("connection.driver_class") == 0) {
 					driver = value;
+					_logger.debug("driver_class: " + driver);
 				} else if (key.compareTo("connection.username") == 0) {
 					username = value;
+					_logger.debug("username: " + username);
 				} else if (key.compareTo("connection.password") == 0) {
 					password = value;
 				}
@@ -1057,6 +1067,7 @@ import gov.nih.nci.security.util.StringEncrypter.EncryptionException;
 	   }
 
 	   public Vector getReportData() {
+		    _logger.debug("getReportData... ");
 		    Vector v = new Vector();
 		    Connection conn = null;
 		    Statement stmt = null;
@@ -1125,6 +1136,7 @@ import gov.nih.nci.security.util.StringEncrypter.EncryptionException;
 				   se.printStackTrace();
 			    }
 		    }
+		    _logger.debug("getReportData - number of reports: " + v.size());
 		    return sortReportData(v);
 	   }
    }

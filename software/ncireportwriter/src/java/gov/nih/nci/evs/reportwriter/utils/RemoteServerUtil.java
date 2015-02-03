@@ -23,7 +23,7 @@ import org.lexgrid.valuesets.LexEVSValueSetDefinitionServices;
 import org.lexgrid.valuesets.impl.LexEVSValueSetDefinitionServicesImpl;
 
 /**
- * 
+ *
  */
 
 /**
@@ -32,6 +32,8 @@ import org.lexgrid.valuesets.impl.LexEVSValueSetDefinitionServicesImpl;
  */
 
 public class RemoteServerUtil {
+	private static boolean skipServerMonitoring = true;
+
     private static Logger _logger = Logger
         .getLogger(RemoteServerUtil.class);
     private static boolean _firstTime = true;
@@ -90,6 +92,9 @@ public class RemoteServerUtil {
 
 
     public static boolean isRunning(StringBuffer warningMsg) {
+		if (skipServerMonitoring) {
+			return true;
+		}
         try {
             LexBIGService lbsvr = createLexBIGService();
             simpleTest(lbsvr);
