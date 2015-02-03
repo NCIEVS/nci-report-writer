@@ -11,12 +11,13 @@ import gov.nih.nci.evs.reportwriter.bean.*;
 import gov.nih.nci.evs.reportwriter.utils.*;
 import gov.nih.nci.evs.utils.*;
 
+import java.io.*;
 import java.util.*;
 
 import javax.servlet.http.*;
 
 /**
- * 
+ *
  */
 
 /**
@@ -30,10 +31,10 @@ public class ReportStatusRequest {
         return HTTPUtils.warningMsg(request, "Not Yet Implemented.");
         //return "report_status";
     }
-    
+
     public String activateAction() {
         HttpServletRequest request = HTTPUtils.getRequest();
-        return HTTPUtils.warningMsg(request, "Not Yet Implemented.");        
+        return HTTPUtils.warningMsg(request, "Not Yet Implemented.");
     }
 
     public String inactivateAction() {
@@ -64,6 +65,13 @@ public class ReportStatusRequest {
         String statusValue =
             (String) request.getSession().getAttribute("selectedReportStatus");
 
+		String hibernate_cfg_xml = request.getSession().getServletContext().getRealPath(JDBCUtil.HIBERNATE_CFG_PATH);//"/WEB-INF/classes/hibernate.cfg.xml");
+		File f = new File(hibernate_cfg_xml);
+		if (f.exists()) {
+			JDBCUtil util = new JDBCUtil(hibernate_cfg_xml);
+			util.updateStatus(reportTemplate, statusValue);
+		}
+/*
         try {
             SDKClientUtil sdkclientutil = new SDKClientUtil();
             StandardReportTemplate standardReportTemplate = null;
@@ -72,6 +80,7 @@ public class ReportStatusRequest {
             if (objs != null && objs.length > 0) {
                 for (int i = 0; i < objs.length; i++) {
                     StandardReport standardReport = (StandardReport) objs[i];
+
                     standardReportTemplate = standardReport.getTemplate();
                     if (standardReportTemplate != null) {
                         if (reportTemplate.compareTo(standardReportTemplate
@@ -99,6 +108,8 @@ public class ReportStatusRequest {
         } catch (Exception e) {
             e.printStackTrace();
         }
+
+*/
 
         UserSessionBean usBean = BeanUtils.getUserSessionBean();
         usBean.getStandardReportTemplateList_draft();

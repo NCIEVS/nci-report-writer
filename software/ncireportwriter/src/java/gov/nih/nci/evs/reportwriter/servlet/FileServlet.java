@@ -165,7 +165,8 @@ System.out.println("sendResponse filename: " + filename);
     public void sendResponse(HttpServletRequest request, HttpServletResponse response,
                              int formatId,
 	                         int templateId) throws IOException, ServletException {
-		String hibernate_cfg_xml = request.getSession().getServletContext().getRealPath("/WEB-INF/classes/hibernate.cfg.xml");
+		String hibernate_cfg_xml = request.getSession().getServletContext().getRealPath(JDBCUtil.HIBERNATE_CFG_PATH);//"/WEB-INF/classes/hibernate.cfg.xml");
+
 		File f = new File(hibernate_cfg_xml);
 		if (f.exists()) {
 			JDBCUtil util = new JDBCUtil(hibernate_cfg_xml);
@@ -207,7 +208,7 @@ System.out.println("sendResponse filename: " + filename);
         Vector report_metadata_vec = null;
         String action = request.getParameter("action");
         if (action != null && action.compareTo("download") == 0) {
-			String hibernate_cfg_xml = request.getSession().getServletContext().getRealPath("/WEB-INF/classes/hibernate.cfg.xml");
+		    String hibernate_cfg_xml = request.getSession().getServletContext().getRealPath(JDBCUtil.HIBERNATE_CFG_PATH);//"/WEB-INF/classes/hibernate.cfg.xml");
 			//C:\Tomcat 7.0.54\webapps\ncireportwriter\WEB-INF\classes\hibernate.cfg.xml
 			//hibernate_cfg_xml = hibernate_cfg_xml.replaceAll("\"", "/");
 			File f = new File(hibernate_cfg_xml);

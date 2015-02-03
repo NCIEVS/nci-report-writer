@@ -29,6 +29,7 @@ import gov.nih.nci.security.util.StringEncrypter.EncryptionException;
 
    public class JDBCUtil
    {
+	   public static String HIBERNATE_CFG_PATH = "/WEB-INF/classes/hibernate.cfg.xml";
 	   private Connection conn = null;
 	   private String username = null;
 	   private String password = null;
@@ -817,6 +818,152 @@ import gov.nih.nci.security.util.StringEncrypter.EncryptionException;
 		    }
 		    return template_data;
 	   }
+
+
+	   public int getTemplateId(String standardReportTemplateLabel) {
+		    Connection conn = null;
+		    Statement stmt = null;
+		    ResultSet rs = null;
+		    int template_id = -1;
+
+            try {
+				Class.forName (driver).newInstance ();
+				conn = DriverManager.getConnection (url, username, password);
+				stmt = conn.createStatement();
+				////////////////////////////////////
+				rs = stmt.executeQuery("SELECT * FROM standard_report_template where LABEL=" + "'" + standardReportTemplateLabel + "'");
+				while (rs.next()) {
+					template_id = (int) rs.getInt("id");
+					break;
+				}
+				////////////////////////////////////
+				rs.close();
+				stmt.close();
+			    conn.close();
+
+		    } catch (SQLException se) {
+			    se.printStackTrace();
+		    } catch(Exception e){
+			    e.printStackTrace();
+		    } finally {
+			    try{
+				   if(stmt!=null) {
+					   stmt.close();
+				   }
+			    } catch (SQLException se2) {
+			       se2.printStackTrace();
+			    }
+			    try {
+				   if (conn!=null) {
+					   conn.close();
+				   }
+			    } catch (SQLException se) {
+				   se.printStackTrace();
+			    }
+		    }
+		    return template_id;
+	   }
+
+	   public Vector<Integer> getReportIds(int templateId) {
+		    Connection conn = null;
+		    Statement stmt = null;
+		    ResultSet rs = null;
+		    Vector v = new Vector();
+		    int report_id;
+
+            try {
+				Class.forName (driver).newInstance ();
+				conn = DriverManager.getConnection (url, username, password);
+				stmt = conn.createStatement();
+				////////////////////////////////////
+				rs = stmt.executeQuery("SELECT * FROM standard_report where BASED_ON_TEMPLATE=" + templateId);
+				while (rs.next()) {
+					report_id = (int) rs.getInt("REPORT_ID");
+					v.add(new Integer(report_id));
+				}
+				////////////////////////////////////
+				rs.close();
+				stmt.close();
+			    conn.close();
+
+		    } catch (SQLException se) {
+			    se.printStackTrace();
+		    } catch(Exception e){
+			    e.printStackTrace();
+		    } finally {
+			    try{
+				   if(stmt!=null) {
+					   stmt.close();
+				   }
+			    } catch (SQLException se2) {
+			       se2.printStackTrace();
+			    }
+			    try {
+				   if (conn!=null) {
+					   conn.close();
+				   }
+			    } catch (SQLException se) {
+				   se.printStackTrace();
+			    }
+		    }
+		    return v;
+	   }
+
+
+	   public void updateReportStatus(int report_id, String status) {
+		    // 505: DRAFT
+		    // 506: APPROVED
+		    int status_id = 505;
+		    if (status.compareTo("APPROVED") == 0) status_id = 506;
+		    Connection conn = null;
+		    Statement stmt = null;
+		    ResultSet rs = null;
+		    Vector v = new Vector();
+
+            try {
+				Class.forName (driver).newInstance ();
+				conn = DriverManager.getConnection (url, username, password);
+				stmt = conn.createStatement();
+				////////////////////////////////////
+				String sql = "UPDATE report set HAS_STATUS=" + status_id + " where ID=" +  report_id;
+				stmt.executeUpdate(sql);
+				////////////////////////////////////
+				rs.close();
+				stmt.close();
+			    conn.close();
+
+		    } catch (SQLException se) {
+			    se.printStackTrace();
+		    } catch(Exception e){
+			    e.printStackTrace();
+		    } finally {
+			    try{
+				   if(stmt!=null) {
+					   stmt.close();
+				   }
+			    } catch (SQLException se2) {
+			       se2.printStackTrace();
+			    }
+			    try {
+				   if (conn!=null) {
+					   conn.close();
+				   }
+			    } catch (SQLException se) {
+				   se.printStackTrace();
+			    }
+		    }
+	   }
+
+	    public void updateStatus(String standardReportTemplateLabel, String status) {
+			int templateId = getTemplateId(standardReportTemplateLabel);
+			Vector<Integer> v = getReportIds(templateId);
+			for (int i=0; i<v.size(); i++) {
+				Integer int_obj = (Integer) v.elementAt(i);
+				int report_id = int_obj.intValue();
+				updateReportStatus(report_id, status);
+			}
+		}
+
 
 		public static Vector<String> parseData(String line) {
 			if (line == null) return null;

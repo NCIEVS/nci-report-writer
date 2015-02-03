@@ -86,7 +86,7 @@ public class StandardReportTemplateManager {
         List<SelectItem> list = new ArrayList<SelectItem>();
         HashSet<String> hset = new HashSet<String>();
 
-		String hibernate_cfg_xml = request.getSession().getServletContext().getRealPath("/WEB-INF/classes/hibernate.cfg.xml");
+		String hibernate_cfg_xml = request.getSession().getServletContext().getRealPath(JDBCUtil.HIBERNATE_CFG_PATH);//"/WEB-INF/classes/hibernate.cfg.xml");
 		File f = new File(hibernate_cfg_xml);
 		if (f.exists()) {
 			JDBCUtil util = new JDBCUtil(hibernate_cfg_xml);

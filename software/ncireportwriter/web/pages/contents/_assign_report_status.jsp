@@ -8,6 +8,7 @@ L--%>
 <%@ taglib uri="http://java.sun.com/jsf/html" prefix="h" %>
 <%@ taglib uri="http://java.sun.com/jsf/core" prefix="f" %> 
 
+
 <f:view>
   <h:form id="ADD_REPORT_STATUSForm">
     <table summary="" cellpadding="0" cellspacing="0" border="0" 
@@ -74,5 +75,7 @@ L--%>
         </td>
       </tr>
     </table> <!-- Table 1 (End) -->
+
+
   </h:form>
 </f:view>
