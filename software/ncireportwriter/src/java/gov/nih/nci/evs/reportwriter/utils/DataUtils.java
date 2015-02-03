@@ -232,7 +232,8 @@ public class DataUtils {
             }
             SortUtils.quickSort(_ontologies);
         } catch (Exception e) {
-            e.printStackTrace();
+            //e.printStackTrace();
+            System.out.println("ERROR: setCodingSchemeMap throws exceptions.");
         }
     }
 

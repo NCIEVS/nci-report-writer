@@ -47,6 +47,7 @@ import org.apache.log4j.*;
 	   public JDBCUtil(String configuration_file) {
 		   this.configuration_file = configuration_file;
 		   _logger.debug("configuration_file: " + configuration_file);
+		  System.out.println("configuration_file: " + configuration_file);
 
 		   initialize();
 	   }
@@ -60,13 +61,16 @@ import org.apache.log4j.*;
 				String value = (String) map.get(key);
 				if (key.compareTo("connection.url") == 0) {
 					url = value;
+					System.out.println("url: " + url);
 					_logger.debug("url: " + url);
 				} else if (key.compareTo("connection.driver_class") == 0) {
 					driver = value;
 					_logger.debug("driver_class: " + driver);
+					System.out.println("driver: " + driver);
 				} else if (key.compareTo("connection.username") == 0) {
 					username = value;
 					_logger.debug("username: " + username);
+					System.out.println("username: " + username);
 				} else if (key.compareTo("connection.password") == 0) {
 					password = value;
 				}

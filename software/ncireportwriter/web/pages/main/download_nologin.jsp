@@ -40,6 +40,15 @@ SimpleDateFormat formatter = new SimpleDateFormat("MM/dd/yyyy");
 
 boolean approvedOnly = true;
 
+String hibernate_cfg_xml = request.getSession().getServletContext().getRealPath(JDBCUtil.HIBERNATE_CFG_PATH);//"/WEB-INF/classes/hibernate.cfg.xml");
+System.out.println("hibernate_cfg_xml: " + hibernate_cfg_xml);
+File file = new File(hibernate_cfg_xml);
+if (file.exists()) {
+    System.out.println("Note: hibernate_cfg_xml exists.");
+} else {
+    System.out.println("WARNING: Unable to access hibernate_cfg_xml -- file.exists() method failed.");
+}
+		
   
   String label = null;
   int templateId = -1;
@@ -59,6 +68,12 @@ boolean approvedOnly = true;
   String labelUrl = null;
 
   Vector report_metadata_vec = (Vector) request.getSession().getAttribute("report_metadata_vec");
+  if (report_metadata_vec == null) {
+      System.out.println("(*) WARNING: report_metadata_vec is NULL???");
+  } else { 
+      System.out.println("(*) report_metadata_vec.size() = " + report_metadata_vec.size());
+  }
+  
   String imagesPath = FormUtils.getImagesPath(request);
   String title = "NCI Report Writer: Download";
 
@@ -132,6 +147,7 @@ boolean approvedOnly = true;
 
                   <%
 		int lcv = 0;
+		if (report_metadata_vec != null) {
 		for (int i=0; i<report_metadata_vec.size(); i++) {
 			ReportMetadata rmd = (ReportMetadata) report_metadata_vec.elementAt(i);
 			label = rmd.getTemplateLabel();
@@ -188,6 +204,7 @@ boolean approvedOnly = true;
 			      </tr>
 	 	 <%
                  } // for loop
+                 }
                  %>
                 </table>
               </td>
