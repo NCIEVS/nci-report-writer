@@ -52,6 +52,26 @@ import org.apache.log4j.*;
 		   initialize();
 	   }
 
+	   public String getUsername() {
+		   return username;
+	   }
+
+	   public String getPassword() {
+		   return password;
+	   }
+
+	   public String getUrl() {
+		   return url;
+	   }
+
+	   public String getDriver() {
+		   return driver;
+	   }
+
+	   public String getConfigurationFile() {
+		   return configuration_file;
+	   }
+
 	   public void initialize() {
            ConfigurationFileParser parser = new ConfigurationFileParser(this.configuration_file);
 		   HashMap map = parser.getAttributeToValueHashMap("property", "name");
