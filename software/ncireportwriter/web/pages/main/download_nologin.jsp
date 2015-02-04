@@ -43,9 +43,10 @@ boolean approvedOnly = true;
 String hibernate_cfg_xml = request.getSession().getServletContext().getRealPath(JDBCUtil.HIBERNATE_CFG_PATH);//"/WEB-INF/classes/hibernate.cfg.xml");
 System.out.println("hibernate_cfg_xml: " + hibernate_cfg_xml);
 File file = new File(hibernate_cfg_xml);
+JDBCUtil util = null;
 if (file.exists()) {
     System.out.println("Note: hibernate_cfg_xml exists.");
-    JDBCUtil util = new JDBCUtil(hibernate_cfg_xml);
+    util = new JDBCUtil(hibernate_cfg_xml);
     System.out.println("username: " + util.getUsername());
     System.out.println("password: " + util.getPassword());
     System.out.println("url: " + util.getUrl());
@@ -77,10 +78,13 @@ if (file.exists()) {
   Vector report_metadata_vec = (Vector) request.getSession().getAttribute("report_metadata_vec");
   if (report_metadata_vec == null) {
       System.out.println("(*) WARNING: report_metadata_vec is NULL???");
-      System.out.println("(*) Trying to call util.getReportData() again...");
-      report_metadata_vec = util.getReportData();
-      if (report_metadata_vec == null) {
-           System.out.println("(*) WARNING: report_metadata_vec is still NULL???");
+      
+      if (util != null) {
+              System.out.println("(*) Trying to call util.getReportData() again...");
+	      report_metadata_vec = util.getReportData();
+	      if (report_metadata_vec == null) {
+		   System.out.println("(*) WARNING: report_metadata_vec is still NULL???");
+	      }
       }
       
   } else { 
