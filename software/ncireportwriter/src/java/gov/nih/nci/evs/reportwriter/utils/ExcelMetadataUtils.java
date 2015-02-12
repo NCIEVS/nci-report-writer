@@ -34,6 +34,8 @@ import org.apache.poi.openxml4j.opc.OPCPackage;
 import org.apache.poi.POIXMLProperties;
 import org.apache.poi.POIXMLProperties.CoreProperties;
 
+import org.apache.poi.hssf.usermodel.HSSFWorkbook;
+
 
 public final class ExcelMetadataUtils {
 
@@ -164,7 +166,7 @@ public final class ExcelMetadataUtils {
 			}
 
 	    } catch (Exception ex) {
-			ex.printStackTrace();
+			//ex.printStackTrace();
 		} finally {
 			try {
 				pkg.close();
@@ -256,63 +258,76 @@ public final class ExcelMetadataUtils {
 		FileInputStream stream = null;
 		try {
 			stream = new FileInputStream(new File(filename));
-
 			POIFSFileSystem poifs = null;
+			boolean passed = false;
 			try {
 				poifs = new POIFSFileSystem(stream);
+				passed = true;
 			} catch (Exception e) {
-				stream.close();
+				passed = false;
+			}
+			if (!passed) {
 				setPOISummaryData(filename, keys, values);
+				stream.close();
+				return;
 			}
 
-			System.out.println("setSummaryData..#2.");
-			DirectoryEntry dir = poifs.getRoot();
-			DocumentEntry siEntry = (DocumentEntry)dir.getEntry(SummaryInformation.DEFAULT_STREAM_NAME);
-			DocumentInputStream dis = new DocumentInputStream(siEntry);
-			PropertySet ps = new PropertySet(dis);
-			SummaryInformation si = new SummaryInformation(ps);
-
-			for (int i=0; i<keys.length; i++) {
-				String key = keys[i];
-				String value = values[i];
-
-				System.out.println(key + " -> " + value);
-
-				if (key.compareTo(SUMMARY_DATA_AUTHOR) == 0) {
-					si.setAuthor(value);
-				} else if (key.compareTo(SUMMARY_DATA_KEYWORDS) == 0) {
-					si.setKeywords(value);
-				} else if (key.compareTo(SUMMARY_DATA_TITLE) == 0) {
-					si.setTitle(value);
-				} else if (key.compareTo(SUMMARY_DATA_SUBJECT) == 0) {
-					si.setSubject(value);
-				}
-
-		    }
-
-			OutputStream outStream = null;
-			outStream = new FileOutputStream(new File("test2.xls"));
+			HSSFWorkbook workbook = null;
+			SummaryInformation summaryInfo = null;
+			FileInputStream fis = null;
 			try {
-				stream.close();
-				stream = new FileInputStream(new File(filename));
-				int c;
-				while ((c = stream.read()) != -1) {
-				  outStream.write(c);
+				System.out.println(filename);
+				fis = new FileInputStream(filename);
+
+				workbook = new HSSFWorkbook(fis);
+				summaryInfo = workbook.getSummaryInformation();
+				if (summaryInfo == null) {
+					workbook.createInformationProperties();
+					summaryInfo = workbook.getSummaryInformation();
+
+					for (int i=0; i<keys.length; i++) {
+						String key = keys[i];
+						String value = values[i];
+
+						System.out.println(key + " -> " + value);
+
+						if (key.compareTo(SUMMARY_DATA_AUTHOR) == 0) {
+							summaryInfo.setAuthor(value);
+						} else if (key.compareTo(SUMMARY_DATA_KEYWORDS) == 0) {
+							summaryInfo.setKeywords(value);
+						} else if (key.compareTo(SUMMARY_DATA_TITLE) == 0) {
+							summaryInfo.setTitle(value);
+						} else if (key.compareTo(SUMMARY_DATA_SUBJECT) == 0) {
+							summaryInfo.setSubject(value);
+						}
+					}
+
+
 				}
-				stream.close();
-				outStream.close();
 			} catch (Exception ex) {
 				ex.printStackTrace();
+			} finally {
+				try {
+					fis.close();
+				} catch (Exception ex) {
+
+			    }
 			}
+			FileOutputStream fos = null;
+
+			try {
+				fos = new FileOutputStream(new File(filename));
+				workbook.write(fos);
+				fos.flush();
+			} catch (Exception ex) {
+				ex.printStackTrace();
+			} finally {
+				fos.close();
+			}
+
 
 		} catch (Exception ex) {
 			ex.printStackTrace();
-		} finally {
-			try {
-				stream.close();
-			} catch (Exception ex) {
-				ex.printStackTrace();
-			}
 		}
 	}
 
@@ -328,7 +343,13 @@ public final class ExcelMetadataUtils {
 				stream.close();
 				return getCreator(file);
 			}
-			DirectoryEntry dir = poifs.getRoot();
+			DirectoryEntry dir = null;
+			try {
+				dir = poifs.getRoot();
+			} catch (Exception ex) {
+				System.out.println("DirectoryEntry is NULL???");
+				return null;
+			}
 			DocumentEntry siEntry = (DocumentEntry)dir.getEntry(SummaryInformation.DEFAULT_STREAM_NAME);
 			if (siEntry != null) {
 				DocumentInputStream dis = new DocumentInputStream(siEntry);
@@ -430,21 +451,36 @@ public final class ExcelMetadataUtils {
         System.out.println("SUMMARY_DATA_SUBJECT: " + subject);
 		String size = getFileSize(filename);
 		System.out.println("file size: " + size);
-
 	}
 
+	public static void updateMetadata(String filename, String author, String keywords, String title, String subject) {
+		String[] keys = new String[4];
+        keys[0] = SUMMARY_DATA_AUTHOR;
+        keys[1] = SUMMARY_DATA_KEYWORDS;
+        keys[2] = SUMMARY_DATA_TITLE;
+        keys[3] = SUMMARY_DATA_SUBJECT;
+
+        String[] values = new String[4];
+        values[0] = author;
+        values[1] = keywords;
+        values[2] = title;
+        values[3] = subject;
+        setSummaryData(filename, keys, values);
+	}
 
 
 	public static void main(String [ ] args)
 	{
 		String filename = "CDISC_Controlled_Terminology_Multiple_Term_Request_Spreadsheet.xlsx";
+		filename = "20150115 Term Browser Functional Automation LOE.xlsx";
+		//filename = "FDA-SPL_Country_Code_REPORT__14.12e.xls";
 
 		String size = getFileSize(filename);
 		System.out.println("file size: " + size);
 
 		String targetfile = "copyfile.xlsx";
 		copyFile(filename, targetfile);
-		freezeRow(targetfile, 1, 4);
+		//freezeRow(targetfile, 1, 4);
 
 		String[] keys = new String[4];
         keys[0] = SUMMARY_DATA_AUTHOR;
@@ -458,6 +494,7 @@ public final class ExcelMetadataUtils {
         values[2] = "This is the title";
         values[3] = "This is the subject";
 
+		System.out.println("setSummaryData " + filename);
         setSummaryData(filename, keys, values);
 
         String author = getSummaryData(filename, SUMMARY_DATA_AUTHOR);

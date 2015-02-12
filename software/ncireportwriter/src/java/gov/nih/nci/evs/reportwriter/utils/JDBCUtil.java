@@ -1163,5 +1163,91 @@ import org.apache.log4j.*;
 		    _logger.debug("getReportData - number of reports: " + v.size());
 		    return sortReportData(v);
 	   }
+
+
+	   public Vector getReportData(Vector reportIds, String format_description) {
+		    _logger.debug("getReportData... ");
+		    Vector v = new Vector();
+		    Connection conn = null;
+		    Statement stmt = null;
+		    ResultSet rs = null;
+            try {
+				Class.forName (driver).newInstance();
+				//Class.forName(driver);
+				conn = DriverManager.getConnection (url, username, password);
+				stmt = conn.createStatement();
+				////////////////////////////////////
+				rs = stmt.executeQuery("SELECT * FROM report");
+				while (rs.next()) {
+					 int id  = rs.getInt("id");
+					 Integer id_obj = new Integer(id);
+					 if (reportIds.contains(id_obj)) {
+
+						 String label = rs.getString("label");
+						 int formatId = rs.getInt("has_format");
+						 String format = getReportFormat(formatId);
+						 if (format.compareToIgnoreCase(format_description) == 0) {
+
+
+							 int has_status = rs.getInt("has_status");
+							 String status = getReportStatus(has_status);
+							 int created_by = rs.getInt("created_by");
+							 String last_modified = rs.getString("last_modified");
+							 String login_name = getLoginName(created_by);
+							 String pathName = rs.getString("path_name");
+							 int templateId = -1;
+
+							 String template_data = getCodingSchemeNameAndVersionByReportId(id);
+							 String template_label = null;
+							 String codingSchemeName = null;
+							 String codingSchemeVersion = null;
+							 if (template_data != null) {
+								 Vector u = parseData(template_data);
+								 String t = (String) u.elementAt(0);
+								 templateId = Integer.parseInt(t);
+								 template_label = (String) u.elementAt(1);
+								 codingSchemeName = (String) u.elementAt(2);
+								 codingSchemeVersion = (String) u.elementAt(3);
+							 }
+							 ReportMetadata mrd = new ReportMetadata(id, label, templateId, template_label, formatId, format, codingSchemeName, codingSchemeVersion,
+								 login_name, last_modified, status, pathName);
+
+						 	 v.add(mrd);
+					     }
+				     }
+				}
+				////////////////////////////////////
+
+				rs.close();
+				stmt.close();
+			    conn.close();
+
+		    } catch (SQLException se) {
+			    se.printStackTrace();
+
+		    } catch(Exception e){
+			    e.printStackTrace();
+		    } finally {
+			    try{
+				   if(stmt!=null) {
+					   stmt.close();
+				   }
+			    } catch (SQLException se2) {
+			       se2.printStackTrace();
+			    }
+			    try {
+				   if (conn!=null) {
+					   conn.close();
+				   }
+			    } catch (SQLException se) {
+				   se.printStackTrace();
+			    }
+		    }
+		    _logger.debug("getReportData - number of reports: " + v.size());
+		    return sortReportData(v);
+	   }
+
+
+
    }
 

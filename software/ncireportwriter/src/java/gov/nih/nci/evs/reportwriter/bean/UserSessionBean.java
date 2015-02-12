@@ -11,6 +11,7 @@ import gov.nih.nci.evs.reportwriter.utils.*;
 import gov.nih.nci.evs.reportwriter.webapp.*;
 import gov.nih.nci.evs.utils.*;
 
+import java.io.*;
 import java.util.*;
 
 import javax.faces.event.*;
@@ -400,4 +401,54 @@ public class UserSessionBean extends Object {
     public String clearUnlockAccount() {
         return new UserAccountRequest().clear();
     }
+
+    public String enterExcelMetadata() {
+        String selectedStandardReportTemplate = _srtMgr.getSelected();
+        System.out.println("selectedStandardReportTemplate: " + selectedStandardReportTemplate);
+        HttpServletRequest request = HTTPUtils.getRequest();
+        String author = request.getParameter("author");
+        System.out.println("author: " + author);
+        String keywords = request.getParameter("keywords");
+        System.out.println("keywords: " + keywords);
+        String title = request.getParameter("title");
+        System.out.println("title: " + title);
+        String subject = request.getParameter("subject");
+        System.out.println("subject: " + subject);
+        String worksheet = request.getParameter("worksheet");
+        worksheet = worksheet.trim();
+        System.out.println("worksheet: " + worksheet);
+        String frozen_rows = request.getParameter("frozen_rows");
+        System.out.println("frozen_rows: " + frozen_rows);
+        frozen_rows = frozen_rows.trim();
+
+        String format_description = "Microsoft Office Excel";
+		String hibernate_cfg_xml = request.getSession().getServletContext().getRealPath(JDBCUtil.HIBERNATE_CFG_PATH);//"/WEB-INF/classes/hibernate.cfg.xml");
+		File f = new File(hibernate_cfg_xml);
+		if (f.exists()) {
+			JDBCUtil util = new JDBCUtil(hibernate_cfg_xml);
+			int templateId = util.getTemplateId(selectedStandardReportTemplate);
+			System.out.println("templateId: " + templateId);
+			Vector<Integer> reportIds = util.getReportIds(templateId);
+			if (reportIds != null) {
+	             Vector reports = util.getReportData(reportIds, format_description);
+	             System.out.println("Number of excel files: " + reports.size());
+	             if (reports != null) {
+					 for (int i=0; i<reports.size(); i++) {
+						 ReportMetadata mrd = (ReportMetadata) reports.elementAt(i);
+						 String sourcefile = mrd.getPathName();
+						 if (sourcefile != null) {
+							 System.out.println("sourcefile: " + sourcefile);
+							 ExcelMetadataUtils.updateMetadata(sourcefile, author, keywords, title, subject);
+							 if (worksheet.length() > 0 && frozen_rows.length() > 0) {
+								 int worksheet_number = Integer.parseInt(worksheet);
+								 int frozen_rows_number = Integer.parseInt(frozen_rows);
+								 ExcelMetadataUtils.freezeRow(sourcefile, worksheet_number, frozen_rows_number);
+							 }
+						 }
+					 }
+				 }
+			}
+		}
+        return "success";
+	}
 }

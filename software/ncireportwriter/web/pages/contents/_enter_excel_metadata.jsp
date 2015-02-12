@@ -38,8 +38,6 @@ String frozen_rows = "";
                   <tr>
                     <td>
                     
-                    
-                    
                       <table summary="Enter metadata here" 
                           cellpadding="3" cellspacing="0" border="0" 
                           class="dataTable" width="100%">
@@ -48,14 +46,16 @@ String frozen_rows = "";
                             <h:outputText value="Report" />
                           </td>
                           <td class="dataCellText">
+                            
                             <h:selectOneMenu id="standardReportTemplateId" 
-                                value="#{userSessionBean.selectedStandardReportTemplate_draft}" 
-                                valueChangeListener="#{userSessionBean.reportSelectionChanged_draft}">
-                              <f:selectItems value="#{userSessionBean.standardReportTemplateList_draft}"/>
+                                value="#{userSessionBean.selectedStandardReportTemplate}" 
+                                valueChangeListener="#{userSessionBean.reportSelectionChanged}">
+                              <f:selectItems value="#{userSessionBean.standardReportTemplateList}"/>
                             </h:selectOneMenu>
+                          
+                           
                           </td>
                         </tr>
-                        
                         
 			  <tr>
 			    <td class="requestLabel">Author: <i
@@ -67,14 +67,16 @@ String frozen_rows = "";
 			  <tr>
 			    <td class="requestLabel">Keywords: <i
 			      class="warningMsgColor">*</i></td>
-			    <td><input class="requestPageTF<%=css%>"
-			      name="keywords" alt="keywords" value="<%=keywords%>"></td>
+			    <td><textarea class="requestPageTA<%=css%>"
+			      name="keywords" alt="keywords" value="<%=keywords%>"></textarea></td>
 			  </tr>
+			  
 			  <tr>
 			    <td class="requestLabel">Title:</td>
-			    <td><input class="requestPageTA<%=css%>"
+			    <td><input class="requestPageTF<%=css%>"
 			      name="title" alt="title" value="<%=title%>"></td>
 			  </tr>
+			  
 			  <tr>
 			    <td class="requestLabel">Subject<br/>
 			    Information:</td>
@@ -83,9 +85,14 @@ String frozen_rows = "";
 			  </tr>	
 
 			  <tr>
-			    <td class="requestLabel">Number of Frozen Header Rows: <br/>
-			    Information:</td>
-			    <td><input class="requestPageTA<%=css%>"
+			    <td class="requestLabel">Worksheet Number (where frozen header rows are required):</td>
+			    <td><input class="requestPageTF<%=css%>"
+			      name="worksheet" alt="worksheet" value="<%=worksheet%>"></td>
+			  </tr>	
+			  
+			  <tr>
+			    <td class="requestLabel">Number of Frozen Header Rows:</td>
+			    <td><input class="requestPageTF<%=css%>"
 			      name="frozen_rows" alt="frozen_rows" value="<%=frozen_rows%>"></td>
 			  </tr>	
 			  
@@ -102,7 +109,7 @@ String frozen_rows = "";
                       <table cellpadding="4" cellspacing="0" border="0">
                         <tr>
                           <td><h:commandButton id="save" value="Save" 
-                              action="#{userSessionBean.assignStatusAction}" /></td>
+                              action="#{userSessionBean.enterExcelMetadata}" /></td>
                           <td><h:commandButton id="back" action="back" value="Back" /></td>
                         </tr>
                       </table>

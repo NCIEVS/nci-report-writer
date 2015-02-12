@@ -83,6 +83,11 @@ L-->
     </navigation-case>
 
     <navigation-case>
+      <from-outcome>enter_excel_metadata</from-outcome>
+      <to-view-id>/pages/main/enter_excel_metadata.jsp</to-view-id>
+    </navigation-case>
+    
+    <navigation-case>
       <from-outcome>message</from-outcome>
       <to-view-id>/pages/main/message.jsp</to-view-id>
     </navigation-case>
@@ -95,7 +100,8 @@ L-->
     <navigation-case>
       <from-outcome>perform_unlock</from-outcome>
       <to-view-id>/pages/main/unlock.jsp</to-view-id>
-    </navigation-case>    
+    </navigation-case>  
+    
   </navigation-rule>
    
   <!-- ===================================================================== -->
@@ -142,6 +148,21 @@ L-->
     </navigation-case>
   </navigation-rule>  
 
+  <!-- ===================================================================== -->
+  <navigation-rule>
+    <from-view-id>/pages/main/enter_excel_metadata.jsp</from-view-id>
+    <navigation-case>
+      <from-action>#{userSessionBean.enterExcelMetadata}</from-action>
+      <from-outcome>success</from-outcome>
+      <to-view-id>/pages/main/task.jsp</to-view-id>
+    </navigation-case>
+
+    <navigation-case>
+      <from-outcome>back</from-outcome>
+      <to-view-id>/pages/main/task.jsp</to-view-id>
+    </navigation-case>
+  </navigation-rule> 
+  
   <!-- ===================================================================== -->
   <navigation-rule>
     <from-view-id>/pages/main/retrieve_standard_reports.jsp</from-view-id>

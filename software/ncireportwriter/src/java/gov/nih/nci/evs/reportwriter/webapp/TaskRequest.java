@@ -70,7 +70,8 @@ public class TaskRequest {
             return "report_status";
 
         } else if (_selectedTask.compareTo("Administer Excel Metadata") == 0) {
-            return "administer_excel_metadata";
+            //return "administer_excel_metadata";
+            return "enter_excel_metadata";
 
         } else if (_selectedTask.compareTo("Generate Hierarchy Report") == 0) {
             return "generate_hierarchy_report";
