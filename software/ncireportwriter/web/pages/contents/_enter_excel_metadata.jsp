@@ -12,11 +12,11 @@ L--%>
 
 <%
 String css = WebUtils.isUsingIE(request) ? "_IE" : "";
-String author = "";
+String author = "NCI CBIIT";
 String keywords = "";
 String title = "";
 String subject = "";
-String worksheet = "";
+String worksheet = "0";
 String frozen_rows = "";
 
 
@@ -27,12 +27,12 @@ subject = (String) request.getSession().getAttribute("subject");
 worksheet = (String) request.getSession().getAttribute("worksheet");
 frozen_rows = (String) request.getSession().getAttribute("frozen_rows");
 
-if (author == null) author = "";
+if (author == null) author = "NCI CBIIT";
 if (keywords == null) keywords = "";
 if (title == null) title = "";
 if (subject == null) subject = "";
-if (worksheet == null) worksheet = "";
-if (frozen_rows == null) frozen_rows = "";
+if (worksheet == null) worksheet = "0";
+if (frozen_rows == null) frozen_rows = "1";
 
 String warningMsg = (String) request.getSession().getAttribute("warningMsg");
 if (warningMsg != null) {
@@ -99,11 +99,11 @@ if (warningMsg != null) {
 			    <td class="requestLabel">Keywords: <i
 			      class="warningMsgColor">*</i></td>
 			    <td><textarea class="requestPageTA<%=css%>"
-			      name="keywords" alt="keywords" value="<%=keywords%>"></textarea></td>
+			      name="keywords"><%=keywords%></textarea></td>
 			  </tr>
 			  
 			  <tr>
-			    <td class="requestLabel">Title:</td>
+			    <td class="requestLabel">Title (default to the template identifier):</td>
 			    <td><input class="requestPageTF<%=css%>"
 			      name="title" alt="title" value="<%=title%>"></td>
 			  </tr>

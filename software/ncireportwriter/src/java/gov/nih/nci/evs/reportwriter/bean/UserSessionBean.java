@@ -421,6 +421,11 @@ public class UserSessionBean extends Object {
         System.out.println("frozen_rows: " + frozen_rows);
         frozen_rows = frozen_rows.trim();
 
+		title = title.trim();
+		if (title == null || title.length() == 0) {
+			title = selectedStandardReportTemplate;
+		}
+
         request.getSession().setAttribute("author", author);
         request.getSession().setAttribute("keywords", keywords);
         request.getSession().setAttribute("title", title);
@@ -434,6 +439,7 @@ public class UserSessionBean extends Object {
 		if (f.exists()) {
 			JDBCUtil util = new JDBCUtil(hibernate_cfg_xml);
 			int templateId = util.getTemplateId(selectedStandardReportTemplate);
+
 			System.out.println("templateId: " + templateId);
 			Vector<Integer> reportIds = util.getReportIds(templateId);
 			if (reportIds != null) {
