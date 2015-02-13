@@ -421,6 +421,13 @@ public class UserSessionBean extends Object {
         System.out.println("frozen_rows: " + frozen_rows);
         frozen_rows = frozen_rows.trim();
 
+        request.getSession().setAttribute("author", author);
+        request.getSession().setAttribute("keywords", keywords);
+        request.getSession().setAttribute("title", title);
+        request.getSession().setAttribute("subject", subject);
+        request.getSession().setAttribute("worksheet", worksheet);
+        request.getSession().setAttribute("frozen_rows", frozen_rows);
+
         String format_description = "Microsoft Office Excel";
 		String hibernate_cfg_xml = request.getSession().getServletContext().getRealPath(JDBCUtil.HIBERNATE_CFG_PATH);//"/WEB-INF/classes/hibernate.cfg.xml");
 		File f = new File(hibernate_cfg_xml);
@@ -433,6 +440,7 @@ public class UserSessionBean extends Object {
 	             Vector reports = util.getReportData(reportIds, format_description);
 	             System.out.println("Number of excel files: " + reports.size());
 	             if (reports != null) {
+					 int success_knt = 0;
 					 for (int i=0; i<reports.size(); i++) {
 						 ReportMetadata mrd = (ReportMetadata) reports.elementAt(i);
 						 String sourcefile = mrd.getPathName();
@@ -442,9 +450,18 @@ public class UserSessionBean extends Object {
 							 if (worksheet.length() > 0 && frozen_rows.length() > 0) {
 								 int worksheet_number = Integer.parseInt(worksheet);
 								 int frozen_rows_number = Integer.parseInt(frozen_rows);
-								 ExcelMetadataUtils.freezeRow(sourcefile, worksheet_number, frozen_rows_number);
+								 boolean success = ExcelMetadataUtils.freezeRow(sourcefile, worksheet_number, frozen_rows_number);
+								 if (success) {
+									 success_knt++;
+								 }
 							 }
 						 }
+					 }
+
+					 if (success_knt < reports.size()) {
+						  String msg = "Please verify input values and try again.";
+						  request.getSession().setAttribute("warningMsg", msg);
+						  return "failed";
 					 }
 				 }
 			}

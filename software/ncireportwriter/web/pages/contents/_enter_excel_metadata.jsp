@@ -18,13 +18,43 @@ String title = "";
 String subject = "";
 String worksheet = "";
 String frozen_rows = "";
+
+
+author = (String) request.getSession().getAttribute("author");
+keywords = (String) request.getSession().getAttribute("keywords");
+title = (String) request.getSession().getAttribute("title");
+subject = (String) request.getSession().getAttribute("subject");
+worksheet = (String) request.getSession().getAttribute("worksheet");
+frozen_rows = (String) request.getSession().getAttribute("frozen_rows");
+
+if (author == null) author = "";
+if (keywords == null) keywords = "";
+if (title == null) title = "";
+if (subject == null) subject = "";
+if (worksheet == null) worksheet = "";
+if (frozen_rows == null) frozen_rows = "";
+
+String warningMsg = (String) request.getSession().getAttribute("warningMsg");
+if (warningMsg != null) {
+    request.getSession().removeAttribute("warningMsg");
+}
+
 %>
 
 <f:view>
   <h:form id="ADMINISTER_EXCEL_METADATAForm">
- 
+      
     <table summary="" cellpadding="0" cellspacing="0" border="0" 
         width="100%" height="100%"> <!-- Table 1 (Begin) -->
+
+            <% if (warningMsg != null && warningMsg.trim().length() > 0) { %>
+              <tr><td class="warningMsgColor">
+                Warning:<br/>
+                <%=StringUtils.toHtml(warningMsg)%><br/>
+                <br/>
+              </td></tr>
+            <% } %>  
+            
       <tr>
         <td height="500" width="100%" valign="top">
           <br>

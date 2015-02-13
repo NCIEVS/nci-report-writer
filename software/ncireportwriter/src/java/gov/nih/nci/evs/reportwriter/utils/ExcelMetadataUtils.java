@@ -44,19 +44,31 @@ public final class ExcelMetadataUtils {
     private static String SUMMARY_DATA_TITLE = "SUMMARY_DATA_TITLE";
     private static String SUMMARY_DATA_SUBJECT = "SUMMARY_DATA_SUBJECT";
 
-	public static void freezeRow(String filename, int sheetNumber, int rowNum) {
+	public static boolean freezeRow(String filename, int sheetNumber, int rowNum) {
+		FileOutputStream fileOut = null;
+		boolean status = false;
         try {
 			InputStream inp = new FileInputStream(filename);
 			Workbook wb = WorkbookFactory.create(inp);
 			Sheet sheet = wb.getSheetAt(sheetNumber);
 			sheet.createFreezePane(0,rowNum); // this will freeze first rowNum rows
-			FileOutputStream fileOut = new FileOutputStream(filename);
+			fileOut = new FileOutputStream(filename);
 			wb.write(fileOut);
-			fileOut.close();
+			status = true;
+			System.out.println("File modified " + filename);
+
 		} catch (Exception ex) {
-			ex.printStackTrace();
+			//ex.printStackTrace();
+			System.out.println("ERROR: freezeRow " + filename);
+
+		} finally {
+			try {
+				fileOut.close();
+			} catch (Exception ex) {
+				ex.printStackTrace();
+			}
 		}
-		System.out.println("File modified " + filename);
+		return status;
 	}
 
 	public static void copyFile(String sourcefile, String targetfile) {

@@ -158,6 +158,12 @@ L-->
     </navigation-case>
 
     <navigation-case>
+      <from-action>#{userSessionBean.enterExcelMetadata}</from-action>
+      <from-outcome>failed</from-outcome>
+      <to-view-id>/pages/main/enter_excel_metadata.jsp</to-view-id>
+    </navigation-case>
+    
+    <navigation-case>
       <from-outcome>back</from-outcome>
       <to-view-id>/pages/main/task.jsp</to-view-id>
     </navigation-case>
