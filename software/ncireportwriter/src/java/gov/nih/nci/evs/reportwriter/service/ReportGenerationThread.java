@@ -109,13 +109,13 @@ public class ReportGenerationThread implements Runnable {
                 generateStandardReport(_outputDir, _standardReportLabel, _uid,
                     warningMsg);
             long runTime = stopWatch.getDuration();
-
-		    if (DataUtils.isNullOrBlank(DataUtils.NCIT_VERSION)) {
+            //[EVSREPORT-97] No longer getting confirmation emails.
+		    //if (DataUtils.isNullOrBlank(DataUtils.NCIT_VERSION)) {
 
             	emailNotification(successful, _standardReportLabel,
                 	warningMsg, startDate, new Date(), runTime);
 
-			}
+			//}
 
             _logger.info("Report " + _standardReportLabel + " generated.");
             _logger.info("  * Start time: " + startDate);
@@ -208,6 +208,7 @@ public class ReportGenerationThread implements Runnable {
             }
 
             boolean send = true;
+            System.out.println("Email sent to " + recipients + " (subject: " + subject + ")");
             MailUtils.postMail(mailServer, from, recipients, subject,
                 message.toString(), send);
         } catch (Exception e) {
