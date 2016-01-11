@@ -1861,7 +1861,21 @@ for (int k=0; k<w.size(); k++) {
 			if (propertyName.compareTo(property_name) == 0) {
 				match = true;
 
-				if (source != null || representational_form != null
+				if (source == null && representational_form == null
+					&& qualifier_name == null && isPreferred == null) {
+
+					String prop_value = p.getValue().getContent();
+					if (!hset.contains(prop_value)) {
+						num_matches++;
+						hset.add(prop_value);
+						if (num_matches == 1) {
+							return_str = prop_value;
+						} else {
+							return_str = return_str + delimiter + prop_value;
+						}
+					}
+
+				} else if (source != null || representational_form != null
 					|| qualifier_name != null || isPreferred != null) {
 					// compare isPreferred
 					if (isPreferred != null && p instanceof Presentation) {
@@ -2326,8 +2340,6 @@ FULL_SYN: DEVICE ISSUE
         String delimiter = "" + delimiter_ch;
         //GF28844: delimiter = " " + delimiter + " ";
 
-
-
         if (isNull(field_Id))
             field_Id = null;
         if (isNull(property_name))
@@ -2362,6 +2374,19 @@ FULL_SYN: DEVICE ISSUE
 
         if (field_Id.endsWith("Code")) {
 			return getFocusConceptCode(concept);
+
+		} else if (field_Id.compareTo("Associated Concept Property") == 0) {
+            String value = getFocusConceptPropertyValue(
+             associated_concept,
+             property_name,
+             property_type,
+	         qualifier_name,
+	         source,
+	         qualifier_value,
+	         representational_form,
+	         delimiter,
+	         isPreferred);
+	         return value;
 
 		} else if (field_Id.endsWith("Property Qualifier")) {
 
@@ -2590,7 +2615,6 @@ FULL_SYN: DEVICE ISSUE
 	}
 
 
-
     public void setReportColumns(ReportColumn[] cols) {
         for (int i = 0; i < cols.length; i++) {
 			ReportColumn col = cols[i];
@@ -2602,26 +2626,20 @@ FULL_SYN: DEVICE ISSUE
 				col.setQualifierName(null);
 				col.setQualifierValue(null);
 		    }
-/*
-		    if (i == 1) {
-				col.setFieldId("Blank");
-			}
 
-
-		    if (field_id.compareTo("Associated Concept Code") == 0) {
-				col.setFieldId("Code");
-			}
-*/
 		    if (field_id.compareTo("Associated Concept Code") == 0) {
 				col.setFieldId("Blank");
 			}
 
-			if (col.getPropertyName().compareTo("Extensible_List") == 0) {
-				col.setFieldId("Property");
+//KLO, 01102016
+			if (col.getPropertyName() != null) {
+				System.out.println("setReportColumns col: " + col.getPropertyName());
+				if (col.getPropertyName().compareTo("Extensible_List") == 0) {
+					col.setFieldId("Property");
+				}
 			}
 		}
 	}
-
 
     public ReportColumn[] copyReportColumns(ReportColumn[] cols) {
         if (cols == null) return null;
@@ -2629,9 +2647,7 @@ FULL_SYN: DEVICE ISSUE
         subheader_line_required = false;
         ReportColumn[] temporary_cols = new ReportColumn[cols.length];
 		for (int i = 0; i < cols.length; i++) {
-
 			ReportColumn col = cols[i];
-
 			ReportColumn rc = new ReportColumn();
             rc.setColumnNumber(col.getColumnNumber());
             rc.setId(col.getId());

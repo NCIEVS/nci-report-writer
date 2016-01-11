@@ -165,7 +165,7 @@ public class StandardReportServiceProvider
 			    "\tLabel: " + col.getLabel()
 			  + "\n\tFieldId: " + col.getFieldId()
 			  + "\n\tPropertyType: " + col.getPropertyType()
-			  + "\n\tPropertyName " + col.getPropertyName()
+			  + "\n\tPropertyName: " + col.getPropertyName()
 			  + "\n\tIsPreferred: " + col.getIsPreferred()
 			  + "\n\tRepresentationalForm: " + col.getRepresentationalForm()
 			  + "\n\tSource: " + col.getSource()
