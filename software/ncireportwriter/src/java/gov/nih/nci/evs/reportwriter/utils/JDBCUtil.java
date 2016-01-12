@@ -29,6 +29,7 @@ import gov.nih.nci.security.util.StringUtilities;
 import gov.nih.nci.security.util.StringEncrypter.EncryptionException;
 
 import org.apache.log4j.*;
+import javax.faces.model.SelectItem;
 
 
    public class JDBCUtil
@@ -47,7 +48,7 @@ import org.apache.log4j.*;
 	   public JDBCUtil(String configuration_file) {
 		   this.configuration_file = configuration_file;
 		   _logger.debug("configuration_file: " + configuration_file);
-		  System.out.println("configuration_file: " + configuration_file);
+		  //System.out.println("configuration_file: " + configuration_file);
 
 		   initialize();
 	   }
@@ -90,7 +91,7 @@ import org.apache.log4j.*;
 				} else if (key.compareTo("connection.username") == 0) {
 					username = value;
 					_logger.debug("username: " + username);
-					System.out.println("username: " + username);
+					//System.out.println("username: " + username);
 				} else if (key.compareTo("connection.password") == 0) {
 					password = value;
 				}
@@ -948,8 +949,15 @@ import org.apache.log4j.*;
 	   public void updateReportStatus(int report_id, String status) {
 		    // 505: DRAFT
 		    // 506: APPROVED
-		    int status_id = 505;
-		    if (status.compareTo("APPROVED") == 0) status_id = 506;
+		    //int status_id = 505;
+		    //if (status.compareTo("APPROVED") == 0) status_id = 506;
+
+		    int status_id = getReportStatusId(status);
+		    if (status_id == -1) {
+				System.out.println("ERROR: Unknown status: " + status);
+				return;
+			}
+
 		    Connection conn = null;
 		    Statement stmt = null;
 		    ResultSet rs = null;
@@ -960,7 +968,7 @@ import org.apache.log4j.*;
 				conn = DriverManager.getConnection (url, username, password);
 				stmt = conn.createStatement();
 				////////////////////////////////////
-				String sql = "UPDATE report set HAS_STATUS=" + status_id + " where ID=" +  report_id;
+				String sql = "UPDATE report SET HAS_STATUS=" + status_id + " WHERE ID=" +  report_id;
 				stmt.executeUpdate(sql);
 				////////////////////////////////////
 				//rs.close();
@@ -1248,6 +1256,107 @@ import org.apache.log4j.*;
 	   }
 
 
+	   public int getReportStatusId(String label) {
+		    Connection conn = null;
+		    Statement stmt = null;
+		    ResultSet rs = null;
+		    int id = -1;
+
+            try {
+				Class.forName (driver).newInstance ();
+				conn = DriverManager.getConnection (url, username, password);
+				stmt = conn.createStatement();
+				rs = stmt.executeQuery("SELECT id FROM report_status where LABEL=" + "'" + label + "'");
+				while (rs.next()) {
+					id = (int) rs.getInt("id");
+					break;
+				}
+				////////////////////////////////////
+				rs.close();
+				stmt.close();
+			    conn.close();
+
+		    } catch (SQLException se) {
+			    se.printStackTrace();
+		    } catch(Exception e){
+			    e.printStackTrace();
+		    } finally {
+			    try{
+				   if(stmt!=null) {
+					   stmt.close();
+				   }
+			    } catch (SQLException se2) {
+			       se2.printStackTrace();
+			    }
+			    try {
+				   if (conn!=null) {
+					   conn.close();
+				   }
+			    } catch (SQLException se) {
+				   se.printStackTrace();
+			    }
+		    }
+		    return id;
+	   }
+
+
+       public List<SelectItem> getStandardReportTemplateList(String status_label) {
+		    List _standardReportTemplateList = new ArrayList();
+	        int status_id = getReportStatusId(status_label);
+		    Connection conn = null;
+		    Statement stmt = null;
+		    ResultSet rs = null;
+            String report_label = null;
+            Vector report_vec = new Vector();
+            HashSet hset = new HashSet();
+            try {
+				Class.forName (driver).newInstance ();
+				conn = DriverManager.getConnection (url, username, password);
+				stmt = conn.createStatement();
+				////////////////////////////////////
+				rs = stmt.executeQuery("SELECT label FROM report where HAS_STATUS=" + status_id);
+				while (rs.next()) {
+					report_label = (String) rs.getString("label");
+					report_vec.add(report_label);
+				}
+				rs.close();
+				stmt.close();
+			    conn.close();
+
+				report_vec = SortUtils.quickSort(report_vec);
+				for (int i = 0; i < report_vec.size(); i++) {
+					String name = (String) report_vec.elementAt(i);
+					int n = name.lastIndexOf(".");
+					String t = name.substring(0, n);
+					if (!hset.contains(t)) {
+						hset.add(t);
+						_standardReportTemplateList.add(new SelectItem(t));
+					}
+				}
+
+		    } catch (SQLException se) {
+			    se.printStackTrace();
+		    } catch(Exception e){
+			    e.printStackTrace();
+		    } finally {
+			    try{
+				   if(stmt!=null) {
+					   stmt.close();
+				   }
+			    } catch (SQLException se2) {
+			       se2.printStackTrace();
+			    }
+			    try {
+				   if (conn!=null) {
+					   conn.close();
+				   }
+			    } catch (SQLException se) {
+				   se.printStackTrace();
+			    }
+		    }
+
+		    return _standardReportTemplateList;
+	   }
 
    }
 

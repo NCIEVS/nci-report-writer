@@ -82,29 +82,27 @@ public class StandardReportTemplateManager {
     private List<SelectItem> getStandardReportTemplateList(String version) {
 		HttpServletRequest request = HTTPUtils.getRequest();
 
-
         List<SelectItem> list = new ArrayList<SelectItem>();
         HashSet<String> hset = new HashSet<String>();
 
+try {
 		String hibernate_cfg_xml = request.getSession().getServletContext().getRealPath(JDBCUtil.HIBERNATE_CFG_PATH);//"/WEB-INF/classes/hibernate.cfg.xml");
 		File f = new File(hibernate_cfg_xml);
 		if (f.exists()) {
 			JDBCUtil util = new JDBCUtil(hibernate_cfg_xml);
-			Vector report_metadata_vec = util.getReportData();
-
-			for (int i=0; i<report_metadata_vec.size(); i++) {
-				ReportMetadata rmd = (ReportMetadata) report_metadata_vec.elementAt(i);
-				if (rmd.getStatus().compareTo(version) == 0) {
-                    String templateLabel = rmd.getTemplateLabel();
-                    if (!hset.contains(templateLabel)) {
-						hset.add(templateLabel);
-						list.add(new SelectItem(templateLabel));
-					}
-				}
-			}
+			return util.getStandardReportTemplateList(version);
 		}
+
+} catch (Exception ex) {
+	ex.printStackTrace();
+
+}
 		return list;
     }
+
+
+
+
 
 /*
     private List<SelectItem> getStandardReportTemplateList(String version) {
@@ -213,3 +211,8 @@ public class StandardReportTemplateManager {
         return list;
     }
 }
+
+/*
+java.io.IOException: Server returned HTTP response code: 503 for URL: http://hibernate.sourceforge.net/hibernate-configuration-3.0.dtd
+        at sun.net.www.protocol.http.HttpURLConnection.getInputStream(HttpURLConnection.java:1615)
+*/

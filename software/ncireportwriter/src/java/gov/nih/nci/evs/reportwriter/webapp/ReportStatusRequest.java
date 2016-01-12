@@ -62,6 +62,7 @@ public class ReportStatusRequest {
         String reportTemplate =
             (String) request.getSession().getAttribute(
                     "selectedStandardReportTemplate_draft");
+
         String statusValue =
             (String) request.getSession().getAttribute("selectedReportStatus");
 

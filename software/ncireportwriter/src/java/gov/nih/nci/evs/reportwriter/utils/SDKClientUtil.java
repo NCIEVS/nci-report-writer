@@ -878,7 +878,7 @@ public class SDKClientUtil {
 				ex.printStackTrace();
 			}
 			if (appService == null) {
-				System.out.println("(***) appService = null???");
+				//System.out.println("(***) appService = null???");
 				return null;
 			}
 
@@ -886,7 +886,7 @@ public class SDKClientUtil {
             if (results == null)
                 return null;
             Object[] a = results.toArray();
-            System.out.println("Number of matches: " + a.length);
+            //System.out.println("Number of matches: " + a.length);
             return a;
         } catch (Exception e) {
             e.printStackTrace();
