@@ -28,7 +28,7 @@ import org.LexGrid.naming.SupportedAssociation;
 
 
 /**
- * 
+ *
  */
 
 /**
@@ -508,24 +508,6 @@ public class OntologyBean // extends BaseBean
          v0.add("Associated Concept Code");
          v0.add("Associated Concept Property");
          v0.add("Associated Concept Property Qualifier");
-
-/*
-         v0.add("1st Associated Concept Code");
-         v0.add("1st Associated Concept Property");
-         v0.add("1st Associated Concept Property Qualifier");
-
-         v0.add("2nd Associated Concept Code");
-         v0.add("2nd Associated Concept Property");
-         v0.add("2nd Associated Concept Property Qualifier");
-
-         v0.add("1st Parent Code");
-         v0.add("1st Parent Property");
-         v0.add("1st Parent Property Qualifier");
-
-         v0.add("2nd Parent Code");
-         v0.add("2nd Parent Property");
-         v0.add("2nd Parent Property Qualifier");
-*/
 
          if (_selectedOntology == null) {
 			 _selectedOntology = DEFAULT_ONTOLOGY;
