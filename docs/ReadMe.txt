@@ -1,12 +1,15 @@
 How to run the NCI ReportWriter without UI.
 (Reference: [EVSREPORT-94] Generate reports without the UI.)
 
-Sample program for running the NCI ReportWriter without UI is available at:
-<report writer installation dir>\software\ncireportwriter\test\src\java\gov\nih\nci\evs\reportwriter\test
+Use the following program to retrieve all report template available in the database:
+<report writer installation dir>\software\ncireportwriter\test\src\java\gov\nih\nci\evs\reportwriter\test\StandardReportTemplateExporter.java
 
-Folder structure:
+Then use the following program: 
+<report writer installation dir>\software\ncireportwriter\test\src\java\gov\nih\nci\evs\reportwriter\test\StandaloneReportGenerator.java
+to generate a new report in HTML, Excel, and ASCII formats.
 
-<Root Folder where the StandaloneReportGenerator will be running>
+The structure of the folder where these two programs will be running is the following:
+<Root Folder>
 |   compile.bat
 |   run.bat
 |   log4j.xml
@@ -14,7 +17,7 @@ Folder structure:
 |   ReportGenerationRunner$ReportFormatType.class
 |   ncireportwriter.properties
 |   StandaloneReportGenerator.java
-|   StandaloneReportGenerator.class
+|   hibernate.cfg.xml
 |   
 +---config
 |       application-config-client-local.xml
@@ -23,7 +26,6 @@ Folder structure:
 |       application-config.xml
 |       ApplicationSecurityConfig.xml
 |       context.xml
-|       hibernate.cfg.xml
 |       
 \---output
         FDA_Quality_of_Matrics_Terminology__16.04d.txt
@@ -57,8 +59,11 @@ set CLASSPATH=.
 set CLASSPATH=%CLASSPATH%;%lib%\*
 set CLASSPATH=%CLASSPATH%;%lib1%\*
 set CLASSPATH=%CLASSPATH%;%lib2%\*
+rem java -Xmx1300m -classpath %CLASSPATH% -DLG_CONFIG_FILE="C:\LexEVS6.3.0.RC1\resources\config\lbconfig.props" gov.nih.nci.evs.reportwriter.test.StandardReportTemplateExporter templates.dat
 java -Xmx1300m -classpath %CLASSPATH% -DLG_CONFIG_FILE="C:\LexEVS6.3.0.RC1\resources\config\lbconfig.props" gov.nih.nci.evs.reportwriter.test.StandaloneReportGenerator template.dat output
 set CLASSPATH=%OCP%
+
+rem NOTE: Change "C:\LexEVS6.3.0.RC1\resources\config\lbconfig.props" to fit your LexEVS environment, if you are running against LexEVS local runtime.
 
 ==================================================================================
 Sample Standard Report Template data file:
@@ -84,7 +89,6 @@ columnCollection:
 	qualifierValue:
 	delimiter:|
 	conditionalColumnId:
-	reportTemplate:
 	
 	columnNumber:2
 	label:Subset Code
@@ -98,7 +102,6 @@ columnCollection:
 	qualifierValue:
 	delimiter:|
 	conditionalColumnId:
-	reportTemplate:
 
 	columnNumber:3
 	label:Subset Name
@@ -112,7 +115,6 @@ columnCollection:
 	qualifierValue:
 	delimiter:|
 	conditionalColumnId:
-	reportTemplate:
 	
 	columnNumber:4
 	label:Concept Code
@@ -126,7 +128,6 @@ columnCollection:
 	qualifierValue:
 	delimiter:|
 	conditionalColumnId:
-	reportTemplate:
 
 	columnNumber:5
 	label:Source PT
@@ -140,7 +141,6 @@ columnCollection:
 	qualifierValue:QM
 	delimiter:|
 	conditionalColumnId:
-	reportTemplate:
 	
 	columnNumber:6
 	label:Source Synonym(s)
@@ -154,8 +154,6 @@ columnCollection:
 	qualifierValue:QM
 	delimiter:|
 	conditionalColumnId:
-	reportTemplate:	
-
 
 ==================================================================================
 Note: All file in the config directory can be copied from the 

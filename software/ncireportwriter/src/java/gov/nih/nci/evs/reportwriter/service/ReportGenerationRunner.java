@@ -1390,21 +1390,4 @@ public class ReportGenerationRunner { //implements Runnable {
 		}
 		return new ReportGenerationRunner().generateStandardReport(outputDir, adminPassword, template, ncitColumns);
 	}
-
-/*
-	public static void main(String[] args) {
-		String templateFile = args[0]; //"template.dat")
-		RWUIUtils utils = new RWUIUtils();
-		StandardReportTemplate template = utils.loadStandardReportTemplate(templateFile);
-		utils.dumpStandardReportTemplate(template);
-		String outputDir = "output";
-		Collection<ReportColumn> cc = template.getColumnCollection();
-
-		int[] ncitColumns = new int[cc.size()];
-		for (int i=0; i<cc.size(); i++) {
-			ncitColumns[i] = 0;
-		}
-		Boolean retval = new ReportGenerationRunner().generateStandardReport(outputDir, "rwadmin", template, ncitColumns);
-	}
-*/
 }

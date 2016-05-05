@@ -146,37 +146,68 @@ public class StandardReportServiceProvider
 
     public void dumpStandardReportTemplate(StandardReportTemplate template) {
 		if (template == null) return;
-		System.out.println("ID: " + template.getId());
-		System.out.println("Label: " + template.getLabel());
-		System.out.println("\tRootConceptCode: " + template.getRootConceptCode());
-		System.out.println("\tCodingSchemeName: " + template.getCodingSchemeName());
-		System.out.println("\tCodingSchemeVersion: " + template.getCodingSchemeVersion());
-		System.out.println("\tAssociationName: " + template.getAssociationName());
-		System.out.println("\tDirection: " + template.getDirection());
-		System.out.println("\tLevel: " + template.getLevel());
-		System.out.println("\tDelimiter: " + template.getDelimiter());
-		System.out.println("\nColumn Data: ");
+		System.out.println("label:" + template.getLabel());
+		System.out.println("rootConceptCode:" + template.getRootConceptCode());
+		System.out.println("codingSchemeName:" + template.getCodingSchemeName());
+		System.out.println("codingSchemeVersion:" + template.getCodingSchemeVersion());
+		System.out.println("associationName:" + template.getAssociationName());
+		System.out.println("direction:" + template.getDirection());
+		System.out.println("level:" + template.getLevel());
+		System.out.println("delimiter:" + template.getDelimiter());
+		System.out.println("columnCollection:");
 	    Collection<ReportColumn> c = template.getColumnCollection();
 		Object[] a = c.toArray();
 		for (int i=0; i<a.length; i++) {
+			int j = i+1;
 			ReportColumn col = (ReportColumn) a[i];
-			System.out.println("\n(" + col.getColumnNumber() + ") " + "Id: " + col.getId());
-			System.out.println(
-			    "\tLabel: " + col.getLabel()
-			  + "\n\tFieldId: " + col.getFieldId()
-			  + "\n\tPropertyType: " + col.getPropertyType()
-			  + "\n\tPropertyName: " + col.getPropertyName()
-			  + "\n\tIsPreferred: " + col.getIsPreferred()
-			  + "\n\tRepresentationalForm: " + col.getRepresentationalForm()
-			  + "\n\tSource: " + col.getSource()
-			  + "\n\tQualifierName: " + col.getQualifierName()
-			  + "\n\tQualifierValue: " + col.getQualifierValue()
-			  + "\n\tDelimiter: " + col.getDelimiter()
-			  + "\n\tConditionalColumnId: " + col.getConditionalColumnId()
-			  );
+			System.out.println("\tcolumnNumber:" + j);
+			System.out.println("\tlabel:" + col.getLabel()
+			  + "\n\tfieldId:" + col.getFieldId()
+			  + "\n\tpropertyType:" + col.getPropertyType()
+			  + "\n\tpropertyName:" + col.getPropertyName()
+			  + "\n\tisPreferred:" + col.getIsPreferred()
+			  + "\n\trepresentationalForm:" + col.getRepresentationalForm()
+			  + "\n\tsource:" + col.getSource()
+			  + "\n\tqualifierName:" + col.getQualifierName()
+			  + "\n\tqualifierValue:" + col.getQualifierValue()
+			  + "\n\tdelimiter:" + col.getDelimiter()
+			  + "\n\tconditionalColumnId:" + col.getConditionalColumnId()
+			  + "\n");
 		}
 	}
 
+
+    public void dumpStandardReportTemplate(PrintWriter pw, StandardReportTemplate template) {
+		if (template == null) return;
+		pw.println("label:" + template.getLabel());
+		pw.println("rootConceptCode:" + template.getRootConceptCode());
+		pw.println("codingSchemeName:" + template.getCodingSchemeName());
+		pw.println("codingSchemeVersion:" + template.getCodingSchemeVersion());
+		pw.println("associationName:" + template.getAssociationName());
+		pw.println("direction:" + template.getDirection());
+		pw.println("level:" + template.getLevel());
+		pw.println("delimiter:" + template.getDelimiter());
+		pw.println("columnCollection:");
+	    Collection<ReportColumn> c = template.getColumnCollection();
+		Object[] a = c.toArray();
+		for (int i=0; i<a.length; i++) {
+			int j = i+1;
+			ReportColumn col = (ReportColumn) a[i];
+			pw.println("\tcolumnNumber:" + j);
+			pw.println("\tlabel:" + col.getLabel()
+			  + "\n\tfieldId:" + col.getFieldId()
+			  + "\n\tpropertyType:" + col.getPropertyType()
+			  + "\n\tpropertyName:" + col.getPropertyName()
+			  + "\n\tisPreferred:" + col.getIsPreferred()
+			  + "\n\trepresentationalForm:" + col.getRepresentationalForm()
+			  + "\n\tsource:" + col.getSource()
+			  + "\n\tqualifierName:" + col.getQualifierName()
+			  + "\n\tqualifierValue:" + col.getQualifierValue()
+			  + "\n\tdelimiter:" + col.getDelimiter()
+			  + "\n\tconditionalColumnId:" + col.getConditionalColumnId()
+			  + "\n");
+		}
+	}
 
     public Boolean generateStandardReport(String outputDir,
         String standardReportLabel, String uid, String emailAddress) {
