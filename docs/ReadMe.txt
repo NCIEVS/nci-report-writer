@@ -3,10 +3,16 @@ How to run the NCI ReportWriter without UI.
 
 Use the following program to retrieve all report template available in the database:
 <report writer installation dir>\software\ncireportwriter\test\src\java\gov\nih\nci\evs\reportwriter\test\StandardReportTemplateExporter.java
+The command line parameter is the directory name where template files will be generated.
+For example:
+   java -Xmx1300m -classpath %CLASSPATH% -DLG_CONFIG_FILE="C:\LexEVS6.3.0.RC1\resources\config\lbconfig.props" gov.nih.nci.evs.reportwriter.test.StandardReportTemplateExporter templates_dir
+
+NOTE: Change "C:\LexEVS6.3.0.RC1\resources\config\lbconfig.props" above to fit your LexEVS environment, 
+      if you are running using LexEVS local runtime; i'e', local mode.
 
 Then use the following program: 
 <report writer installation dir>\software\ncireportwriter\test\src\java\gov\nih\nci\evs\reportwriter\test\StandaloneReportGenerator.java
-to generate a new report in HTML, Excel, and ASCII formats.
+to generate new reports in HTML, Excel, and ASCII formats for eacj report template.
 
 The structure of the folder where these two programs will be running is the following:
 <Root Folder>
@@ -27,11 +33,7 @@ The structure of the folder where these two programs will be running is the foll
 |       ApplicationSecurityConfig.xml
 |       context.xml
 |       
-\---output
-        FDA_Quality_of_Matrics_Terminology__16.04d.txt
-        FDA_Quality_of_Matrics_Terminology__16.04d.xls
-        FDA_Quality_of_Matrics_Terminology__16.04d.htm
-        
+\---template_dir
 
 ==================================================================================
 Sample compile.bat:
@@ -59,7 +61,7 @@ set CLASSPATH=.
 set CLASSPATH=%CLASSPATH%;%lib%\*
 set CLASSPATH=%CLASSPATH%;%lib1%\*
 set CLASSPATH=%CLASSPATH%;%lib2%\*
-rem java -Xmx1300m -classpath %CLASSPATH% -DLG_CONFIG_FILE="C:\LexEVS6.3.0.RC1\resources\config\lbconfig.props" gov.nih.nci.evs.reportwriter.test.StandardReportTemplateExporter templates.dat
+rem java -Xmx1300m -classpath %CLASSPATH% -DLG_CONFIG_FILE="C:\LexEVS6.3.0.RC1\resources\config\lbconfig.props" gov.nih.nci.evs.reportwriter.test.StandardReportTemplateExporter template_dir
 java -Xmx1300m -classpath %CLASSPATH% -DLG_CONFIG_FILE="C:\LexEVS6.3.0.RC1\resources\config\lbconfig.props" gov.nih.nci.evs.reportwriter.test.StandaloneReportGenerator template.dat output
 set CLASSPATH=%OCP%
 
@@ -68,94 +70,122 @@ rem NOTE: Change "C:\LexEVS6.3.0.RC1\resources\config\lbconfig.props" to fit you
 ==================================================================================
 Sample Standard Report Template data file:
 
-label:FDA Quality of Matrics Terminology
-rootConceptCode:C123273
-codingSchemeName:NCI_Thesaurus
-codingSchemeVersion:16.04d
+label:CDISC ADaM Terminology
+rootConceptCode:C81222
+codingSchemeName:NCI Thesaurus
+codingSchemeVersion:11.09d
 associationName:Concept_In_Subset
-direction:source
-level:ALL
-delimiter:|
+direction:false
+level:-1
+delimiter:$
 columnCollection:
 	columnNumber:1
-	label:Source
-	fieldId:Associated Concept Property
-	propertyType:GENERIC
-	propertyName:Contributing_Source
-	isPreferred:
-	representationalForm:
-	source:
-	qualifierName:
-	qualifierValue:
-	delimiter:|
-	conditionalColumnId:
-	
-	columnNumber:2
-	label:Subset Code
-	fieldId:Associated Concept Code
-	propertyType:
-	propertyName:
-	isPreferred:
-	representationalForm:
-	source:
-	qualifierName:
-	qualifierValue:
-	delimiter:|
-	conditionalColumnId:
-
-	columnNumber:3
-	label:Subset Name
-	fieldId:Associated Concept Property
-	propertyType:PRESENTATION
-	propertyName:Preferred_Name
-	isPreferred:
-	representationalForm:
-	source:
-	qualifierName:
-	qualifierValue:
-	delimiter:|
-	conditionalColumnId:
-	
-	columnNumber:4
-	label:Concept Code
+	label:Code
 	fieldId:Code
 	propertyType:
 	propertyName:
-	isPreferred:
+	isPreferred:null
 	representationalForm:
 	source:
 	qualifierName:
 	qualifierValue:
 	delimiter:|
-	conditionalColumnId:
+	conditionalColumnId:-1
+
+	columnNumber:2
+	label:Codelist Code
+	fieldId:Associated Concept Code
+	propertyType:
+	propertyName:
+	isPreferred:null
+	representationalForm:
+	source:
+	qualifierName:
+	qualifierValue:
+	delimiter:|
+	conditionalColumnId:-1
+
+	columnNumber:3
+	label:Codelist Extensible (Yes/No)
+	fieldId:Associated Concept Property
+	propertyType:GENERIC
+	propertyName:Extensible_List
+	isPreferred:null
+	representationalForm:
+	source:
+	qualifierName:
+	qualifierValue:
+	delimiter:|
+	conditionalColumnId:-1
+
+	columnNumber:4
+	label:Codelist Name
+	fieldId:Associated Concept Property
+	propertyType:PRESENTATION
+	propertyName:FULL_SYN
+	isPreferred:null
+	representationalForm:SY
+	source:CDISC
+	qualifierName:
+	qualifierValue:
+	delimiter:|
+	conditionalColumnId:-1
 
 	columnNumber:5
-	label:Source PT
-	fieldId:Property
+	label:CDISC Submission Value
+	fieldId:CDISC Submission Value
 	propertyType:PRESENTATION
 	propertyName:FULL_SYN
-	isPreferred:
-	representationalForm:PT
-	source:FDA
-	qualifierName:subsource-name
-	qualifierValue:QM
+	isPreferred:null
+	representationalForm:
+	source:CDISC
+	qualifierName:
+	qualifierValue:
 	delimiter:|
-	conditionalColumnId:
-	
+	conditionalColumnId:-1
+
 	columnNumber:6
-	label:Source Synonym(s)
+	label:CDISC Synonym(s)
 	fieldId:Property
 	propertyType:PRESENTATION
 	propertyName:FULL_SYN
-	isPreferred:
+	isPreferred:null
 	representationalForm:SY
-	source:FDA
-	qualifierName:subsource-name
-	qualifierValue:QM
+	source:CDISC
+	qualifierName:
+	qualifierValue:
 	delimiter:|
-	conditionalColumnId:
+	conditionalColumnId:-1
+
+	columnNumber:7
+	label:CDISC Definition
+	fieldId:Property
+	propertyType:DEFINITION
+	propertyName:ALT_DEFINITION
+	isPreferred:null
+	representationalForm:
+	source:CDISC
+	qualifierName:
+	qualifierValue:
+	delimiter:|
+	conditionalColumnId:-1
+
+	columnNumber:8
+	label:NCI Preferred Term
+	fieldId:Property
+	propertyType:PRESENTATION
+	propertyName:FULL_SYN
+	isPreferred:null
+	representationalForm:PT
+	source:NCI
+	qualifierName:
+	qualifierValue:
+	delimiter:|
+	conditionalColumnId:-1
 
 ==================================================================================
 Note: All file in the config directory can be copied from the 
 <report writer installation dir>\software\ncireportwriter\conf
+
+Make sure the database connection parameters in hibernate.cfg are correct.
 

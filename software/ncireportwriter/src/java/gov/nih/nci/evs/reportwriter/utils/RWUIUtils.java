@@ -126,7 +126,6 @@ public class RWUIUtils { //implements Runnable {
 		template.setDirection(direction);
 		template.setLevel(level);
 		template.setDelimiter(delimiter);
-
         return template;
     }
 
@@ -190,8 +189,6 @@ public class RWUIUtils { //implements Runnable {
 					int n = t.indexOf(":");
 					String key = t.substring(0, n);
 					String value = t.substring(n+1, t.length());
-					//System.out.println(key + "-->" + value);
-
 					if (key.compareTo("label") == 0) {
 						if (value.length() > 0) {
 							template_label = value;
@@ -213,9 +210,9 @@ public class RWUIUtils { //implements Runnable {
 							associationName = value;
 					    }
 					} else if (key.compareTo("direction") == 0) {
-						if (value.compareTo("source") == 0) {
+						if (value.compareTo("source") == 0 || value.compareTo("false") == 0) {
 							direction = false;
-						} else if (value.compareTo("target") == 0) {
+						} else if (value.compareTo("target") == 0 || value.compareTo("true") == 0) {
 							direction = true;
 						}
 					} else if (key.compareTo("level") == 0) {
@@ -263,11 +260,11 @@ public class RWUIUtils { //implements Runnable {
 						}
 					} else if (key.compareTo("isPreferred") == 0) {
 						if (value.length() > 0) {
-						isPreferred = null;
+						    isPreferred = null;
 							if (value.length() > 0) {
 								if (value.compareTo("true") == 0) {
 									isPreferred = Boolean.TRUE;
-								} else if (value.compareTo("target") == 0) {
+								} else if (value.compareTo("false") == 0) {
 									isPreferred = Boolean.FALSE;
 								}
 							}
