@@ -202,8 +202,13 @@ public class RWUIUtils { //implements Runnable {
 							codingSchemeName = value;
 					    }
 					} else if (key.compareTo("codingSchemeVersion") == 0) {
-						if (value.length() > 0) {
-							codingSchemeVersion = value;
+						//KLO 05092106
+						if (!DataUtils.isNullOrBlank(DataUtils.NCIT_VERSION)) {
+							codingSchemeVersion = DataUtils.NCIT_VERSION;
+						} else {
+							if (value.length() > 0) {
+								codingSchemeVersion = value;
+							}
 					    }
 					} else if (key.compareTo("associationName") == 0) {
 						if (value.length() > 0) {
