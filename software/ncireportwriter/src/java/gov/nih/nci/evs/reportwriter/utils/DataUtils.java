@@ -88,7 +88,8 @@ public class DataUtils {
 
     static {
         setCodingSchemeMap();
-        NCIT_VERSION = getVocabularyVersionByTag("NCI_Thesaurus", "PRODUCTION");
+        //NCIT_VERSION = getVocabularyVersionByTag("NCI_Thesaurus", "PRODUCTION");
+        NCIT_VERSION = AppProperties.getInstance().getProperty(AppProperties.NCIT_VERSION);
     }
 
     public static List<SelectItem> getPropertyTypeList() {
