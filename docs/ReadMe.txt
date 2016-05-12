@@ -12,9 +12,11 @@ NOTE: Change "C:\LexEVS6.3.0.RC1\resources\config\lbconfig.props" above to fit y
 
 Then use the following program: 
 <report writer installation dir>\software\ncireportwriter\test\src\java\gov\nih\nci\evs\reportwriter\test\StandaloneReportGenerator.java
-to generate new reports in HTML, Excel, and ASCII formats for eacj report template.
+to generate new reports in HTML, Excel, and ASCII formats. 
+The program will accept two command line parameters. The first can either be a template file name, or the name of the folder containing
+all template files. 
 
-The structure of the folder where these two programs will be running is the following:
+The structure of the folder where these two programs would be running is the following:
 <Root Folder>
 |   compile.bat
 |   run.bat

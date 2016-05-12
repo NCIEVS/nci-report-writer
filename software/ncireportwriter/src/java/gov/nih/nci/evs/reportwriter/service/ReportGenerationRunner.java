@@ -1378,16 +1378,75 @@ public class ReportGenerationRunner { //implements Runnable {
 		return temporary_cols;
 	}
 
-	public Boolean generateStandardReport(String outputDir, String adminPassword, String templateFile, int[] ncitColumns) {
+	public Boolean generateStandardReport(String templateFile, String outputDir, String adminPassword) {
+		return generateStandardReport(templateFile, outputDir, adminPassword, null);
+	}
+
+	public Boolean generateStandardReport(String templateFile, String outputDir, String adminPassword, boolean useDefaultNcitColumns) {
+		if (useDefaultNcitColumns) {
+			RWUIUtils utils = new RWUIUtils();
+			StandardReportTemplate template = utils.loadStandardReportTemplate(templateFile);
+			Collection<ReportColumn> cc = template.getColumnCollection();
+			Object[] objs = null;
+			objs = cc.toArray();
+			int[] ncitColumns = new int[cc.size()];
+			for (int i=0; i<cc.size(); i++) {
+				ReportColumn rc = (ReportColumn) objs[i];
+				String fieldId = rc.getFieldId();
+				ncitColumns[i] = 0;
+				if (fieldId.endsWith("Concept Code")) {
+					ncitColumns[i] = 1; //the column is a NCIt code
+				}
+			}
+			return generateStandardReport(outputDir, adminPassword, template, ncitColumns);
+		} else {
+			return generateStandardReport(templateFile, outputDir, adminPassword, null);
+		}
+	}
+
+	public Boolean generateStandardReport(String templateFile, String outputDir, String adminPassword, int[] ncitColumns) {
 		RWUIUtils utils = new RWUIUtils();
 		StandardReportTemplate template = utils.loadStandardReportTemplate(templateFile);
-        if (ncitColumns == null) {
+		if (ncitColumns == null) {
 			Collection<ReportColumn> cc = template.getColumnCollection();
+			Object[] objs = null;
+			objs = cc.toArray();
 			ncitColumns = new int[cc.size()];
 			for (int i=0; i<cc.size(); i++) {
+				ReportColumn rc = (ReportColumn) objs[i];
+				String fieldId = rc.getFieldId();
 				ncitColumns[i] = 0;
 			}
 		}
-		return new ReportGenerationRunner().generateStandardReport(outputDir, adminPassword, template, ncitColumns);
+		return generateStandardReport(outputDir, adminPassword, template, ncitColumns);
+	}
+
+	public static List getFileCanonicalPathNamesInFolder(String folderName) {
+		List list = new ArrayList();
+		File folder = new File(folderName);
+		File[] listOfFiles = folder.listFiles();
+		try {
+			for (int i = 0; i < listOfFiles.length; i++) {
+				if (listOfFiles[i].isFile()) {
+					list.add(listOfFiles[i].getCanonicalPath());
+				}
+			}
+		} catch (Exception ex) {
+			ex.printStackTrace();
+		}
+		return list;
+	}
+
+
+	public void generateStandardReportInBatch(String input_dir, String output_dir, String adminPassword) {
+		List list = getFileCanonicalPathNamesInFolder(input_dir);
+		if (list == null || list.size() == 0) return;
+		for (int i=0; i<list.size(); i++) {
+			String templateFile = (String) list.get(i);
+			Boolean retval = generateStandardReport(templateFile, output_dir, adminPassword);
+			if (!retval) {
+				System.out.println("WARNING: Unable to generate report based on the template " + templateFile);
+			}
+		}
 	}
 }

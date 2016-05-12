@@ -32,18 +32,37 @@ import org.LexGrid.LexBIG.DataModel.Core.AssociatedConcept;
  */
 
 public class StandaloneReportGenerator {
-	public static void main(String[] args) {
-		String templateFile = args[0]; //"template.dat")
-		String outputDir = args[1]; //"output")
-		String adminPassword = "rwadmin";
-		RWUIUtils util = new RWUIUtils();
-		StandardReportTemplate template = util.loadStandardReportTemplate(templateFile);
-		util.dumpStandardReportTemplate(template);
-		Collection<ReportColumn> cc = template.getColumnCollection();
-		int[] ncitColumns = new int[cc.size()];
-		for (int i=0; i<cc.size(); i++) {
-			ncitColumns[i] = 0; // set to 1 if the column is a NCIt code
+	public static void dumpList(String label, List list) {
+		System.out.println(label);
+		for (int i=0; i<list.size(); i++) {
+			String filename = (String) list.get(i);
+			System.out.println(filename);
 		}
-		Boolean retval = new ReportGenerationRunner().generateStandardReport(outputDir, adminPassword, templateFile, ncitColumns);
+	}
+
+	public static void main(String[] args) {
+		String arg_0 = args[0];
+		String output_dir = args[1];
+		String adminPassword = args[2];
+        String currentDir = System.getProperty("user.dir");
+        System.out.println("Current working directory:" +currentDir);
+        String path = currentDir + File.separator + arg_0;
+        System.out.println("arg[0]: " + path);
+        File file = new File(path);
+        if (!file.exists()) {
+			System.out.println(path + " does not exist.");
+			System.exit(1);
+		}
+
+		ReportGenerationRunner runner = new ReportGenerationRunner();
+		if (file.isDirectory()) {
+			System.out.println("Tempalte folder: " + arg_0);
+			List list = runner.getFileCanonicalPathNamesInFolder(arg_0);
+			dumpList("Template files in folder " + arg_0, list);
+			new ReportGenerationRunner().generateStandardReportInBatch(path, output_dir, adminPassword);
+		} else {
+			System.out.println("Tempalte file: " + arg_0);
+			runner.generateStandardReport(path, output_dir, adminPassword);
+		}
 	}
 }
