@@ -1378,11 +1378,11 @@ public class ReportGenerationRunner { //implements Runnable {
 		return temporary_cols;
 	}
 
-	public Boolean generateStandardReport(String templateFile, String outputDir, String adminPassword) {
-		return generateStandardReport(templateFile, outputDir, adminPassword, null);
+	public Boolean generateStandardReport(String templateFile, String outputDir, String userId) {
+		return generateStandardReport(templateFile, outputDir, userId, null);
 	}
 
-	public Boolean generateStandardReport(String templateFile, String outputDir, String adminPassword, boolean useDefaultNcitColumns) {
+	public Boolean generateStandardReport(String templateFile, String outputDir, String userId, boolean useDefaultNcitColumns) {
 		if (useDefaultNcitColumns) {
 			RWUIUtils utils = new RWUIUtils();
 			StandardReportTemplate template = utils.loadStandardReportTemplate(templateFile);
@@ -1398,13 +1398,13 @@ public class ReportGenerationRunner { //implements Runnable {
 					ncitColumns[i] = 1; //the column is a NCIt code
 				}
 			}
-			return generateStandardReport(outputDir, adminPassword, template, ncitColumns);
+			return generateStandardReport(outputDir, userId, template, ncitColumns);
 		} else {
-			return generateStandardReport(templateFile, outputDir, adminPassword, null);
+			return generateStandardReport(templateFile, outputDir, userId, null);
 		}
 	}
 
-	public Boolean generateStandardReport(String templateFile, String outputDir, String adminPassword, int[] ncitColumns) {
+	public Boolean generateStandardReport(String templateFile, String outputDir, String userId, int[] ncitColumns) {
 		RWUIUtils utils = new RWUIUtils();
 		StandardReportTemplate template = utils.loadStandardReportTemplate(templateFile);
 		if (ncitColumns == null) {
@@ -1418,7 +1418,7 @@ public class ReportGenerationRunner { //implements Runnable {
 				ncitColumns[i] = 0;
 			}
 		}
-		return generateStandardReport(outputDir, adminPassword, template, ncitColumns);
+		return generateStandardReport(outputDir, userId, template, ncitColumns);
 	}
 
 	public static List getFileCanonicalPathNamesInFolder(String folderName) {
@@ -1438,12 +1438,12 @@ public class ReportGenerationRunner { //implements Runnable {
 	}
 
 
-	public void generateStandardReportInBatch(String input_dir, String output_dir, String adminPassword) {
+	public void generateStandardReportInBatch(String input_dir, String output_dir, String userId) {
 		List list = getFileCanonicalPathNamesInFolder(input_dir);
 		if (list == null || list.size() == 0) return;
 		for (int i=0; i<list.size(); i++) {
 			String templateFile = (String) list.get(i);
-			Boolean retval = generateStandardReport(templateFile, output_dir, adminPassword);
+			Boolean retval = generateStandardReport(templateFile, output_dir, userId);
 			if (!retval) {
 				System.out.println("WARNING: Unable to generate report based on the template " + templateFile);
 			}

@@ -43,7 +43,7 @@ public class StandaloneReportGenerator {
 	public static void main(String[] args) {
 		String arg_0 = args[0];
 		String output_dir = args[1];
-		String adminPassword = args[2];
+		String userId = args[2];
         String currentDir = System.getProperty("user.dir");
         System.out.println("Current working directory:" +currentDir);
         String path = currentDir + File.separator + arg_0;
@@ -59,10 +59,10 @@ public class StandaloneReportGenerator {
 			System.out.println("Tempalte folder: " + arg_0);
 			List list = runner.getFileCanonicalPathNamesInFolder(arg_0);
 			dumpList("Template files in folder " + arg_0, list);
-			new ReportGenerationRunner().generateStandardReportInBatch(path, output_dir, adminPassword);
+			new ReportGenerationRunner().generateStandardReportInBatch(path, output_dir, userId);
 		} else {
 			System.out.println("Tempalte file: " + arg_0);
-			runner.generateStandardReport(path, output_dir, adminPassword);
+			runner.generateStandardReport(path, output_dir, userId);
 		}
 	}
 }
