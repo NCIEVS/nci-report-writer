@@ -15,6 +15,7 @@ import gov.nih.nci.evs.reportwriter.formatter.*;
 
 import org.LexGrid.commonTypes.*;
 import org.LexGrid.concepts.*;
+import javax.faces.model.*;
 import org.apache.log4j.*;
 import org.lexgrid.valuesets.*;
 
@@ -441,6 +442,36 @@ public class RWUIUtils { //implements Runnable {
         }
         pw.close();
         pw = null;
+    }
+
+    public static List<SelectItem> getStandardReportTemplateList() {
+        List<SelectItem> _standardReportTemplateList = new ArrayList<SelectItem>();
+        try {
+            SDKClientUtil util = new SDKClientUtil();
+            String FQName =
+                "gov.nih.nci.evs.reportwriter.bean.StandardReportTemplate";
+
+            Object[] objs = util.search(FQName);
+            if (objs == null || objs.length == 0) {
+                return _standardReportTemplateList;
+			}
+            Vector<String> v = new Vector<String>();
+            for (int i = 0; i < objs.length; i++) {
+                StandardReportTemplate standardReportTemplate =
+                    (StandardReportTemplate) objs[i];
+                // standardReportTemplateList.add(new
+                // SelectItem(standardReportTemplate.getLabel()));
+                v.add(standardReportTemplate.getLabel());
+            }
+            SortUtils.quickSort(v);
+            for (int i = 0; i < v.size(); i++) {
+                String name = (String) v.elementAt(i);
+                _standardReportTemplateList.add(new SelectItem(name));
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return _standardReportTemplateList;
     }
 
 	public static void main(String[] args) {

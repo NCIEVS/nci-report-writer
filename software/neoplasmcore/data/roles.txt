@@ -1,0 +1,6 @@
+Disease_Has_Cytogenetic_Abnormality
+Disease_Has_Molecular_Abnormality
+Disease_Mapped_To_Gene
+Disease_May_Have_Cytogenetic_Abnormality
+Disease_May_Have_Molecular_Abnormality
+Gene_Involved_In_Pathogenesis_Of_Disease
