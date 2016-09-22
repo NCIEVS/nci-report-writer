@@ -3,6 +3,8 @@ package gov.nih.nci.evs.app.neopl;
 
 import com.opencsv.CSVReader;
 import gov.nih.nci.evs.browser.utils.*;
+import gov.nih.nci.evs.browser.bean.*;
+
 import java.io.*;
 import java.text.*;
 import java.util.*;
@@ -423,8 +425,8 @@ System.out.println("Totol number of selected_roles: " + selected_roles.size());
 		return true;
 	}
 
-
-	public Vector sortDelimitedStrings(Vector v) {
+/*
+	public Vector sortDelimitedStrs(Vector v) {
 
 
 
@@ -443,6 +445,7 @@ System.out.println("Totol number of selected_roles: " + selected_roles.size());
 		}
 		return v;
 	}
+*/
 
 	public void generateCSVFile(String inputfile, String csvfile) {
 		//String outputfile = getOutputfileName(inputfile);
@@ -505,7 +508,11 @@ System.out.println("Totol number of selected_roles: " + selected_roles.size());
 			}
 			//key_vec = SortUtils.quickSort(key_vec);
 //dumpVector("BEFORE SORT ", key_vec);
-			key_vec = sortDelimitedStrings(key_vec);
+			//key_vec = sortDelimitedStrs(key_vec);
+
+			key_vec = DelimitedStr.sort(key_vec, '$');
+
+
 //dumpVector("AFTER SORT ", key_vec);
 			for (int k=0; k<key_vec.size(); k++) {
 				key = (String) key_vec.elementAt(k);

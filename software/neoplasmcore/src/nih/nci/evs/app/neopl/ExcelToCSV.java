@@ -1,6 +1,5 @@
 package gov.nih.nci.evs.app.neopl;
 
-
 import com.opencsv.CSVReader;
 import gov.nih.nci.evs.browser.utils.*;
 import java.io.*;
@@ -412,9 +411,6 @@ public class ExcelToCSV {
 	}
 
     public static Vector extractColumnDataFromCSV(String csvfile, int column_index, boolean skip_heading) {
-		int n = csvfile.lastIndexOf(".");
-		String nextLine = null;
-		String outputfile = getOutputFile(csvfile, "txt");
 		Vector w = new Vector();
 		String[] values = null;
 		try {
@@ -432,118 +428,6 @@ public class ExcelToCSV {
 		}
 		return w;
 	}
-
-/*
-   Reader reader =
-      new InputStreamReader(
-         new FileInputStream(args[0]),"UTF-8");
-   BufferedReader fin = new BufferedReader(reader);
-   Writer writer =
-      new OutputStreamWriter(
-         new FileOutputStream(args[1]), "UTF-8");
-   BufferedWriter fout = new BufferedWriter(writer);
-*/
-
-
-/*
-    public static void debug(String csvfile) {
-		System.out.println("csvfile: " + csvfile);
-
-		BufferedReader fin = null;
-		BufferedWriter fout = null;
-		PrintWriter pw = null;
-
-		try {
-		    Reader reader =
-			  new InputStreamReader(
-				 new FileInputStream(csvfile),"UTF8");
-		    fin = new BufferedReader(reader);
-
-		    pw = new PrintWriter("DEBUG0.txt", "UTF-8");
-
-			String sCurrentLine;
-			while ((sCurrentLine = fin.readLine()) != null) {
-				//fout.write(sCurrentLine);
-				//fout.newLine();
-				pw.println(sCurrentLine);
-			}
-
-
-		} catch (Exception ex) {
-			ex.printStackTrace();
-
-		} finally {
-			try {
-				if (fin != null) fin.close();
-				//if (fout != null) fout.close();
-				pw.close();
-			} catch (IOException ex) {
-				ex.printStackTrace();
-			}
-		}
-	}
-
-        FileWriter fw = null;
-        BufferedWriter bw = null;
-        ArrayList<String> line = null;
-        StringBuffer buffer = null;
-        String csvLineElement = null;
-        try {
-            fw = new FileWriter(file);
-            bw = new BufferedWriter(fw);
-
-            //bw = new BufferedWriter
-            //    (new OutputStreamWriter(new FileOutputStream(file),"UTF-8"));
-
-            if (header != null) {
-				bw.write(header);
-				bw.newLine();
-			}
-
-
-
-    public static void debug(String csvfile) {
-		System.out.println("csvfile: " + csvfile);
-		PrintWriter pw = null;
-
-        FileWriter fw = null;
-        BufferedWriter bw = null;
-
-
-		try {
-            fw = new FileWriter(new File("DEBUG0.txt"));
-            bw = new BufferedWriter(fw);
-
-            Vector v = FileUtils.readFile(csvfile);
-
-		    //pw = new PrintWriter("DEBUG0.txt", "UTF-8");
-
-            for (int i=0; i<v.size(); i++) {
-				String line = (String) v.elementAt(i);
-
-				bw.write(line);
-				bw.newLine();
-
-				//pw.println(line);
-			}
-
-
-		} catch (Exception ex) {
-			ex.printStackTrace();
-
-		} finally {
-			try {
-				//if (fin != null) fin.close();
-				//if (fout != null) fout.close();
-				//pw.close();
-				bw.close();
-			} catch (Exception ex) {
-				ex.printStackTrace();
-			}
-		}
-	}
-*/
-
 
     public void debug(String excelfile) {
 		System.out.println("excelfile: " + excelfile);

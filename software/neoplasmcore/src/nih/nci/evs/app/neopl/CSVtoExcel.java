@@ -629,11 +629,12 @@ Source Term
 				nextLine = (String) data_vec.elementAt(k);
 				int k1 = k+1;
 				line = toArray(nextLine);
-                if (lcv % PAGE_SIZE == 0) {
+                //if (lcv % PAGE_SIZE == 0) {
+				if (lcv == 0) {
 					r = 0;
 					String sheetLabel = SHEET_LABEL;
 					if (size > PAGE_SIZE) {
-					    sheetLabel = sheetLabel + " (Page " + page_num + ")";
+					    sheetLabel = sheetLabel;// + " (Page " + page_num + ")";
 					}
 					sheet = wb.createSheet(sheetLabel);
 
@@ -650,8 +651,9 @@ Source Term
 					}
 					sheet.createFreezePane(0,1); // this will freeze the header row
 					page_num++;
+				}
 
-				} //else {
+
 				String s4 = line[4];
 				if (s4.compareTo("NCI") == 0) {
 					w.add("NCI Line number: " + r);
@@ -659,10 +661,6 @@ Source Term
 					r++;
 					row = sheet.createRow((short) r);
 					row_count++;
-
-					row = sheet.createRow((short) r);
-					row_count++;
-
 					for (int i=0; i<HEADINGS.length; i++) {
 						cell = row.createCell(i);
 						int codeCol = codeColumn[i];
@@ -690,8 +688,8 @@ Source Term
 							}
 						}
 					}
-				}
-			    //}
+
+			    }
 			    lcv++;
 			}
 

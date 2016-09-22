@@ -129,9 +129,15 @@ public class SortComparator implements Comparator<Object> {
             if (sort_option == SORT_BY_CODE)
                 return node.getCode();
             return node.getEntityDescription();
-
+/*
         } else if (c instanceof DelimitedString) {
 			DelimitedString s = (DelimitedString) c;
+			int sortIndex = s.getSortIndex();
+			return (String) s.getValues().elementAt(sortIndex);
+		}
+*/
+        } else if (c instanceof DelimitedStr) {
+			DelimitedStr s = (DelimitedStr) c;
 			int sortIndex = s.getSortIndex();
 			return (String) s.getValues().elementAt(sortIndex);
 		}

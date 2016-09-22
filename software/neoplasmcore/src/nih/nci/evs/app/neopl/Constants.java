@@ -72,6 +72,8 @@ public class Constants {
 		public static final String HEADING_LINE = "\"NCIt Code\",\"NCIt Preferred Term\",\"NCIm CUI\",\"NCIm Preferred Name\",\"NCIm Source\",\"Term Type\",\"Source Code\",\"Source Term\"";
 	    public static final String HEADING_STR = "\"Code\",\"Preferred Term\",\"Relationship\",\"Code\",\"Preferred Term\"";
 
+	    public static final String VALUESET_HEADING_STR = "\"Code\",\"Preferred Term\",\"Synonyms\",\"Definition\",\"Neoplastic Status\"";
+
 		public static final String HIERARCHY_FILE_PREFIX = "Neoplasm_Core_Hierarchy_";
 		public static final String HIERARCHY_FILE_PREFIX_2 = "Neoplasm_Core_Hierarchy_By_Neoplastic_Status_";
 		public static final String HIERARCHY_FILE_PREFIX_2_PLUS = "Neoplasm_Core_Hierarchy_By_Neoplastic_Status_Plus_";

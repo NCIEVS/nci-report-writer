@@ -1,6 +1,5 @@
 package gov.nih.nci.evs.app.neopl;
 
-
 import gov.nih.nci.evs.browser.common.*;
 import gov.nih.nci.evs.browser.utils.*;
 import gov.nih.nci.evs.security.SecurityToken;
@@ -132,12 +131,39 @@ public class NeoplasmCoreMappingGenerator {
 		return t;
 	}
 
+	public static void addValueSetHeadingLine(String valueSetCSVFile) {
+		String VALUESET_HEADING_STR = "\"Code\",\"Preferred Term\",\"Synonyms\",\"Definition\",\"Neoplastic Status\"";
+
+		Vector v = gov.nih.nci.evs.app.neopl.FileUtils.readFile(valueSetCSVFile);
+		PrintWriter pw = null;
+		try {
+			pw = new PrintWriter(valueSetCSVFile, "UTF-8");
+			pw.println(VALUESET_HEADING_STR);
+			for (int i=0; i<v.size(); i++) {
+			    String t = (String) v.elementAt(i);
+			    pw.println(t);
+			}
+		} catch (Exception ex) {
+
+		} finally {
+			try {
+				pw.close();
+				//System.out.println("Output file " + outputfile + " generated.");
+			} catch (Exception ex) {
+				ex.printStackTrace();
+			}
+		}
+	}
+
 
     public static void run(String valueSetXLSFile, String valueSetCSVFile) {
 		boolean test_mode = false;
         try {
             ExcelToCSV converter = new ExcelToCSV();
             converter.convertExcelToCSV(valueSetXLSFile, valueSetCSVFile);
+            System.out.println("addValueSetHeadingLine ...");
+            addValueSetHeadingLine(valueSetCSVFile);
+            System.out.println("Done addValueSetHeadingLine ...");
 		} catch (Exception ex) {
 			ex.printStackTrace();
 		}
@@ -146,28 +172,33 @@ public class NeoplasmCoreMappingGenerator {
 		System.out.println(ncit_version);
 
 		LexBIGService lbSvc = RemoteServerUtil.createLexBIGService();
-		CodingSchemeUtils util = new CodingSchemeUtils(lbSvc);
+		gov.nih.nci.evs.app.neopl.CodingSchemeUtils util = new gov.nih.nci.evs.app.neopl.CodingSchemeUtils(lbSvc);
 		util.generateLocalNameMap("localNameMap.txt");
 
         String title = "Core Mappings: NCIm Terms";
         String label = "NCIt Neoplasm Core Mappings to NCIm Source Terms";
-        String date = StringUtils.getToday("YYYY-MM-dd");
-        String neoplasmCore2NCImXLS = Constants.MAPPING_FILE_PREFIX + date + ".xls";
-        String neoplasmCore2NCImCSV = Constants.MAPPING_FILE_PREFIX + date + ".csv";
-        String neoplasmCore2NCImHTML = Constants.MAPPING_FILE_PREFIX + date + ".html";
-        String neoplasmCore2NCImTXT = Constants.MAPPING_FILE_PREFIX + date + ".txt";
-        String neoplasmCore2NCImSRC = Constants.MAPPING_FILE_PREFIX + date + "_wrk.txt";
+        String date = gov.nih.nci.evs.app.neopl.StringUtils.getToday("YYYY-MM-dd");
+        String neoplasmCore2NCImXLS = gov.nih.nci.evs.app.neopl.Constants.MAPPING_FILE_PREFIX + date + ".xls";
+        String neoplasmCore2NCImCSV = gov.nih.nci.evs.app.neopl.Constants.MAPPING_FILE_PREFIX + date + ".csv";
+        String neoplasmCore2NCImHTML = gov.nih.nci.evs.app.neopl.Constants.MAPPING_FILE_PREFIX + date + ".html";
+        String neoplasmCore2NCImTXT = gov.nih.nci.evs.app.neopl.Constants.MAPPING_FILE_PREFIX + date + ".txt";
+        String neoplasmCore2NCImSRC = gov.nih.nci.evs.app.neopl.Constants.MAPPING_FILE_PREFIX + date + "_wrk.txt";
         String outputfile = neoplasmCore2NCImXLS;
         int n = 0;
+
 		HashMap code2NameHashMap = new HashMap();
-		Vector codes = ExcelToCSV.extractColumnDataFromCSV(valueSetCSVFile, 0);
-		Vector names = ExcelToCSV.extractColumnDataFromCSV(valueSetCSVFile, 1);
+		int column_index = 0;
+		boolean skip_heading = true;
+		Vector codes = ExcelToCSV.extractColumnDataFromCSV(valueSetCSVFile, column_index, skip_heading);
+		column_index = 1;
+		Vector names = ExcelToCSV.extractColumnDataFromCSV(valueSetCSVFile, column_index, skip_heading);
 		System.out.println("codes.size(): " + codes.size());
 		for (int i=0; i<codes.size(); i++) {
 			String code = (String) codes.elementAt(i);
 			String name = (String) names.elementAt(i);
 			int j = i+1;
 			code2NameHashMap.put(code, name);
+			//System.out.println("(" + j + ")" + code + " --> " + name);
 		}
 
 		if (test_mode) {
@@ -183,11 +214,29 @@ public class NeoplasmCoreMappingGenerator {
 
 		NeoplasmCore2NCIm test = new NeoplasmCore2NCIm(lbSvc);
 		test.setCode2NameHashMap(code2NameHashMap);
-		Vector v = test.getMappingData(codes);
 
-		for (int k=0; k<v.size(); k++) {
-			String t = (String) v.elementAt(k);
-			System.out.println(t);
+		long ms = System.currentTimeMillis();
+		Vector v = test.getMappingData(codes);
+		System.out.println("Total getMappingData run time (ms): " + (System.currentTimeMillis() - ms));
+
+
+		PrintWriter pw1 = null;
+		String mapping_file = "mapping_" + date + ".txt";
+		try {
+			pw1 = new PrintWriter(mapping_file, "UTF-8");
+			for (int k=0; k<v.size(); k++) {
+				String t = (String) v.elementAt(k);
+				pw1.println(t);
+			}
+		} catch (Exception ex) {
+
+		} finally {
+			try {
+				pw1.close();
+				System.out.println("Output file " + mapping_file + " generated.");
+			} catch (Exception ex) {
+				ex.printStackTrace();
+			}
 		}
 
         int[] sort_options = new int[4];
@@ -231,8 +280,7 @@ public class NeoplasmCoreMappingGenerator {
         MappingHyperlinkUtils mappingHyperlinkUtils = new MappingHyperlinkUtils();
         mappingHyperlinkUtils.setStringReplacement("src=\"images/", "src=\"");
         mappingHyperlinkUtils.run(neoplasmCore2NCImSRC, neoplasmCore2NCImHTML);
-	}
-
+    }
 
     public static void main(String[] args) {
 		boolean test_mode = false;
