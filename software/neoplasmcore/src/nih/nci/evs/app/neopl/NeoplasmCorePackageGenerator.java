@@ -104,7 +104,8 @@ public class NeoplasmCorePackageGenerator {
 
 	}
 
-	public static void run(String owlfile, String valueSetXLSFile) {
+
+	public static void run(String owlfile, String valueSetXLSFile, boolean run_parsor, boolean run_mapping, boolean run_appl) {
 		int n = valueSetXLSFile.lastIndexOf(".");
 		String valueSetCSVFile = valueSetXLSFile.substring(0, n) + ".csv";
 		n = owlfile.lastIndexOf("_");
@@ -117,16 +118,61 @@ public class NeoplasmCorePackageGenerator {
 		System.out.println("valueSetCSVFile: " + valueSetCSVFile);
 		System.out.println("parent_child_file: " + parent_child_file);
 
-		new OWLParserRunner(owlfile).run();
-		NeoplasmCoreMappingGenerator.run(valueSetXLSFile, valueSetCSVFile);
-		NeoplasmCoreApplication.run(valueSetCSVFile, owlfile, parent_child_file);
+        if (run_parsor) {
+			new OWLParserRunner(owlfile).run();
+	    } else {
+			System.out.println("Skip OWLParserRunner...");
+		}
+
+	    if (run_mapping) {
+			NeoplasmCoreMappingGenerator.run(valueSetXLSFile, valueSetCSVFile);
+	    } else {
+			System.out.println("Skip NeoplasmCoreMappingGenerator...");
+		}
+
+	    if (run_appl) {
+			NeoplasmCoreApplication.run(valueSetCSVFile, owlfile, parent_child_file);
+		} else {
+			System.out.println("Skip NeoplasmCoreApplication...");
+		}
+		System.out.println("PackagingUtils...");
 		PackagingUtils.run();
+	}
+
+	public static void run(String owlfile, String valueSetXLSFile) {
+		run(owlfile, valueSetXLSFile, true, true, true);
 	}
 
     public static void main(String[] args) throws IOException {
 		String owlfile = args[0]; //ThesaurusInferred_16.06d.owl
 		String valueSetXLSFile = args[1]; //Neoplasm_Core_16.07d.xls
-        run(owlfile, valueSetXLSFile);
+		//boolean run_parsor, boolean run_mapping, boolean run_appl
+		boolean run_parsor = true;
+		boolean run_mapping = true;
+		boolean run_appl = true;
+		if (args.length > 2) {
+			String run_parser_str = args[2];
+			if (run_parser_str.compareToIgnoreCase("false") == 0) {
+				run_parsor = false;
+
+			}
+		}
+		if (args.length > 3) {
+			String run_mapping_str = args[3];
+			if (run_mapping_str.compareToIgnoreCase("false") == 0) {
+				run_mapping = false;
+			}
+		}
+		if (args.length > 4) {
+			String run_appl_str = args[4];
+			if (run_appl_str.compareToIgnoreCase("false") == 0) {
+				run_appl = false;
+			}
+		}
+		System.out.println("Run parser? " + run_parsor);
+		System.out.println("Run mapping? " + run_mapping);
+		System.out.println("Run appl? " + run_appl);
+        run(owlfile, valueSetXLSFile, run_parsor, run_mapping, run_appl);
 	}
 
 }
