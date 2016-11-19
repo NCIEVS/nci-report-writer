@@ -91,7 +91,7 @@ public class HierarchyHelper {
 	}
 
     public HierarchyHelper(Vector v) {
-       this.rel_vec = v;
+        this.rel_vec = v;
         this.format = FORMAT_PARENT_CHILD;
         initialize(v, format);
 	}
@@ -169,7 +169,7 @@ public class HierarchyHelper {
 
 
 	public void load_parent_child_rel(String filename) {
-		this.rel_vec = FileUtils.readFile(filename);
+		this.rel_vec = gov.nih.nci.evs.app.neopl.FileUtils.readFile(filename);
 		System.out.println("parent_child_rel size: " + this.rel_vec.size());
 	}
 
@@ -187,7 +187,7 @@ public class HierarchyHelper {
 		HashMap label_hmap = new HashMap();
 		for (int i=0; i<label_vec.size(); i++) {
 			String t = (String) label_vec.elementAt(i);
-			Vector u = StringUtils.parseData(t);
+			Vector u = gov.nih.nci.evs.app.neopl.StringUtils.parseData(t);
 			String code = (String) u.elementAt(0);
 			String name = (String) u.elementAt(1);
 			label_hmap.put(code, name);
@@ -236,7 +236,7 @@ public class HierarchyHelper {
 				roots.add(s);
 			}
 		}
-		return SortUtils.quickSort(roots);
+		return gov.nih.nci.evs.app.neopl.SortUtils.quickSort(roots);
 	}
 
 	public Vector findLeaves(HashMap _parent2childcodesMap) {
@@ -272,7 +272,7 @@ public class HierarchyHelper {
 				leaf_nodes.add(s);
 			}
 		}
-		return SortUtils.quickSort(leaf_nodes);
+		return gov.nih.nci.evs.app.neopl.SortUtils.quickSort(leaf_nodes);
 	}
 
 
@@ -286,7 +286,7 @@ public class HierarchyHelper {
 		HashMap parent2childcodesMap = new HashMap();
         for (int i=0; i<w.size(); i++) {
 			String t = (String) w.elementAt(i);
-			Vector u = StringUtils.parseData(t);
+			Vector u = gov.nih.nci.evs.app.neopl.StringUtils.parseData(t);
 			String parent_code = null;
 			String child_code = null;
 			if (format == FORMAT_PARENT_CHILD) {
@@ -325,7 +325,7 @@ public class HierarchyHelper {
 		HashMap label_hmap = new HashMap();
         for (int i=0; i<w.size(); i++) {
 			String t = (String) w.elementAt(i);
-			Vector u = StringUtils.parseData(t);
+			Vector u = gov.nih.nci.evs.app.neopl.StringUtils.parseData(t);
 			if (u.size() == 2) {
 				String code = (String) u.elementAt(0);
 				String label = (String) u.elementAt(1);
@@ -432,10 +432,28 @@ public class HierarchyHelper {
 		if (roots == null) {
 			findRootAndLeafNodes();
 		}
+
+		Vector label_vec = new Vector();
+		HashMap label2codeMap = new HashMap();
+		for (int i=0; i<roots.size(); i++) {
+			String root = (String) roots.elementAt(i);
+			String label = getLabel(root);
+			label2codeMap.put(label, root);
+			label_vec.add(label);
+		}
+		label_vec = gov.nih.nci.evs.app.neopl.SortUtils.quickSort(label_vec);
+		/*
 		for (int i=0; i<roots.size(); i++) {
 			String root = (String) roots.elementAt(i);
 			printTree(pw, root, 0);
 		}
+		*/
+		for (int i=0; i<label_vec.size(); i++) {
+			String label = (String) label_vec.elementAt(i);
+			String code = (String) label2codeMap.get(label);
+			printTree(pw, code, 0);
+		}
+
 	}
 
 	public void printTree(PrintWriter pw, String code, int level) {
@@ -451,29 +469,51 @@ public class HierarchyHelper {
 		}
 
 		Vector child_codes = getSubclassCodes(code);
+        if (child_codes != null && child_codes.size() > 0) {
+			Vector label_vec = new Vector();
+			HashMap label2codeMap = new HashMap();
+			for (int i=0; i<child_codes.size(); i++) {
+				String root = (String) child_codes.elementAt(i);
+				label = getLabel(root);
+				label2codeMap.put(label, root);
+				label_vec.add(label);
+			}
+			label_vec = gov.nih.nci.evs.app.neopl.SortUtils.quickSort(label_vec);
+
+			for (int i=0; i<label_vec.size(); i++) {
+				label = (String) label_vec.elementAt(i);
+				String child_code = (String) label2codeMap.get(label);
+				printTree(pw, child_code, level+1);
+			}
+		}
+
+
+		/*
 		if (child_codes != null && child_codes.size() > 0) {
+			//child_codes = gov.nih.nci.evs.app.neopl.SortUtils.quickSort(child_codes);
 			for (int i=0; i<child_codes.size(); i++) {
 				String child_code = (String) child_codes.elementAt(i);
 				printTree(pw, child_code, level+1);
 			}
 		}
+		*/
 	}
 
 
 
 
     public static void main(String[] args) {
-		Vector v = FileUtils.readFile("tvs_rel.txt");
+		Vector v = gov.nih.nci.evs.app.neopl.FileUtils.readFile("tvs_rel.txt");
 		HierarchyHelper test = new HierarchyHelper(v, 2);
 		Vector roots = test.getRoots();
-		StringUtils.dumpVector("roots", roots);
+		gov.nih.nci.evs.app.neopl.StringUtils.dumpVector("roots", roots);
 		Vector leaves = test.getLeaves();
-		StringUtils.dumpVector("leaves", leaves);
+		gov.nih.nci.evs.app.neopl.StringUtils.dumpVector("leaves", leaves);
 
 		for (int i=0; i<roots.size(); i++) {
 			String root = (String) roots.elementAt(i);
 			Vector w = test.getTransitiveClosure(root);
-			StringUtils.dumpVector("\n" + root, w);
+			gov.nih.nci.evs.app.neopl.StringUtils.dumpVector("\n" + root, w);
 		}
 		test.printTree();
 	}
