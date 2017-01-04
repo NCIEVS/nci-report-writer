@@ -253,7 +253,7 @@ public class PackagingUtils {
     }
 
     public static boolean fileExists(String filename) {
-		File file = new File("foo");
+		File file = new File(filename);
 		if (file.exists()) {
 			return true;
 		} else {

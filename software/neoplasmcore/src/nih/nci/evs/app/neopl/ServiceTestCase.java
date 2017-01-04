@@ -1,6 +1,5 @@
 package gov.nih.nci.evs.app.neopl;
 
-
 import java.io.File;
 import java.io.FileInputStream;
 import java.util.Iterator;
@@ -140,12 +139,9 @@ abstract public class ServiceTestCase extends TestCase{
 	private static void parseXMLFile(String filename)
 	{
 		DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
-
 		try{
 			DocumentBuilder db = dbf.newDocumentBuilder();
-
 			dom=db.parse(filename);
-
 		}
 		catch (Exception e){
 			e.printStackTrace();
