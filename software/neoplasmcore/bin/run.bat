@@ -11,7 +11,7 @@ set CLASSPATH=%CLASSPATH%;%lib3%\*
 set CLASSPATH=%CLASSPATH%;%lib4%\*
 
 copy data\*.* .
-java -Xmx1300m -classpath %CLASSPATH% gov.nih.nci.evs.app.neopl.NeoplasmCorePackageGenerator ThesaurusInferred_16.08e.owl Neoplasm_Core_16.08e.xls
+java -Xmx1300m -classpath %CLASSPATH% gov.nih.nci.evs.app.neopl.NeoplasmCorePackageGenerator ThesaurusInferred_16.12d.owl Neoplasm_Core_16.12d.xls
 
 set CLASSPATH=%OCP%
 
