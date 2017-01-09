@@ -161,9 +161,18 @@ public class NeoplasmCoreMappingGenerator {
         try {
             ExcelToCSV converter = new ExcelToCSV();
             converter.convertExcelToCSV(valueSetXLSFile, valueSetCSVFile);
+            System.out.println("Generating value set CSV file " + valueSetCSVFile);
             System.out.println("addValueSetHeadingLine ...");
             addValueSetHeadingLine(valueSetCSVFile);
             System.out.println("Done addValueSetHeadingLine ...");
+
+			int n = valueSetXLSFile.lastIndexOf(".");
+			String textFile = valueSetXLSFile.substring(0, n) + ".txt";
+			System.out.println("Generating value set text file " + textFile);
+			String 	heading = "Code\tPreferred Term\tSynonyms\tDefinition\tNeoplastic Status";
+			converter.toDelimitedFile(valueSetXLSFile, textFile, heading);
+
+
 		} catch (Exception ex) {
 			ex.printStackTrace();
 		}

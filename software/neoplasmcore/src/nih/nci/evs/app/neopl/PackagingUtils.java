@@ -261,8 +261,11 @@ public class PackagingUtils {
 		}
 	}
 
-
     public static void run() {
+		run(null);
+	}
+
+    public static void run(String valueSetXLSFile) {
 		String curr_dir = getCurrentWorkingDirectory();
 		System.out.println("Current dir: " + curr_dir);
         String today = StringUtils.getToday("yyyy-MM-dd");
@@ -309,6 +312,14 @@ public class PackagingUtils {
 				//System.out.println("(" + knt + ") " + filename);
 				String to_file = pathName + File.separator + filename;
 				copyFile(filename, to_file);
+			} else if (valueSetXLSFile != null) {
+				int n = valueSetXLSFile.lastIndexOf(".");
+				String valueSetTxtFile = valueSetXLSFile.substring(0, n) + ".txt";
+				if (filename.compareTo(valueSetTxtFile) == 0) {
+					knt++;
+					String to_file = pathName + File.separator + filename;
+					copyFile(filename, to_file);
+				}
 			}
 		}
 
