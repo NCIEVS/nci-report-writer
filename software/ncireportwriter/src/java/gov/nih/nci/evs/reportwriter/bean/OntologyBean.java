@@ -502,11 +502,20 @@ public class OntologyBean // extends BaseBean
          Vector v0 = new Vector();
 
          v0.add("Code");
-         v0.add("Property");
-         v0.add("Property Qualifier");
 
+         v0.add("1st CDRH Parent Code");
+         v0.add("1st NICHD Parent Code");
+         v0.add("2nd NICHD Parent Code");
          v0.add("Associated Concept Code");
+
+         v0.add("Property");
+         v0.add("1st CDRH Parent Property");
+         v0.add("1st NICHD Parent Property");
+         v0.add("2nd NICHD Parent Property");
          v0.add("Associated Concept Property");
+
+         v0.add("Property Qualifier");
+         v0.add("1st CDRH Parent Property Qualifier");
          v0.add("Associated Concept Property Qualifier");
 
          if (_selectedOntology == null) {
