@@ -358,6 +358,7 @@ L-->
              flatten="true" includeEmptyDirs="no" filtering="true">
             <filterset>
                 <filter token="ncit.url" value="${ncit.url}"/>
+                <filter token="ncit.version" value="${ncit.version}"/>
                 <filter token="lex.evs.api.url" value="${lex.evs.api.url}"/>
                 <filter token="lg.config.file" value="${lg.config.file}"/>
                 <filter token="application.data.path" value="${application.data.path}"/>

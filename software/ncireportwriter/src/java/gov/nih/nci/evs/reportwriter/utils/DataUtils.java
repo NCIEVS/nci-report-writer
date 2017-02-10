@@ -7,6 +7,10 @@
 
 package gov.nih.nci.evs.reportwriter.utils;
 
+import gov.nih.nci.evs.browser.utils.*;
+import org.lexgrid.resolvedvalueset.LexEVSResolvedValueSetService;
+import org.lexgrid.resolvedvalueset.impl.LexEVSResolvedValueSetServiceImpl;
+
 import java.io.*;
 import java.util.*;
 
@@ -86,11 +90,71 @@ public class DataUtils {
 
     public static String NCIT_VERSION = null;//AppProperties.getInstance().getProperty(AppProperties.NCIT_VERSION);
 
+    public static Boolean VALUE_SET_TAB_AVAILABLE = null;
+    private static HashMap resovedValueSetHashMap = null;
+
     static {
+
+		VALUE_SET_TAB_AVAILABLE = isCodingSchemeAvailable(gov.nih.nci.evs.browser.common.Constants.TERMINOLOGY_VALUE_SET_NAME);
+
+        if (VALUE_SET_TAB_AVAILABLE != null && VALUE_SET_TAB_AVAILABLE.equals(Boolean.TRUE)) {
+			System.out.println("getResolvedValueSetHashMap ...");
+			resovedValueSetHashMap = getResolvedValueSetHashMap();
+		}
+
         setCodingSchemeMap();
         //NCIT_VERSION = getVocabularyVersionByTag("NCI_Thesaurus", "PRODUCTION");
         NCIT_VERSION = AppProperties.getInstance().getProperty(AppProperties.NCIT_VERSION);
     }
+
+    public static Boolean isCodingSchemeAvailable(String cs_name) {
+
+		LexBIGService lbSvc = null;
+		try {
+			lbSvc = RemoteServerUtil.createLexBIGService();
+		    return new CodingSchemeDataUtils(lbSvc).isCodingSchemeAvailable(cs_name);
+		} catch (Exception ex) {
+			ex.printStackTrace();
+		}
+		return Boolean.FALSE;
+    }
+
+
+    public static HashMap getResolvedValueSetHashMap() {
+		if (resovedValueSetHashMap != null) return resovedValueSetHashMap;
+		HashMap hmap = new HashMap();
+		try {
+			long ms = System.currentTimeMillis();
+			LexBIGService lbs = RemoteServerUtil.createLexBIGService();
+			List<CodingScheme> choices = new ArrayList<CodingScheme>();
+			LexEVSResolvedValueSetService lrvs = new LexEVSResolvedValueSetServiceImpl(lbs);
+			List<CodingScheme> schemes = lrvs.listAllResolvedValueSets();
+			for (int i = 0; i < schemes.size(); i++) {
+				CodingScheme cs = schemes.get(i);
+				int j = i+1;
+				String key = cs.getCodingSchemeURI();
+				String value = cs.getRepresentsVersion();
+				Vector v = new Vector();
+				if (hmap.containsKey(key)) {
+					v = (Vector) hmap.get(key);
+				}
+				v.add(value);
+				hmap.put(key, v);
+			}
+			System.out.println("Total run time (ms): " + (System.currentTimeMillis() - ms));
+
+		} catch (Exception ex) {
+			ex.printStackTrace();
+		}
+		return hmap;
+    }
+
+	public static boolean isResolvedValueSetCodingScheme(CodingScheme cs) {
+		if (resovedValueSetHashMap == null) {
+			resovedValueSetHashMap = getResolvedValueSetHashMap();
+		}
+		return resovedValueSetHashMap.containsKey(cs.getCodingSchemeURI());
+	}
 
     public static List<SelectItem> getPropertyTypeList() {
         if (_propertyTypeList == null) {
@@ -223,13 +287,15 @@ public class DataUtils {
                     j++;
                 }
 
-                _codingSchemeMap.put(formalName, scheme);
-                String value = getCSNVKey(formalName, representsVersion);
-                _ontologies.add(new SelectItem(value, value));
-                CSNVInfo info = new CSNVInfo();
-                info.codingSchemeName = formalName;
-                info.version = representsVersion;
-                _csnv2InfoMap.put(value, info);
+                if (!isResolvedValueSetCodingScheme(scheme)) {
+					_codingSchemeMap.put(formalName, scheme);
+					String value = getCSNVKey(formalName, representsVersion);
+					_ontologies.add(new SelectItem(value, value));
+					CSNVInfo info = new CSNVInfo();
+					info.codingSchemeName = formalName;
+					info.version = representsVersion;
+					_csnv2InfoMap.put(value, info);
+			    }
             }
             SortUtils.quickSort(_ontologies);
         } catch (Exception e) {
@@ -326,7 +392,7 @@ public class DataUtils {
         SupportedAssociation[] assos =
             scheme.getMappings().getSupportedAssociation();
         _logger.debug("");
-        _logger.debug(StringUtils.SEPARATOR);
+        _logger.debug(gov.nih.nci.evs.utils.StringUtils.SEPARATOR);
         _logger.debug("List of supported associations:");
         for (int i = 0; i < assos.length; i++) {
             SupportedAssociation sa = (SupportedAssociation) assos[i];
@@ -445,7 +511,7 @@ public class DataUtils {
                 scheme.getMappings().getSupportedRepresentationalForm();
             boolean debug = true;
             if (debug) {
-                _logger.debug(StringUtils.SEPARATOR);
+                _logger.debug(gov.nih.nci.evs.utils.StringUtils.SEPARATOR);
                 _logger.debug("Method getRepresentationalFormListData");
                 _logger.debug("* codingSchemeName: " + codingSchemeName);
                 _logger.debug("* version: " + version);
@@ -453,7 +519,7 @@ public class DataUtils {
                 for (int i = 0; i < forms.length; ++i) {
                     list.add(forms[i].getLocalId());
 				}
-                StringUtils.debug(false, _logger, "* forms: ", list);
+                gov.nih.nci.evs.utils.StringUtils.debug(false, _logger, "* forms: ", list);
             }
             if (forms != null) {
                 for (int i = 0; i < forms.length; i++) {
@@ -1877,7 +1943,7 @@ public class DataUtils {
         String code, boolean target2Source, String referenceAssociation,
         boolean includeRoot) throws Exception {
 
-        _logger.debug(StringUtils.SEPARATOR);
+        _logger.debug(gov.nih.nci.evs.utils.StringUtils.SEPARATOR);
         _logger.debug("Resolving value set:");
         _logger.debug("  * codingScheme: " + codingScheme);
         _logger.debug("  * version: " + version);
