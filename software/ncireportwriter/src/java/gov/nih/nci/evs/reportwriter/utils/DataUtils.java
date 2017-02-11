@@ -124,7 +124,7 @@ public class DataUtils {
 		if (resovedValueSetHashMap != null) return resovedValueSetHashMap;
 		HashMap hmap = new HashMap();
 		try {
-			long ms = System.currentTimeMillis();
+			//long ms = System.currentTimeMillis();
 			LexBIGService lbs = RemoteServerUtil.createLexBIGService();
 			List<CodingScheme> choices = new ArrayList<CodingScheme>();
 			LexEVSResolvedValueSetService lrvs = new LexEVSResolvedValueSetServiceImpl(lbs);
@@ -141,7 +141,7 @@ public class DataUtils {
 				v.add(value);
 				hmap.put(key, v);
 			}
-			System.out.println("Total run time (ms): " + (System.currentTimeMillis() - ms));
+			//System.out.println("Total run time (ms): " + (System.currentTimeMillis() - ms));
 
 		} catch (Exception ex) {
 			ex.printStackTrace();
@@ -2812,6 +2812,91 @@ _logger.debug("getResolvedConceptReferenceIterator...");
 			return new Integer(406);
 		}
         return new Integer(404);
+	}
+
+///////////////////////////////////////////////////////////////////////////////////////
+    public static Vector getHasParentAssociationNames(String selectedOntology) {
+		Vector w = new Vector();
+		try {
+			LexBIGService lbSvc = RemoteServerUtil.createLexBIGService();
+			CodingSchemeDataUtils csdu = new CodingSchemeDataUtils(lbSvc);
+			String codingScheme = selectedOntology;
+			String version = null;
+			if (selectedOntology.indexOf("(version") != -1) {
+				String s = parseCodingSchemeNameAndVersionString(selectedOntology);
+				Vector u = gov.nih.nci.evs.browser.utils.StringUtils.parseData(s);
+				codingScheme = (String) u.elementAt(0);
+				version = (String) u.elementAt(1);
+		    }
+			CodingScheme cs = csdu.resolveCodingScheme(codingScheme, version);
+			Vector names = csdu.getSupportedAssociationNames(cs);
+			for (int j=0; j<names.size(); j++) {
+				String t = (String) names.elementAt(j);
+				if (t.startsWith("Has") && t.endsWith("Parent")) {
+					w.add(t);
+				}
+			}
+		} catch (Exception ex) {
+			ex.printStackTrace();
+		}
+		return w;
+	}
+
+    public static Vector getHasParentSourceNames(String selectedOntology) {
+		Vector w = getHasParentAssociationNames(selectedOntology);
+		Vector u = new Vector();
+		for (int i=0; i<w.size(); i++) {
+			String t = (String) w.elementAt(i);
+			String s = t.substring(4, t.length());
+			s = s.substring(0, s.length()-7);
+			u.add(s);
+		}
+		return u;
+	}
+
+	public static Vector getSourcePropertyNames(Vector sources, String surfix) {
+		Vector w = new Vector();
+		for (int i=0; i<sources.size(); i++) {
+			String source = (String) sources.elementAt(i);
+			w.add("1st " + source + " " + surfix);
+			w.add("2nd " + source + " " + surfix);
+		}
+		return w;
+	}
+
+
+	public static Vector getFieldLabels(String selectedOntology) {
+		Vector w = new Vector();
+		Vector sources = getHasParentSourceNames(selectedOntology);
+		w.add("Code");
+		Vector u = getSourcePropertyNames(sources, "Parent Code");
+		for (int i=0; i<u.size(); i++) {
+			String t = (String) u.elementAt(i);
+			w.add(t);
+		}
+		w.add("Associated Concept Code");
+		w.add("Property");
+		u = getSourcePropertyNames(sources, "Parent Property");
+		for (int i=0; i<u.size(); i++) {
+			String t = (String) u.elementAt(i);
+			w.add(t);
+		}
+		w.add("Associated Concept Property");
+        u = getSourcePropertyNames(sources, "Parent Property Qualifier");
+		for (int i=0; i<u.size(); i++) {
+			String t = (String) u.elementAt(i);
+			w.add(t);
+		}
+		w.add("Associated Concept Property Qualifier");
+		return w;
+	}
+
+	public static String parseCodingSchemeNameAndVersionString(String nameAndVersion) {
+		int n = nameAndVersion.lastIndexOf("(");
+		String codingScheme = nameAndVersion.substring(0, n-1);
+		n = nameAndVersion.lastIndexOf(":");
+		String version = nameAndVersion.substring(n+2, nameAndVersion.length()-1);
+		return codingScheme + "|" + version;
 	}
 
 }

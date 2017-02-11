@@ -494,13 +494,23 @@ public class OntologyBean // extends BaseBean
 
 
     public List<SelectItem> getDataCategoryList() {
-        if (_dataCategoryList != null)
+        if (_dataCategoryList != null) {
             return _dataCategoryList;
+		}
 
-         _dataCategoryList = new ArrayList<SelectItem>();
+        System.out.println("(*) getDataCategoryList _selectedOntology: " + _selectedOntology);
+        if (_selectedOntology == null) {
+			_selectedOntology = DEFAULT_ONTOLOGY;
+		}
 
-         Vector v0 = new Vector();
+        _dataCategoryList = new ArrayList<SelectItem>();
+        Vector v0 = DataUtils.getFieldLabels(_selectedOntology);
+         //for (int i=0; i<v0.size(); i++) {
+		 //	 String t = (String) v0.elementAt(i);
+		 //	 System.out.println("filed value: " + t);
+		 //}
 
+/*
          v0.add("Code");
 
          v0.add("1st CDRH Parent Code");
@@ -517,11 +527,11 @@ public class OntologyBean // extends BaseBean
          v0.add("Property Qualifier");
          v0.add("1st CDRH Parent Property Qualifier");
          v0.add("Associated Concept Property Qualifier");
+*/
 
-         if (_selectedOntology == null) {
-			 _selectedOntology = DEFAULT_ONTOLOGY;
-		 }
 
+
+/*
          Vector<String> v = null;
          try {
          	v = getSupportedAssociations(_selectedOntology, null);
@@ -546,15 +556,15 @@ public class OntologyBean // extends BaseBean
 			 String s = (String) w.elementAt(i);
 			 v0.add(s);
 		 }
-
+*/
          for (int i=0; i<v0.size(); i++) {
 			 String propName = (String) v0.elementAt(i);
-			 System.out.println(propName);
 			 _dataCategoryList.add(new SelectItem(propName));
 		 }
 
 		 String t = "CDISC Submission Value";
 		 _dataCategoryList.add(new SelectItem(t));
+
          return _dataCategoryList;
     }
 
