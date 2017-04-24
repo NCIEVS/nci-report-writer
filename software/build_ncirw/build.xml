@@ -88,6 +88,7 @@
       <include name="**/gov/nih/nci/evs/reportwriter/bean/*.java" />
       <include name="**/gov/nih/nci/evs/reportwriter/webapp/*.java" />
       <include name="**/gov/nih/nci/evs/reportwriter/security/*.java" />
+      <include name="**/gov/nih/nci/security/util/*.java" />
       
     </javac>
   </target>

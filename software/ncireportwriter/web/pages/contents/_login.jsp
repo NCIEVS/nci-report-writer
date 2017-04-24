@@ -13,7 +13,10 @@ L--%>
 <%
   String pagesPath = FormUtils.getPagesPath(request);
   String loginWarning = (String)request.getAttribute("loginWarning");
-  
+  String userid = (String) request.getSession().getAttribute("userid");
+  String password = (String) request.getSession().getAttribute("password");
+  if (userid == null) userid = "";
+  if (password == null) password = "";
   
 %>
 <f:view>
@@ -85,6 +88,7 @@ L--%>
                       value="#{reportwriterBundle.loginSubmitLabel}">
                     </h:commandButton></td>
                   </tr>
+                  
                   <tr>
                     <td colspan="2" align="center" nowrap><a
                       href="<%=pagesPath%>/main/request.jsf">Can't

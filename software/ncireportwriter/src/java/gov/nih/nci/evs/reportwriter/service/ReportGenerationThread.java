@@ -326,19 +326,6 @@ public class ReportGenerationThread implements Runnable {
             _logger.debug("  * Level: " + level);
             _logger.debug("  * Delimiter: " + delimiter);
 
-/*
-            System.out.println(StringUtils.SEPARATOR);
-            System.out.println("  * ID: " + id);
-            System.out.println("  * Label: " + label);
-            System.out.println("  * CodingSchemeName: " + codingSchemeName);
-            System.out.println("  * CodingSchemeVersion: " + codingSchemeVersion);
-            System.out.println("  * Root: " + rootConceptCode);
-            System.out.println("  * AssociationName: " + associationName);
-            System.out.println("  * Direction: " + direction);
-            System.out.println("  * Level: " + level);
-            System.out.println("  * Delimiter: " + delimiter);
-*/
-
             Object[] objs = null;
             Collection<ReportColumn> cc =
                 standardReportTemplate.getColumnCollection();
@@ -2633,7 +2620,7 @@ FULL_SYN: DEVICE ISSUE
 
 //KLO, 01102016
 			if (col.getPropertyName() != null) {
-				System.out.println("setReportColumns col: " + col.getPropertyName());
+				//System.out.println("setReportColumns col: " + col.getPropertyName());
 				if (col.getPropertyName().compareTo("Extensible_List") == 0) {
 					col.setFieldId("Property");
 				}

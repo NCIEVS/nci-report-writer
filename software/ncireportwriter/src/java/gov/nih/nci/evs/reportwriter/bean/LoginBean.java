@@ -10,10 +10,11 @@ package gov.nih.nci.evs.reportwriter.bean;
 import gov.nih.nci.evs.reportwriter.properties.*;
 import gov.nih.nci.evs.reportwriter.utils.*;
 import gov.nih.nci.evs.utils.*;
-import gov.nih.nci.security.*;
-import gov.nih.nci.security.authentication.*;
-import gov.nih.nci.security.authorization.domainobjects.User;
+//import gov.nih.nci.security.*;
+//import gov.nih.nci.security.authentication.*;
+//import gov.nih.nci.security.authorization.domainobjects.User;
 import java.util.*;
+import gov.nih.nci.security.util.*;
 
 
 import javax.faces.event.*;
@@ -27,8 +28,8 @@ import java.net.*;
 import java.sql.*;
 import javax.sql.DataSource;
 
-import gov.nih.nci.security.util.*;
-import gov.nih.nci.evs.reportwriter.security.CSMAuthorizationManager;
+//import gov.nih.nci.security.util.*;
+//import gov.nih.nci.evs.reportwriter.security.CSMAuthorizationManager;
 
 /**
  *
@@ -62,8 +63,7 @@ public class LoginBean extends Object {
 
     public LoginBean() {
 		super();
-		LockoutManager.initialize(CSM_LOCKOUT_TIME, CSM_ALLOWED_LOGIN_TIME,
-				CSM_ALLOWED_ATTEMPTS);
+		//LockoutManager.initialize(CSM_LOCKOUT_TIME, CSM_ALLOWED_LOGIN_TIME,	CSM_ALLOWED_ATTEMPTS);
 	}
 
     public void setSelectedTask(String selectedTask) {
@@ -96,7 +96,7 @@ public class LoginBean extends Object {
     }
 
 
-
+/*
     public static gov.nih.nci.security.authorization.domainobjects.User getCSMUser(String userid) throws Exception {
         AuthorizationManager manager = CSMAuthorizationManager.getAuthorizationManagerDirectly(APP_NAME);
         if (manager == null)
@@ -108,8 +108,9 @@ public class LoginBean extends Object {
 
         return user;
     }
+*/
 
-
+/*
     private Boolean hasAdminPrivilege(String userid) throws Exception {
         gov.nih.nci.security.authorization.domainobjects.User user = getCSMUser(userid);
 
@@ -129,11 +130,26 @@ public class LoginBean extends Object {
 
         //return new Boolean(true);
     }
+*/
 
+
+/*
     private String getEmail(String userid) throws Exception {
         gov.nih.nci.security.authorization.domainobjects.User user = getCSMUser(userid);
         String email = user.getEmailId();
         return email != null ? email : null;
+    }
+*/
+    private String getEmail(String userid) throws Exception {
+		HttpServletRequest request = HTTPUtils.getRequest();
+        String hibernate_cfg_xml = request.getSession().getServletContext().getRealPath(JDBCUtil.HIBERNATE_CFG_PATH);//"/WEB-INF/classes/hibernate.cfg.xml");
+		JDBCUtil util = new JDBCUtil(hibernate_cfg_xml);
+		try {
+			String email_id = util.getEmail(userid);
+		} catch (Exception ex) {
+			ex.printStackTrace();
+		}
+        return null;
     }
 
     public List<SelectItem> getTaskList() {
@@ -160,24 +176,6 @@ public class LoginBean extends Object {
         return null;
     }
 
-/*
-String url = "jdbc:mysql://localhost/test";
-Class.forName ("com.mysql.jdbc.Driver").newInstance ();
-Connection conn = DriverManager.getConnection (url, "username", "password");
-
-
-    <Resource name="ncirw"
-              auth="Container"
-              type="javax.sql.DataSource"
-              username="@database.user@"
-              password="@database.password@"
-              driverClassName="@database.driver@"
-              url="@database.url@"
-              maxActive="10"
-              maxIdle="4"/>
-
-
-*/
 
 	public boolean validateUser(String user, String password) {
 		Connection conn = null;
@@ -185,16 +183,7 @@ Connection conn = DriverManager.getConnection (url, "username", "password");
 		ResultSet rs = null;
 		boolean match = false;
 		try {
-			/*
-			String url = "jdbc:mysql://localhost/ncirw";
-			Class.forName ("com.mysql.jdbc.Driver").newInstance ();
-			Connection conn = DriverManager.getConnection (url, "username", "password");
-			*/
-
 			InitialContext ctx = new InitialContext();
-			//DataSource ds = (DataSource) ctx.lookup("ncirw");
-
-			// This works too
 			Context envCtx = (Context) ctx.lookup("java:comp/env");
 			DataSource ds = (DataSource) envCtx.lookup(APP_NAME);
 
@@ -224,7 +213,7 @@ Connection conn = DriverManager.getConnection (url, "username", "password");
 
 
 
-
+/*
     public String loginAction() {
 
 
@@ -286,6 +275,73 @@ _logger.debug("(*) hasAdminPrivilege? " + _isAdmin);
                 sdkclientutil.insertUser(_userid);
             }
 
+            session.setAttribute("isSessionValid", Boolean.TRUE);
+            HTTPUtils.getRequest().removeAttribute("loginWarning");
+            return "success";
+        } catch (Exception e) {
+            String msg = reformatError(e.getMessage());
+            _logger.error(StringUtils.SEPARATOR);
+            ExceptionUtils
+                .print(_logger, e, "  * Error logging in: " + _userid);
+            HTTPUtils.getRequest().setAttribute("loginWarning", msg);
+            return "failure";
+        }
+    }
+*/
+
+
+
+    public String loginAction() {
+        try {
+            _isAdmin = false;
+            if (_userid.length() <= 0)
+                throw new Exception("Please enter your login ID.");
+            if (_password.length() <= 0)
+                throw new Exception("Please enter your password.");
+
+//_logger.debug("_userid: " + _userid);
+//_logger.debug("_password: " + _password);
+//_logger.debug("SecurityServiceProvider.getAuthenticationManager: APP_NAME " +  APP_NAME);
+
+/*
+            AuthenticationManager authenticationManager =
+                SecurityServiceProvider.getAuthenticationManager(APP_NAME,
+                    CSM_LOCKOUT_TIME, CSM_ALLOWED_LOGIN_TIME,
+                    CSM_ALLOWED_ATTEMPTS);
+
+
+if (authenticationManager == null) {
+   throw new Exception("NULL authenticationManager???");
+}
+
+            if (!authenticationManager.login(_userid, _password)) {
+            //if (!validateUser(_userid, _password)) {
+                throw new Exception("Incorrect login credential.");
+			}
+*/
+
+		AuthenticationBean bean = new AuthenticationBean();
+		boolean authenticated = bean.authenticate(_userid, _password);
+		if (!authenticated) {
+            throw new Exception("Incorrect login credential.");
+		}
+
+            HttpServletRequest request = HTTPUtils.getRequest();
+            HttpSession session = request.getSession(); // true
+            if (session != null)
+                session.setAttribute("uid", _userid);
+            //_isAdmin = hasAdminPrivilege(_userid);
+            _isAdmin = bean.hasAdminPrivilege();
+            session.setAttribute("isAdmin", _isAdmin);
+            String email = getEmail(_userid);
+            session.setAttribute("email", email);
+
+            gov.nih.nci.evs.reportwriter.bean.User user = getUser(_userid);
+            if (user == null) {
+                // Synchronize with CSM User table
+                SDKClientUtil sdkclientutil = new SDKClientUtil();
+                sdkclientutil.insertUser(_userid);
+            }
             session.setAttribute("isSessionValid", Boolean.TRUE);
             HTTPUtils.getRequest().removeAttribute("loginWarning");
             return "success";

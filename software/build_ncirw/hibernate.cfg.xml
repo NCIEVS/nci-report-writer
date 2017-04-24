@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE hibernate-configuration PUBLIC "-//Hibernate/Hibernate Configuration DTD 3.0//EN" "http://hibernate.sourceforge.net/hibernate-configuration-3.0.dtd">
+<!DOCTYPE hibernate-configuration SYSTEM "http://hibernate.sourceforge.net/hibernate-configuration-3.0.dtd">
 <hibernate-configuration>
 	<session-factory>
 	
@@ -13,10 +13,10 @@
 		<property name="dialect">org.hibernate.dialect.MySQLDialect</property>
 		
 		
-        <property name="connection.url">jdbc:mysql://localhost:3306/reportwriter</property>
-        <property name="connection.driver_class">com.mysql.jdbc.Driver</property>
-        <property name="connection.username">root</property>
-        <property name="connection.password">password</property>
+        <property name="connection.url">@database.url@</property>
+        <property name="connection.driver_class">@database.driver@</property>
+        <property name="connection.username">@database.user@</property>
+        <property name="connection.password">@database.password@</property>
 		
 		<property name="max_fetch_depth">1</property>
 		<property name="bytecode.use_reflection_optimizer">false</property>

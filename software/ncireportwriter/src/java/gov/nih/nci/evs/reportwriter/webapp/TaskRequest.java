@@ -48,7 +48,7 @@ public class TaskRequest {
                 (Boolean) request.getSession(true).getAttribute("isAdmin");
         }
 
-        List<SelectItem> list = DataUtils.getTaskList(isAdmin);
+        List<SelectItem> list = UIUtils.getTaskList(isAdmin);
         if (list != null) {
             SelectItem item = (SelectItem) list.get(0);
             _selectedTask = item.getLabel();

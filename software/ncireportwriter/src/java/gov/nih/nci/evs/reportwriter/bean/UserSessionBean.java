@@ -74,7 +74,7 @@ public class UserSessionBean extends Object {
     }
 
     public List<SelectItem> getPropertyTypeList() {
-        List<SelectItem> list = DataUtils.getPropertyTypeList();
+        List<SelectItem> list = UIUtils.getPropertyTypeList();
         return list;
     }
 

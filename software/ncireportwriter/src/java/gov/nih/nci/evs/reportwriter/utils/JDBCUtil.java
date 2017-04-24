@@ -9,6 +9,7 @@ package gov.nih.nci.evs.reportwriter.utils;
 
 import gov.nih.nci.evs.reportwriter.bean.*;
 import gov.nih.nci.evs.reportwriter.properties.*;
+import gov.nih.nci.security.util.*;
 
 import java.io.*;
 import java.util.*;
@@ -24,9 +25,9 @@ import java.sql.Statement;
 //import java.sql.DatabaseMetaData;
 import java.sql.*;
 
-import gov.nih.nci.security.util.StringEncrypter;
-import gov.nih.nci.security.util.StringUtilities;
-import gov.nih.nci.security.util.StringEncrypter.EncryptionException;
+//import gov.nih.nci.security.util.StringEncrypter;
+//import gov.nih.nci.security.util.StringUtilities;
+//import gov.nih.nci.security.util.StringEncrypter.EncryptionException;
 
 import org.apache.log4j.*;
 import javax.faces.model.SelectItem;
@@ -82,12 +83,12 @@ import javax.faces.model.SelectItem;
 				String value = (String) map.get(key);
 				if (key.compareTo("connection.url") == 0) {
 					url = value;
-					System.out.println("url: " + url);
+					//System.out.println("url: " + url);
 					_logger.debug("url: " + url);
 				} else if (key.compareTo("connection.driver_class") == 0) {
 					driver = value;
 					_logger.debug("driver_class: " + driver);
-					System.out.println("driver: " + driver);
+					//System.out.println("driver: " + driver);
 				} else if (key.compareTo("connection.username") == 0) {
 					username = value;
 					_logger.debug("username: " + username);
@@ -155,7 +156,8 @@ import javax.faces.model.SelectItem;
 			StringEncrypter stringEncrypter = null;
 			try {
 				stringEncrypter = new StringEncrypter();
-			} catch (EncryptionException e1) {
+			//} catch (EncryptionException e1) {
+			} catch (Exception e1) {
 				e1.printStackTrace();
 			}
 
@@ -205,7 +207,8 @@ import javax.faces.model.SelectItem;
 			StringEncrypter stringEncrypter = null;
 			try {
 				stringEncrypter = new StringEncrypter();
-			} catch (EncryptionException e1) {
+			//} catch (EncryptionException e1) {
+			} catch (Exception e1) {
 				e1.printStackTrace();
 			}
 
@@ -1356,6 +1359,45 @@ import javax.faces.model.SelectItem;
 		    }
 
 		    return _standardReportTemplateList;
+	   }
+
+       public String getEmail(String userid) throws Exception {
+		    Connection conn = null;
+		    Statement stmt = null;
+		    ResultSet rs = null;
+		    String email_id = null;
+            try {
+				Class.forName (driver).newInstance ();
+				conn = DriverManager.getConnection (url, username, password);
+				stmt = conn.createStatement();
+				////////////////////////////////////
+				rs = stmt.executeQuery("SELECT EMAIL_ID FROM csm_user where USER_ID=" + userid);
+				while (rs.next()) {
+					email_id = (String) rs.getString("EMAIL_ID");
+                    break;
+				}
+				rs.close();
+				stmt.close();
+			    conn.close();
+		    } catch(Exception e){
+			    e.printStackTrace();
+		    } finally {
+			    try{
+				   if(stmt!=null) {
+					   stmt.close();
+				   }
+			    } catch (SQLException se2) {
+			       se2.printStackTrace();
+			    }
+			    try {
+				   if (conn!=null) {
+					   conn.close();
+				   }
+			    } catch (SQLException se) {
+				   se.printStackTrace();
+			    }
+		    }
+		    return email_id;
 	   }
 
    }

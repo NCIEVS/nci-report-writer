@@ -34,6 +34,7 @@ L-->
     <property name="project.short.name" value="ncirw" />
     <property name="webapp.war.name" value="${project.name}.war" />
     <property name="webapp.prop.file" value="ncireportwriter.properties" />
+    <property name="shiro.ini.file" value="shiro.ini" />
 
     <path id="classpath">
         <fileset dir="../${project.name}/extlib">
@@ -272,6 +273,7 @@ L-->
             </filterset>
             <resources>
                 <file file="${bda.conf.dir}/${webapp.prop.file}"/>
+                <file file="${bda.conf.dir}/${shiro.ini.file}"/>
                 <file file="${bda.conf.dir}/application-config.xml"/>
                 <file file="${bda.conf.dir}/application-config-client.xml"/>
                 <file file="${bda.conf.dir}/ncireportwriter.csm.new.hibernate.cfg.xml"/>
@@ -370,6 +372,7 @@ L-->
             </filterset>
             <resources>
                 <file file="${exploded.dir}/deploy/${webapp.prop.file}"/>
+                <file file="${exploded.dir}/deploy/${shiro.ini.file}"/>
             </resources>
         </copy>
 
@@ -573,6 +576,13 @@ L-->
         <bda:AddTomcatProperty
             deploydir="${tomcat.server.path}"
             backup="true"
+            name="gov.nih.nci.cacore.ncireportwritershiroini"
+            value="${application.data.path}/${web.app.conf.path}/${shiro.ini.file}"
+        />
+        
+        <bda:AddTomcatProperty
+            deploydir="${tomcat.server.path}"
+            backup="true"
             name="gov.nih.nci.cacore.ncireportwriterlog4jProperties"
             value="${application.data.path}/${web.app.conf.path}/${project.short.name}-log4j.xml"
         />
@@ -587,6 +597,7 @@ L-->
               flatten="true" includeEmptyDirs="no" filtering="false">
             <resources>
                 <file file="${exploded.dir}/install/${webapp.prop.file}"/>
+                <file file="${exploded.dir}/install/${shiro.ini.file}"/>
                 <file file="${exploded.dir}/install/${project.short.name}-log4j.xml"/>
                 <file file="${exploded.dir}/install/log4j.dtd"/>
                 

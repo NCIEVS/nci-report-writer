@@ -184,6 +184,7 @@ public class DataUtils {
             }
             return _adminTaskList;
         }
+
         if (_userTaskList == null) {
             _userTaskList = new ArrayList<SelectItem>();
             _userTaskList.add(new SelectItem("Retrieve Standard Reports"));

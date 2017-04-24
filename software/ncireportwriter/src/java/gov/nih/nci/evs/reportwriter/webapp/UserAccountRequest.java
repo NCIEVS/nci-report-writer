@@ -8,14 +8,14 @@
 package gov.nih.nci.evs.reportwriter.webapp;
 
 import gov.nih.nci.evs.utils.*;
-import gov.nih.nci.security.authentication.*;
+//import gov.nih.nci.security.authentication.*;
 
 import javax.servlet.http.*;
 
 import org.apache.log4j.*;
 
 /**
- * 
+ *
  */
 
 /**
@@ -35,6 +35,7 @@ public class UserAccountRequest {
     }
 
     public String unlock() {
+		/*
         _logger.debug("Method: UserAccountRequest.unlock");
         HttpServletRequest request = HTTPUtils.getRequest();
         String userid = HTTPUtils.getParameter(request, LOGIN_ID);
@@ -52,6 +53,8 @@ public class UserAccountRequest {
         mgr.unLockUser(userid);
         HTTPUtils.infoMsg(request, "User (" + userid + ") has been unlocked.");
         clear();
+        */
         return "unlock";
     }
+
 }
