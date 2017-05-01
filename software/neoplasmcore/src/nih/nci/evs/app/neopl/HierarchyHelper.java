@@ -427,12 +427,11 @@ public class HierarchyHelper {
 	}
 
 
-
+/*
 	public void printTree(PrintWriter pw) {
 		if (roots == null) {
 			findRootAndLeafNodes();
 		}
-
 		Vector label_vec = new Vector();
 		HashMap label2codeMap = new HashMap();
 		for (int i=0; i<roots.size(); i++) {
@@ -442,19 +441,49 @@ public class HierarchyHelper {
 			label_vec.add(label);
 		}
 		label_vec = gov.nih.nci.evs.app.neopl.SortUtils.quickSort(label_vec);
-		/*
-		for (int i=0; i<roots.size(); i++) {
-			String root = (String) roots.elementAt(i);
-			printTree(pw, root, 0);
-		}
-		*/
+
 		for (int i=0; i<label_vec.size(); i++) {
 			String label = (String) label_vec.elementAt(i);
 			String code = (String) label2codeMap.get(label);
 			printTree(pw, code, 0);
 		}
-
 	}
+*/
+
+    public void printTree(PrintWriter pw) {
+		printTree(pw, true);
+	}
+
+	public void printTree(PrintWriter pw, boolean sortByLabel) {
+		if (roots == null) {
+			findRootAndLeafNodes();
+		}
+
+		if (sortByLabel) {
+			Vector label_vec = new Vector();
+			HashMap label2codeMap = new HashMap();
+			for (int i=0; i<roots.size(); i++) {
+				String root = (String) roots.elementAt(i);
+				String label = getLabel(root);
+				label2codeMap.put(label, root);
+				label_vec.add(label);
+			}
+			label_vec = gov.nih.nci.evs.app.neopl.SortUtils.quickSort(label_vec);
+
+			for (int i=0; i<label_vec.size(); i++) {
+				String label = (String) label_vec.elementAt(i);
+				String code = (String) label2codeMap.get(label);
+				printTree(pw, code, 0);
+			}
+		} else {
+			roots = gov.nih.nci.evs.app.neopl.SortUtils.quickSort(roots);
+			for (int i=0; i<roots.size(); i++) {
+			    String code = (String) roots.elementAt(i);
+			    printTree(pw, code, 0);
+			}
+		}
+	}
+
 
 	public void printTree(PrintWriter pw, String code, int level) {
 		String indent = "";

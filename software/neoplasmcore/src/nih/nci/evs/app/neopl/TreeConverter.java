@@ -75,57 +75,7 @@ public class TreeConverter {
 		this.lines_to_skip = num;
 	}
 
-/*
-	public HashMap loadCategoryMap(String value_set_ascii_file) {
-		HashMap categoryMap = new HashMap();
-		BufferedReader br = null;
-		String line = "";
-		String cvsSplitBy = ",";
-		Vector v = new Vector();
-		int category_benign = 0;
-		int category_malignant = 0;
-		int category_undetermined = 0;
-		try {
-			br = new BufferedReader(new FileReader(value_set_ascii_file));
-			line = br.readLine();
-			int k = 0;
-			while ((line = br.readLine()) != null) {
-				System.out.println(line);
-				String[] values = line.split(cvsSplitBy);
-				String field_1 = (String) values[0];
-				field_1 = field_1.substring(1, field_1.length()-1);
-				String field_2 = (String) values[1];
-				field_2 = field_2.substring(1, field_2.length()-1);
-				int n = line.lastIndexOf(",");
-				String category = line.substring(n+1, line.length());
-				category = category.substring(1, category.length()-1);
-				categoryMap.put(field_1, category);
 
-				if (category.compareTo("Malignant") == 0) {
-					category_malignant++;
-				} else if (category.compareTo("Benign") == 0) {
-					category_benign++;
-				} else {
-					category_undetermined++;
-				}
-			}
-
-		} catch (FileNotFoundException e) {
-			e.printStackTrace();
-		} catch (IOException e) {
-			e.printStackTrace();
-		} finally {
-			if (br != null) {
-				try {
-					br.close();
-				} catch (IOException e) {
-					e.printStackTrace();
-				}
-			}
-		}
-		return categoryMap;
-    }
-*/
 	public HashMap loadCategoryMap(String value_set_ascii_file) {
 		HashMap categoryMap = new HashMap();
 		BufferedReader br = null;

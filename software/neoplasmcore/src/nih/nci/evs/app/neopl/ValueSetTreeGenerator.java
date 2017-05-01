@@ -1,6 +1,5 @@
 package gov.nih.nci.evs.app.neopl;
 
-
 import com.opencsv.CSVReader;
 import gov.nih.nci.evs.browser.bean.*;
 import gov.nih.nci.evs.browser.utils.*;
@@ -131,7 +130,7 @@ public class ValueSetTreeGenerator {
 		categoryMap = new HashMap();
 		stack = new Stack();
 		parent_child_vec = new Vector();
-		Vector v = FileUtils.readFile(parent_child_file);
+		Vector v = gov.nih.nci.evs.app.neopl.FileUtils.readFile(parent_child_file);
 		hierarchyHelper = new HierarchyHelper(v);
 		valueSet = loadValueSetData(value_set_ascii_file);
 		categoryMap = loadCategoryMap(value_set_ascii_file);
@@ -167,7 +166,7 @@ public class ValueSetTreeGenerator {
 			level2_root2Root = new HashMap();
 			for (int i=0; i<v.size(); i++) {
 				String t = (String) v.elementAt(i);
-				Vector u = StringUtils.parseData(t);
+				Vector u = gov.nih.nci.evs.app.neopl.StringUtils.parseData(t);
 
 				String s1 = (String) u.elementAt(1); //sourceConceptCode
 				String s2 = (String) u.elementAt(0); //sourceConceptName
@@ -197,7 +196,7 @@ public class ValueSetTreeGenerator {
 	}
 
 	private boolean checkAdjacency(String key, String path) {
-		Vector u = StringUtils.parseData(key);
+		Vector u = gov.nih.nci.evs.app.neopl.StringUtils.parseData(key);
 		String sourceCode = (String) u.elementAt(1);
 		String targetCode = (String) u.elementAt(3);
 		//if (!path.endsWith(targetCode)) return false;
@@ -210,7 +209,7 @@ public class ValueSetTreeGenerator {
 	}
 
 	private boolean validatePath(String key, String path) {
-		Vector u = StringUtils.parseData(key);
+		Vector u = gov.nih.nci.evs.app.neopl.StringUtils.parseData(key);
 		String sourceCode = (String) u.elementAt(1);
 		String targetCode = (String) u.elementAt(3);
         path = path + "|";
@@ -235,7 +234,7 @@ public class ValueSetTreeGenerator {
 
 	    for (int i=0; i<root_data.size(); i++) {
 			String t = (String) root_data.elementAt(i);
-			Vector u = StringUtils.parseData(t);
+			Vector u = gov.nih.nci.evs.app.neopl.StringUtils.parseData(t);
 			String code = (String) u.elementAt(0);
 			String name = (String) u.elementAt(1);
 			String category = (String) u.elementAt(2);
@@ -244,13 +243,13 @@ public class ValueSetTreeGenerator {
             String parent_code = (String) categoryLabel2CodeMap.get(parent_name);
             w.add(parent_name + "|" + parent_code + "|" + name + "|" + code);
 		}
-		parent_child_vec = SortUtils.quickSort(w);
+		parent_child_vec = gov.nih.nci.evs.app.neopl.SortUtils.quickSort(w);
 	}
 
 
 	public void run(PrintWriter pw) {
 		parent_child_vec = generate_parent_child_relationships();
-		parent_child_vec = SortUtils.quickSort(parent_child_vec);
+		parent_child_vec = gov.nih.nci.evs.app.neopl.SortUtils.quickSort(parent_child_vec);
 		for (int i=0; i<parent_child_vec.size(); i++) {
 			String line = (String) parent_child_vec.elementAt(i);
 			pw.println(line);
@@ -270,7 +269,7 @@ public class ValueSetTreeGenerator {
 				String key = (String) it.next();
 				key_vec.add(key);
 			}
-			key_vec = SortUtils.quickSort(key_vec);
+			key_vec = gov.nih.nci.evs.app.neopl.SortUtils.quickSort(key_vec);
 			for (int i=0; i<key_vec.size(); i++) {
 				String key = (String) key_vec.elementAt(i);
 				Vector w = (Vector) link2Path.get(key);
@@ -467,7 +466,7 @@ public class ValueSetTreeGenerator {
 		if (parent_child_vec == null) {
 			System.out.println("generate_parent_child_relationships yields parent_child_vec == null???");
 		}
-		parent_child_vec = SortUtils.quickSort(parent_child_vec);
+		parent_child_vec = gov.nih.nci.evs.app.neopl.SortUtils.quickSort(parent_child_vec);
 		return parent_child_vec;
 	}
 
@@ -602,7 +601,7 @@ public class ValueSetTreeGenerator {
 
     public void regenerate_parent_child_file(String inputfile) {
 		Vector link_to_remove_vec = new Vector();
-		Vector v = FileUtils.readFile(inputfile);
+		Vector v = gov.nih.nci.evs.app.neopl.FileUtils.readFile(inputfile);
 		HierarchyHelper hierarchyHelper = new HierarchyHelper(v);
 
 		pathToRootsFinder = new PathToRootsFinder(v);
@@ -765,27 +764,7 @@ public class ValueSetTreeGenerator {
 		HyperlinkAppender appender = new HyperlinkAppender();
 		HashMap map1 = appender.loadCUIMap(mappingfile);
 		HashMap map2 = appender.loadNeoplasticStatusMap(valuesetfile);
-        /*
-		int n = htmlfile.lastIndexOf(".");
-		String outputfile = htmlfile.substring(0, n) + "_v2.html";
 
-		appender.runHTML(htmlfile, outputfile);
-		n = treefile.lastIndexOf(".");
-		outputfile = treefile.substring(0, n) + "_v2.txt";
-        */
-
-
- /*
-         String date = ValueSetTreeGenerator.getToday("yyyy-MM-dd");
-         int format = 0;
-         String htmlfile = Constants.HIERARCHY_FILE_PREFIX + date + ".html";
-         String treefile = Constants.HIERARCHY_FILE_PREFIX + date + ".txt";
-         if (retree_using_neoplastic_categories) {
- 			htmlfile = Constants.HIERARCHY_FILE_PREFIX + "By_Neoplastic_Status_" + date + ".html";
- 			treefile = Constants.HIERARCHY_FILE_PREFIX + "By_Neoplastic_Status_" + date + ".txt";
- 			format = 1;
-		}
-*/
         int n = htmlfile.indexOf("By_Neoplastic_Status_");
         String date = ValueSetTreeGenerator.getToday("yyyy-MM-dd");
         if (n == -1) {
@@ -843,7 +822,7 @@ System.out.println("Step 1");
 		boolean retree_using_neoplastic_categories = false;
 		String parent_child_file = args[0];
 
-		Vector parent_child_file_v = FileUtils.readFile(parent_child_file);
+		Vector parent_child_file_v = gov.nih.nci.evs.app.neopl.FileUtils.readFile(parent_child_file);
 		String value_set_ascii_file = args[1];
 
 System.out.println("Step 2");
@@ -877,7 +856,7 @@ System.out.println("Step 3");
 
         if (!retree_using_neoplastic_categories) {
 			System.out.println("Loading neoplasm_roots ...");
-			Vector roots = FileUtils.readFile("neoplasm_roots.out");
+			Vector roots = gov.nih.nci.evs.app.neopl.FileUtils.readFile("neoplasm_roots.out");
 			generator.initialize_stack(roots);
 	    }
 
@@ -927,7 +906,7 @@ System.out.println("Step 6");
         System.out.println("regenerate_parent_child_file ..." + outputfile);
 		generator.regenerate_parent_child_file(outputfile);
 
-		w = FileUtils.readFile(outputfile);
+		w = gov.nih.nci.evs.app.neopl.FileUtils.readFile(outputfile);
 
 System.out.println("Step 6 w.size() " + w.size());
 
@@ -950,7 +929,7 @@ System.out.println("Step 6 w.size() " + w.size());
 					cont = false;
 					break;
 				} else {
-					w = FileUtils.readFile(outputfile);
+					w = gov.nih.nci.evs.app.neopl.FileUtils.readFile(outputfile);
 
 					System.out.println("w.size(): " + w.size());
 				}
@@ -962,7 +941,7 @@ System.out.println("Step 6 w.size() " + w.size());
 
 System.out.println("Step 7 outputfile " + outputfile);
 
-		w = FileUtils.readFile(outputfile);
+		w = gov.nih.nci.evs.app.neopl.FileUtils.readFile(outputfile);
 		siblings_to_remove = new Vector();
 
 		try {
@@ -982,12 +961,12 @@ System.out.println("Step 8 " + outputfile);
 
 		try {
 			pw = new PrintWriter(final_outputfile, "UTF-8");
-			w = FileUtils.readFile(outputfile);
+			w = gov.nih.nci.evs.app.neopl.FileUtils.readFile(outputfile);
 			HierarchyHelper hierarchyHelper = new HierarchyHelper(w);
 			hierarchyHelper.set_show_code(true);
-			hierarchyHelper.printTree(pw);
+			hierarchyHelper.printTree(pw, false);
 
-hierarchyHelper.printTree(new PrintWriter(System.out));
+//hierarchyHelper.printTree(new PrintWriter(System.out));
 
 		} catch (Exception ex) {
 			ex.printStackTrace();
@@ -1002,11 +981,11 @@ hierarchyHelper.printTree(new PrintWriter(System.out));
 
 		System.out.println("generateHTMLTree: " + htmlfile);
         generator.generateHTMLTree(final_outputfile, htmlfile, 0, ncit_version, format);
-
         formatter.run(htmlfile);
 
         String mappingfile = "mapping.csv"; //from MetathesaurusUtils
         generator.run_appender(value_set_ascii_file, mappingfile, htmlfile, treefile);
+
 	}
 }
 

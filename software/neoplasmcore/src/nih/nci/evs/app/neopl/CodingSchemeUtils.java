@@ -9,7 +9,6 @@ import java.io.*;
 import java.text.*;
 import java.util.*;
 import org.LexGrid.codingSchemes.CodingScheme;
-import org.LexGrid.codingSchemes.CodingScheme;
 import org.LexGrid.concepts.Entity;
 import org.LexGrid.LexBIG.caCore.interfaces.LexEVSDistributed;
 import org.LexGrid.LexBIG.DataModel.Collections.AbsoluteCodingSchemeVersionReferenceList;
