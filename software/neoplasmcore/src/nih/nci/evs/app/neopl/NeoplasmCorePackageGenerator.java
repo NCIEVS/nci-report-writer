@@ -108,6 +108,15 @@ public class NeoplasmCorePackageGenerator {
 	public static void run(String owlfile, String valueSetXLSFile, boolean run_parsor, boolean run_mapping, boolean run_appl) {
 		int n = valueSetXLSFile.lastIndexOf(".");
 		String valueSetCSVFile = valueSetXLSFile.substring(0, n) + ".csv";
+
+//KLO, 05012017
+		ExcelToCSV converter = new ExcelToCSV();
+		try {
+			converter.convertExcelToCSV(valueSetXLSFile, valueSetCSVFile);
+		} catch (Exception ex) {
+			ex.printStackTrace();
+		}
+
 		n = owlfile.lastIndexOf("_");
 		String parent_child_file = "parent_child" + owlfile.substring(n, owlfile.length());
 		n = parent_child_file.lastIndexOf(".");

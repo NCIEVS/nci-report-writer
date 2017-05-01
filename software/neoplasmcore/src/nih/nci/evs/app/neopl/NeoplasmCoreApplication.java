@@ -230,7 +230,7 @@ System.out.println("Step 8 " + outputfile);
 			w = FileUtils.readFile(outputfile);
 			HierarchyHelper hierarchyHelper = new HierarchyHelper(w);
 			hierarchyHelper.set_show_code(true);
-			hierarchyHelper.printTree(pw);
+			hierarchyHelper.printTree(pw, false);
 
 hierarchyHelper.printTree(new PrintWriter(System.out));
 
