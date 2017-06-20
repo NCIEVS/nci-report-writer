@@ -491,8 +491,8 @@ public class ReportGenerationRunner { //implements Runnable {
         }
 
         Vector<String> subconcept_vec =
-            DataUtils
-                .getSubconceptCodes2(scheme, version, root.getEntityCode());
+            //DataUtils.getSubconceptCodes2(scheme, version, root.getEntityCode());
+            DataUtils.getSubconceptCodes(scheme, version, root.getEntityCode());
 
         //Vector<Entity> subconcept_vec = DataUtils.getSubconcepts(scheme, version, code);
         if (subconcept_vec == null | subconcept_vec.size() == 0)

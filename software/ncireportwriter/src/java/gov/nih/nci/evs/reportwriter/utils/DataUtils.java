@@ -776,10 +776,10 @@ public class DataUtils {
     // =========================================================================
     public static Entity getConceptByCode(String codingSchemeName,
         String version, String tag, String code) throws Exception {
-
         LexBIGService lbSvc = RemoteServerUtil.createLexBIGService();
-        if (lbSvc == null)
+        if (lbSvc == null) {
             throw new Exception("lbSvc == null???");
+        }
 
         CodingSchemeVersionOrTag vtag = new CodingSchemeVersionOrTag();
         vtag.setVersion(version);
@@ -800,21 +800,24 @@ public class DataUtils {
             throw new Exception(
                 "lbSvc.getCodingSchemeConcepts threw exception??? " + code);
         }
-
         cns = cns.restrictToCodes(crefs);
-        ResolvedConceptReferenceList matches =
+        ResolvedConceptReferenceList matches = null;
+
+        try {
+            matches =
             cns.resolveToList(null, null, null, 1);
+		} catch (Exception ex) {
+			ex.printStackTrace();
+		}
 
         if (matches == null) {
             _logger.warn("Concept not found for " + code + ".");
             return null;
         }
-
         if (matches.getResolvedConceptReferenceCount() > 0) {
             ResolvedConceptReference ref =
                 (ResolvedConceptReference) matches
                     .enumerateResolvedConceptReference().nextElement();
-
             Entity entry = ref.getReferencedEntry();
             return entry;
         }
@@ -1011,6 +1014,7 @@ public class DataUtils {
     // return v;
     // }
 
+/*
     public static Vector<String> getSubconceptCodes2(String scheme,
         String version, String code) {
         // eturned bar delimited name|code
@@ -1020,22 +1024,15 @@ public class DataUtils {
             csvt.setVersion(version);
         long ms = System.currentTimeMillis();
 
-
-        //try {
-			/*
-            LexBIGService lbSvc = RemoteServerUtil.createLexBIGService();
-            LexBIGServiceConvenienceMethods lbscm =
-                (LexBIGServiceConvenienceMethods) lbSvc
-                    .getGenericExtension("LexBIGServiceConvenienceMethods");
-            lbscm.setLexBIGService(lbSvc);
-            CodingScheme cs = lbSvc.resolveCodingScheme(scheme, csvt);
-            */
         CodingScheme cs = null;
         try {
             cs = resolveCodingScheme(scheme, version);
 
             if (cs == null)
                 return null;
+
+
+
             Mappings mappings = cs.getMappings();
             SupportedHierarchy[] hierarchies = mappings.getSupportedHierarchy();
             if (hierarchies == null || hierarchies.length == 0)
@@ -1046,6 +1043,9 @@ public class DataUtils {
                 hierarchyDefn.getAssociationNames();
             boolean associationsNavigatedFwd =
                 hierarchyDefn.getIsForwardNavigable();
+
+
+
             NameAndValueList nameAndValueList =
                 createNameAndValueList(associationsToNavigate, null);
             ResolvedConceptReferenceList matches = null;
@@ -1117,7 +1117,7 @@ public class DataUtils {
         SortUtils.quickSort(list);
         return list;
     }
-
+*/
     public static ResolvedConceptReferencesIterator codedNodeGraph2CodedNodeSetIterator(
         CodedNodeGraph cng, ConceptReference graphFocus,
         boolean resolveForward, boolean resolveBackward,
@@ -1218,8 +1218,13 @@ public class DataUtils {
             || hierarchicalAssoName_vec.size() == 0) {
             return null;
         }
-        String hierarchicalAssoName =
-            (String) hierarchicalAssoName_vec.elementAt(0);
+
+        String hierarchicalAssoName = "subClassOf";
+        if (hierarchicalAssoName_vec.size() == 1) {
+			hierarchicalAssoName = (String) hierarchicalAssoName_vec.elementAt(0);
+		} else if (hierarchicalAssoName_vec.contains("subClassOf")) {
+			hierarchicalAssoName = "subClassOf";
+		}
         // KLO, 01/23/2009
         // Vector<Entity> superconcept_vec = util.getAssociationSources(scheme,
         // version, code, hierarchicalAssoName);
@@ -1334,47 +1339,45 @@ public class DataUtils {
                     .getContent();
 
             } catch (Exception e) {
-                ExceptionUtils
-                    .print(_logger, e, "DataUtils.getSubconceptCodes");
-                // e.printStackTrace();
+                 e.printStackTrace();
             }
 
             // Iterate through all hierarchies and levels ...
             String[] hierarchyIDs = lbscm.getHierarchyIDs(scheme, csvt);
             for (int k = 0; k < hierarchyIDs.length; k++) {
                 String hierarchyID = hierarchyIDs[k];
-                AssociationList associations = null;
-                associations = null;
-                try {
-                    associations =
-                        lbscm.getHierarchyLevelNext(scheme, csvt, hierarchyID,
-                            code, false, null);
-                } catch (Exception e) {
-                    ExceptionUtils.print(_logger, e,
-                        "DataUtils.getSubconceptCodes");
-                    _logger.error("getSubconceptCodes "
-                        + "Exception lbscm.getHierarchyLevelNext");
-                    return v;
-                }
+                if (hierarchyID.compareTo("is_a") == 0 || hierarchyID.compareTo("subClassOf") == 0) {
+					AssociationList associations = null;
+					associations = null;
+					try {
+						associations =
+							lbscm.getHierarchyLevelNext(scheme, csvt, hierarchyID,
+								code, false, null);
+					} catch (Exception e) {
+						System.out.println("getSubconceptCodes "
+							+ "Exception lbscm.getHierarchyLevelNext");
+						return v;
+					}
 
-                for (int i = 0; i < associations.getAssociationCount(); i++) {
-                    Association assoc = associations.getAssociation(i);
-                    AssociatedConceptList concepts =
-                        assoc.getAssociatedConcepts();
-                    for (int j = 0; j < concepts.getAssociatedConceptCount(); j++) {
-                        AssociatedConcept concept =
-                            concepts.getAssociatedConcept(j);
-                        String nextCode = concept.getConceptCode();
-                        v.add(nextCode);
-                    }
-                }
+					for (int i = 0; i < associations.getAssociationCount(); i++) {
+						Association assoc = associations.getAssociation(i);
+						AssociatedConceptList concepts =
+							assoc.getAssociatedConcepts();
+						for (int j = 0; j < concepts.getAssociatedConceptCount(); j++) {
+							AssociatedConcept concept =
+								concepts.getAssociatedConcept(j);
+							String nextCode = concept.getConceptCode();
+							v.add(nextCode);
+						}
+					}
+			    }
             }
         } catch (Exception ex) {
-            ExceptionUtils.print(_logger, ex, "DataUtils.getSubconceptCodes");
             ex.printStackTrace();
         }
         return v;
     }
+
 
     public static Vector<String> getSuperconceptCodes(String scheme,
         String version, String code) { // throws LBException{
@@ -1400,45 +1403,36 @@ public class DataUtils {
             String[] hierarchyIDs = lbscm.getHierarchyIDs(scheme, csvt);
             for (int k = 0; k < hierarchyIDs.length; k++) {
                 String hierarchyID = hierarchyIDs[k];
-                AssociationList associations =
-                    lbscm.getHierarchyLevelPrev(scheme, csvt, hierarchyID,
-                        code, false, null);
-                for (int i = 0; i < associations.getAssociationCount(); i++) {
-                    Association assoc = associations.getAssociation(i);
-                    AssociatedConceptList concepts =
-                        assoc.getAssociatedConcepts();
-                    for (int j = 0; j < concepts.getAssociatedConceptCount(); j++) {
-                        AssociatedConcept concept =
-                            concepts.getAssociatedConcept(j);
-                        String nextCode = concept.getConceptCode();
-                        v.add(nextCode);
-                    }
-                }
+                if (hierarchyID.compareTo("is_a") == 0 || hierarchyID.compareTo("subClassOf") == 0) {
+					AssociationList associations =
+						lbscm.getHierarchyLevelPrev(scheme, csvt, hierarchyID,
+							code, false, null);
+					for (int i = 0; i < associations.getAssociationCount(); i++) {
+						Association assoc = associations.getAssociation(i);
+						AssociatedConceptList concepts =
+							assoc.getAssociatedConcepts();
+						for (int j = 0; j < concepts.getAssociatedConceptCount(); j++) {
+							AssociatedConcept concept =
+								concepts.getAssociatedConcept(j);
+							String nextCode = concept.getConceptCode();
+							v.add(nextCode);
+						}
+					}
+				}
             }
         } catch (Exception ex) {
             ex.printStackTrace();
         } finally {
-            _logger
-                .debug("Run time (ms): " + (System.currentTimeMillis() - ms));
+             System.out.println("Run time (ms): " + (System.currentTimeMillis() - ms));
         }
         return v;
     }
 
+/*
     public static Vector<String> getHierarchyAssociationId(String scheme,
         String version) {
 
         Vector<String> association_vec = new Vector<String>();
-        //try {
-			/* resolveCodingScheme
-            LexBIGService lbSvc = RemoteServerUtil.createLexBIGService();
-
-            // Will handle secured ontologies later.
-            CodingSchemeVersionOrTag versionOrTag =
-                new CodingSchemeVersionOrTag();
-            versionOrTag.setVersion(version);
-            CodingScheme cs = lbSvc.resolveCodingScheme(scheme, versionOrTag);
-            */
-
         CodingScheme cs = null;
         try {
             cs = resolveCodingScheme(scheme, version);
@@ -1457,6 +1451,30 @@ public class DataUtils {
         }
         return association_vec;
     }
+*/
+
+    public static Vector<String> getHierarchyAssociationId(String scheme, String version) {
+        Vector<String> association_vec = new Vector<String>();
+        CodingScheme cs = null;
+        try {
+			LexBIGService lbSvc = RemoteServerUtil.createLexBIGService();
+            cs = new CodingSchemeDataUtils(lbSvc).resolveCodingScheme(scheme, version);
+            Mappings mappings = cs.getMappings();
+            SupportedHierarchy[] hierarchies = mappings.getSupportedHierarchy();
+            for (int k=0; k<hierarchies.length; k++) {
+				String[] ids = hierarchies[k].getAssociationNames();
+				for (int i = 0; i < ids.length; i++) {
+					if (!association_vec.contains(ids[i])) {
+						association_vec.add(ids[i]);
+					}
+				}
+		    }
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+        return association_vec;
+    }
+
 
     public static String getVocabularyVersionByTag(String codingSchemeName,
         String ltag) {
