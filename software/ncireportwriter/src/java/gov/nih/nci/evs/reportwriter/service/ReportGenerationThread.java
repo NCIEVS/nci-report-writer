@@ -7,22 +7,47 @@
 
 package gov.nih.nci.evs.reportwriter.service;
 
-import java.io.*;
-import java.util.*;
-
+import gov.nih.nci.evs.browser.utils.*;
 import gov.nih.nci.evs.reportwriter.bean.*;
 import gov.nih.nci.evs.reportwriter.formatter.*;
+import gov.nih.nci.evs.reportwriter.properties.*;
 import gov.nih.nci.evs.reportwriter.utils.*;
-
+import gov.nih.nci.evs.utils.*;
+import gov.nih.nci.system.client.*;
+import java.io.*;
+import java.text.DecimalFormat;
+import java.text.SimpleDateFormat;
+import java.util.*;
+import javax.faces.model.*;
+import org.LexGrid.LexBIG.DataModel.Collections.*;
+import org.LexGrid.LexBIG.DataModel.Core.*;
+import org.LexGrid.LexBIG.DataModel.Core.AssociatedConcept;
+import org.LexGrid.LexBIG.DataModel.Core.types.*;
+import org.LexGrid.LexBIG.DataModel.InterfaceElements.*;
+import org.LexGrid.LexBIG.Exceptions.*;
+import org.LexGrid.LexBIG.Extensions.Generic.*;
+import org.LexGrid.LexBIG.LexBIGService.*;
+import org.LexGrid.LexBIG.Utility.*;
+import org.LexGrid.LexBIG.Utility.Iterators.*;
+import org.LexGrid.LexBIG.Utility.Iterators.ResolvedConceptReferencesIterator;
+import org.LexGrid.LexBIG.caCore.interfaces.*;
+import org.LexGrid.codingSchemes.*;
 import org.LexGrid.commonTypes.*;
 import org.LexGrid.concepts.*;
+import org.LexGrid.naming.*;
+import org.LexGrid.valueSets.DefinitionEntry;
+import org.LexGrid.valueSets.EntityReference;
+import org.LexGrid.valueSets.PropertyMatchValue;
+import org.LexGrid.valueSets.PropertyReference;
+import org.LexGrid.valueSets.ValueSetDefinition;
+import org.LexGrid.valueSets.types.DefinitionOperator;
 import org.apache.log4j.*;
+import org.lexgrid.resolvedvalueset.LexEVSResolvedValueSetService;
+import org.lexgrid.resolvedvalueset.impl.LexEVSResolvedValueSetServiceImpl;
 import org.lexgrid.valuesets.*;
-
-import gov.nih.nci.evs.reportwriter.properties.*;
-import gov.nih.nci.evs.utils.*;
-
-import org.LexGrid.LexBIG.DataModel.Core.AssociatedConcept;
+import org.lexgrid.valuesets.LexEVSValueSetDefinitionServices;
+import org.lexgrid.valuesets.dto.ResolvedValueSetDefinition;
+import org.lexgrid.valuesets.impl.LexEVSValueSetDefinitionServicesImpl;
 
 /**
  *
@@ -155,7 +180,7 @@ public class ReportGenerationThread implements Runnable {
                     StopWatch.format(StopWatch.timeInMinutes(runTime)) + " minutes, " +
                     _count + " rows\n");
                 message.append("\n");
-                message.append(StringUtils.SEPARATOR + "\n");
+                message.append(gov.nih.nci.evs.utils.StringUtils.SEPARATOR + "\n");
             }
 
             if (successful) {
@@ -168,7 +193,7 @@ public class ReportGenerationThread implements Runnable {
             }
 
             message.append("\n");
-            message.append(StringUtils.SEPARATOR + "\n");
+            message.append(gov.nih.nci.evs.utils.StringUtils.SEPARATOR + "\n");
             message.append("LexEVS: " + AppProperties.getInstance().getProperty(
                 AppProperties.EVS_SERVICE_URL) + "\n");
             message.append("Started:   " + startDate + "\n");
@@ -181,7 +206,7 @@ public class ReportGenerationThread implements Runnable {
             message.append("Total number of concepts processed: " + _count + "\n");
 
             message.append("\n");
-            message.append(StringUtils.SEPARATOR + "\n");
+            message.append(gov.nih.nci.evs.utils.StringUtils.SEPARATOR + "\n");
             message.append("Report Template Parameters:\n");
             try {
                 StandardReportTemplate standardReportTemplate = null;
@@ -209,7 +234,7 @@ public class ReportGenerationThread implements Runnable {
 
             boolean send = true;
             System.out.println("Email sent to " + recipients + " (subject: " + subject + ")");
-            MailUtils.postMail(mailServer, from, recipients, subject,
+            gov.nih.nci.evs.utils.MailUtils.postMail(mailServer, from, recipients, subject,
                 message.toString(), send);
         } catch (Exception e) {
             ExceptionUtils.print(_logger, e);
@@ -254,7 +279,7 @@ public class ReportGenerationThread implements Runnable {
                     uid, warningMsg);
             }
 
-            _logger.debug(StringUtils.SEPARATOR);
+            _logger.debug(gov.nih.nci.evs.utils.StringUtils.SEPARATOR);
             _logger.debug("Method: generateStandardReport");
             _logger.debug("  * Output directory: " + outputDir);
             _logger.debug("  * standardReportLabel: " + standardReportLabel);
@@ -315,7 +340,7 @@ public class ReportGenerationThread implements Runnable {
             String delimeter_str = "\t";
 
 
-            _logger.debug(StringUtils.SEPARATOR);
+            _logger.debug(gov.nih.nci.evs.utils.StringUtils.SEPARATOR);
             _logger.debug("  * ID: " + id);
             _logger.debug("  * Label: " + label);
             _logger.debug("  * CodingSchemeName: " + codingSchemeName);
@@ -354,7 +379,7 @@ public class ReportGenerationThread implements Runnable {
             setReportColumns(temp_cols);
 
 
-            _logger.debug(StringUtils.SEPARATOR);
+            _logger.debug(gov.nih.nci.evs.utils.StringUtils.SEPARATOR);
             _logger.debug("* Start generating report..." + pathname);
 
             printReportHeading(pw, cols);
@@ -596,7 +621,7 @@ for (int k=0; k<w.size(); k++) {
 
 
     private void printColumnData(PrintWriter pw, Vector<String> values, String delim) {
-		pw.println(StringUtils.toString(values, delim, true));
+		pw.println(gov.nih.nci.evs.utils.StringUtils.toString(values, delim, true));
 	}
 
 
@@ -628,6 +653,67 @@ for (int k=0; k<w.size(); k++) {
     }
 
 
+    public Vector<Entity> getAssociatedEntities(String scheme, String version, String namespace, String code,
+                                         String associationName, boolean direction) {
+        Vector v = new Vector();
+        CodingSchemeVersionOrTag csvt = new CodingSchemeVersionOrTag();
+        if (version != null) {
+			csvt.setVersion(version);
+		}
+
+        // Perform the query ...
+        String relationContainerName = null;
+        ResolvedConceptReferenceList matches = null;
+        ConceptReference cref = ConvenienceMethods.createConceptReference(code, scheme);
+        LexBIGService lbSvc = null;
+        try {
+			lbSvc = RemoteServerUtil.createLexBIGService();
+		} catch (Exception ex) {
+			ex.printStackTrace();
+		}
+        if (namespace == null) {
+			namespace = new ConceptDetails(lbSvc).getNamespaceByCode(scheme, version, code);
+		}
+        cref.setCodeNamespace(namespace);
+        try {
+			matches = lbSvc.getNodeGraph(scheme, csvt, relationContainerName).resolveAsList(
+					cref, direction, !direction, 1, 1, new LocalNameList(), null,
+					null, -1);
+		} catch (Exception ex) {
+			return null;
+		}
+        boolean associationExists = false;
+        if (matches.getResolvedConceptReferenceCount() > 0) {
+            Enumeration<? extends ResolvedConceptReference> refEnum = matches.enumerateResolvedConceptReference();
+
+            while (refEnum.hasMoreElements()) {
+                ResolvedConceptReference ref = refEnum.nextElement();
+                AssociationList sourceof = ref.getSourceOf();
+                if (!direction) {
+					sourceof = ref.getTargetOf();
+				}
+                if (sourceof != null) {
+					Association[] associations = sourceof.getAssociation();
+					for (int i = 0; i < associations.length; i++) {
+						Association assoc = associations[i];
+						if (assoc.getAssociationName().compareTo(associationName) == 0) {
+							associationExists = true;
+							AssociatedConcept[] acl = assoc.getAssociatedConcepts().getAssociatedConcept();
+							for (int j = 0; j < acl.length; j++) {
+								AssociatedConcept ac = acl[j];
+								Entity entity = ac.getEntity();
+								v.add(entity);
+							}
+							break;
+						}
+					}
+			    }
+            }
+        }
+        if (!associationExists) return null;
+        return v;
+    }
+
 
     private void traverse(LexEVSValueSetDefinitionServices definitionServices,
         String uri, PrintWriter pw, String scheme, String version,
@@ -655,6 +741,11 @@ for (int k=0; k<w.size(); k++) {
 
 
         Vector<Entity> v = new Vector<Entity>();
+        String namespace = null;
+        v = getAssociatedEntities(scheme, version, namespace, root.getEntityCode(),
+                                         associationName, direction);
+
+        /*
         if (direction) {
             v =
                 DataUtils.getAssociationTargets(definitionServices, uri,
@@ -664,6 +755,7 @@ for (int k=0; k<w.size(); k++) {
                 DataUtils.getAssociationSources(definitionServices, uri,
                     scheme, version, root.getEntityCode(), associationName);
         }
+        */
 
 		//Boolean isForwardNavigable = DataUtils.getIsForwardNavigable(scheme, version);
 		//String[] asso_array = DataUtils.getHierarchyAssociations(scheme, version);
@@ -737,7 +829,7 @@ for (int k=0; k<w.size(); k++) {
 						break;
 				}
 
-				key_vec = SortUtils.quickSort(key_vec);
+				key_vec = new gov.nih.nci.evs.browser.utils.SortUtils().quickSort(key_vec);
 				for (int i = 0; i < key_vec.size(); i++) {
 					String key = (String) key_vec.elementAt(i);
 					Vector values = (Vector) hmap.get(key);
@@ -752,8 +844,6 @@ for (int k=0; k<w.size(); k++) {
 			for (int i = 0; i < v.size(); i++) {
 				// subset member element
 				Entity c = (Entity) v.elementAt(i);
-
-
 				writeColumnData(definitionServices, uri,
 					pw, scheme, version, defining_root_concept, root,
 					c, delim, cols);
@@ -1190,7 +1280,7 @@ for (int k=0; k<w.size(); k++) {
             String matchText = (String) v.elementAt(4);
             String matchAlgorithm = (String) v.elementAt(5);
 
-            _logger.debug(StringUtils.SEPARATOR);
+            _logger.debug(gov.nih.nci.evs.utils.StringUtils.SEPARATOR);
             _logger.debug("Method: generateSpecialReport");
             _logger.debug("  * Output directory: " + outputDir);
             _logger.debug("  * standardReportLabel: " + standardReportLabel);
@@ -1273,7 +1363,7 @@ for (int k=0; k<w.size(); k++) {
                 }
             }
 
-            _logger.debug(StringUtils.SEPARATOR);
+            _logger.debug(gov.nih.nci.evs.utils.StringUtils.SEPARATOR);
             _logger.debug("* Start generating report..." + pathname);
 
             printReportHeading(pw, cols);
