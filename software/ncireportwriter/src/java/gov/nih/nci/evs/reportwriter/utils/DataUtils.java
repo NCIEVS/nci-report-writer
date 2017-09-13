@@ -605,18 +605,27 @@ public class DataUtils {
             LexBIGService lbSvc = RemoteServerUtil.createLexBIGService();
             scheme = lbSvc.resolveCodingScheme(codingSchemeName, vt);
         */
+
+        System.out.println("getSourceListData codingSchemeName: " + codingSchemeName);
+        System.out.println("getSourceListData version: " + version);
+
         CodingScheme scheme = null;
         try {
             scheme = resolveCodingScheme(codingSchemeName, version);
-            if (scheme == null)
+            if (scheme == null) {
+				System.out.println("ERROR -- unable to resolve " + codingSchemeName + " (" + version + ")");
                 return null;
+			}
             Vector<String> sourceListData = new Vector<String>();
 
             // Insert your code here
             SupportedSource[] sources =
                 scheme.getMappings().getSupportedSource();
+
+            System.out.println("getSourceListData returns number of sources: " + sources.length);
             for (int i = 0; i < sources.length; i++) {
                 SupportedSource source = sources[i];
+                System.out.println(source.getLocalId());
                 sourceListData.add(source.getLocalId());
             }
 
