@@ -63,8 +63,8 @@ set CLASSPATH=.
 set CLASSPATH=%CLASSPATH%;%lib%\*
 set CLASSPATH=%CLASSPATH%;%lib1%\*
 set CLASSPATH=%CLASSPATH%;%lib2%\*
-rem java -Xmx1300m -classpath %CLASSPATH% -DLG_CONFIG_FILE="C:\LexEVS6.3.0.RC1\resources\config\lbconfig.props" gov.nih.nci.evs.reportwriter.test.StandardReportTemplateExporter template_dir
-java -Xmx1300m -classpath %CLASSPATH% -DLG_CONFIG_FILE="C:\LexEVS6.3.0.RC1\resources\config\lbconfig.props" gov.nih.nci.evs.reportwriter.test.StandaloneReportGenerator template.dat output
+rem java -Xmx1300m -classpath %CLASSPATH% -DLG_CONFIG_FILE="C:\LexEVS6.3.0.RC1\resources\config\lbconfig.props" gov.nih.nci.evs.reportwriter.service.StandardReportTemplateExporter template_dir admin_userid
+java -Xmx1300m -classpath %CLASSPATH% -DLG_CONFIG_FILE="C:\LexEVS6.3.0.RC1\resources\config\lbconfig.props" gov.nih.nci.evs.reportwriter.service.StandaloneReportGenerator template_dir output admin_userid
 set CLASSPATH=%OCP%
 
 rem NOTE: Change "C:\LexEVS6.3.0.RC1\resources\config\lbconfig.props" to fit your LexEVS environment, if you are running against LexEVS local runtime.

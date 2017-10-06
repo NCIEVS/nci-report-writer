@@ -78,6 +78,13 @@ public class ReportGenerationRunner { //implements Runnable {
 			String standardReportLabel = standardReportTemplate.getLabel();
             String defining_set_desc =
                 standardReportTemplate.getRootConceptCode();
+
+             if (defining_set_desc.indexOf("|") != -1) {
+                return generateSpecialReport(outputDir, standardReportTemplate,
+                    uid, new StringBuffer());
+            }
+
+
             File dir = new File(outputDir);
             if (!dir.exists()) {
                 _logger.debug("Output directory " + outputDir
@@ -112,10 +119,6 @@ public class ReportGenerationRunner { //implements Runnable {
                 throw new Exception("Unable to create output file " + pathname
                     + " -- please check privilege setting.");
             _logger.debug("opened PrintWriter " + pathname);
-
-/*
-            int id = standardReportTemplate.getId();
-*/
 
             String label = standardReportTemplate.getLabel();
             String codingSchemeName =
@@ -1436,6 +1439,194 @@ public class ReportGenerationRunner { //implements Runnable {
 		}
 		return list;
 	}
+
+
+
+    public Boolean warningMsg(StringBuffer buffer, String text) {
+        buffer.append(text);
+        _logger.warn(text);
+        return Boolean.FALSE;
+    }
+
+    public Boolean generateSpecialReport(String outputDir,
+        StandardReportTemplate standardReportTemplate, String uid,
+        StringBuffer warningMsg) {
+        String standardReportLabel = null;
+
+        try {
+			standardReportLabel = standardReportTemplate.getLabel();
+        } catch (Exception e) {
+            return warningMsg(warningMsg, "Unable to identify report label "
+                + standardReportLabel + " -- report not generated.");
+        }
+
+        try {
+            String queryString = standardReportTemplate.getRootConceptCode();
+            String delimiter = "|";
+            Vector<String> v = parseData(queryString, delimiter);
+            String property = (String) v.elementAt(0);
+            String source = (String) v.elementAt(1);
+            String qualifier_name = (String) v.elementAt(2);
+            String qualifier_value = (String) v.elementAt(3);
+            String matchText = (String) v.elementAt(4);
+            String matchAlgorithm = (String) v.elementAt(5);
+            _logger.debug(gov.nih.nci.evs.utils.StringUtils.SEPARATOR);
+            _logger.debug("Method: generateSpecialReport");
+            _logger.debug("  * Output directory: " + outputDir);
+            _logger.debug("  * standardReportLabel: " + standardReportLabel);
+            _logger.debug("  * uid: " + uid);
+
+            File dir = new File(outputDir);
+            if (!dir.exists()) {
+                _logger.debug("Output directory " + outputDir
+                    + " does not exist -- try to create the directory.");
+                boolean retval = dir.mkdir();
+                if (!retval) {
+                    throw new Exception("Unable to create output directory "
+                        + outputDir + " -- please check privilege setting.");
+                } else {
+                    _logger.debug("Output directory: " + outputDir
+                        + " created.");
+                }
+            } else {
+                _logger.debug("Output directory: " + outputDir + " exists.");
+            }
+
+            String version = standardReportTemplate.getCodingSchemeVersion();
+            String pathname =
+                outputDir + File.separator + standardReportLabel + "__"
+                    + version + ".txt";
+            pathname = pathname.replaceAll(" ", "_");
+            _logger.debug("Full path name: " + pathname);
+
+            PrintWriter pw = openPrintWriter(pathname);
+
+            if (pw == null) {
+                throw new Exception("Unable to create output file " + pathname
+                    + " -- please check privilege setting.");
+			}
+            //int id = standardReportTemplate.getId();
+            String label = standardReportTemplate.getLabel();
+            String codingSchemeName =
+                standardReportTemplate.getCodingSchemeName();
+            String codingSchemeVersion =
+                standardReportTemplate.getCodingSchemeVersion();
+            String rootConceptCode =
+                standardReportTemplate.getRootConceptCode();
+            String associationName =
+                standardReportTemplate.getAssociationName();
+            boolean direction = standardReportTemplate.getDirection();
+            int level = standardReportTemplate.getLevel();
+            // char delim = '$';
+            // Character delimiter = standardReportTemplate.getDelimiter();
+            String delimeter_str = "\t";
+
+            //_logger.debug("  * ID: " + id);
+            _logger.debug("  * Label: " + label);
+            _logger.debug("  * CodingSchemeName: " + codingSchemeName);
+            _logger.debug("  * CodingSchemeVersion: " + codingSchemeVersion);
+            _logger.debug("  * Root: " + rootConceptCode);
+            _logger.debug("  * AssociationName: " + associationName);
+            _logger.debug("  * Direction: " + direction);
+            _logger.debug("  * Level: " + level);
+            // _logger.debug("Delimiter: " + delimiter);
+
+            Object[] objs = null;
+            Collection<ReportColumn> cc =
+                standardReportTemplate.getColumnCollection();
+            if (cc == null) {
+                throw new Exception(
+                    "standardReportTemplate.getColumnCollection"
+                        + " returned null???");
+            } else {
+                objs = cc.toArray();
+            }
+
+            ReportColumn[] cols = null;
+            if (cc != null) {
+                cols = new ReportColumn[objs.length];
+                for (int i = 0; i < objs.length; i++) {
+                    gov.nih.nci.evs.reportwriter.bean.ReportColumn col =
+                        (gov.nih.nci.evs.reportwriter.bean.ReportColumn) objs[i];
+                    //Debug.print(col);
+                    cols[i] = col;
+                }
+            }
+
+            _logger.debug(gov.nih.nci.evs.utils.StringUtils.SEPARATOR);
+            _logger.debug("* Start generating report..." + pathname);
+            printReportHeading(pw, cols);
+            // String scheme = standardReportTemplate.getCodingSchemeName();
+            version = standardReportTemplate.getCodingSchemeVersion();
+
+//10062017
+if (!DataUtils.isNullOrBlank(DataUtils.NCIT_VERSION) || version.compareTo("@ncit.version@") == 0) {
+	version = DataUtils.NCIT_VERSION;
+}
+
+            Vector<String> property_vec = null;
+            if (property != null && property.compareTo("null") != 0) {
+                property_vec = new Vector<String>();
+                property_vec.add(property);
+            }
+
+            Vector<String> source_vec = null;
+            if (source != null && source.compareTo("null") != 0) {
+                source_vec = new Vector<String>();
+                source_vec.add(source);
+            }
+
+            Vector<String> qualifier_name_vec = null;
+            if (qualifier_name != null && qualifier_name.compareTo("null") != 0) {
+                qualifier_name_vec = new Vector<String>();
+                qualifier_name_vec.add(qualifier_name);
+            }
+
+            Vector<String> qualifier_value_vec = null;
+            if (qualifier_value != null
+                && qualifier_value.compareTo("null") != 0) {
+                qualifier_value_vec = new Vector<String>();
+                qualifier_value_vec.add(qualifier_value);
+            }
+
+            int maxToReturn = 10000;
+            String language = null;
+
+/*
+            Vector<Entity> concept_vec =
+                DataUtils.restrictToMatchingProperty(codingSchemeName, version,
+                    property_vec, source_vec, qualifier_name_vec,
+                    qualifier_value_vec, matchText, matchAlgorithm, language,
+                    maxToReturn);
+*/
+            Vector<Entity> concept_vec =
+                DataUtils.restrict_To_Matching_Property(codingSchemeName, version,
+                    property_vec, source_vec, qualifier_name_vec,
+                    qualifier_value_vec, matchText, matchAlgorithm, language,
+                    maxToReturn);
+
+            _logger.debug("concept_vec.size(): " + concept_vec.size());
+
+            String delim = "\t";
+            LexEVSValueSetDefinitionServices definitionServices =
+                DataUtils.getValueSetDefinitionService();
+            String uri = DataUtils.codingSchemeName2URI(codingSchemeName, version);
+            for (int i = 0; i < concept_vec.size(); i++) {
+                Entity c = (Entity) concept_vec.elementAt(i);
+                writeColumnData(definitionServices, uri,
+                    pw, codingSchemeName, version, null, null, c,
+                    delim, cols, true);
+            }
+
+            closePrintWriter(pw);
+            _logger.debug("Generated output file: " + pathname);
+            return createStandardReports(outputDir, standardReportLabel, uid,
+                standardReportTemplate, pathname, version, delimeter_str);
+        } catch (Exception e) {
+			e.printStackTrace();
+            return warningMsg(warningMsg, ExceptionUtils.getStackTrace(e));
+        }
+    }
 
 
 	public void generateStandardReportInBatch(String input_dir, String output_dir, String userId) {

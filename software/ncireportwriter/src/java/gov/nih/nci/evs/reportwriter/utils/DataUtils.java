@@ -606,9 +606,6 @@ public class DataUtils {
             scheme = lbSvc.resolveCodingScheme(codingSchemeName, vt);
         */
 
-        System.out.println("getSourceListData codingSchemeName: " + codingSchemeName);
-        System.out.println("getSourceListData version: " + version);
-
         CodingScheme scheme = null;
         try {
             scheme = resolveCodingScheme(codingSchemeName, version);
@@ -622,10 +619,8 @@ public class DataUtils {
             SupportedSource[] sources =
                 scheme.getMappings().getSupportedSource();
 
-            System.out.println("getSourceListData returns number of sources: " + sources.length);
             for (int i = 0; i < sources.length; i++) {
                 SupportedSource source = sources[i];
-                System.out.println(source.getLocalId());
                 sourceListData.add(source.getLocalId());
             }
 
@@ -2687,58 +2682,7 @@ _logger.debug("getResolvedConceptReferenceIterator...");
         return data_vec;
     }
 
-    public static void main(String[] args) {
 
-        try {
-			String scheme = "NCI Thesaurus";
-			String version = "11.03d";
-            String code = "C66767";
-
-            String assocName = "Concept_In_Subset";
-            boolean direction = true;
-
-            Vector v = getRelatedConcepts(scheme, version, code, assocName, direction);
-            for (int i=0; i<v.size(); i++) {
-				AssociatedConcept ac = (AssociatedConcept) v.elementAt(i);
-				System.out.println("\t\t" + ac.getConceptCode() + "\t" + ac.getEntityDescription().getContent());
-			}
-
-            direction = false;
-
-            v = getRelatedConcepts(scheme, version, code, assocName, direction);
-            for (int i=0; i<v.size(); i++) {
-				AssociatedConcept ac = (AssociatedConcept) v.elementAt(i);
-				System.out.println("\t\t" + ac.getConceptCode() + "\t" + ac.getEntityDescription().getContent());
-			}
-
-            code = "C92807";
-            assocName = "Has_NICHD_Parent";
-            direction = true;
-
-            v = getRelatedConcepts(scheme, version, code, assocName, direction);
-            for (int i=0; i<v.size(); i++) {
-				AssociatedConcept ac = (AssociatedConcept) v.elementAt(i);
-				System.out.println("\t\t" + ac.getConceptCode() + "\t" + ac.getEntityDescription().getContent());
-			}
-
-			code = "C74912";
-			String source = "CDISC";
-			String source_code = "SDTM-LBTEST";
-			String pt = getPTBySourceCode(scheme, version, code, source, source_code);
-			System.out.println(code + " source: " + source + " source-code: " + source_code + " pt: " + pt);
-
-
-			code = "C25158";
-			source = "CDISC";
-			source_code = "SDTM-LBTEST";
-			pt = getPTBySourceCode(scheme, version, code, source, source_code);
-			System.out.println(code + " source: " + source + " source-code: " + source_code + " pt: " + pt);
-
-
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
 
     public static boolean isNullOrBlank(String value) {
 		if (value == null || value.compareToIgnoreCase("null") == 0 || value.compareTo("") == 0) return true;
@@ -2922,6 +2866,7 @@ _logger.debug("getResolvedConceptReferenceIterator...");
 		return w;
 	}
 
+
 	public static String parseCodingSchemeNameAndVersionString(String nameAndVersion) {
 		int n = nameAndVersion.lastIndexOf("(");
 		String codingScheme = nameAndVersion.substring(0, n-1);
@@ -2930,4 +2875,120 @@ _logger.debug("getResolvedConceptReferenceIterator...");
 		return codingScheme + "|" + version;
 	}
 
+
+    public static Vector<org.LexGrid.concepts.Entity> restrict_To_Matching_Property(
+        String codingSchemeName, String version, Vector<String> property_vec,
+        Vector<String> source_vec, Vector<String> qualifier_name_vec,
+        Vector<String> qualifier_value_vec, java.lang.String matchText,
+        java.lang.String matchAlgorithm, java.lang.String language,
+        int maxToReturn) {
+
+		LexBIGService lbSvc = null;
+		CodedNodeSet cns = null;
+		CodingSchemeVersionOrTag csvt = new CodingSchemeVersionOrTag();
+		if (version != null) {
+			csvt.setVersion(version);
+		}
+		Vector v = new Vector();
+
+		try {
+			lbSvc = RemoteServerUtil.createLexBIGService();
+			cns = lbSvc.getCodingSchemeConcepts(codingSchemeName, csvt);
+			CodedNodeSet.AnonymousOption restrictToAnonymous = CodedNodeSet.AnonymousOption.NON_ANONYMOUS_ONLY;
+			cns = cns.restrictToAnonymous(restrictToAnonymous);
+
+			LocalNameList propertyNames = vector2LocalNameList(property_vec);
+			CodedNodeSet.PropertyType[] propertyTypes = null;
+			LocalNameList sourceList = vector2LocalNameList(source_vec);
+			NameAndValueList qualifierList =
+				createNameAndValueList(qualifier_name_vec, qualifier_value_vec);
+
+			cns = cns.restrictToMatchingProperties(
+				propertyNames,
+				propertyTypes,
+				sourceList,
+				null,
+				qualifierList,
+				matchText,
+				matchAlgorithm,
+				language);
+
+			ResolvedConceptReferencesIterator iterator
+			= cns.resolve(null, null, null, null, true);
+
+			if (iterator == null) return null;
+			try {
+				while (iterator.hasNext()) {
+					ResolvedConceptReference rcr = iterator.next();
+					Entity concept = rcr.getReferencedEntry();
+					if (concept == null) {
+						_logger.warn("rcr.getReferencedEntry() returns NULL");
+					} else {
+						v.add(concept);
+					}
+				}
+
+			} catch (Exception ex) {
+				ex.printStackTrace();
+			}
+
+	    } catch (Exception ex) {
+			ex.printStackTrace();
+		}
+
+		return v;
+	}
+
+    public static void main(String[] args) {
+
+        try {
+			String scheme = "NCI Thesaurus";
+			String version = "11.03d";
+            String code = "C66767";
+
+            String assocName = "Concept_In_Subset";
+            boolean direction = true;
+
+            Vector v = getRelatedConcepts(scheme, version, code, assocName, direction);
+            for (int i=0; i<v.size(); i++) {
+				AssociatedConcept ac = (AssociatedConcept) v.elementAt(i);
+				System.out.println("\t\t" + ac.getConceptCode() + "\t" + ac.getEntityDescription().getContent());
+			}
+
+            direction = false;
+
+            v = getRelatedConcepts(scheme, version, code, assocName, direction);
+            for (int i=0; i<v.size(); i++) {
+				AssociatedConcept ac = (AssociatedConcept) v.elementAt(i);
+				System.out.println("\t\t" + ac.getConceptCode() + "\t" + ac.getEntityDescription().getContent());
+			}
+
+            code = "C92807";
+            assocName = "Has_NICHD_Parent";
+            direction = true;
+
+            v = getRelatedConcepts(scheme, version, code, assocName, direction);
+            for (int i=0; i<v.size(); i++) {
+				AssociatedConcept ac = (AssociatedConcept) v.elementAt(i);
+				System.out.println("\t\t" + ac.getConceptCode() + "\t" + ac.getEntityDescription().getContent());
+			}
+
+			code = "C74912";
+			String source = "CDISC";
+			String source_code = "SDTM-LBTEST";
+			String pt = getPTBySourceCode(scheme, version, code, source, source_code);
+			System.out.println(code + " source: " + source + " source-code: " + source_code + " pt: " + pt);
+
+
+			code = "C25158";
+			source = "CDISC";
+			source_code = "SDTM-LBTEST";
+			pt = getPTBySourceCode(scheme, version, code, source, source_code);
+			System.out.println(code + " source: " + source + " source-code: " + source_code + " pt: " + pt);
+
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 }

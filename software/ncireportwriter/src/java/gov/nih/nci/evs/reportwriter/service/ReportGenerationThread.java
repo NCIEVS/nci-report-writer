@@ -1303,6 +1303,13 @@ for (int k=0; k<w.size(); k++) {
             }
 
             String version = standardReportTemplate.getCodingSchemeVersion();
+
+//10062017
+if (!DataUtils.isNullOrBlank(DataUtils.NCIT_VERSION) || version.compareTo("@ncit.version@") == 0) {
+	version = DataUtils.NCIT_VERSION;
+}
+
+
             String pathname =
                 outputDir + File.separator + standardReportLabel + "__"
                     + version + ".txt";
