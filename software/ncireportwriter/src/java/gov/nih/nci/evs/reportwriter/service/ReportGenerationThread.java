@@ -325,9 +325,6 @@ public class ReportGenerationThread implements Runnable {
             String codingSchemeName =
                 standardReportTemplate.getCodingSchemeName();
 
-            //String codingSchemeVersion =
-            //    standardReportTemplate.getCodingSchemeVersion();
-
             String rootConceptCode =
                 standardReportTemplate.getRootConceptCode();
 
@@ -454,9 +451,9 @@ Vector w = DataUtils.parseData(code, ";");
 for (int k=0; k<w.size(); k++) {
 	code = (String) w.elementAt(k);
 
-		if (!DataUtils.isNullOrBlank(DataUtils.NCIT_VERSION)) {
-			codingSchemeVersion = DataUtils.NCIT_VERSION;
-		}
+	if (!DataUtils.isNullOrBlank(DataUtils.NCIT_VERSION)) {
+		codingSchemeVersion = DataUtils.NCIT_VERSION;
+	}
 
 	defining_root_concept =
 		DataUtils.getConceptByCode(codingSchemeName,
@@ -1306,7 +1303,7 @@ for (int k=0; k<w.size(); k++) {
             String version = standardReportTemplate.getCodingSchemeVersion();
 
 //10062017
-if (!DataUtils.isNullOrBlank(DataUtils.NCIT_VERSION) || version.compareTo("@ncit.version@") == 0) {
+if (!DataUtils.isNullOrBlank(DataUtils.NCIT_VERSION)) {
 	version = DataUtils.NCIT_VERSION;
 }
 
@@ -1338,6 +1335,13 @@ if (!DataUtils.isNullOrBlank(DataUtils.NCIT_VERSION) || version.compareTo("@ncit
             // char delim = '$';
             // Character delimiter = standardReportTemplate.getDelimiter();
             String delimeter_str = "\t";
+
+
+//10062017
+if (!DataUtils.isNullOrBlank(DataUtils.NCIT_VERSION)) {
+	codingSchemeVersion = DataUtils.NCIT_VERSION;
+}
+
 
             _logger.debug("  * ID: " + id);
             _logger.debug("  * Label: " + label);
@@ -1378,6 +1382,11 @@ if (!DataUtils.isNullOrBlank(DataUtils.NCIT_VERSION) || version.compareTo("@ncit
 
             // String scheme = standardReportTemplate.getCodingSchemeName();
             version = standardReportTemplate.getCodingSchemeVersion();
+
+if (!DataUtils.isNullOrBlank(DataUtils.NCIT_VERSION)) {
+	version = DataUtils.NCIT_VERSION;
+}
+
 
             Vector<String> property_vec = null;
             if (property != null && property.compareTo("null") != 0) {
