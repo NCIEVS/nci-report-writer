@@ -1326,6 +1326,12 @@ if (!DataUtils.isNullOrBlank(DataUtils.NCIT_VERSION)) {
                 standardReportTemplate.getCodingSchemeName();
             String codingSchemeVersion =
                 standardReportTemplate.getCodingSchemeVersion();
+
+			if (!DataUtils.isNullOrBlank(DataUtils.NCIT_VERSION)) {
+				codingSchemeVersion = DataUtils.NCIT_VERSION;
+			}
+
+
             String rootConceptCode =
                 standardReportTemplate.getRootConceptCode();
             String associationName =

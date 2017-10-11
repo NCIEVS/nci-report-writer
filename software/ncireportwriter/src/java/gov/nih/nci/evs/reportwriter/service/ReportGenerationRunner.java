@@ -180,7 +180,7 @@ public class ReportGenerationRunner { //implements Runnable {
             printReportHeading(pw, cols);
 
             String scheme = standardReportTemplate.getCodingSchemeName();
-            codingSchemeVersion = standardReportTemplate.getCodingSchemeVersion();
+            //codingSchemeVersion = standardReportTemplate.getCodingSchemeVersion();
 
             associationName = standardReportTemplate.getAssociationName();
             // associationName = "A8"; //NOTE_A8: A8 vs Concept_In_Subset
@@ -1493,6 +1493,12 @@ public class ReportGenerationRunner { //implements Runnable {
             }
 
             String version = standardReportTemplate.getCodingSchemeVersion();
+
+			if (!DataUtils.isNullOrBlank(DataUtils.NCIT_VERSION)) {
+				version = DataUtils.NCIT_VERSION;
+			}
+
+
             String pathname =
                 outputDir + File.separator + standardReportLabel + "__"
                     + version + ".txt";
@@ -1509,8 +1515,15 @@ public class ReportGenerationRunner { //implements Runnable {
             String label = standardReportTemplate.getLabel();
             String codingSchemeName =
                 standardReportTemplate.getCodingSchemeName();
+
+
             String codingSchemeVersion =
                 standardReportTemplate.getCodingSchemeVersion();
+
+			if (!DataUtils.isNullOrBlank(DataUtils.NCIT_VERSION)) {
+				codingSchemeVersion = DataUtils.NCIT_VERSION;
+			}
+
             String rootConceptCode =
                 standardReportTemplate.getRootConceptCode();
             String associationName =
