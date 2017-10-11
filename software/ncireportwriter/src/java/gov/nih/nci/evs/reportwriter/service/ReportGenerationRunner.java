@@ -204,9 +204,23 @@ public class ReportGenerationRunner { //implements Runnable {
                     || hierarchicalAssoName_vec.size() == 0) {
                     return Boolean.FALSE;
                 }
+                /*
                 _hierarchicalAssoName =
                     (String) hierarchicalAssoName_vec.elementAt(0);
+                    */
+
+                for (int k=0; k<hierarchicalAssoName_vec.size(); k++) {
+                _hierarchicalAssoName =
+                    (String) hierarchicalAssoName_vec.elementAt(k);
+                    if (_hierarchicalAssoName.compareTo("subClassOf") == 0) {
+						break;
+					}
+				}
+
             }
+            if (_hierarchicalAssoName == null) {
+				_hierarchicalAssoName = "subClassOf";
+			}
 
             String associationCode = "";
             try {
@@ -236,9 +250,9 @@ public class ReportGenerationRunner { //implements Runnable {
 			for (int k=0; k<w.size(); k++) {
 				code = (String) w.elementAt(k);
 
-					if (!DataUtils.isNullOrBlank(DataUtils.NCIT_VERSION)) {
-						codingSchemeVersion = DataUtils.NCIT_VERSION;
-					}
+				if (!DataUtils.isNullOrBlank(DataUtils.NCIT_VERSION)) {
+					codingSchemeVersion = DataUtils.NCIT_VERSION;
+				}
 
 				defining_root_concept =
 					DataUtils.getConceptByCode(codingSchemeName,
