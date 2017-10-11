@@ -252,7 +252,7 @@ public class ReportGenerationRunner { //implements Runnable {
 			}
 
             closePrintWriter(pw);
-
+            _logger.debug("codingSchemeVersion: " + codingSchemeVersion);
             _logger.debug("Total number of concepts processed: " + _count);
             _logger.debug("Output file " + pathname + " generated.");
 
@@ -325,6 +325,7 @@ public class ReportGenerationRunner { //implements Runnable {
         pw.println(output_line);
         _count++;
         if ((_count / 100) * 100 == _count) {
+			_logger.debug("version: " + version);
             _logger.debug("Number of concepts processed: " + _count);
         }
     }
@@ -340,6 +341,7 @@ public class ReportGenerationRunner { //implements Runnable {
 			printColumnData(pw, values, delim);
 			_count++;
 			if ((_count / 100) * 100 == _count) {
+				_logger.debug("version: " + version);
 				_logger.debug("Number of concepts processed: " + _count);
 			}
 		}
