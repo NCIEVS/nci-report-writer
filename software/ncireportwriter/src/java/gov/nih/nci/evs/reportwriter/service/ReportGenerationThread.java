@@ -385,7 +385,8 @@ public class ReportGenerationThread implements Runnable {
             printReportHeading(pw, cols);
 
             String scheme = standardReportTemplate.getCodingSchemeName();
-            codingSchemeVersion = standardReportTemplate.getCodingSchemeVersion();
+            //10112007
+            //codingSchemeVersion = standardReportTemplate.getCodingSchemeVersion();
 
 //[GF#32771] Allow report templates with multiple roots.
 //String code = standardReportTemplate.getRootConceptCode();
