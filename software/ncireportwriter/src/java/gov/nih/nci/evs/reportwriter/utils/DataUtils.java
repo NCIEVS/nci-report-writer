@@ -2691,8 +2691,7 @@ _logger.debug("getResolvedConceptReferenceIterator...");
 
     public static CodingScheme resolveCodingScheme(String scheme, String version) {
 		String representsVersion = version;
-
-		if (!isNullOrBlank(NCIT_VERSION) || version.compareTo("@ncit.version@") == 0) {
+		if (!isNullOrBlank(NCIT_VERSION)) {
 			representsVersion = NCIT_VERSION;
 		}
 

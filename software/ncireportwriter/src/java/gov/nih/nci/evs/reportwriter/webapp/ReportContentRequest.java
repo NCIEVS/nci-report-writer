@@ -22,7 +22,7 @@ import org.LexGrid.concepts.*;
 import org.apache.log4j.*;
 
 /**
- * 
+ *
  */
 
 /**
@@ -90,7 +90,7 @@ public class ReportContentRequest {
         return "standard_report_column";
     }
 
-    private String sessionMsg_goBack2(HttpServletRequest request, 
+    private String sessionMsg_goBack2(HttpServletRequest request,
         String text) {
         request.setAttribute("goBack", "2");
         return HTTPUtils.sessionMsg(request, text);
@@ -127,6 +127,10 @@ public class ReportContentRequest {
                     standardReportTemplate.getCodingSchemeName();
                 String version =
                     standardReportTemplate.getCodingSchemeVersion();
+
+				if (!DataUtils.isNullOrBlank(DataUtils.NCIT_VERSION)) {
+					version = DataUtils.NCIT_VERSION;
+				}
 
                 _logger.debug("generateStandardReportAction: codingscheme "
                     + codingscheme);

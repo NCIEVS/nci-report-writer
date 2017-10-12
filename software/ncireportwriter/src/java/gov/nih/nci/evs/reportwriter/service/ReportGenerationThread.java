@@ -95,6 +95,7 @@ public class ReportGenerationThread implements Runnable {
         _count = 0;
 
         _code2PTHashMap = new HashMap();
+
     }
 
     public Boolean warningMsg(StringBuffer buffer, String text) {
@@ -262,13 +263,14 @@ public class ReportGenerationThread implements Runnable {
     public Boolean generateStandardReport(String outputDir,
         String standardReportLabel, String uid, StringBuffer warningMsg) {
         StandardReportTemplate standardReportTemplate = null;
+
         try {
             standardReportTemplate = getStandardReportTemplate(
                 standardReportLabel, warningMsg);
         } catch (Exception e) {
             return warningMsg(warningMsg, "Unable to identify report label "
                 + standardReportLabel + " -- report not generated.");
-        }
+       }
 
         try {
             String defining_set_desc =
@@ -302,11 +304,9 @@ public class ReportGenerationThread implements Runnable {
             }
 
             String codingSchemeVersion = standardReportTemplate.getCodingSchemeVersion();
-
 			if (!DataUtils.isNullOrBlank(DataUtils.NCIT_VERSION)) {
 				codingSchemeVersion = DataUtils.NCIT_VERSION;
 			}
-
             // append version to the report file name:
             String pathname =
                 outputDir + File.separator + standardReportLabel + "__"
@@ -405,6 +405,7 @@ public class ReportGenerationThread implements Runnable {
                         AppProperties.MAXIMUM_LEVEL, 20);
 
             // printReportHeading(pw, cols);
+            /*
             if (_hierarchicalAssoName == null) {
                 Vector<String> hierarchicalAssoName_vec =
                     DataUtils.getHierarchyAssociationId(scheme, codingSchemeVersion);
@@ -415,6 +416,9 @@ public class ReportGenerationThread implements Runnable {
                 _hierarchicalAssoName =
                     (String) hierarchicalAssoName_vec.elementAt(0);
             }
+            */
+
+            _hierarchicalAssoName = "subClassOf";
 
             String associationCode = "";
             try {
@@ -460,13 +464,13 @@ for (int k=0; k<w.size(); k++) {
 			codingSchemeVersion, null, code);
 
 
-
 	curr_level = 0;
 	/*
 	traverse(definitionServices, uri, pw, scheme, version, tag, defining_root_concept, code,
 		_hierarchicalAssoName, associationName, direction, curr_level,
 		max_level, cols);
     */
+
 	traverse(definitionServices, uri, pw, scheme, codingSchemeVersion, tag, defining_root_concept, code,
 		_hierarchicalAssoName, associationName, direction, curr_level,
 		max_level, cols);
@@ -480,6 +484,8 @@ for (int k=0; k<w.size(); k++) {
 
             return createStandardReports(outputDir, standardReportLabel, uid,
                 standardReportTemplate, pathname, codingSchemeVersion, delimeter_str);
+
+
         } catch (Exception e) {
 			e.printStackTrace();
             return warningMsg(warningMsg, ExceptionUtils.getStackTrace(e));
@@ -672,18 +678,24 @@ for (int k=0; k<w.size(); k++) {
         if (namespace == null) {
 			namespace = new ConceptDetails(lbSvc).getNamespaceByCode(scheme, version, code);
 		}
-        cref.setCodeNamespace(namespace);
+
+        //KLO, 10122017 (temporarily commented out)
+        //cref.setCodeNamespace(namespace);
         try {
 			matches = lbSvc.getNodeGraph(scheme, csvt, relationContainerName).resolveAsList(
 					cref, direction, !direction, 1, 1, new LocalNameList(), null,
 					null, -1);
 		} catch (Exception ex) {
+			System.out.println("getNodeGraph return matches = NULL???: ");
 			return null;
 		}
+
         boolean associationExists = false;
+
+        System.out.println("matches.getResolvedConceptReferenceCount(): " + matches.getResolvedConceptReferenceCount());
+
         if (matches.getResolvedConceptReferenceCount() > 0) {
             Enumeration<? extends ResolvedConceptReference> refEnum = matches.enumerateResolvedConceptReference();
-
             while (refEnum.hasMoreElements()) {
                 ResolvedConceptReference ref = refEnum.nextElement();
                 AssociationList sourceof = ref.getSourceOf();
@@ -691,10 +703,12 @@ for (int k=0; k<w.size(); k++) {
 					sourceof = ref.getTargetOf();
 				}
                 if (sourceof != null) {
+
 					Association[] associations = sourceof.getAssociation();
 					for (int i = 0; i < associations.length; i++) {
 						Association assoc = associations[i];
 						if (assoc.getAssociationName().compareTo(associationName) == 0) {
+
 							associationExists = true;
 							AssociatedConcept[] acl = assoc.getAssociatedConcepts().getAssociatedConcept();
 							for (int j = 0; j < acl.length; j++) {
@@ -865,6 +879,7 @@ for (int k=0; k<w.size(); k++) {
         if (subconcept_vec == null | subconcept_vec.size() == 0)
             return;
         level++;
+
         for (int k = 0; k < subconcept_vec.size(); k++) {
             // Note: Commented on 2/24/10 (Wed). subconcept_vec size was 0.
             // Entity concept = (Entity) subconcept_vec.elementAt(k);
