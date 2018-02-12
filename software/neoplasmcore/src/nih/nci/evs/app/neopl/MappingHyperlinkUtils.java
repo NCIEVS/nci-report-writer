@@ -195,7 +195,15 @@ public class MappingHyperlinkUtils {
 		pw.println("<ul>");
 		for (int i=0; i<avail_sources.size(); i++) {
 			String t = (String) avail_sources.elementAt(i);
-			pw.println("<li><a href=\"#\" onclick=\"on_vocabulary_home_clicked('" + t + "');return false;\" >" + t + "</a></li>");
+			// [EVSREPORT-110] Broken EVS standalone source hyperlinks.
+			String s = t;
+			int n = t.indexOf("(");
+			int m = t.indexOf(")");
+			if (n != -1 && m != -1) {
+				s = t.substring(0, n-1);
+			}
+			pw.println("<li><a href=\"#\" onclick=\"on_vocabulary_home_clicked('" + s + "');return false;\" >" + t + "</a></li>");
+			//pw.println("<li><a href=\"#\" onclick=\"on_vocabulary_home_clicked('" + t + "');return false;\" >" + t + "</a></li>");
 		}
 		pw.println("</ul>");
 
