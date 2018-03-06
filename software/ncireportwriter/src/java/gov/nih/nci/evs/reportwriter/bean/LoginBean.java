@@ -176,7 +176,7 @@ public class LoginBean extends Object {
         return null;
     }
 
-
+/*
 	public boolean validateUser(String user, String password) {
 		Connection conn = null;
 		Statement st = null;
@@ -210,7 +210,7 @@ public class LoginBean extends Object {
 		}
 		return match;
 	}
-
+*/
 
 
 /*

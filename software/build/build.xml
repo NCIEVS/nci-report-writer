@@ -65,8 +65,9 @@ L-->
     
     <property name="webapp.dir" value="${bda.software.dir}/${project.name}/web" />
     <property name="webapp.meta.inf.dir" value="${webapp.dir}/META-INF" />
-    
+    <!--
     <property name="upt.dir" value="${bda.software.dir}/${project.name}/upt" />
+    -->
     <property name="database.driver.file" value="${bda.lib.dir}/mysql-connector-java-5.1.10.jar"/>
     <property name="exploded.dir" value="${bda.dist.dir}/exploded/${project.name}-webapp" />
 
@@ -154,7 +155,9 @@ L-->
         <copy todir="${webapp.classes.dir}" overwrite="true"
              flatten="true" includeEmptyDirs="no" filtering="false">
             <resources>
+            <!--
                 <file file="${bda.conf.dir}/csm.ehcache.xml"/>
+             -->   
                 <file file="${bda.conf.dir}/unmarshaller-xml-mapping.xml"/>
                 <file file="${bda.conf.dir}/xml-mapping.xml"/>
             </resources>
@@ -188,7 +191,9 @@ L-->
             
             <resources>
                 <file file="${bda.conf.dir}/application-config-client.xml"/>
+                <!--
                 <file file="${bda.conf.dir}/ncireportwriter.csm.new.hibernate.cfg.xml"/>
+                -->
                 <file file="${bda.conf.dir}/application-config-client-local.xml"/>
                 <file file="${bda.conf.dir}/application-config-client-remote.xml"/>
                 <file file="${bda.conf.dir}/hibernate.cfg.xml"/>
@@ -276,10 +281,15 @@ L-->
                 <file file="${bda.conf.dir}/${shiro.ini.file}"/>
                 <file file="${bda.conf.dir}/application-config.xml"/>
                 <file file="${bda.conf.dir}/application-config-client.xml"/>
+                <!--
                 <file file="${bda.conf.dir}/ncireportwriter.csm.new.hibernate.cfg.xml"/>
-                <file file="${bda.conf.dir}/rwdbserver.csm.new.hibernate.cfg.xml"/>
+                -->
+                
                 <file file="${bda.conf.dir}/hibernate.cfg.xml"/>
+                <!--
+                <file file="${bda.conf.dir}/rwdbserver.csm.new.hibernate.cfg.xml"/>
                 <file file="${bda.conf.dir}/ApplicationSecurityConfig.xml"/>
+                -->
                
             </resources>
         </copy>
@@ -393,10 +403,13 @@ L-->
                 <file file="${exploded.dir}/deploy/application-config-client.xml"/>
                 <file file="${exploded.dir}/deploy/application-config-client-local.xml"/>
                 <file file="${exploded.dir}/deploy/application-config-client-remote.xml"/>
+                
+                <file file="${exploded.dir}/deploy/hibernate.cfg.xml"/>
+                <!--
                 <file file="${exploded.dir}/deploy/ncireportwriter.csm.new.hibernate.cfg.xml"/>
                 <file file="${exploded.dir}/deploy/rwdbserver.csm.new.hibernate.cfg.xml"/>
-                <file file="${exploded.dir}/deploy/hibernate.cfg.xml"/>
                 <file file="${exploded.dir}/deploy/ApplicationSecurityConfig.xml"/>
+                -->
                 <file file="${exploded.dir}/deploy/ncireportwriter-ds.xml"/>
             </resources>
         </copy>
@@ -601,12 +614,12 @@ L-->
                 <file file="${exploded.dir}/install/${project.short.name}-log4j.xml"/>
                 <file file="${exploded.dir}/install/log4j.dtd"/>
                 
+                <file file="${exploded.dir}/deploy/hibernate.cfg.xml"/>
+                <!--
                 <file file="${exploded.dir}/deploy/ncireportwriter.csm.new.hibernate.cfg.xml"/>
                 <file file="${exploded.dir}/deploy/rwdbserver.csm.new.hibernate.cfg.xml"/>
-                <!--
-                <file file="${exploded.dir}/deploy/hibernate.cfg.xml"/>
-                -->
                 <file file="${exploded.dir}/deploy/ApplicationSecurityConfig.xml"/>
+                -->
                 
             </resources>
         </copy>
@@ -747,7 +760,9 @@ L-->
                 <file file="${bda.conf.dir}/hibernate.cfg.xml"/>
                 <file file="${bda.conf.dir}/application-config.xml"/>
                 <file file="${bda.conf.dir}/ncireportwriter.properties"/>
+                <!--
                 <file file="${bda.conf.dir}/ApplicationSecurityConfig.xml"/>
+                -->
             </resources>
         </copy>
                 

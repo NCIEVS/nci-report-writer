@@ -68,7 +68,9 @@
 		<file file="../ncireportwriter/conf/application-config-client-local.xml"/>
 		<file file="../ncireportwriter/conf/application-config-client-remote.xml"/>
 		<file file="../ncireportwriter/conf/hibernate.cfg.xml"/>
+		<!--
 		<file file="../ncireportwriter/conf/ApplicationSecurityConfig.xml"/>
+		-->
 		<file file="../ncireportwriter/conf/ncireportwriter.properties"/>
 		<file file="../ncireportwriter/conf/context.xml"/>
 	    </resources>

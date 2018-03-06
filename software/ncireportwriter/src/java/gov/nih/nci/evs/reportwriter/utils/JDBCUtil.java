@@ -151,7 +151,7 @@ import javax.faces.model.SelectItem;
 		   }
 		   return false;
 	   }
-
+/*
 	   public void getUsers() {
 			StringEncrypter stringEncrypter = null;
 			try {
@@ -306,7 +306,7 @@ import javax.faces.model.SelectItem;
 		    }
 		    return uid;
 	   }
-
+*/
 	   public String getLoginName(int userid) {
 		    Connection conn = null;
 		    Statement stmt = null;
